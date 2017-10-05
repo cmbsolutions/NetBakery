@@ -537,7 +537,7 @@ Public Class main
             Text = FormHelpers.ApplicationTitle
 
             If Not FormHelpers.isDebug Then
-                txtServer.Text = "dbext036441.bytenet.nl"
+                txtServer.Text = "db036441.bytenet.nl"
                 txtUser.Text = "u036441_root"
                 txtPass.Text = ""
                 chkSsl.Checked = True

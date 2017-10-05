@@ -9,80 +9,80 @@ Imports System.Data.Entity.ModelConfiguration
 
 Namespace Models.Mapping
 <#
-    Dim keys as New List(Of String)
+	Dim keys as New List(Of String)
 
-    For Each c in _t.columns
-        If not _t.isView Then
-            If c.key = "PRI" then
-                keys.add(c.columnAlias)
-            End If
-        Else
-            If c.columnName.EndsWith("_id") Then
-                keys.add(c.columnAlias)
-            End If
-        End If
-    Next
+	For Each c in _t.columns
+		If not _t.isView Then
+			If c.key = "PRI" then
+				keys.add(c.columnAlias)
+			End If
+		Else
+			If c.columnName.EndsWith("_id") Then
+				keys.add(c.columnAlias)
+			End If
+		End If
+	Next
 
-    If _t.isView And Not keys.Any() Then
-        For Each c in _t.columns
-            keys.add(c.columnAlias)
-        Next
-    End If
+	If _t.isView And Not keys.Any() Then
+		For Each c in _t.columns
+			keys.add(c.columnAlias)
+		Next
+	End If
 #>
 	Public Class <#= _t.singleName #>Map
 		Inherits EntityTypeConfiguration(Of <#= _t.singleName #>)
 		Public Sub New()
 			' Primary Key
 <#
-    If keys.Any() Then
-        If keys.count() = 1 then #>
+	If keys.Any() Then
+		If keys.count() = 1 then #>
 			Me.HasKey(Function(t) t.<#= String.Join("", keys) #>)
 <#      else #>
-            Me.HasKey(Function(t) New With { t.<#= String.Join(", t.", keys) #>})
+			Me.HasKey(Function(t) New With { t.<#= String.Join(", t.", keys) #>})
 <# 
-        End If
-    End If
+		End If
+	End If
 #>
 
 			' Properties
 <#
-    For Each c in _t.columns
-        Dim configLines as new list(of String)
+	For Each c in _t.columns
+		Dim configLines as new list(of String)
 
-        if not c.isNullable AndAlso c.vbType = "String" then configLines.add(".IsRequired()")
-        if c.vbType = "String" then configLines.add(String.format(".HasMaxLength({0})", c.maximumLength))
+		if not c.isNullable AndAlso c.vbType = "String" then configLines.add(".IsRequired()")
+		if c.vbType = "String" then configLines.add(String.format(".HasMaxLength({0})", c.maximumLength))
 
-        if configLines.Any() then
+		if configLines.Any() then
 #>
-            Me.[Property](Function(t) t.<#= c.columnAlias #>)<#= String.Join("", configLines) #>
+			Me.[Property](Function(t) t.<#= c.columnAlias #>)<#= String.Join("", configLines) #>
 <#
-        end if
-    Next
+		end if
+	Next
 #>
 			' Table & Column Mappings
 			Me.ToTable("<#= _t.tableName #>")
 <#
-    For Each c in _t.columns
-        If c.columnName <> c.columnAlias Then
+	For Each c in _t.columns
+		If c.columnName <> c.columnAlias Then
 #>
-            Me.[Property](Function(t) t.<#= c.columnAlias #>).HasColumnName("<#= c.columnName #>")
+			Me.[Property](Function(t) t.<#= c.columnAlias #>).HasColumnName("<#= c.columnName #>")
 <#
-        End If
-    Next
+		End If
+	Next
 #>
 
-            ' Relationships
+			' Relationships
 <#
 
-    For Each r in _t.relations
-        If r.optional Then
+	For Each r in _t.relations
+		If r.optional Then
 #>
-            Me.HasOptional(Function(t) t.<#= r.alias #>).WithMany(Function(t) t.<#= r.thistable #>).HasForeignKey(Function(d) d.<#= r.thiscolumn #>)
+			Me.HasOptional(Function(t) t.<#= r.alias #>).WithMany(Function(t) t.<#= r.thistable #>).HasForeignKey(Function(d) d.<#= r.thiscolumn #>)
 <#      Else #>
-            Me.HasRequired(Function(t) t.<#= r.alias #>).WithMany(Function(t) t.<#= r.thistable #>).HasForeignKey(Function(d) d.<#= r.thiscolumn #>)
+			Me.HasRequired(Function(t) t.<#= r.alias #>).WithMany(Function(t) t.<#= r.thistable #>).HasForeignKey(Function(d) d.<#= r.thiscolumn #>)
 <#
-        End If
-    Next
+		End If
+	Next
 #>
 
 		End Sub

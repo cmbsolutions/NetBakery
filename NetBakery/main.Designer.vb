@@ -390,10 +390,10 @@ Partial Class main
         'TabPage11
         '
         Me.TabPage11.Controls.Add(Me.sPreviewModel)
-        Me.TabPage11.Location = New System.Drawing.Point(4, 26)
+        Me.TabPage11.Location = New System.Drawing.Point(4, 22)
         Me.TabPage11.Name = "TabPage11"
         Me.TabPage11.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage11.Size = New System.Drawing.Size(1047, 445)
+        Me.TabPage11.Size = New System.Drawing.Size(1047, 449)
         Me.TabPage11.TabIndex = 2
         Me.TabPage11.Text = "Model"
         Me.TabPage11.UseVisualStyleBackColor = True
@@ -409,7 +409,7 @@ Partial Class main
         Me.sPreviewModel.Location = New System.Drawing.Point(3, 3)
         Me.sPreviewModel.Name = "sPreviewModel"
         Me.sPreviewModel.ReadOnly = True
-        Me.sPreviewModel.Size = New System.Drawing.Size(1041, 439)
+        Me.sPreviewModel.Size = New System.Drawing.Size(1041, 443)
         Me.sPreviewModel.TabIndex = 2
         Me.sPreviewModel.UseTabs = True
         '
@@ -568,7 +568,7 @@ Partial Class main
         Me.chkRecovery.Location = New System.Drawing.Point(3, 36)
         Me.chkRecovery.Name = "chkRecovery"
         Me.chkRecovery.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.chkRecovery.Size = New System.Drawing.Size(138, 21)
+        Me.chkRecovery.Size = New System.Drawing.Size(139, 21)
         Me.chkRecovery.TabIndex = 3
         Me.chkRecovery.Text = "Generate recovery"
         Me.chkRecovery.TextAlign = System.Drawing.ContentAlignment.MiddleCenter

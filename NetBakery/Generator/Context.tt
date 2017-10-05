@@ -14,189 +14,190 @@ Imports System.Reflection
 Imports System.Runtime.InteropServices
 Imports System.Threading
 Imports System.Data.Entity.Core
+Imports AutomatischeVerwerking.AVPluginInterface
 
 Public Class <#= _name #>DataManager
-    Inherits Models.<#= _name #>DataContext
+	Inherits Models.<#= _name #>DataContext
 
-    Private _callerAssemblyGUID As String
-    Private _callerAssemblyName As String
-    Public StoreCommands As New Models.StoreCommands(Me)
+	Private _callerAssemblyGUID As String
+	Private _callerAssemblyName As String
+	Public StoreCommands As New Models.StoreCommands(Me)
 
-    Public Sub New(Optional ByVal sEnv As eSentiaEnv = eSentiaEnv.tst)
-        MyBase.New(New MySqlConnectionFactory().CreateConnection(My.Resources.ResourceManager.GetString("DB" & [Enum].GetName(GetType(eSentiaEnv), sEnv))))
+	Public Sub New(ConnectionString As String, Optional ByVal sEnv As eSentiaEnv = eSentiaEnv.tst)
+		MyBase.New(New MySqlConnectionFactory().CreateConnection(ConnectionString))
 
-        ' Proxie creation uitzetten
-        Me.Configuration.ProxyCreationEnabled = False
+		' Proxie creation uitzetten
+		Me.Configuration.ProxyCreationEnabled = False
 
-        _callerAssemblyGUID = CType(Assembly.GetCallingAssembly().GetCustomAttributes(GetType(GuidAttribute), False)(0), GuidAttribute).Value
-        _callerAssemblyName = Assembly.GetCallingAssembly().GetName().Name
+		_callerAssemblyGUID = CType(Assembly.GetCallingAssembly().GetCustomAttributes(GetType(GuidAttribute), False)(0), GuidAttribute).Value
+		_callerAssemblyName = Assembly.GetCallingAssembly().GetName().Name
 
-        ' initialiseren van de database verbinding in de databasecontext
-        Me.Database.Initialize(False)
+		' initialiseren van de database verbinding in de databasecontext
+		Me.Database.Initialize(False)
 
 <# If _recovery Then #>
-        Recover()
+		Recover(sEnv)
 <# End If #>
-    End Sub
+	End Sub
 
-    Public Function ConvertEntityResultSetToDataTable(EntityResultSet As Linq.IQueryable) As DataTable
-        Try
-            Dim table = New DataTable
+	Public Function ConvertEntityResultSetToDataTable(EntityResultSet As Linq.IQueryable) As DataTable
+		Try
+			Dim table = New DataTable
 
-            For Each EntityResult In EntityResultSet
-                If table.Columns.Count = 0 Then
-                    For Each info As PropertyInfo In EntityResult.GetType().GetProperties()
-                        If info.CanRead Then
-                            Dim IsNullable As Boolean = (Nullable.GetUnderlyingType(info.PropertyType) IsNot Nothing)
+			For Each EntityResult In EntityResultSet
+				If table.Columns.Count = 0 Then
+					For Each info As PropertyInfo In EntityResult.GetType().GetProperties()
+						If info.CanRead Then
+							Dim IsNullable As Boolean = (Nullable.GetUnderlyingType(info.PropertyType) IsNot Nothing)
 
-                            If IsNullable Then
-                                table.Columns.Add(info.Name, Nullable.GetUnderlyingType(info.PropertyType))
-                            Else
-                                table.Columns.Add(info.Name, info.PropertyType())
-                            End If
-                        End If
-                    Next
-                End If
+							If IsNullable Then
+								table.Columns.Add(info.Name, Nullable.GetUnderlyingType(info.PropertyType))
+							Else
+								table.Columns.Add(info.Name, info.PropertyType())
+							End If
+						End If
+					Next
+				End If
 
-                Dim row As DataRow = table.NewRow
+				Dim row As DataRow = table.NewRow
 
-                For Each info As PropertyInfo In EntityResult.GetType().GetProperties()
-                    Dim IsNullable As Boolean = (Nullable.GetUnderlyingType(info.PropertyType) IsNot Nothing)
+				For Each info As PropertyInfo In EntityResult.GetType().GetProperties()
+					Dim IsNullable As Boolean = (Nullable.GetUnderlyingType(info.PropertyType) IsNot Nothing)
 
-                    If IsNullable Then
-                        Dim val As Object = info.GetValue(EntityResult, Nothing)
-                        If Not val Is Nothing Then row(info.Name) = Convert.ChangeType(val, Nullable.GetUnderlyingType(info.PropertyType))
-                    Else
-                        row(info.Name) = info.GetValue(EntityResult, Nothing)
-                    End If
+					If IsNullable Then
+						Dim val As Object = info.GetValue(EntityResult, Nothing)
+						If Not val Is Nothing Then row(info.Name) = Convert.ChangeType(val, Nullable.GetUnderlyingType(info.PropertyType))
+					Else
+						row(info.Name) = info.GetValue(EntityResult, Nothing)
+					End If
 
-                Next
-                table.Rows.Add(row)
-            Next
+				Next
+				table.Rows.Add(row)
+			Next
 
-            Return table
-        Catch ex As Exception
-            Throw ex
-        End Try
+			Return table
+		Catch ex As Exception
+			Throw ex
+		End Try
 
-        Return Nothing
-    End Function
+		Return Nothing
+	End Function
 
-    Public Sub SetFieldValueByName(_entity As Object, _fieldname As String, _value As Object)
-        Try
-            Dim info As PropertyInfo = _entity.GetType().GetProperties().Where(Function(c) c.Name = _fieldname).FirstOrDefault
-            If Not info Is Nothing AndAlso info.CanRead AndAlso info.CanWrite Then
-                info.SetValue(_entity, _value)
-            End If
-        Catch ex As Exception
-            Throw ex
-        End Try
-    End Sub
+	Public Sub SetFieldValueByName(_entity As Object, _fieldname As String, _value As Object)
+		Try
+			Dim info As PropertyInfo = _entity.GetType().GetProperties().Where(Function(c) c.Name = _fieldname).FirstOrDefault
+			If Not info Is Nothing AndAlso info.CanRead AndAlso info.CanWrite Then
+				info.SetValue(_entity, _value)
+			End If
+		Catch ex As Exception
+			Throw ex
+		End Try
+	End Sub
 
 <# If _recovery Then #>
-    Public Sub Recover()
-        ' Huidige ContextConfig settings opslaan
-        Dim bLazy As Boolean = Me.Configuration.LazyLoadingEnabled
-        Dim bProxy As Boolean = Me.Configuration.ProxyCreationEnabled
+	Public Sub Recover(Optional ByVal sEnv As eSentiaEnv = eSentiaEnv.tst)
+		' Huidige ContextConfig settings opslaan
+		Dim bLazy As Boolean = Me.Configuration.LazyLoadingEnabled
+		Dim bProxy As Boolean = Me.Configuration.ProxyCreationEnabled
 
-        Try
-            ' ContextConfig aanpassen
-            Me.Configuration.LazyLoadingEnabled = False
-            Me.Configuration.ProxyCreationEnabled = True
+		Try
+			' ContextConfig aanpassen
+			Me.Configuration.LazyLoadingEnabled = False
+			Me.Configuration.ProxyCreationEnabled = True
 
-            Using rContext = New AVRecoveryManager ' Nieuwe recoveryContext
-                ' Alle recoveryrecords ophalen voor de calling process en nog niet afgehandeld
-                Dim q = From rx In rContext.recoveries Where
-                            rx.datum_afgehandeld Is Nothing And
-                            rx.process_name = _callerAssemblyName And
-                            rx.process_guid = _callerAssemblyGUID And
-                            rx.known_entitytype = True
-                        Select rx
+			Using rContext = New AVRecoveryManager(sEnv) ' Nieuwe recoveryContext
+				' Alle recoveryrecords ophalen voor de calling process en nog niet afgehandeld
+				Dim q = From rx In rContext.recoveries Where
+							rx.datum_afgehandeld Is Nothing And
+							rx.process_name = _callerAssemblyName And
+							rx.process_guid = _callerAssemblyGUID And
+							rx.known_entitytype = True
+						Select rx
 
-                For Each r As Recovery.Models.recovery In q
-                    Select Case Type.GetType(r.entity)
+				For Each r As Recovery.Models.recovery In q
+					Select Case Type.GetType(r.entity)
 <# For Each table In _tables #>
-                        Case GetType(Models.<#= table.singleName #>)
-                            Dim ser = New seri(Of Models.<#= table.singleName #>) ' new serializeobject aanmaken
-                            ser.Deserialize(r.binary_data) ' binarydata deserializen
+						Case GetType(Models.<#= table.singleName #>)
+							Dim ser = New seri(Of Models.<#= table.singleName #>) ' new serializeobject aanmaken
+							ser.Deserialize(r.binary_data) ' binarydata deserializen
 
-                            If Not Me.ChangeTracker.Entries(Of Models.<#= table.singleName #>).Any(Function(b) b.Entity.Equals(ser.Entity)) Then ' Controle of de nieuwe entity al bestaat in de context
-                                Me.<#= table.pluralName #>.Add(ser.Entity) ' bestaat niet, aanmaken dan
-                                Me.Entry(ser.Entity).State = CType([Enum].Parse(GetType(EntityState), r.action), EntityState)
-                            Else
-                                Me.<#= table.pluralName #>.Attach(Me.Entry(ser.Entity).Entity) ' bestaat wel, attachen dan
-                            End If
+							If Not Me.ChangeTracker.Entries(Of Models.<#= table.singleName #>).Any(Function(b) b.Entity.Equals(ser.Entity)) Then ' Controle of de nieuwe entity al bestaat in de context
+								Me.<#= table.pluralName #>.Add(ser.Entity) ' bestaat niet, aanmaken dan
+								Me.Entry(ser.Entity).State = CType([Enum].Parse(GetType(EntityState), r.action), EntityState)
+							Else
+								Me.<#= table.pluralName #>.Attach(Me.Entry(ser.Entity).Entity) ' bestaat wel, attachen dan
+							End If
 <# Next #>
-                        Case Else
+						Case Else
 
-                    End Select
+					End Select
 
-                    r.datum_afgehandeld = Now
-                Next
+					r.datum_afgehandeld = Now
+				Next
 
-                Me.SaveChanges()
+				Me.SaveChanges()
 
-                rContext.SaveChanges()
-            End Using
-        Catch ex As Exception
+				rContext.SaveChanges()
+			End Using
+		Catch ex As Exception
 
-        Finally
-            Me.Configuration.LazyLoadingEnabled = bLazy
-            Me.Configuration.ProxyCreationEnabled = bProxy
-        End Try
-    End Sub
+		Finally
+			Me.Configuration.LazyLoadingEnabled = bLazy
+			Me.Configuration.ProxyCreationEnabled = bProxy
+		End Try
+	End Sub
 
 <# End If #>
-    Public Overrides Function SaveChanges() As Integer
-        For i As Integer = 0 To CInt(My.Resources.retryCount)
-            Try
-                Return MyBase.SaveChanges
-                Exit For
-            Catch ex As EntityException
-                ' No host connection
-                If ex.HResult = -2146233087 Then
-                    If i < CInt(My.Resources.retryCount) Then ' Retry 
-                        Thread.Sleep(CInt(My.Resources.retryTimeout))
-                        Continue For
-                    End If
-                End If
-                'deadlock
-                If ex.GetInnerExceptionText.Contains("Deadlock") Then
-                    If i < CInt(My.Resources.retryCount) Then ' Retry 
-                        Thread.Sleep(CInt(My.Resources.retryTimeout))
-                        Continue For
-                    End If
-                End If
+	Public Overrides Function SaveChanges() As Integer
+		For i As Integer = 0 To CInt(My.Resources.retryCount)
+			Try
+				Return MyBase.SaveChanges
+				Exit For
+			Catch ex As EntityException
+				' No host connection
+				If ex.HResult = -2146233087 Then
+					If i < CInt(My.Resources.retryCount) Then ' Retry 
+						Thread.Sleep(CInt(My.Resources.retryTimeout))
+						Continue For
+					End If
+				End If
+				'deadlock
+				If ex.GetInnerExceptionText.Contains("Deadlock") Then
+					If i < CInt(My.Resources.retryCount) Then ' Retry 
+						Thread.Sleep(CInt(My.Resources.retryTimeout))
+						Continue For
+					End If
+				End If
 
-                Throw ex
-            Catch ex As Exception
-                'deadlock
-                If ex.GetInnerExceptionText.Contains("Deadlock") Then
-                    If i < CInt(My.Resources.retryCount) Then ' Retry 
-                        Thread.Sleep(CInt(My.Resources.retryTimeout))
-                        Continue For
-                    End If
-                End If
+				Throw ex
+			Catch ex As Exception
+				'deadlock
+				If ex.GetInnerExceptionText.Contains("Deadlock") Then
+					If i < CInt(My.Resources.retryCount) Then ' Retry 
+						Thread.Sleep(CInt(My.Resources.retryTimeout))
+						Continue For
+					End If
+				End If
 
-                Throw ex
-            End Try
-        Next
+				Throw ex
+			End Try
+		Next
 
-        Return 0
-    End Function
+		Return 0
+	End Function
 End Class
 
 Namespace Models
-    Partial Public Class <#= _name #>DataContext
-        Inherits DbContext
+	Partial Public Class <#= _name #>DataContext
+		Inherits DbContext
 
-        Shared Sub New()
-            Database.SetInitializer(Of <#= _name #>DataContext)(Nothing)
-        End Sub
+		Shared Sub New()
+			Database.SetInitializer(Of <#= _name #>DataContext)(Nothing)
+		End Sub
 
-        Public Sub New(connection As DbConnection)
-            MyBase.New(connection, True)
-        End Sub
+		Public Sub New(connection As DbConnection)
+			MyBase.New(connection, True)
+		End Sub
 
 <# For Each table In _tables #>
 		Public Property <#= table.pluralName #>() As DbSet(Of <#= table.singleName #>)
