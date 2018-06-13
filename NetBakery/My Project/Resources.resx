@@ -118,17 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="connections" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\connections.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="RibbonGeometry" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RibbonGeometry.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="netbakery" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\netbakery.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="php_keywords" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\php_keywords.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="defaultOutputExplorer" xml:space="preserve">
     <value>&lt;AdvTree&gt;
@@ -141,5 +135,17 @@
   &lt;/Node&gt;
 &lt;/AdvTree&gt;</value>
     <comment>Default output explorer nodes. Is used to revert to init state</comment>
+  </data>
+  <data name="connections" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\connections.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="netbakery" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\netbakery.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="folder_search" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder_search.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

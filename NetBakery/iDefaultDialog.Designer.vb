@@ -97,7 +97,8 @@ Partial Class iDefaultDialog
         Me.ShowInTaskbar = False
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "Preferences"
+        Me.Text = "Base"
+        Me.TitleText = "Base"
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
 

@@ -10,7 +10,7 @@ Namespace infoSchema
         Implements IList(Of connection)
         Implements IDisposable
 
-        <Xml.Serialization.XmlArray("items")>
+        <System.Xml.Serialization.XmlArray("items")>
         Private _internal As List(Of connection)
 
         Public Sub New()

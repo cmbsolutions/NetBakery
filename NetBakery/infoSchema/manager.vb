@@ -89,10 +89,11 @@ Namespace infoSchema
                         _dbCommand.CommandText = "SELECT COLUMN_NAME,ORDINAL_POSITION,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,COLUMN_TYPE,COLUMN_KEY,EXTRA FROM COLUMNS WHERE TABLE_SCHEMA = @database AND TABLE_NAME = @table ORDER BY ORDINAL_POSITION ASC"
                         _dbCommand.Parameters.AddWithValue("database", database)
                         _dbCommand.Parameters.AddWithValue("table", t.tableName)
-
+                        Debug.WriteLine(t.tableName)
                         Using rdr As MySqlDataReader = _dbCommand.ExecuteReader()
                             While rdr.Read
                                 Dim c As New column
+                                Debug.WriteLine(rdr("COLUMN_NAME").ToString)
                                 c.name = rdr("COLUMN_NAME").ToString
                                 c.alias = AliasGenerator(rdr("COLUMN_NAME").ToString)
                                 c.ordinalPosition = CInt(rdr("ORDINAL_POSITION"))
@@ -221,7 +222,13 @@ Namespace infoSchema
             If obj.ToString = "" Then
                 Return 0
             Else
-                Return CInt(obj.ToString)
+                Dim result As Integer
+
+                If Not Integer.TryParse(obj.ToString, result) Then
+                    Return 0
+                End If
+
+                Return result
             End If
         End Function
 

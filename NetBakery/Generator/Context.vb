@@ -25,7 +25,7 @@ Namespace My.Templates
         Public Overridable Function TransformText() As String
             Me.Write("Imports System.Data.Entity"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Imports System.Data.Entity.Infrastructure"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Imports ")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",8)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",8)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_name))
             
             #End ExternalSource
@@ -35,13 +35,13 @@ Namespace My.Templates
                     "stem.Data.Entity.Core"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Imports AutomatischeVerwerking.AVPluginInterface"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Publi"& _ 
                     "c Class ")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",19)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",19)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_name))
             
             #End ExternalSource
             Me.Write("DataManager"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"Inherits Models.")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",20)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",20)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_name))
             
             #End ExternalSource
@@ -55,13 +55,13 @@ Namespace My.Templates
                     "emblyName = Assembly.GetCallingAssembly().GetName().Name"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' initialiseren va"& _ 
                     "n de database verbinding in de databasecontext"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.Database.Initialize(False)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",38)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",38)
  If _recovery Then 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Recover(sEnv)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",40)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",40)
  End If 
             
             #End ExternalSource
@@ -87,7 +87,7 @@ Namespace My.Templates
                     "Read AndAlso info.CanWrite Then"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"info.SetValue(_entity, _value)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End If"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)& _ 
                     ""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Catch ex As Exception"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Throw ex"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End Try"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",97)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",97)
  If _recovery Then 
             
             #End ExternalSource
@@ -103,33 +103,33 @@ Namespace My.Templates
                     "blyGUID And"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"rx.known_entitytype = True"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Select rx"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"For Each "& _ 
                     "r As Recovery.Models.recovery In q"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Select Case Type.GetType(r.entity)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",119)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",119)
  For Each table In _tables 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Case GetType(Models.")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",120)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",120)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.singleName))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Dim ser = New seri(Of Models.")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",121)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",121)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.singleName))
             
             #End ExternalSource
             Me.Write(") ' new serializeobject aanmaken"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"ser.Deserialize(r.binary_data) ' binaryd"& _ 
                     "ata deserializen"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"If Not Me.ChangeTracker.Entries(Of Models.")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",124)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",124)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.singleName))
             
             #End ExternalSource
             Me.Write(").Any(Function(b) b.Entity.Equals(ser.Entity)) Then ' Controle of de nieuwe entit"& _ 
                     "y al bestaat in de context"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",125)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",125)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.pluralName))
             
             #End ExternalSource
@@ -137,14 +137,14 @@ Namespace My.Templates
                     " = CType([Enum].Parse(GetType(EntityState), r.action), EntityState)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Else"& _ 
                     ""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",128)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",128)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.pluralName))
             
             #End ExternalSource
             Me.Write(".Attach(Me.Entry(ser.Entity).Entity) ' bestaat wel, attachen dan"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End If"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)& _ 
                     "")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",130)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",130)
  Next 
             
             #End ExternalSource
@@ -152,7 +152,7 @@ Namespace My.Templates
                     " Exception"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Finally"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.Configuration.LazyLoadingEnabled = bLazy"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.C"& _ 
                     "onfiguration.ProxyCreationEnabled = bProxy"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End Try"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",150)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",150)
  End If 
             
             #End ExternalSource
@@ -169,56 +169,56 @@ Namespace My.Templates
                     "ue For"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End If"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End If"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Throw ex"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End Try"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Next"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Return "& _ 
                     "0"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End Class"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"Partial Public Class ")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",191)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",191)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_name))
             
             #End ExternalSource
             Me.Write("DataContext"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Inherits DbContext"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Shared Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Database.SetInitializ"& _ 
                     "er(Of ")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",195)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",195)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_name))
             
             #End ExternalSource
             Me.Write("DataContext)(Nothing)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Public Sub New(connection As DbConnection)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"MyBase.New(connection, True)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",202)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",202)
  For Each table In _tables 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Public Property ")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",203)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",203)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.pluralName))
             
             #End ExternalSource
             Me.Write("() As DbSet(Of ")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",203)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",203)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.singleName))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",204)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",204)
  Next 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Protected Overrides Sub OnModelCreating(modelBuilder As DbModelBuilder)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",207)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",207)
  For Each table In _tables 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"modelBuilder.Configurations.Add(New ")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",208)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",208)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.singleName))
             
             #End ExternalSource
             Me.Write("Map())"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Context.tt",209)
+            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\Context.tt",209)
  Next 
             
             #End ExternalSource

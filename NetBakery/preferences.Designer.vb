@@ -35,7 +35,7 @@ Partial Class preferences
         Me.LabelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.LabelX1.Location = New System.Drawing.Point(12, 12)
         Me.LabelX1.Name = "LabelX1"
-        Me.LabelX1.Size = New System.Drawing.Size(125, 20)
+        Me.LabelX1.Size = New System.Drawing.Size(84, 20)
         Me.LabelX1.TabIndex = 15
         Me.LabelX1.Text = "Routine regex"
         '
@@ -50,11 +50,11 @@ Partial Class preferences
         Me.txtDescription.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.NetBakery.My.MySettings.Default, "routineRegex", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
         Me.txtDescription.DisabledBackColor = System.Drawing.Color.Black
         Me.txtDescription.ForeColor = System.Drawing.Color.White
-        Me.txtDescription.Location = New System.Drawing.Point(143, 12)
+        Me.txtDescription.Location = New System.Drawing.Point(102, 13)
         Me.txtDescription.MaxLength = 255
         Me.txtDescription.Name = "txtDescription"
         Me.txtDescription.PreventEnterBeep = True
-        Me.txtDescription.Size = New System.Drawing.Size(261, 23)
+        Me.txtDescription.Size = New System.Drawing.Size(389, 23)
         Me.txtDescription.TabIndex = 14
         Me.txtDescription.Text = Global.NetBakery.My.MySettings.Default.routineRegex
         Me.txtDescription.WatermarkText = "Enter a description..."
@@ -66,11 +66,11 @@ Partial Class preferences
         Me.cboStyle.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
         Me.cboStyle.ForeColor = System.Drawing.Color.White
         Me.cboStyle.FormattingEnabled = True
-        Me.cboStyle.ItemHeight = 17
+        Me.cboStyle.ItemHeight = 18
         Me.cboStyle.Items.AddRange(New Object() {Me.VisualStudio2012Light, Me.VisualStudio2012Dark})
-        Me.cboStyle.Location = New System.Drawing.Point(143, 41)
+        Me.cboStyle.Location = New System.Drawing.Point(102, 42)
         Me.cboStyle.Name = "cboStyle"
-        Me.cboStyle.Size = New System.Drawing.Size(261, 23)
+        Me.cboStyle.Size = New System.Drawing.Size(389, 24)
         Me.cboStyle.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.cboStyle.TabIndex = 16
         Me.cboStyle.Text = Global.NetBakery.My.MySettings.Default.gui_style
@@ -93,7 +93,7 @@ Partial Class preferences
         Me.LabelX2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.LabelX2.Location = New System.Drawing.Point(12, 41)
         Me.LabelX2.Name = "LabelX2"
-        Me.LabelX2.Size = New System.Drawing.Size(125, 20)
+        Me.LabelX2.Size = New System.Drawing.Size(84, 20)
         Me.LabelX2.TabIndex = 17
         Me.LabelX2.Text = "Overall style"
         '

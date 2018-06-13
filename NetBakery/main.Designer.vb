@@ -364,10 +364,10 @@ Partial Class main
         'TabPage10
         '
         Me.TabPage10.Controls.Add(Me.dgv2)
-        Me.TabPage10.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage10.Location = New System.Drawing.Point(4, 26)
         Me.TabPage10.Name = "TabPage10"
         Me.TabPage10.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage10.Size = New System.Drawing.Size(1047, 449)
+        Me.TabPage10.Size = New System.Drawing.Size(1047, 445)
         Me.TabPage10.TabIndex = 1
         Me.TabPage10.Text = "Foreign keys"
         Me.TabPage10.UseVisualStyleBackColor = True
@@ -384,16 +384,16 @@ Partial Class main
         Me.dgv2.ReadOnly = True
         Me.dgv2.RowHeadersVisible = False
         Me.dgv2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv2.Size = New System.Drawing.Size(1041, 443)
+        Me.dgv2.Size = New System.Drawing.Size(1041, 439)
         Me.dgv2.TabIndex = 13
         '
         'TabPage11
         '
         Me.TabPage11.Controls.Add(Me.sPreviewModel)
-        Me.TabPage11.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage11.Location = New System.Drawing.Point(4, 26)
         Me.TabPage11.Name = "TabPage11"
         Me.TabPage11.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage11.Size = New System.Drawing.Size(1047, 449)
+        Me.TabPage11.Size = New System.Drawing.Size(1047, 445)
         Me.TabPage11.TabIndex = 2
         Me.TabPage11.Text = "Model"
         Me.TabPage11.UseVisualStyleBackColor = True
@@ -409,17 +409,17 @@ Partial Class main
         Me.sPreviewModel.Location = New System.Drawing.Point(3, 3)
         Me.sPreviewModel.Name = "sPreviewModel"
         Me.sPreviewModel.ReadOnly = True
-        Me.sPreviewModel.Size = New System.Drawing.Size(1041, 443)
+        Me.sPreviewModel.Size = New System.Drawing.Size(1041, 439)
         Me.sPreviewModel.TabIndex = 2
         Me.sPreviewModel.UseTabs = True
         '
         'TabPage12
         '
         Me.TabPage12.Controls.Add(Me.sPreviewMap)
-        Me.TabPage12.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage12.Location = New System.Drawing.Point(4, 26)
         Me.TabPage12.Name = "TabPage12"
         Me.TabPage12.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage12.Size = New System.Drawing.Size(1047, 449)
+        Me.TabPage12.Size = New System.Drawing.Size(1047, 445)
         Me.TabPage12.TabIndex = 3
         Me.TabPage12.Text = "Mapping"
         Me.TabPage12.UseVisualStyleBackColor = True
@@ -435,7 +435,7 @@ Partial Class main
         Me.sPreviewMap.Location = New System.Drawing.Point(3, 3)
         Me.sPreviewMap.Name = "sPreviewMap"
         Me.sPreviewMap.ReadOnly = True
-        Me.sPreviewMap.Size = New System.Drawing.Size(1041, 443)
+        Me.sPreviewMap.Size = New System.Drawing.Size(1041, 439)
         Me.sPreviewMap.TabIndex = 3
         Me.sPreviewMap.UseTabs = True
         '
