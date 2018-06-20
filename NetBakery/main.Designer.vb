@@ -34,7 +34,6 @@ Partial Class main
         Me.tsbInvert = New System.Windows.Forms.ToolStripMenuItem()
         Me.tvObjects = New System.Windows.Forms.TreeView()
         Me.tvImages = New System.Windows.Forms.ImageList(Me.components)
-        Me.txtServer = New System.Windows.Forms.TextBox()
         Me.txtUser = New System.Windows.Forms.TextBox()
         Me.txtPass = New System.Windows.Forms.TextBox()
         Me.cboDatabases = New System.Windows.Forms.ComboBox()
@@ -76,6 +75,13 @@ Partial Class main
         Me.chkSsl = New System.Windows.Forms.CheckBox()
         Me.cmdRefresh = New System.Windows.Forms.Button()
         Me.cmdDict = New System.Windows.Forms.Button()
+        Me.cboServer = New DevComponents.DotNetBar.Controls.ComboBoxEx()
+        Me.sentiDev = New DevComponents.Editors.ComboItem()
+        Me.sentiTest = New DevComponents.Editors.ComboItem()
+        Me.sentiApp = New DevComponents.Editors.ComboItem()
+        Me.sentiProdShared = New DevComponents.Editors.ComboItem()
+        Me.sentiProdEneco = New DevComponents.Editors.ComboItem()
+        Me.sentiProd4DMC = New DevComponents.Editors.ComboItem()
         Me.checkSelector.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -188,15 +194,6 @@ Partial Class main
         Me.tvImages.Images.SetKeyName(9, "unknown")
         Me.tvImages.Images.SetKeyName(10, "key")
         Me.tvImages.Images.SetKeyName(11, "question_frame.png")
-        '
-        'txtServer
-        '
-        Me.txtServer.Location = New System.Drawing.Point(91, 9)
-        Me.txtServer.Margin = New System.Windows.Forms.Padding(2)
-        Me.txtServer.Name = "txtServer"
-        Me.txtServer.Size = New System.Drawing.Size(202, 25)
-        Me.txtServer.TabIndex = 2
-        Me.txtServer.Text = "localhost"
         '
         'txtUser
         '
@@ -364,10 +361,10 @@ Partial Class main
         'TabPage10
         '
         Me.TabPage10.Controls.Add(Me.dgv2)
-        Me.TabPage10.Location = New System.Drawing.Point(4, 26)
+        Me.TabPage10.Location = New System.Drawing.Point(4, 22)
         Me.TabPage10.Name = "TabPage10"
         Me.TabPage10.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage10.Size = New System.Drawing.Size(1047, 445)
+        Me.TabPage10.Size = New System.Drawing.Size(1047, 449)
         Me.TabPage10.TabIndex = 1
         Me.TabPage10.Text = "Foreign keys"
         Me.TabPage10.UseVisualStyleBackColor = True
@@ -384,16 +381,16 @@ Partial Class main
         Me.dgv2.ReadOnly = True
         Me.dgv2.RowHeadersVisible = False
         Me.dgv2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv2.Size = New System.Drawing.Size(1041, 439)
+        Me.dgv2.Size = New System.Drawing.Size(1041, 443)
         Me.dgv2.TabIndex = 13
         '
         'TabPage11
         '
         Me.TabPage11.Controls.Add(Me.sPreviewModel)
-        Me.TabPage11.Location = New System.Drawing.Point(4, 26)
+        Me.TabPage11.Location = New System.Drawing.Point(4, 22)
         Me.TabPage11.Name = "TabPage11"
         Me.TabPage11.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage11.Size = New System.Drawing.Size(1047, 445)
+        Me.TabPage11.Size = New System.Drawing.Size(1047, 449)
         Me.TabPage11.TabIndex = 2
         Me.TabPage11.Text = "Model"
         Me.TabPage11.UseVisualStyleBackColor = True
@@ -409,17 +406,17 @@ Partial Class main
         Me.sPreviewModel.Location = New System.Drawing.Point(3, 3)
         Me.sPreviewModel.Name = "sPreviewModel"
         Me.sPreviewModel.ReadOnly = True
-        Me.sPreviewModel.Size = New System.Drawing.Size(1041, 439)
+        Me.sPreviewModel.Size = New System.Drawing.Size(1041, 443)
         Me.sPreviewModel.TabIndex = 2
         Me.sPreviewModel.UseTabs = True
         '
         'TabPage12
         '
         Me.TabPage12.Controls.Add(Me.sPreviewMap)
-        Me.TabPage12.Location = New System.Drawing.Point(4, 26)
+        Me.TabPage12.Location = New System.Drawing.Point(4, 22)
         Me.TabPage12.Name = "TabPage12"
         Me.TabPage12.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage12.Size = New System.Drawing.Size(1047, 445)
+        Me.TabPage12.Size = New System.Drawing.Size(1047, 449)
         Me.TabPage12.TabIndex = 3
         Me.TabPage12.Text = "Mapping"
         Me.TabPage12.UseVisualStyleBackColor = True
@@ -435,7 +432,7 @@ Partial Class main
         Me.sPreviewMap.Location = New System.Drawing.Point(3, 3)
         Me.sPreviewMap.Name = "sPreviewMap"
         Me.sPreviewMap.ReadOnly = True
-        Me.sPreviewMap.Size = New System.Drawing.Size(1041, 439)
+        Me.sPreviewMap.Size = New System.Drawing.Size(1041, 443)
         Me.sPreviewMap.TabIndex = 3
         Me.sPreviewMap.UseTabs = True
         '
@@ -667,11 +664,62 @@ Partial Class main
         Me.cmdDict.Text = "Custom dictionary"
         Me.cmdDict.UseVisualStyleBackColor = True
         '
+        'cboServer
+        '
+        Me.cboServer.DisplayMember = "Text"
+        Me.cboServer.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.cboServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboServer.FormattingEnabled = True
+        Me.cboServer.ItemHeight = 20
+        Me.cboServer.Items.AddRange(New Object() {Me.sentiDev, Me.sentiTest, Me.sentiApp, Me.sentiProdShared, Me.sentiProdEneco, Me.sentiProd4DMC})
+        Me.cboServer.Location = New System.Drawing.Point(91, 8)
+        Me.cboServer.Name = "cboServer"
+        Me.cboServer.Size = New System.Drawing.Size(201, 26)
+        Me.cboServer.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2003
+        Me.cboServer.TabIndex = 22
+        '
+        'sentiDev
+        '
+        Me.sentiDev.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.sentiDev.Text = "Development"
+        Me.sentiDev.Value = "10.128.85.132"
+        '
+        'sentiTest
+        '
+        Me.sentiTest.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.sentiTest.Text = "Test"
+        Me.sentiTest.Value = "10.128.85.116"
+        '
+        'sentiApp
+        '
+        Me.sentiApp.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.sentiApp.Text = "Approval"
+        Me.sentiApp.Value = "10.128.85.104"
+        '
+        'sentiProdShared
+        '
+        Me.sentiProdShared.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.sentiProdShared.Text = "Production Shared"
+        Me.sentiProdShared.Value = "10.128.85.68"
+        '
+        'sentiProdEneco
+        '
+        Me.sentiProdEneco.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.sentiProdEneco.Text = "Production Eneco"
+        Me.sentiProdEneco.Value = "10.128.85.36"
+        '
+        'sentiProd4DMC
+        '
+        Me.sentiProd4DMC.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.sentiProd4DMC.Text = "Production 4DMC"
+        Me.sentiProd4DMC.Value = "10.128.85.20"
+        '
         'main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 17.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1451, 594)
+        Me.Controls.Add(Me.cboServer)
         Me.Controls.Add(Me.cmdDict)
         Me.Controls.Add(Me.chkSsl)
         Me.Controls.Add(Me.cmdExport)
@@ -687,7 +735,6 @@ Partial Class main
         Me.Controls.Add(Me.cboDatabases)
         Me.Controls.Add(Me.txtPass)
         Me.Controls.Add(Me.txtUser)
-        Me.Controls.Add(Me.txtServer)
         Me.DoubleBuffered = True
         Me.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -721,7 +768,6 @@ Partial Class main
 
     Friend WithEvents tvObjects As TreeView
     Friend WithEvents tvImages As ImageList
-    Friend WithEvents txtServer As TextBox
     Friend WithEvents txtUser As TextBox
     Friend WithEvents txtPass As TextBox
     Friend WithEvents cboDatabases As ComboBox
@@ -767,4 +813,11 @@ Partial Class main
     Friend WithEvents TabPage12 As TabPage
     Friend WithEvents sPreviewMap As ScintillaNET.Scintilla
     Friend WithEvents sPreviewContext As ScintillaNET.Scintilla
+    Friend WithEvents cboServer As DevComponents.DotNetBar.Controls.ComboBoxEx
+    Friend WithEvents sentiDev As DevComponents.Editors.ComboItem
+    Friend WithEvents sentiTest As DevComponents.Editors.ComboItem
+    Friend WithEvents sentiApp As DevComponents.Editors.ComboItem
+    Friend WithEvents sentiProdShared As DevComponents.Editors.ComboItem
+    Friend WithEvents sentiProdEneco As DevComponents.Editors.ComboItem
+    Friend WithEvents sentiProd4DMC As DevComponents.Editors.ComboItem
 End Class

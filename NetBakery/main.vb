@@ -7,7 +7,7 @@ Public Class main
 
     Private Sub cmdConnect_Click(sender As Object, e As EventArgs) Handles cmdConnect.Click
         Try
-            If txtServer.Text = "" Then
+            If cboServer.SelectedItem Is Nothing Then
                 MessageBox.Show("Missing server")
                 Exit Sub
             End If
@@ -31,8 +31,10 @@ Public Class main
 
             Cursor = Cursors.WaitCursor
 
+            Dim obj As DevComponents.Editors.ComboItem = TryCast(cboServer.SelectedItem, DevComponents.Editors.ComboItem)
+
             _is = New informationSchema
-            _is.connectionString = String.Format(My.Settings.defaultConnectionString, txtServer.Text, txtUser.Text, txtPass.Text, sslMode)
+            _is.connectionString = String.Format(My.Settings.defaultConnectionString, obj.Value, txtUser.Text, txtPass.Text, sslMode)
 
             If _is.TryConnect Then
                 cboDatabases.DataSource = _is.databases.ToList
@@ -537,8 +539,7 @@ Public Class main
             Text = FormHelpers.ApplicationTitle
 
             If Not FormHelpers.isDebug Then
-                txtServer.Text = "db036441.bytenet.nl"
-                txtUser.Text = "u036441_root"
+                txtUser.Text = ""
                 txtPass.Text = ""
                 chkSsl.Checked = True
             End If
@@ -723,6 +724,4 @@ Public Class main
             FormHelpers.dumpException(ex)
         End Try
     End Sub
-
-
 End Class

@@ -30,7 +30,7 @@ Namespace Models
         If p1.Any() Then
 #>
         Public Overridable Function <#= f.routineName #>(<#= String.Join(", ", p1) #>) As <#= f.returnParam.vbType #>
-            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= f.returnParam.vbType #>)("SELECT <#= f.routineName #>(<#= String.Join(", ", p2) #>)", <#= String.Join(", ", p3) #>).FirstOrDefault
+            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= f.returnParam.vbType #>)("SELECT <#= f.routineName #>(<#= String.Join(",", p2) #>)", <#= String.Join(", ", p3) #>).FirstOrDefault
         End Function
 
 <#
@@ -61,13 +61,13 @@ Namespace Models
             If f.returnsRecordset AndAlso f.returnLayout.columns IsNot Nothing AndAlso f.returnLayout.columns.Any() then
 #>
         Public Overridable Function <#= f.routineName #>(<#= String.Join(", ", p1) #>) As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)
-            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("<#= f.routineName #>(<#= String.Join(", ", p2) #>)", <#= String.Join(", ", p3) #>)
+            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("<#= f.routineName #>(<#= String.Join(",", p2) #>)", <#= String.Join(", ", p3) #>)
         End Function
 <#
             else
 #>
         Public Overridable Sub <#= f.routineName #>(<#= String.Join(", ", p1) #>)
-            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= f.routineName #>(<#= String.Join(", ", p2) #>)", <#= String.Join(", ", p3) #>)
+            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= f.routineName #>(<#= String.Join(",", p2) #>)", <#= String.Join(", ", p3) #>)
         End Sub
 <#          
             End If

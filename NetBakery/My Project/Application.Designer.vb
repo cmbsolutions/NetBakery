@@ -32,7 +32,7 @@ Namespace My
         
         <Global.System.Diagnostics.DebuggerStepThroughAttribute()>  _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = Global.NetBakery.mainGUI2
+            Me.MainForm = Global.NetBakery.main
         End Sub
     End Class
 End Namespace
