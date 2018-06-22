@@ -41,6 +41,9 @@ Public Class mainGUI2
             setVbStyle(scCodePreview)
             setVbStyle(scGeneratedModel)
             setVbStyle(scGeneratedMapping)
+
+            dcProjectSettings.Selected = True
+
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -265,7 +268,36 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
+
+            If nodeEvent.Button = MouseButtons.Left Then
+                Dim tableFields = (From f In _mngr.tables Where f.isView = False AndAlso f.tableName = node.Text Select f).FirstOrDefault
+
+                If tableFields IsNot Nothing Then
+                    dgvFields.DataSource = tableFields.columns.ToArray
+
+                    Dim fks = (From fk In tableFields.foreignKeys Order By fk.ordinalPosition Select New With {
+                                                                      Key fk.constraintName,
+                                                                      fk.table.tableName,
+                                                                      fk.column.name,
+                                                                      fk.ordinalPosition,
+                                                                      fk.positionInUniqueConstraint,
+                                                                      .referenceTable = fk.referencedTable.tableName,
+                                                                      .referenceColumn = fk.referencedColumn.name})
+
+
+                    dgvForeignKeys.DataSource = fks.ToArray
+                End If
+                dgvFields.Refresh()
+                dgvForeignKeys.Refresh()
+
+                dcObjectInfo.Selected = True
+                TabControl1.SelectedPanel = TabControlPanel1
+
+            End If
+
+
             _mngr.tables.First(Function(c) c.tableName = node.Text).hasExport = node.Checked
+
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)

@@ -18,6 +18,16 @@ Namespace infoSchema
         Public Property tables As List(Of table)
         Public Property routines As List(Of routine)
 
+        Private _generator As New generator
+
+        Public Function generateModel(t As table) As String
+            Try
+                Return ""
+            Catch ex As Exception
+                Throw
+            End Try
+        End Function
+
         Public Sub New()
             initSchema()
         End Sub
@@ -29,10 +39,11 @@ Namespace infoSchema
 
                 getTables()
                 getColumns()
+                getForeignKeys()
                 getRoutines()
 
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Sub
 
@@ -51,7 +62,7 @@ Namespace infoSchema
                     End Using
                 End Using
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Sub
 
@@ -74,7 +85,7 @@ Namespace infoSchema
                     End Using
                 End Using
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Sub
 
@@ -89,11 +100,11 @@ Namespace infoSchema
                         _dbCommand.CommandText = "SELECT COLUMN_NAME,ORDINAL_POSITION,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,COLUMN_TYPE,COLUMN_KEY,EXTRA FROM COLUMNS WHERE TABLE_SCHEMA = @database AND TABLE_NAME = @table ORDER BY ORDINAL_POSITION ASC"
                         _dbCommand.Parameters.AddWithValue("database", database)
                         _dbCommand.Parameters.AddWithValue("table", t.tableName)
-                        Debug.WriteLine(t.tableName)
+                        'Debug.WriteLine(t.tableName)
                         Using rdr As MySqlDataReader = _dbCommand.ExecuteReader()
                             While rdr.Read
                                 Dim c As New column
-                                Debug.WriteLine(rdr("COLUMN_NAME").ToString)
+                                'Debug.WriteLine(rdr("COLUMN_NAME").ToString)
                                 c.name = rdr("COLUMN_NAME").ToString
                                 c.alias = AliasGenerator(rdr("COLUMN_NAME").ToString)
                                 c.ordinalPosition = CInt(rdr("ORDINAL_POSITION"))
@@ -116,7 +127,49 @@ Namespace infoSchema
                 Next
 
             Catch ex As Exception
-                Throw ex
+                Throw
+            End Try
+        End Sub
+
+        Private Sub getForeignKeys()
+            Try
+                Using _dbCommand = New MySqlCommand
+                    _dbCommand.Connection = dbConnection()
+                    _dbCommand.CommandText = "SELECT CONSTRAINT_NAME, TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM KEY_COLUMN_USAGE WHERE CONSTRAINT_SCHEMA = @database AND REFERENCED_TABLE_NAME is not null"
+                    _dbCommand.Parameters.AddWithValue("database", database)
+
+                    Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
+                        While rdr.Read
+                            Dim f As New foreignKey
+                            f.constraintName = rdr("CONSTRAINT_NAME").ToString
+
+                            Dim t As table = (From t1 In tables Where t1.tableName = rdr("TABLE_NAME").ToString Select t1).FirstOrDefault
+                            If t IsNot Nothing Then f.table = t
+
+                            Dim c As column = (From c1 In t.columns Where c1.name = rdr("COLUMN_NAME").ToString Select c1).FirstOrDefault
+                            If c IsNot Nothing Then f.column = c
+
+                            f.ordinalPosition = ToInt(rdr("ORDINAL_POSITION"))
+                            f.positionInUniqueConstraint = ToInt(rdr("POSITION_IN_UNIQUE_CONSTRAINT"))
+
+                            Dim rt As table = (From t1 In tables Where t1.tableName = rdr("REFERENCED_TABLE_NAME").ToString Select t1).FirstOrDefault
+                            If rt IsNot Nothing Then f.referencedTable = rt
+
+                            Dim rc As column = (From c1 In t.columns Where c1.name = rdr("REFERENCED_COLUMN_NAME").ToString Select c1).FirstOrDefault
+                            If rc IsNot Nothing Then f.referencedColumn = rc
+
+                            If t.foreignKeys.Where(Function(d) d.table.tableName = f.table.tableName AndAlso d.referencedTable.tableName = f.referencedTable.tableName).Count > 0 Then
+                                f.propertyAlias = String.Format("{0}1", f.table.tableName)
+                            Else
+                                f.propertyAlias = f.table.tableName
+                            End If
+
+                            t.foreignKeys.Add(f)
+                        End While
+                    End Using
+                End Using
+            Catch ex As Exception
+                Throw
             End Try
         End Sub
 
@@ -146,7 +199,7 @@ Namespace infoSchema
                                 End If
                             End If
 
-                                Dim p As New parameter
+                            Dim p As New parameter
                             p.mysqlType = rdr("DATA_TYPE").ToString
                             p.maximumLength = ToInt(rdr("CHARACTER_MAXIMUM_LENGTH"))
                             p.numericPrecision = ToInt(rdr("NUMERIC_PRECISION"))
@@ -172,7 +225,7 @@ Namespace infoSchema
                     End Using
                 End Using
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Sub
 
@@ -190,7 +243,7 @@ Namespace infoSchema
                 _keywords.AddRange(My.Settings.keywords.Split(" "c))
 
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Sub
         Public Function TryConnect() As Boolean
@@ -199,7 +252,7 @@ Namespace infoSchema
 
                 Return True
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Function
 
@@ -214,7 +267,7 @@ Namespace infoSchema
 
                 Return _dbConnection
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Function
 
@@ -273,7 +326,7 @@ Namespace infoSchema
 
                 Return [alias]
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Function
 #End Region

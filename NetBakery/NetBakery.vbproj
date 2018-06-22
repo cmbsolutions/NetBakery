@@ -208,6 +208,7 @@
     <Compile Include="Generator\templateData.vb" />
     <Compile Include="infoSchema\column.vb" />
     <Compile Include="infoSchema\connections.vb" />
+    <Compile Include="infoSchema\foreignKey.vb" />
     <Compile Include="infoSchema\inflector.vb" />
     <Compile Include="infoSchema\manager.vb" />
     <Compile Include="infoSchema\parameter.vb" />
