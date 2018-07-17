@@ -1,6 +1,6 @@
 ﻿Namespace infoSchema
     Public Class foreignKey
-        Public Property constraintName As String
+        Public Property name As String
         Public Property table As table
         Public Property propertyAlias As String
         Public Property column As column

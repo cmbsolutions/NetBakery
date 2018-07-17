@@ -203,7 +203,7 @@ Public Class mainGUI2
                 Dim tmpCell = New AdvTree.Cell With {.Editable = False, .Text = "0", .TextDisplayFormat = "(0)", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter}
 
                 tmpCell.Text = table.columns.Count.ToString
-                tmpNode.Text = table.tableName
+                tmpNode.Text = table.name
                 tmpNode.Cells.Add(tmpCell)
 
                 AddHandler tmpNode.NodeClick, AddressOf tableNodeHandler
@@ -270,23 +270,30 @@ Public Class mainGUI2
 
 
             If nodeEvent.Button = MouseButtons.Left Then
-                Dim tableFields = (From f In _mngr.tables Where f.isView = False AndAlso f.tableName = node.Text Select f).FirstOrDefault
+                Dim tableFields = (From f In _mngr.tables Where f.isView = False AndAlso f.name = node.Text Select f).FirstOrDefault
 
                 If tableFields IsNot Nothing Then
                     dgvFields.DataSource = tableFields.columns.ToArray
 
                     Dim fks = (From fk In tableFields.foreignKeys Order By fk.ordinalPosition Select New With {
-                                                                      Key fk.constraintName,
-                                                                      fk.table.tableName,
-                                                                      fk.column.name,
+                                                                      Key fk.name,
+                                                                      .tableName = fk.table.name,
+                                                                      .columnName = fk.column.name,
                                                                       fk.ordinalPosition,
                                                                       fk.positionInUniqueConstraint,
-                                                                      .referenceTable = fk.referencedTable.tableName,
+                                                                      .referenceTable = fk.referencedTable.name,
                                                                       .referenceColumn = fk.referencedColumn.name})
 
 
                     dgvForeignKeys.DataSource = fks.ToArray
+
+                    scGeneratedModel.Text = _mngr.generateModel(tableFields)
+                    scGeneratedModel.Colorize(0, scGeneratedModel.Text.Length)
+
+                    scGeneratedMapping.Text = _mngr.generateMap(tableFields)
+                    scGeneratedMapping.Colorize(0, scGeneratedMapping.Text.Length)
                 End If
+
                 dgvFields.Refresh()
                 dgvForeignKeys.Refresh()
 
@@ -296,7 +303,7 @@ Public Class mainGUI2
             End If
 
 
-            _mngr.tables.First(Function(c) c.tableName = node.Text).hasExport = node.Checked
+            _mngr.tables.First(Function(c) c.name = node.Text).hasExport = node.Checked
 
 
         Catch ex As Exception
@@ -356,15 +363,15 @@ Public Class mainGUI2
                 Dim tmpModel As AdvTree.Node = tplModelAndMapping.DeepCopy
                 Dim tmpMapping As AdvTree.Node = tplModelAndMapping.DeepCopy
 
-                tmpModel.Name = "n" & table.tableName
-                tmpModel.TagString = table.tableName
+                tmpModel.Name = "n" & table.name
+                tmpModel.TagString = table.name
 
                 tmpModel.Text = String.Format("{0}.vb", table.singleName)
                 AddHandler tmpModel.NodeDoubleClick, AddressOf explorerModelNodeHandler
                 mModel.Nodes.Add(tmpModel)
 
-                tmpMapping.Name = "n" & table.tableName & "Mapping"
-                tmpMapping.TagString = table.tableName
+                tmpMapping.Name = "n" & table.name & "Mapping"
+                tmpMapping.TagString = table.name
                 tmpMapping.Text = String.Format("{0}Mapping.vb", table.singleName)
                 AddHandler tmpMapping.NodeDoubleClick, AddressOf explorerMappingNodeHandler
 
@@ -494,7 +501,7 @@ Public Class mainGUI2
 
                 Select Case advtreeDatabases.SelectedNode.Text
                     Case "Tables", "Views"
-                        _mngr.tables.First(Function(c) c.tableName = n.Text).hasExport = n.Checked
+                        _mngr.tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case "Routines"
                         _mngr.routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case Else
@@ -513,7 +520,7 @@ Public Class mainGUI2
 
                 Select Case advtreeDatabases.SelectedNode.Text
                     Case "Tables", "Views"
-                        _mngr.tables.First(Function(c) c.tableName = n.Text).hasExport = n.Checked
+                        _mngr.tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case "Routines"
                         _mngr.routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case Else
@@ -532,7 +539,7 @@ Public Class mainGUI2
 
                 Select Case advtreeDatabases.SelectedNode.Text
                     Case "Tables", "Views"
-                        _mngr.tables.First(Function(c) c.tableName = n.Text).hasExport = n.Checked
+                        _mngr.tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case "Routines"
                         _mngr.routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case Else

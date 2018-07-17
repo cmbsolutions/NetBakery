@@ -3,32 +3,32 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="Netbakery.Models" #>
+<#@ import namespace="Netbakery.infoSchema" #>
 Imports System.Collections.Generic
 
 Namespace Models
     Public Partial Class <#= _t.singleName #>
-<#  If _f.Any() Then #>
+<#  If _t.foreignKeys.Any() Then #>
         Public Sub New()
-<#      For Each fk in _f #>
-            <#= fk.propertyAlias #> = New List(Of <#= p.Singularize(fk.tableName) #>)()
+<#      For Each fk in  _t.foreignKeys #>
+            <#= fk.propertyAlias #> = New List(Of <#= p.Singularize(fk.name) #>)()
 <#      Next #>
         End Sub
 <#  End If #>
 
 <#  For each c in _t.columns #>
-<#      If c.isNullable And c.vbType <> "String" Then #>
-        Public Property <#= c.columnAlias #>() as <#= c.vbType #>?
+<#      If c.isNullable And c.vbType <> GetType(System.String) Then #>
+        Public Property <#= c.alias #>() as <#= c.vbType #>?
 <#      else #>
-        Public Property <#= c.columnAlias #>() as <#= c.vbType #>
+        Public Property <#= c.alias #>() as <#= c.vbType #>
 <#      end if
 
-        If c.dataType = "enum" AndAlso c.vbType <> "String" Then
+        If c.mysqlType = "enum" AndAlso c.vbType <> GetType(System.String) Then
             _i = 1
  #>
 
         Enum <#= c.vbType #>
-<#          For Each e in c.enumData #>
+<#          For Each e in c.enums #>
             <#= e #> = <#= _i #>
 <#              _i += 1 #>
 <#          Next #>
@@ -39,13 +39,13 @@ Namespace Models
 
     For Each r in _t.relations
 #>
-        Public Property <#= r.alias #>() As <#= p.Singularize(r.othertable) #>
+        Public Property <#= r.alias #>() As <#= p.Singularize(r.toTable.name) #>
 <#
     Next
     
-    For Each fk in _f
+    For Each fk in  _t.foreignKeys
  #>
-        Public Property <#= fk.propertyAlias #>() As ICollection(Of <#= p.Singularize(fk.tableName) #>)
+        Public Property <#= fk.propertyAlias #>() As ICollection(Of <#= p.Singularize(fk.name) #>)
 <#  Next #>
     End Class
 End Namespace

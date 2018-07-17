@@ -215,20 +215,7 @@
     <Compile Include="infoSchema\relation.vb" />
     <Compile Include="infoSchema\routine.vb" />
     <Compile Include="infoSchema\table.vb" />
-    <Compile Include="main.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="main.Designer.vb">
-      <DependentUpon>main.vb</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="informationSchema.vb" />
-    <Compile Include="mainGUI.Designer.vb">
-      <DependentUpon>mainGUI.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mainGUI.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="mainGUI2.Designer.vb">
       <DependentUpon>mainGUI2.vb</DependentUpon>
     </Compile>
@@ -281,12 +268,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="customDictionaryEdit.resx">
       <DependentUpon>customDictionaryEdit.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="main.resx">
-      <DependentUpon>main.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="mainGUI.resx">
-      <DependentUpon>mainGUI.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mainGUI2.resx">
       <DependentUpon>mainGUI2.vb</DependentUpon>

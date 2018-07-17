@@ -47,9 +47,9 @@ Namespace My.Templates
         Dim i As Integer = 0
 
         For Each p In f.params
-            p1.add(String.Format("{0} As {1}", p.paramName, p.vbType))
+            p1.add(String.Format("{0} As {1}", p.name, p.vbType))
             p2.Add("{" & i & "}")
-            p3.Add(String.Format(p.paramName))
+            p3.Add(String.Format(p.name))
             i += 1
         Next
 
@@ -60,7 +60,7 @@ Namespace My.Templates
             Me.Write("        Public Overridable Function ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",32)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
@@ -85,7 +85,7 @@ Namespace My.Templates
             Me.Write(")(""SELECT ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",33)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
@@ -97,7 +97,7 @@ Namespace My.Templates
             Me.Write(")"", ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",33)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p3)))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p3)))
             
             #End ExternalSource
             Me.Write(").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
@@ -111,7 +111,7 @@ Namespace My.Templates
             Me.Write("        Public Overridable Function ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",39)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("() As ")
@@ -130,7 +130,7 @@ Namespace My.Templates
             Me.Write(")(""SELECT ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",40)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("()"").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
@@ -147,9 +147,9 @@ Namespace My.Templates
         Dim i As Integer = 0
 
         For Each p In f.params
-            p1.add(String.Format("{0} As {1}", p.paramName, p.vbType))
+            p1.add(String.Format("{0} As {1}", p.name, p.vbType))
             p2.Add("{" & i & "}")
-            p3.Add(String.Format(p.paramName))
+            p3.Add(String.Format(p.name))
             i += 1
         Next
 
@@ -161,7 +161,7 @@ Namespace My.Templates
             Me.Write("        Public Overridable Function ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",63)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
@@ -186,7 +186,7 @@ Namespace My.Templates
             Me.Write(")(""")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",64)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
@@ -198,7 +198,7 @@ Namespace My.Templates
             Me.Write(")"", ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",64)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p3)))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p3)))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
@@ -212,7 +212,7 @@ Namespace My.Templates
             Me.Write("        Public Overridable Sub ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",69)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
@@ -225,7 +225,7 @@ Namespace My.Templates
                     "toreCommand(""")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",70)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
@@ -237,7 +237,7 @@ Namespace My.Templates
             Me.Write(")"", ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",70)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p3)))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p3)))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
@@ -253,7 +253,7 @@ Namespace My.Templates
             Me.Write("        Public Overridable Function ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",77)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("() As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.")
@@ -272,7 +272,7 @@ Namespace My.Templates
             Me.Write(")(""")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",78)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("()"")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
@@ -286,14 +286,14 @@ Namespace My.Templates
             Me.Write("        Public Overridable Sub ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",83)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            DirectCast(_context, IObjectContextAdapter).ObjectContext.Execute"& _ 
                     "StoreCommand(""")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",84)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("()"")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))

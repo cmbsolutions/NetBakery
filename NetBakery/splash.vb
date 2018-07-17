@@ -13,7 +13,7 @@ Public Class splash
 
             If _t >= 10 Then
 
-                Dim frx As New main
+                Dim frx As New mainGUI2
 
                 frx.Show()
 
@@ -21,36 +21,6 @@ Public Class splash
             Else
                 Timer1.Enabled = True
             End If
-        Catch ex As Exception
-            FormHelpers.dumpException(ex)
-        End Try
-    End Sub
-
-    Private Sub btnOriginal_Click(sender As Object, e As EventArgs) Handles btnOriginal.Click
-        Try
-            Timer1.Enabled = False
-
-            Dim frx As New main
-
-            frx.Show()
-
-            Close()
-
-        Catch ex As Exception
-            FormHelpers.dumpException(ex)
-        End Try
-    End Sub
-
-    Private Sub btnNewForm_Click(sender As Object, e As EventArgs) Handles btnNewForm.Click
-        Try
-            Timer1.Enabled = False
-
-            Dim frx As New mainGUI2
-
-            frx.Show()
-
-            Close()
-
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try

@@ -22,7 +22,15 @@ Namespace infoSchema
 
         Public Function generateModel(t As table) As String
             Try
-                Return ""
+                Return _generator.generateModel(t)
+            Catch ex As Exception
+                Throw
+            End Try
+        End Function
+
+        Public Function generateMap(t As table) As String
+            Try
+                Return _generator.generateMap(t)
             Catch ex As Exception
                 Throw
             End Try
@@ -77,9 +85,9 @@ Namespace infoSchema
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         While rdr.Read
                             If rdr("TABLE_TYPE").ToString = "VIEW" Then
-                                tables.Add(New table With {.tableName = rdr("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr("TABLE_NAME").ToString), .pluralName = _p.Pluralize(rdr("TABLE_NAME").ToString), .isView = True, .hasExport = True})
+                                tables.Add(New table With {.name = rdr("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr("TABLE_NAME").ToString), .pluralName = _p.Pluralize(rdr("TABLE_NAME").ToString), .isView = True, .hasExport = True})
                             Else
-                                tables.Add(New table With {.tableName = rdr("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr("TABLE_NAME").ToString), .pluralName = _p.Pluralize(rdr("TABLE_NAME").ToString), .hasExport = True})
+                                tables.Add(New table With {.name = rdr("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr("TABLE_NAME").ToString), .pluralName = _p.Pluralize(rdr("TABLE_NAME").ToString), .hasExport = True})
                             End If
                         End While
                     End Using
@@ -99,7 +107,7 @@ Namespace infoSchema
                         _dbCommand.Connection = dbConnection()
                         _dbCommand.CommandText = "SELECT COLUMN_NAME,ORDINAL_POSITION,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,COLUMN_TYPE,COLUMN_KEY,EXTRA FROM COLUMNS WHERE TABLE_SCHEMA = @database AND TABLE_NAME = @table ORDER BY ORDINAL_POSITION ASC"
                         _dbCommand.Parameters.AddWithValue("database", database)
-                        _dbCommand.Parameters.AddWithValue("table", t.tableName)
+                        _dbCommand.Parameters.AddWithValue("table", t.name)
                         'Debug.WriteLine(t.tableName)
                         Using rdr As MySqlDataReader = _dbCommand.ExecuteReader()
                             While rdr.Read
@@ -141,9 +149,9 @@ Namespace infoSchema
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         While rdr.Read
                             Dim f As New foreignKey
-                            f.constraintName = rdr("CONSTRAINT_NAME").ToString
+                            f.name = rdr("CONSTRAINT_NAME").ToString
 
-                            Dim t As table = (From t1 In tables Where t1.tableName = rdr("TABLE_NAME").ToString Select t1).FirstOrDefault
+                            Dim t As table = (From t1 In tables Where t1.name = rdr("TABLE_NAME").ToString Select t1).FirstOrDefault
                             If t IsNot Nothing Then f.table = t
 
                             Dim c As column = (From c1 In t.columns Where c1.name = rdr("COLUMN_NAME").ToString Select c1).FirstOrDefault
@@ -152,16 +160,16 @@ Namespace infoSchema
                             f.ordinalPosition = ToInt(rdr("ORDINAL_POSITION"))
                             f.positionInUniqueConstraint = ToInt(rdr("POSITION_IN_UNIQUE_CONSTRAINT"))
 
-                            Dim rt As table = (From t1 In tables Where t1.tableName = rdr("REFERENCED_TABLE_NAME").ToString Select t1).FirstOrDefault
+                            Dim rt As table = (From t1 In tables Where t1.name = rdr("REFERENCED_TABLE_NAME").ToString Select t1).FirstOrDefault
                             If rt IsNot Nothing Then f.referencedTable = rt
 
                             Dim rc As column = (From c1 In t.columns Where c1.name = rdr("REFERENCED_COLUMN_NAME").ToString Select c1).FirstOrDefault
                             If rc IsNot Nothing Then f.referencedColumn = rc
 
-                            If t.foreignKeys.Where(Function(d) d.table.tableName = f.table.tableName AndAlso d.referencedTable.tableName = f.referencedTable.tableName).Count > 0 Then
-                                f.propertyAlias = String.Format("{0}1", f.table.tableName)
+                            If t.foreignKeys.Where(Function(d) d.table.name = f.table.name AndAlso d.referencedTable.name = f.referencedTable.name).Count > 0 Then
+                                f.propertyAlias = String.Format("{0}1", f.table.name)
                             Else
-                                f.propertyAlias = f.table.tableName
+                                f.propertyAlias = f.table.name
                             End If
 
                             t.foreignKeys.Add(f)
@@ -194,7 +202,7 @@ Namespace infoSchema
                                 If rdr("ROUTINE_TYPE").ToString = "PROCEDURE" Then
                                     rt.returnsRecordset = Regex.IsMatch(rdr("ROUTINE_DEFINITION").ToString, My.Settings.routineRegex, RegexOptions.IgnoreCase Or RegexOptions.Singleline Or RegexOptions.Multiline)
                                     If rt.returnsRecordset Then
-                                        rt.returnLayout = New table With {.tableName = rt.name, .singleName = _p.Singularize(rt.name), .pluralName = _p.Pluralize(rt.name)}
+                                        rt.returnLayout = New table With {.name = rt.name, .singleName = _p.Singularize(rt.name), .pluralName = _p.Pluralize(rt.name)}
                                     End If
                                 End If
                             End If
@@ -314,7 +322,7 @@ Namespace infoSchema
                 Dim inc As Integer = 1
 
                 ' First check tablenames
-                While tables.Exists(Function(t) t.tableName = [alias] Or t.singleName = [alias] Or t.pluralName = [alias])
+                While tables.Exists(Function(t) t.name = [alias] Or t.singleName = [alias] Or t.pluralName = [alias])
                     [alias] = String.Format("{0}_{1}", original, inc)
                     inc += 1
                 End While

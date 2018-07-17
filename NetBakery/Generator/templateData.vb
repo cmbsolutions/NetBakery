@@ -2,36 +2,37 @@
 
 Namespace My.Templates
     Partial Public Class Model
-        Private _t As Models.Table
-        Private _f As List(Of Models.foreignKey)
+        Private _t As infoSchema.table
         Private _i As Integer
         Private p As New PluralizationService
 
-        Public Sub New(ByVal t As Models.Table, ByVal f As List(Of Models.foreignKey))
+        Public Sub New(ByVal t As infoSchema.table)
             _t = t
-            _f = f
+
         End Sub
     End Class
 
     Partial Public Class Map
-        Private _t As Models.Table
-        Private _f As List(Of Models.foreignKey)
+        Private _t As infoSchema.table
         Private _i As Integer
         Private p As New PluralizationService
 
-        Public Sub New(ByVal t As Models.Table, ByVal f As List(Of Models.foreignKey))
+        Public Sub New(ByVal t As infoSchema.table)
             _t = t
-            _f = f
+
+            'If _t.columns.First.vbType = GetType(System.String) Then
+
+            'End If
         End Sub
     End Class
 
     Partial Public Class Context
-        Private _tables As List(Of Models.Table)
+        Private _tables As List(Of infoSchema.table)
         Private _name As String
         Private _recovery As Boolean
         Private p As New PluralizationService
 
-        Public Sub New(ByVal tables As List(Of Models.Table), ByVal name As String, ByVal recovery As Boolean)
+        Public Sub New(ByVal tables As List(Of infoSchema.table), ByVal name As String, ByVal recovery As Boolean)
             _tables = tables
             _name = name
             _recovery = recovery
@@ -39,11 +40,11 @@ Namespace My.Templates
     End Class
 
     Partial Public Class StoreCommands
-        Private _functions As List(Of Models.Routine)
-        Private _procedures As List(Of Models.Routine)
+        Private _functions As List(Of infoSchema.routine)
+        Private _procedures As List(Of infoSchema.routine)
         Private _name As String
 
-        Public Sub New(ByVal functions As List(Of Models.Routine), ByVal procedures As List(Of Models.Routine), ByVal name As String)
+        Public Sub New(ByVal functions As List(Of infoSchema.routine), ByVal procedures As List(Of infoSchema.routine), ByVal name As String)
             _functions = functions
             _procedures = procedures
             _name = name
@@ -51,9 +52,9 @@ Namespace My.Templates
     End Class
 
     Partial Public Class StoreCommandModel
-        Private _procedure As Models.Routine
+        Private _procedure As infoSchema.routine
 
-        Public Sub New(ByVal procedure As Models.Routine)
+        Public Sub New(ByVal procedure As infoSchema.routine)
             _procedure = procedure
         End Sub
     End Class
@@ -80,25 +81,6 @@ Namespace My.Templates
             End Try
         End Sub
         Public Function Singularize(s As String) As String
-            'Dim ret As String = _service.Singularize(s)
-
-            'Dim testSingle As String
-
-            'If ret = s Then
-            '    If s.Contains("_"c) AndAlso Not s.EndsWith("_"c) Then
-            '        Dim l = s.Split("_"c).LastOrDefault
-
-            '        testSingle = _service.Singularize(l)
-            '        ret = s.Replace(l, testSingle)
-
-            '        If ret = s Then
-            '            ret = s.Substring(0, s.Length - 1)
-            '        End If
-            '    Else
-            '        ret = s.Substring(0, s.Length - 1)
-            '    End If
-            'End If
-
             'Return ret
             Dim ret As String = _service.Singularize(s)
 

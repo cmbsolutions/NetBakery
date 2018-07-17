@@ -12,6 +12,6 @@
         Property numericScale As Integer
         Property key As String
         Property autoIncrement As Boolean
-        '        Property enumData As New List(Of String)
+        Property enums As New List(Of String)
     End Class
 End Namespace

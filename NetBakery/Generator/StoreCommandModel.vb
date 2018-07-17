@@ -26,54 +26,54 @@ Namespace My.Templates
             Me.Write("Imports System.Collections.Generic"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models.StoreCommandSchemas"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    P"& _ 
                     "ublic Partial Class ")
             
-            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\StoreCommandModel.tt",9)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommandModel.tt",9)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_procedure.returnLayout.singleName))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\StoreCommandModel.tt",10)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommandModel.tt",10)
   For each c in _procedure.returnLayout.columns 
             
             #End ExternalSource
             
-            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\StoreCommandModel.tt",11)
-      If c.isNullable And c.vbType <> "String" Then 
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommandModel.tt",11)
+      If c.isNullable And c.vbType <> GetType(System.String) Then 
             
             #End ExternalSource
             Me.Write("        Public Property ")
             
-            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\StoreCommandModel.tt",12)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.columnAlias))
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommandModel.tt",12)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
             
             #End ExternalSource
             Me.Write("() as ")
             
-            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\StoreCommandModel.tt",12)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommandModel.tt",12)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.vbType))
             
             #End ExternalSource
             Me.Write("?"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\StoreCommandModel.tt",13)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommandModel.tt",13)
       else 
             
             #End ExternalSource
             Me.Write("        Public Property ")
             
-            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\StoreCommandModel.tt",14)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.columnAlias))
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommandModel.tt",14)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
             
             #End ExternalSource
             Me.Write("() as ")
             
-            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\StoreCommandModel.tt",14)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommandModel.tt",14)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.vbType))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("C:\localRepositories\netbakery\NetBakery\Generator\StoreCommandModel.tt",15)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommandModel.tt",15)
       end if
     Next
 
