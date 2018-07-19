@@ -173,6 +173,9 @@ Namespace infoSchema
                             End If
 
                             t.foreignKeys.Add(f)
+
+                            t.relations.Add(New relation With {.toTable = rt, .toColumn = rc, .localColumn = c, .isOptional = c.isNullable, .alias = AliasGenerator(f.table.name)})
+
                         End While
                     End Using
                 End Using

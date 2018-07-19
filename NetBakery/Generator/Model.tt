@@ -11,7 +11,7 @@ Namespace Models
 <#  If _t.foreignKeys.Any() Then #>
         Public Sub New()
 <#      For Each fk in  _t.foreignKeys #>
-            <#= fk.propertyAlias #> = New List(Of <#= p.Singularize(fk.name) #>)()
+            <#= fk.referencedTable.name #> = New List(Of <#= p.Singularize(fk.referencedTable.name) #>)()
 <#      Next #>
         End Sub
 <#  End If #>
@@ -45,7 +45,7 @@ Namespace Models
     
     For Each fk in  _t.foreignKeys
  #>
-        Public Property <#= fk.propertyAlias #>() As ICollection(Of <#= p.Singularize(fk.name) #>)
+        Public Property <#= fk.referencedTable.name #>() As ICollection(Of <#= p.Singularize(fk.referencedTable.name) #>)
 <#  Next #>
     End Class
 End Namespace

@@ -25,4 +25,18 @@ Public Class splash
             FormHelpers.dumpException(ex)
         End Try
     End Sub
+
+    Private Sub splash_MouseClick(sender As Object, e As MouseEventArgs) Handles MyBase.MouseClick
+        Try
+            Timer1.Enabled = False
+
+            Dim frx As New mainGUI2
+
+            frx.Show()
+
+            Close()
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
 End Class

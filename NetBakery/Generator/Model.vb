@@ -46,13 +46,13 @@ Namespace My.Templates
             Me.Write("            ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Model.tt",14)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.propertyAlias))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedTable.name))
             
             #End ExternalSource
             Me.Write(" = New List(Of ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Model.tt",14)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.name)))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.referencedTable.name)))
             
             #End ExternalSource
             Me.Write(")()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
@@ -188,13 +188,13 @@ Namespace My.Templates
             Me.Write("        Public Property ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Model.tt",48)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.propertyAlias))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedTable.name))
             
             #End ExternalSource
             Me.Write("() As ICollection(Of ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\Model.tt",48)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.name)))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.referencedTable.name)))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))

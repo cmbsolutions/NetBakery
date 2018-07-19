@@ -60,7 +60,7 @@ Namespace Models.Mapping
 	Next
 #>
 			' Table & Column Mappings
-			Me.ToTable("<#= _t.tableName #>")
+			Me.ToTable("<#= _t.name #>")
 <#
 	For Each c in _t.columns
 		If c.name <> c.alias Then
@@ -77,9 +77,9 @@ Namespace Models.Mapping
 	For Each r in _t.relations
 		If r.isOptional Then
 #>
-			Me.HasisOptional(Function(t) t.<#= r.alias #>).WithMany(Function(t) t.<#= r.toTable.name #>).HasForeignKey(Function(d) d.<#= r.toColumn.name #>)
+			Me.HasisOptional(Function(t) t.<#= r.toTable.name #>).WithMany(Function(t) t.<#= r.alias #>).HasForeignKey(Function(d) d.<#= r.toColumn.name #>)
 <#      Else #>
-			Me.HasRequired(Function(t) t.<#= r.alias #>).WithMany(Function(t) t.<#= r.toTable.name #>).HasForeignKey(Function(d) d.<#= r.toColumn.name #>)
+			Me.HasRequired(Function(t) t.<#= r.toTable.name #>).WithMany(Function(t) t.<#= r.alias #>).HasForeignKey(Function(d) d.<#= r.toColumn.name #>)
 <#
 		End If
 	Next
