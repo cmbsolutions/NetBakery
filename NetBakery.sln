@@ -1,22 +1,28 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NetBakery", "NetBakery\NetBakery.vbproj", "{9724BD24-D339-4E39-BBDC-DB8B352E1068}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Original|Any CPU = Original|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9724BD24-D339-4E39-BBDC-DB8B352E1068}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9724BD24-D339-4E39-BBDC-DB8B352E1068}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9724BD24-D339-4E39-BBDC-DB8B352E1068}.Original|Any CPU.ActiveCfg = Original|Any CPU
+		{9724BD24-D339-4E39-BBDC-DB8B352E1068}.Original|Any CPU.Build.0 = Original|Any CPU
 		{9724BD24-D339-4E39-BBDC-DB8B352E1068}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9724BD24-D339-4E39-BBDC-DB8B352E1068}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {56FDEBE6-298B-4C25-8852-6C216496B6BA}
 	EndGlobalSection
 EndGlobal
