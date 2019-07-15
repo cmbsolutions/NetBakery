@@ -23,10 +23,10 @@ Partial Class main
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim TreeNode5 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Tables", 0, 0)
-        Dim TreeNode6 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Views", 1, 1)
-        Dim TreeNode7 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Functions", 2, 2)
-        Dim TreeNode8 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Procedures", 3, 3)
+        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Tables", 0, 0)
+        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Views", 1, 1)
+        Dim TreeNode3 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Functions", 2, 2)
+        Dim TreeNode4 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Procedures", 3, 3)
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(main))
         Me.checkSelector = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.tsbAll = New System.Windows.Forms.ToolStripMenuItem()
@@ -34,12 +34,8 @@ Partial Class main
         Me.tsbInvert = New System.Windows.Forms.ToolStripMenuItem()
         Me.tvObjects = New System.Windows.Forms.TreeView()
         Me.tvImages = New System.Windows.Forms.ImageList(Me.components)
-        Me.txtUser = New System.Windows.Forms.TextBox()
-        Me.txtPass = New System.Windows.Forms.TextBox()
         Me.cboDatabases = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.cmdConnect = New System.Windows.Forms.Button()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
@@ -75,14 +71,7 @@ Partial Class main
         Me.chkSsl = New System.Windows.Forms.CheckBox()
         Me.cmdRefresh = New System.Windows.Forms.Button()
         Me.cmdDict = New System.Windows.Forms.Button()
-        Me.cboServer = New DevComponents.DotNetBar.Controls.ComboBoxEx()
-        Me.sentiDev = New DevComponents.Editors.ComboItem()
-        Me.sentiTest = New DevComponents.Editors.ComboItem()
-        Me.sentiApp = New DevComponents.Editors.ComboItem()
-        Me.sentiProdShared = New DevComponents.Editors.ComboItem()
-        Me.sentiProdEneco = New DevComponents.Editors.ComboItem()
-        Me.sentiProd4DMC = New DevComponents.Editors.ComboItem()
-        Me.localhost = New DevComponents.Editors.ComboItem()
+        Me.cboAccounts = New System.Windows.Forms.ComboBox()
         Me.checkSelector.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -145,35 +134,35 @@ Partial Class main
         Me.tvObjects.Location = New System.Drawing.Point(0, 0)
         Me.tvObjects.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.tvObjects.Name = "tvObjects"
-        TreeNode5.Checked = True
-        TreeNode5.ContextMenuStrip = Me.checkSelector
-        TreeNode5.ImageIndex = 0
-        TreeNode5.Name = "tables"
-        TreeNode5.NodeFont = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        TreeNode5.SelectedImageIndex = 0
-        TreeNode5.Text = "Tables"
-        TreeNode6.Checked = True
-        TreeNode6.ContextMenuStrip = Me.checkSelector
-        TreeNode6.ImageIndex = 1
-        TreeNode6.Name = "views"
-        TreeNode6.NodeFont = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        TreeNode6.SelectedImageIndex = 1
-        TreeNode6.Text = "Views"
-        TreeNode7.Checked = True
-        TreeNode7.ContextMenuStrip = Me.checkSelector
-        TreeNode7.ImageIndex = 2
-        TreeNode7.Name = "functions"
-        TreeNode7.NodeFont = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        TreeNode7.SelectedImageIndex = 2
-        TreeNode7.Text = "Functions"
-        TreeNode8.Checked = True
-        TreeNode8.ContextMenuStrip = Me.checkSelector
-        TreeNode8.ImageIndex = 3
-        TreeNode8.Name = "procedures"
-        TreeNode8.NodeFont = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        TreeNode8.SelectedImageIndex = 3
-        TreeNode8.Text = "Procedures"
-        Me.tvObjects.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode5, TreeNode6, TreeNode7, TreeNode8})
+        TreeNode1.Checked = True
+        TreeNode1.ContextMenuStrip = Me.checkSelector
+        TreeNode1.ImageIndex = 0
+        TreeNode1.Name = "tables"
+        TreeNode1.NodeFont = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        TreeNode1.SelectedImageIndex = 0
+        TreeNode1.Text = "Tables"
+        TreeNode2.Checked = True
+        TreeNode2.ContextMenuStrip = Me.checkSelector
+        TreeNode2.ImageIndex = 1
+        TreeNode2.Name = "views"
+        TreeNode2.NodeFont = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        TreeNode2.SelectedImageIndex = 1
+        TreeNode2.Text = "Views"
+        TreeNode3.Checked = True
+        TreeNode3.ContextMenuStrip = Me.checkSelector
+        TreeNode3.ImageIndex = 2
+        TreeNode3.Name = "functions"
+        TreeNode3.NodeFont = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        TreeNode3.SelectedImageIndex = 2
+        TreeNode3.Text = "Functions"
+        TreeNode4.Checked = True
+        TreeNode4.ContextMenuStrip = Me.checkSelector
+        TreeNode4.ImageIndex = 3
+        TreeNode4.Name = "procedures"
+        TreeNode4.NodeFont = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        TreeNode4.SelectedImageIndex = 3
+        TreeNode4.Text = "Procedures"
+        Me.tvObjects.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1, TreeNode2, TreeNode3, TreeNode4})
         Me.tvObjects.PathSeparator = "."
         Me.tvObjects.SelectedImageIndex = 9
         Me.tvObjects.Size = New System.Drawing.Size(350, 514)
@@ -196,26 +185,6 @@ Partial Class main
         Me.tvImages.Images.SetKeyName(10, "key")
         Me.tvImages.Images.SetKeyName(11, "question_frame.png")
         '
-        'txtUser
-        '
-        Me.txtUser.Location = New System.Drawing.Point(376, 9)
-        Me.txtUser.Margin = New System.Windows.Forms.Padding(2)
-        Me.txtUser.Name = "txtUser"
-        Me.txtUser.Size = New System.Drawing.Size(202, 25)
-        Me.txtUser.TabIndex = 3
-        Me.txtUser.Text = "root"
-        '
-        'txtPass
-        '
-        Me.txtPass.BackColor = System.Drawing.SystemColors.Window
-        Me.txtPass.Location = New System.Drawing.Point(658, 9)
-        Me.txtPass.Margin = New System.Windows.Forms.Padding(2)
-        Me.txtPass.Name = "txtPass"
-        Me.txtPass.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-        Me.txtPass.Size = New System.Drawing.Size(202, 25)
-        Me.txtPass.TabIndex = 4
-        Me.txtPass.Text = "playstation2!"
-        '
         'cboDatabases
         '
         Me.cboDatabases.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
@@ -231,31 +200,11 @@ Partial Class main
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(36, 12)
+        Me.Label1.Location = New System.Drawing.Point(7, 13)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(41, 17)
+        Me.Label1.Size = New System.Drawing.Size(79, 17)
         Me.Label1.TabIndex = 6
-        Me.Label1.Text = "Host:"
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(298, 12)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(73, 17)
-        Me.Label2.TabIndex = 7
-        Me.Label2.Text = "Username:"
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(583, 12)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(70, 17)
-        Me.Label3.TabIndex = 8
-        Me.Label3.Text = "Password:"
+        Me.Label1.Text = "Connect to:"
         '
         'Label4
         '
@@ -269,7 +218,7 @@ Partial Class main
         '
         'cmdConnect
         '
-        Me.cmdConnect.Location = New System.Drawing.Point(918, 9)
+        Me.cmdConnect.Location = New System.Drawing.Point(450, 10)
         Me.cmdConnect.Name = "cmdConnect"
         Me.cmdConnect.Size = New System.Drawing.Size(75, 25)
         Me.cmdConnect.TabIndex = 10
@@ -501,6 +450,7 @@ Partial Class main
         '
         Me.ListView1.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.cFieldName, Me.cvbType})
         Me.ListView1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListView1.HideSelection = False
         Me.ListView1.Location = New System.Drawing.Point(3, 261)
         Me.ListView1.Name = "ListView1"
         Me.ListView1.Size = New System.Drawing.Size(343, 221)
@@ -638,8 +588,10 @@ Partial Class main
         'chkSsl
         '
         Me.chkSsl.AutoSize = True
+        Me.chkSsl.Checked = True
+        Me.chkSsl.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chkSsl.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkSsl.Location = New System.Drawing.Point(865, 11)
+        Me.chkSsl.Location = New System.Drawing.Point(397, 12)
         Me.chkSsl.Name = "chkSsl"
         Me.chkSsl.Size = New System.Drawing.Size(48, 21)
         Me.chkSsl.TabIndex = 20
@@ -665,69 +617,20 @@ Partial Class main
         Me.cmdDict.Text = "Custom dictionary"
         Me.cmdDict.UseVisualStyleBackColor = True
         '
-        'cboServer
+        'cboAccounts
         '
-        Me.cboServer.DisplayMember = "Text"
-        Me.cboServer.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
-        Me.cboServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboServer.ForeColor = System.Drawing.Color.Black
-        Me.cboServer.FormattingEnabled = True
-        Me.cboServer.ItemHeight = 20
-        Me.cboServer.Items.AddRange(New Object() {Me.sentiDev, Me.sentiTest, Me.sentiApp, Me.sentiProdShared, Me.sentiProdEneco, Me.sentiProd4DMC, Me.localhost})
-        Me.cboServer.Location = New System.Drawing.Point(91, 8)
-        Me.cboServer.Name = "cboServer"
-        Me.cboServer.Size = New System.Drawing.Size(201, 26)
-        Me.cboServer.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2003
-        Me.cboServer.TabIndex = 22
-        '
-        'sentiDev
-        '
-        Me.sentiDev.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.sentiDev.Text = "Development"
-        Me.sentiDev.Value = "10.128.85.132"
-        '
-        'sentiTest
-        '
-        Me.sentiTest.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.sentiTest.Text = "Test"
-        Me.sentiTest.Value = "10.128.85.116"
-        '
-        'sentiApp
-        '
-        Me.sentiApp.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.sentiApp.Text = "Approval"
-        Me.sentiApp.Value = "10.128.85.104"
-        '
-        'sentiProdShared
-        '
-        Me.sentiProdShared.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.sentiProdShared.Text = "Production Shared"
-        Me.sentiProdShared.Value = "10.128.85.68"
-        '
-        'sentiProdEneco
-        '
-        Me.sentiProdEneco.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.sentiProdEneco.Text = "Production Eneco"
-        Me.sentiProdEneco.Value = "10.128.85.36"
-        '
-        'sentiProd4DMC
-        '
-        Me.sentiProd4DMC.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.sentiProd4DMC.Text = "Production 4DMC"
-        Me.sentiProd4DMC.Value = "10.128.85.20"
-        '
-        'localhost
-        '
-        Me.localhost.BackColor = System.Drawing.Color.Magenta
-        Me.localhost.Text = "Localhost"
-        Me.localhost.Value = "127.0.0.1"
+        Me.cboAccounts.FormattingEnabled = True
+        Me.cboAccounts.Location = New System.Drawing.Point(91, 10)
+        Me.cboAccounts.Name = "cboAccounts"
+        Me.cboAccounts.Size = New System.Drawing.Size(300, 25)
+        Me.cboAccounts.TabIndex = 23
         '
         'main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 17.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1451, 594)
-        Me.Controls.Add(Me.cboServer)
+        Me.Controls.Add(Me.cboAccounts)
         Me.Controls.Add(Me.cmdDict)
         Me.Controls.Add(Me.chkSsl)
         Me.Controls.Add(Me.cmdExport)
@@ -737,12 +640,8 @@ Partial Class main
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.cmdConnect)
         Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.cboDatabases)
-        Me.Controls.Add(Me.txtPass)
-        Me.Controls.Add(Me.txtUser)
         Me.DoubleBuffered = True
         Me.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -776,12 +675,8 @@ Partial Class main
 
     Friend WithEvents tvObjects As TreeView
     Friend WithEvents tvImages As ImageList
-    Friend WithEvents txtUser As TextBox
-    Friend WithEvents txtPass As TextBox
     Friend WithEvents cboDatabases As ComboBox
     Friend WithEvents Label1 As Label
-    Friend WithEvents Label2 As Label
-    Friend WithEvents Label3 As Label
     Friend WithEvents Label4 As Label
     Friend WithEvents cmdConnect As Button
     Friend WithEvents SplitContainer1 As SplitContainer
@@ -821,12 +716,5 @@ Partial Class main
     Friend WithEvents TabPage12 As TabPage
     Friend WithEvents sPreviewMap As ScintillaNET.Scintilla
     Friend WithEvents sPreviewContext As ScintillaNET.Scintilla
-    Friend WithEvents cboServer As DevComponents.DotNetBar.Controls.ComboBoxEx
-    Friend WithEvents sentiDev As DevComponents.Editors.ComboItem
-    Friend WithEvents sentiTest As DevComponents.Editors.ComboItem
-    Friend WithEvents sentiApp As DevComponents.Editors.ComboItem
-    Friend WithEvents sentiProdShared As DevComponents.Editors.ComboItem
-    Friend WithEvents sentiProdEneco As DevComponents.Editors.ComboItem
-    Friend WithEvents sentiProd4DMC As DevComponents.Editors.ComboItem
-    Friend WithEvents localhost As DevComponents.Editors.ComboItem
+    Friend WithEvents cboAccounts As ComboBox
 End Class
