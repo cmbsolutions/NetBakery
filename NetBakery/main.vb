@@ -7,18 +7,8 @@ Public Class main
 
     Private Sub cmdConnect_Click(sender As Object, e As EventArgs) Handles cmdConnect.Click
         Try
-            If cboServer.SelectedItem Is Nothing Then
-                MessageBox.Show("Missing server")
-                Exit Sub
-            End If
-
-            If txtUser.Text = "" Then
-                MessageBox.Show("Missing username")
-                Exit Sub
-            End If
-
-            If txtPass.Text = "" Then
-                MessageBox.Show("Missing password")
+            If cboAccounts.SelectedItem Is Nothing Then
+                MessageBox.Show("Select account!")
                 Exit Sub
             End If
 
@@ -31,10 +21,15 @@ Public Class main
 
             Cursor = Cursors.WaitCursor
 
-            Dim obj As DevComponents.Editors.ComboItem = TryCast(cboServer.SelectedItem, DevComponents.Editors.ComboItem)
+            Dim acc As navicatAccount = connectionHelper.getAccount(cboAccounts.SelectedItem.ToString)
+
+            If acc Is Nothing Then
+                MessageBox.Show("Unknown account!")
+                Exit Sub
+            End If
 
             _is = New informationSchema
-            _is.connectionString = String.Format(My.Settings.defaultConnectionString, obj.Value, txtUser.Text, txtPass.Text, sslMode)
+            _is.connectionString = String.Format(My.Settings.defaultConnectionString, acc.host, acc.username, acc.password, sslMode)
 
             If _is.TryConnect Then
                 cboDatabases.DataSource = _is.databases.ToList
@@ -534,15 +529,18 @@ Public Class main
     End Sub
 #End Region
 
+    Private Property connectionHelper As navicatConnectionHelper
+
     Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
             Text = FormHelpers.ApplicationTitle
 
-            If Not FormHelpers.isDebug Then
-                txtUser.Text = ""
-                txtPass.Text = ""
-                chkSsl.Checked = True
-            End If
+            connectionHelper = New navicatConnectionHelper
+
+            connectionHelper.refreshAccounts()
+
+            cboAccounts.DataSource = connectionHelper.getAccounts
+            cboAccounts.Refresh()
 
             InitLexer(sPreviewContext)
             InitLexer(sPreviewModel)
@@ -724,4 +722,6 @@ Public Class main
             FormHelpers.dumpException(ex)
         End Try
     End Sub
+
+
 End Class

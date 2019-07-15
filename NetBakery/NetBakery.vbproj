@@ -25,12 +25,12 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://www.cmbsolutions.nl/netbakery/</InstallUrl>
+    <InstallUrl>https://www.cmbsolutions.nl/netbakery/</InstallUrl>
     <ProductName>NetBakery</ProductName>
     <PublisherName>CMB Solutions</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>index.htm</WebPage>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>0.9.217.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -112,6 +112,9 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.2.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.2\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="CryptSharp, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CryptSharp.1.2.0.1\lib\net35\CryptSharp.dll</HintPath>
+    </Reference>
     <Reference Include="DevComponents.Charts.Design, Version=14.0.0.15, Culture=neutral, PublicKeyToken=2c9ff1fddc42653c, processorArchitecture=MSIL" />
     <Reference Include="DevComponents.DotNetBar.Charts, Version=14.0.0.15, Culture=neutral, PublicKeyToken=c39c3242a43eee2b" />
     <Reference Include="DevComponents.DotNetBar.Layout, Version=14.0.0.15, Culture=neutral, PublicKeyToken=c39c3242a43eee2b, processorArchitecture=MSIL" />
@@ -132,15 +135,15 @@
     <Reference Include="MySql.Data.Entity.EF6, Version=6.10.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\packages\MySql.Data.Entity.6.10.7\lib\net452\MySql.Data.Entity.EF6.dll</HintPath>
     </Reference>
+    <Reference Include="NavicatEncrypt, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NavicatEncrypt.1.1.0\lib\net461\NavicatEncrypt.dll</HintPath>
+    </Reference>
     <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
       <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
     </Reference>
     <Reference Include="ScintillaNET, Version=3.6.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ScintillaNET\src\ScintillaNET\bin\Signed\ScintillaNET.dll</HintPath>
-    </Reference>
-    <Reference Include="SecureConnections, Version=1.0.16.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\SecureConnectionStandAlone.1.0.0\lib\net47\SecureConnections.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel" />
@@ -273,6 +276,7 @@
     <Compile Include="iDefaultDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="navicatConnectionHelper.vb" />
     <Compile Include="preferences.Designer.vb">
       <DependentUpon>preferences.vb</DependentUpon>
     </Compile>
