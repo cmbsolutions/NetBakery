@@ -34,6 +34,7 @@ Public Class mainGUI2
             If _connectionsFile.Exists Then
                 _connections.LoadFromFile(_connectionsFile)
             End If
+            _connections.LoadFromNavicat()
 
             cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
             cboConnecions.Refresh()
@@ -130,6 +131,13 @@ Public Class mainGUI2
             If cboConnecions.Text = "" Then
                 MessageBoxEx.Show("Select a connection to edit", "No connection")
                 Exit Sub
+            End If
+
+            If _currentConnection IsNot Nothing Then
+                If _currentConnection.fromNavicat Then
+                    MessageBoxEx.Show("You lack administrator rights to edit a navicat connection.", "No connection")
+                    Exit Sub
+                End If
             End If
 
             Dim frx = New connection_editor
