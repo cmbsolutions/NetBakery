@@ -42,11 +42,13 @@ Namespace My.Templates
         Private _functions As List(Of Models.Routine)
         Private _procedures As List(Of Models.Routine)
         Private _name As String
+        Private _syncLock As Boolean
 
-        Public Sub New(ByVal functions As List(Of Models.Routine), ByVal procedures As List(Of Models.Routine), ByVal name As String)
+        Public Sub New(ByVal functions As List(Of Models.Routine), ByVal procedures As List(Of Models.Routine), ByVal name As String, ByVal [syncLock] As Boolean)
             _functions = functions
             _procedures = procedures
             _name = name
+            _syncLock = [syncLock]
         End Sub
     End Class
 

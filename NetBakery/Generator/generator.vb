@@ -65,9 +65,9 @@
         End Try
     End Function
 
-    Public Function generateStoreCommands(ByVal functions As List(Of Models.Routine), ByVal procedures As List(Of Models.Routine), ByVal name As String) As String
+    Public Function generateStoreCommands(ByVal functions As List(Of Models.Routine), ByVal procedures As List(Of Models.Routine), ByVal name As String, ByVal locking As Boolean) As String
         Try
-            Dim page = New My.Templates.StoreCommands(functions, procedures, name)
+            Dim page = New My.Templates.StoreCommands(functions, procedures, name, locking)
             Dim pageContent = page.TransformText
 
             Return pageContent

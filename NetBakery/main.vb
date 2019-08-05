@@ -543,6 +543,7 @@ Public Class main
             cboAccounts.Refresh()
 
             InitLexer(sPreviewContext)
+            InitLexer(sPreviewStoreCommands)
             InitLexer(sPreviewModel)
             InitLexer(sPreviewMap)
             InitSqlLexer(scProcedure)
@@ -561,7 +562,7 @@ Public Class main
 
             Dim ts = (From t In _is.tables Where t.export Order By t.tableName Select t).ToList
 
-            Dim tmp As String = _g.generateContext(ts, txtContextName.Text, chkRecovery.Checked)
+            Dim tmp As String = _g.generateContext(ts, txtContextName.Text, False)
 
             sPreviewContext.ReadOnly = False
             sPreviewContext.Text = tmp
@@ -570,6 +571,12 @@ Public Class main
 
             TabControl1.SelectedTab = tabContext
 
+            Dim tmp2 As String = _g.generateStoreCommands(_is.routines.Where(Function(rr) rr.isFunction AndAlso rr.export).ToList, _is.routines.Where(Function(aa) Not aa.isFunction AndAlso aa.export).ToList, txtContextName.Text, chkSynclock.Checked)
+
+            sPreviewStoreCommands.ReadOnly = False
+            sPreviewStoreCommands.Text = tmp2
+            sPreviewStoreCommands.Colorize(0, sPreviewStoreCommands.TextLength)
+            sPreviewStoreCommands.ReadOnly = True
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -634,7 +641,7 @@ Public Class main
 
             ' Export Context
             Dim ts = (From t In _is.tables Where t.export Order By t.tableName Select t).ToList
-            output = _g.generateContext(ts, txtContextName.Text, chkRecovery.Checked)
+            output = _g.generateContext(ts, txtContextName.Text, False)
 
             Using fs As New IO.FileStream(String.Format("{0}{1}DataContext.vb", modelPath, txtContextName.Text), IO.FileMode.Create)
                 Using sw As New IO.StreamWriter(fs, System.Text.Encoding.UTF8)
@@ -644,7 +651,7 @@ Public Class main
             End Using
 
             ' Export StoreCommands
-            output = _g.generateStoreCommands(_is.routines.Where(Function(rr) rr.isFunction AndAlso rr.export).ToList, _is.routines.Where(Function(aa) Not aa.isFunction AndAlso aa.export).ToList, txtContextName.Text)
+            output = _g.generateStoreCommands(_is.routines.Where(Function(rr) rr.isFunction AndAlso rr.export).ToList, _is.routines.Where(Function(aa) Not aa.isFunction AndAlso aa.export).ToList, txtContextName.Text, chkSynclock.Checked)
             Using fs As New IO.FileStream(String.Format("{0}{1}DataStoreCommands.vb", modelPath, txtContextName.Text), IO.FileMode.Create)
                 Using sw As New IO.StreamWriter(fs, System.Text.Encoding.UTF8)
                     sw.Write(output)
