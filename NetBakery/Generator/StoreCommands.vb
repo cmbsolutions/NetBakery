@@ -85,50 +85,69 @@ Namespace My.Templates
  If _syncLock Then 
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
+            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"                Return DirectCast(_context, IObj"& _ 
+                    "ectContextAdapter).ObjectContext.ExecuteStoreQuery(Of ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",39)
- end if 
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQ"& _ 
-                    "uery(Of ")
-            
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",40)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnParam.vbType))
             
             #End ExternalSource
             Me.Write(")(""SELECT ")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",40)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",39)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
             
             #End ExternalSource
             Me.Write("(")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",40)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",39)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
             
             #End ExternalSource
             Me.Write(")"", ")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",40)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",39)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p3)))
+            
+            #End ExternalSource
+            Me.Write(").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
+            
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",41)
+ else 
+            
+            #End ExternalSource
+            Me.Write("            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Exec"& _ 
+                    "uteStoreQuery(Of ")
+            
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",42)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnParam.vbType))
+            
+            #End ExternalSource
+            Me.Write(")(""SELECT ")
+            
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",42)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            
+            #End ExternalSource
+            Me.Write("(")
+            
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",42)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
+            
+            #End ExternalSource
+            Me.Write(")"", ")
+            
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",42)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p3)))
             
             #End ExternalSource
             Me.Write(").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",41)
- If _syncLock Then 
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
-            
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",43)
  end if 
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("        End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",46)
 
@@ -209,50 +228,70 @@ Namespace My.Templates
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnLayout.singleName))
             
             #End ExternalSource
-            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            ")
+            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",79)
  If _syncLock Then 
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
+            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"                Return DirectCast(_context, IObj"& _ 
+                    "ectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas"& _ 
+                    ".")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",81)
- end if 
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQ"& _ 
-                    "uery(Of Models.StoreCommandSchemas.")
-            
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",82)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnLayout.singleName))
             
             #End ExternalSource
             Me.Write(")(""")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",82)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",81)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
             
             #End ExternalSource
             Me.Write("(")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",82)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",81)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
             
             #End ExternalSource
             Me.Write(")"", ")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",82)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",81)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p3)))
             
             #End ExternalSource
-            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
+            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",83)
- If _syncLock Then 
+ else 
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
+            Me.Write("            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Exec"& _ 
+                    "uteStoreQuery(Of Models.StoreCommandSchemas.")
+            
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",84)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnLayout.singleName))
+            
+            #End ExternalSource
+            Me.Write(")(""")
+            
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",84)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            
+            #End ExternalSource
+            Me.Write("(")
+            
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",84)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
+            
+            #End ExternalSource
+            Me.Write(")"", ")
+            
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",84)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p3)))
+            
+            #End ExternalSource
+            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",85)
  end if 
@@ -278,50 +317,63 @@ Namespace My.Templates
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p1)))
             
             #End ExternalSource
-            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            ")
+            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        ")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",91)
  If _syncLock Then 
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
+            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"                DirectCast(_context, IObjectCont"& _ 
+                    "extAdapter).ObjectContext.ExecuteStoreCommand(""")
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",93)
- end if 
-            
-            #End ExternalSource
-            Me.Write("            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStor"& _ 
-                    "eCommand(""")
-            
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",94)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
             
             #End ExternalSource
             Me.Write("(")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",94)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",93)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
             
             #End ExternalSource
             Me.Write(")"", ")
             
-            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",94)
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",93)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p3)))
             
             #End ExternalSource
-            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
+            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",95)
- If _syncLock Then 
+ else 
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
+            Me.Write("            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStor"& _ 
+                    "eCommand(""")
+            
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",96)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.routineName))
+            
+            #End ExternalSource
+            Me.Write("(")
+            
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",96)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
+            
+            #End ExternalSource
+            Me.Write(")"", ")
+            
+            #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",96)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p3)))
+            
+            #End ExternalSource
+            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",97)
  end if 
             
             #End ExternalSource
-            Me.Write("        "&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("        End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("C:\localRepositories\NetBakery\NetBakery\Generator\StoreCommands.tt",99)
           
