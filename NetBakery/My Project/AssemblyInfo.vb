@@ -9,10 +9,10 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("NetBakery")>
-<Assembly: AssemblyDescription("Generate EF classes from MySQL databases")>
+<Assembly: AssemblyDescription("Generate EF classes and CakePHP Models from MySQL databases")>
 <Assembly: AssemblyCompany("CMBSolutions")>
 <Assembly: AssemblyProduct("NetBakery")>
-<Assembly: AssemblyCopyright("Copyright © CMBSolutions 2017-2018")>
+<Assembly: AssemblyCopyright("Copyright © CMBSolutions 2017-2019")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("0.9.262")>
-<Assembly: AssemblyFileVersion("0.9.262")>
+<Assembly: AssemblyVersion("0.9.267")>
+<Assembly: AssemblyFileVersion("0.9.267")>

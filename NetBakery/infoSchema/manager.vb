@@ -270,8 +270,14 @@ Namespace infoSchema
         Private Function dbConnection() As MySqlConnection
             Try
                 If _dbConnection Is Nothing OrElse _dbConnection.State = ConnectionState.Closed Then
-                    _dbConnection = New MySqlConnection(connection.ToString)
-                    _dbConnection.Open()
+                    Try
+                        _dbConnection = New MySqlConnection(connection.ToString)
+                        _dbConnection.Open()
+                    Catch msex As MySqlException
+                        connection.sslmode = eSslMode.Prefered
+                        _dbConnection = New MySqlConnection(connection.ToString)
+                        _dbConnection.Open()
+                    End Try
                 End If
 
                 _dbConnection.ChangeDatabase("INFORMATION_SCHEMA")
