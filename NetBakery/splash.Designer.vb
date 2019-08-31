@@ -83,14 +83,13 @@ Partial Class splash
         'Timer1
         '
         Me.Timer1.Enabled = True
-        Me.Timer1.Interval = 200
+        Me.Timer1.Interval = 50
         '
         'LabelX1
         '
         '
         '
         '
-        Me.LabelX1.BackgroundStyle.BackgroundImage = Global.NetBakery.My.Resources.Resources.RibbonGeometry
         Me.LabelX1.BackgroundStyle.BackgroundImagePosition = DevComponents.DotNetBar.eStyleBackgroundImage.Tile
         Me.LabelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.LabelX1.Dock = System.Windows.Forms.DockStyle.Bottom

@@ -348,6 +348,7 @@
       <LastGenOutput>StoreCommands.vb</LastGenOutput>
     </Content>
     <Content Include="netbakery.png.ico" />
+    <None Include="Resources\logo.png" />
     <None Include="Resources\folder_search.png" />
     <EmbeddedResource Include="Resources\php_keywords.txt" />
     <None Include="packages.config" />
