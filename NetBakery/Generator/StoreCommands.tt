@@ -31,7 +31,7 @@ Namespace Models
 			p1.add("sharedLock As Object")
 		end if
 
-        If p1.Any() Then
+        If p1.count() > 0 Then
 #>
         Public Overridable Function <#= f.routineName #>(<#= String.Join(", ", p1) #>) As <#= f.returnParam.vbType #>
 		<# If _syncLock Then #>
@@ -72,7 +72,7 @@ Namespace Models
 		end if
 
 
-        If p1.Any() Then
+        If p1.count() > 0 Then
             If f.returnsRecordset AndAlso f.returnLayout.columns IsNot Nothing AndAlso f.returnLayout.columns.Any() then
 #>
         Public Overridable Function <#= f.routineName #>(<#= String.Join(", ", p1) #>) As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)
