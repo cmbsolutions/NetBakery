@@ -27,7 +27,7 @@ Namespace Models
             i += 1
         Next
 
-        If p1.Any() Then
+        If p1.count() > 0 Then
 #>
         Public Overridable Function <#= f.name #>(<#= String.Join(", ", p1) #>) As <#= f.returnParam.vbType #>
             Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= f.returnParam.vbType #>)("SELECT <#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>).FirstOrDefault
@@ -57,7 +57,7 @@ Namespace Models
             i += 1
         Next
 
-        If p1.Any() Then
+        If p1.count() > 0 Then
             If f.returnsRecordset AndAlso f.returnLayout.columns IsNot Nothing AndAlso f.returnLayout.columns.Any() then
 #>
         Public Overridable Function <#= f.name #>(<#= String.Join(", ", p1) #>) As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)
