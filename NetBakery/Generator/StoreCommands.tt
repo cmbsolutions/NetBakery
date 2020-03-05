@@ -31,7 +31,7 @@ Namespace Models
 			p1.add("sharedLock As Object")
 		end if
 
-        If p1.count() > 0 Then
+        If (not _syncLock and p1.count() > 0) orelse (_syncLock and p1.count() > 1) Then
 #>
         Public Overridable Function <#= f.routineName #>(<#= String.Join(", ", p1) #>) As <#= f.returnParam.vbType #>
 		<# If _syncLock Then #>
@@ -47,7 +47,13 @@ Namespace Models
         Else
 #>
         Public Overridable Function <#= f.routineName #>() As <#= f.returnParam.vbType #>
+		<# If _syncLock Then #>
+            SyncLock sharedLock
+                Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= f.returnParam.vbType #>)("SELECT <#= f.routineName #>()").FirstOrDefault
+            End SyncLock
+        <# else #>
             Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= f.returnParam.vbType #>)("SELECT <#= f.routineName #>()").FirstOrDefault
+        <# End if #>
         End Function
 
 <#
@@ -72,7 +78,7 @@ Namespace Models
 		end if
 
 
-        If p1.count() > 0 Then
+        If (not _syncLock and p1.count() > 0) orelse (_syncLock and p1.count() > 1) Then
             If f.returnsRecordset AndAlso f.returnLayout.columns IsNot Nothing AndAlso f.returnLayout.columns.Any() then
 #>
         Public Overridable Function <#= f.routineName #>(<#= String.Join(", ", p1) #>) As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)
@@ -102,13 +108,25 @@ Namespace Models
             If f.returnsRecordset AndAlso f.returnLayout.columns IsNot Nothing AndAlso f.returnLayout.columns.Any() then
 #>
         Public Overridable Function <#= f.routineName #>() As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)
+        <# If _syncLock Then #>
+            SyncLock sharedLock
+                Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("<#= f.routineName #>()")
+            End SyncLock
+		<# else #>
             Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("<#= f.routineName #>()")
+        <# end if #>
         End Function
 <#
             else
 #>
         Public Overridable Sub <#= f.routineName #>()
+        <# If _syncLock Then #>
+            SyncLock sharedLock
+                DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= f.routineName #>()")
+            End SyncLock
+		<# else #>
             DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= f.routineName #>()")
+        <# end if #>
         End Sub
 <#
             End If
