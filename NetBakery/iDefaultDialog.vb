@@ -4,7 +4,7 @@ Public Class iDefaultDialog
             DialogResult = System.Windows.Forms.DialogResult.OK
             Close()
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -13,7 +13,7 @@ Public Class iDefaultDialog
             DialogResult = System.Windows.Forms.DialogResult.Cancel
             Close()
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 End Class

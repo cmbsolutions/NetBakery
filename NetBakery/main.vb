@@ -729,6 +729,4 @@ Public Class main
             FormHelpers.dumpException(ex)
         End Try
     End Sub
-
-
 End Class

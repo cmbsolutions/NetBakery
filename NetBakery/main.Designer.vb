@@ -59,7 +59,11 @@ Partial Class main
         Me.cvbType = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.dgProcedure = New System.Windows.Forms.DataGridView()
         Me.tabContext = New System.Windows.Forms.TabPage()
+        Me.TabControl2 = New System.Windows.Forms.TabControl()
+        Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.sPreviewContext = New ScintillaNET.Scintilla()
+        Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.sPreviewStoreCommands = New ScintillaNET.Scintilla()
         Me.chkSynclock = New System.Windows.Forms.CheckBox()
         Me.txtContextName = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -72,10 +76,6 @@ Partial Class main
         Me.cmdRefresh = New System.Windows.Forms.Button()
         Me.cmdDict = New System.Windows.Forms.Button()
         Me.cboAccounts = New System.Windows.Forms.ComboBox()
-        Me.TabControl2 = New System.Windows.Forms.TabControl()
-        Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.sPreviewStoreCommands = New ScintillaNET.Scintilla()
         Me.checkSelector.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -94,10 +94,10 @@ Partial Class main
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.dgProcedure, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabContext.SuspendLayout()
-        Me.pContext.SuspendLayout()
         Me.TabControl2.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
+        Me.pContext.SuspendLayout()
         Me.SuspendLayout()
         '
         'checkSelector
@@ -396,10 +396,10 @@ Partial Class main
         'tabProcedure
         '
         Me.tabProcedure.Controls.Add(Me.TableLayoutPanel1)
-        Me.tabProcedure.Location = New System.Drawing.Point(4, 29)
+        Me.tabProcedure.Location = New System.Drawing.Point(4, 25)
         Me.tabProcedure.Margin = New System.Windows.Forms.Padding(0)
         Me.tabProcedure.Name = "tabProcedure"
-        Me.tabProcedure.Size = New System.Drawing.Size(1061, 481)
+        Me.tabProcedure.Size = New System.Drawing.Size(1061, 485)
         Me.tabProcedure.TabIndex = 3
         Me.tabProcedure.Text = "Procedure inspector"
         Me.tabProcedure.UseVisualStyleBackColor = True
@@ -421,7 +421,7 @@ Partial Class main
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1061, 481)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1061, 485)
         Me.TableLayoutPanel1.TabIndex = 1
         '
         'scProcedure
@@ -435,7 +435,7 @@ Partial Class main
         Me.scProcedure.Name = "scProcedure"
         Me.scProcedure.ReadOnly = True
         Me.TableLayoutPanel1.SetRowSpan(Me.scProcedure, 3)
-        Me.scProcedure.Size = New System.Drawing.Size(706, 475)
+        Me.scProcedure.Size = New System.Drawing.Size(706, 479)
         Me.scProcedure.TabIndex = 3
         Me.scProcedure.UseTabs = True
         '
@@ -445,7 +445,7 @@ Partial Class main
         Me.cmdExecuteProcedure.Dock = System.Windows.Forms.DockStyle.Fill
         Me.cmdExecuteProcedure.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmdExecuteProcedure.ForeColor = System.Drawing.Color.Red
-        Me.cmdExecuteProcedure.Location = New System.Drawing.Point(0, 224)
+        Me.cmdExecuteProcedure.Location = New System.Drawing.Point(0, 226)
         Me.cmdExecuteProcedure.Margin = New System.Windows.Forms.Padding(0)
         Me.cmdExecuteProcedure.Name = "cmdExecuteProcedure"
         Me.cmdExecuteProcedure.Size = New System.Drawing.Size(349, 32)
@@ -458,9 +458,9 @@ Partial Class main
         Me.ListView1.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.cFieldName, Me.cvbType})
         Me.ListView1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListView1.HideSelection = False
-        Me.ListView1.Location = New System.Drawing.Point(3, 259)
+        Me.ListView1.Location = New System.Drawing.Point(3, 261)
         Me.ListView1.Name = "ListView1"
-        Me.ListView1.Size = New System.Drawing.Size(343, 219)
+        Me.ListView1.Size = New System.Drawing.Size(343, 221)
         Me.ListView1.TabIndex = 2
         Me.ListView1.UseCompatibleStateImageBehavior = False
         Me.ListView1.View = System.Windows.Forms.View.Details
@@ -488,18 +488,40 @@ Partial Class main
         Me.dgProcedure.RowHeadersVisible = False
         Me.dgProcedure.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgProcedure.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.dgProcedure.Size = New System.Drawing.Size(343, 218)
+        Me.dgProcedure.Size = New System.Drawing.Size(343, 220)
         Me.dgProcedure.TabIndex = 4
         '
         'tabContext
         '
         Me.tabContext.Controls.Add(Me.TabControl2)
-        Me.tabContext.Location = New System.Drawing.Point(4, 29)
+        Me.tabContext.Location = New System.Drawing.Point(4, 25)
         Me.tabContext.Name = "tabContext"
-        Me.tabContext.Size = New System.Drawing.Size(1061, 481)
+        Me.tabContext.Size = New System.Drawing.Size(1061, 485)
         Me.tabContext.TabIndex = 2
         Me.tabContext.Text = "Context"
         Me.tabContext.UseVisualStyleBackColor = True
+        '
+        'TabControl2
+        '
+        Me.TabControl2.Controls.Add(Me.TabPage1)
+        Me.TabControl2.Controls.Add(Me.TabPage2)
+        Me.TabControl2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl2.Location = New System.Drawing.Point(0, 0)
+        Me.TabControl2.Name = "TabControl2"
+        Me.TabControl2.SelectedIndex = 0
+        Me.TabControl2.Size = New System.Drawing.Size(1061, 485)
+        Me.TabControl2.TabIndex = 4
+        '
+        'TabPage1
+        '
+        Me.TabPage1.Controls.Add(Me.sPreviewContext)
+        Me.TabPage1.Location = New System.Drawing.Point(4, 26)
+        Me.TabPage1.Name = "TabPage1"
+        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage1.Size = New System.Drawing.Size(1053, 455)
+        Me.TabPage1.TabIndex = 0
+        Me.TabPage1.Text = "Context"
+        Me.TabPage1.UseVisualStyleBackColor = True
         '
         'sPreviewContext
         '
@@ -512,9 +534,35 @@ Partial Class main
         Me.sPreviewContext.Location = New System.Drawing.Point(3, 3)
         Me.sPreviewContext.Name = "sPreviewContext"
         Me.sPreviewContext.ReadOnly = True
-        Me.sPreviewContext.Size = New System.Drawing.Size(1047, 445)
+        Me.sPreviewContext.Size = New System.Drawing.Size(1047, 449)
         Me.sPreviewContext.TabIndex = 3
         Me.sPreviewContext.UseTabs = True
+        '
+        'TabPage2
+        '
+        Me.TabPage2.Controls.Add(Me.sPreviewStoreCommands)
+        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage2.Name = "TabPage2"
+        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage2.Size = New System.Drawing.Size(1053, 455)
+        Me.TabPage2.TabIndex = 1
+        Me.TabPage2.Text = "StoreCommands"
+        Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'sPreviewStoreCommands
+        '
+        Me.sPreviewStoreCommands.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.sPreviewStoreCommands.CaretForeColor = System.Drawing.Color.Yellow
+        Me.sPreviewStoreCommands.CaretLineBackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.sPreviewStoreCommands.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.sPreviewStoreCommands.IndentationGuides = ScintillaNET.IndentView.LookBoth
+        Me.sPreviewStoreCommands.Lexer = ScintillaNET.Lexer.Vb
+        Me.sPreviewStoreCommands.Location = New System.Drawing.Point(3, 3)
+        Me.sPreviewStoreCommands.Name = "sPreviewStoreCommands"
+        Me.sPreviewStoreCommands.ReadOnly = True
+        Me.sPreviewStoreCommands.Size = New System.Drawing.Size(1047, 449)
+        Me.sPreviewStoreCommands.TabIndex = 4
+        Me.sPreviewStoreCommands.UseTabs = True
         '
         'chkSynclock
         '
@@ -634,54 +682,6 @@ Partial Class main
         Me.cboAccounts.Size = New System.Drawing.Size(300, 25)
         Me.cboAccounts.TabIndex = 23
         '
-        'TabControl2
-        '
-        Me.TabControl2.Controls.Add(Me.TabPage1)
-        Me.TabControl2.Controls.Add(Me.TabPage2)
-        Me.TabControl2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TabControl2.Location = New System.Drawing.Point(0, 0)
-        Me.TabControl2.Name = "TabControl2"
-        Me.TabControl2.SelectedIndex = 0
-        Me.TabControl2.Size = New System.Drawing.Size(1061, 481)
-        Me.TabControl2.TabIndex = 4
-        '
-        'TabPage1
-        '
-        Me.TabPage1.Controls.Add(Me.sPreviewContext)
-        Me.TabPage1.Location = New System.Drawing.Point(4, 26)
-        Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(1053, 451)
-        Me.TabPage1.TabIndex = 0
-        Me.TabPage1.Text = "Context"
-        Me.TabPage1.UseVisualStyleBackColor = True
-        '
-        'TabPage2
-        '
-        Me.TabPage2.Controls.Add(Me.sPreviewStoreCommands)
-        Me.TabPage2.Location = New System.Drawing.Point(4, 26)
-        Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(1053, 451)
-        Me.TabPage2.TabIndex = 1
-        Me.TabPage2.Text = "StoreCommands"
-        Me.TabPage2.UseVisualStyleBackColor = True
-        '
-        'sPreviewStoreCommands
-        '
-        Me.sPreviewStoreCommands.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.sPreviewStoreCommands.CaretForeColor = System.Drawing.Color.Yellow
-        Me.sPreviewStoreCommands.CaretLineBackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.sPreviewStoreCommands.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.sPreviewStoreCommands.IndentationGuides = ScintillaNET.IndentView.LookBoth
-        Me.sPreviewStoreCommands.Lexer = ScintillaNET.Lexer.Vb
-        Me.sPreviewStoreCommands.Location = New System.Drawing.Point(3, 3)
-        Me.sPreviewStoreCommands.Name = "sPreviewStoreCommands"
-        Me.sPreviewStoreCommands.ReadOnly = True
-        Me.sPreviewStoreCommands.Size = New System.Drawing.Size(1047, 445)
-        Me.sPreviewStoreCommands.TabIndex = 4
-        Me.sPreviewStoreCommands.UseTabs = True
-        '
         'main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 17.0!)
@@ -723,11 +723,11 @@ Partial Class main
         Me.TableLayoutPanel1.ResumeLayout(False)
         CType(Me.dgProcedure, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabContext.ResumeLayout(False)
-        Me.pContext.ResumeLayout(False)
-        Me.pContext.PerformLayout()
         Me.TabControl2.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         Me.TabPage2.ResumeLayout(False)
+        Me.pContext.ResumeLayout(False)
+        Me.pContext.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

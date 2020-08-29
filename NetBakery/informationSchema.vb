@@ -29,7 +29,7 @@ Public Class informationSchema
 
             Return True
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Function
 
@@ -44,7 +44,7 @@ Public Class informationSchema
             getRoutines()
 
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -69,7 +69,7 @@ Public Class informationSchema
                 End Using
             End Using
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -90,7 +90,7 @@ Public Class informationSchema
                 End Using
             End Using
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -109,7 +109,7 @@ Public Class informationSchema
                 End Using
             End Using
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -175,7 +175,7 @@ Public Class informationSchema
                 End Using
             End Using
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -220,7 +220,7 @@ Public Class informationSchema
             Next
 
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -260,7 +260,7 @@ Public Class informationSchema
             Next
 
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
     Private Sub getForeignKeys()
@@ -296,7 +296,7 @@ Public Class informationSchema
             End Using
 
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -364,7 +364,7 @@ Public Class informationSchema
             End Using
 
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -405,7 +405,7 @@ Public Class informationSchema
                 End Using
             End Using
         Catch ex As Exception
-            If throwExceptions Then Throw ex
+            If throwExceptions Then Throw
         End Try
     End Sub
 
@@ -423,7 +423,7 @@ Public Class informationSchema
 
             Return _dbConnection
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Function
 
@@ -523,7 +523,7 @@ Public Class informationSchema
 
             Return [alias]
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Function
 End Class
