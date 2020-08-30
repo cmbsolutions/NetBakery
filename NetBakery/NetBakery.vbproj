@@ -30,15 +30,15 @@
     <PublisherName>CMB Solutions</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>index.htm</WebPage>
-    <ApplicationRevision>5</ApplicationRevision>
-    <ApplicationVersion>0.9.267.%2a</ApplicationVersion>
+    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationVersion>0.9.217.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
@@ -229,20 +229,7 @@
     <Compile Include="infoSchema\relation.vb" />
     <Compile Include="infoSchema\routine.vb" />
     <Compile Include="infoSchema\table.vb" />
-    <Compile Include="main.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="main.Designer.vb">
-      <DependentUpon>main.vb</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="informationSchema.vb" />
-    <Compile Include="mainGUI.Designer.vb">
-      <DependentUpon>mainGUI.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mainGUI.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="mainGUI2.Designer.vb">
       <DependentUpon>mainGUI2.vb</DependentUpon>
     </Compile>
@@ -296,12 +283,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="customDictionaryEdit.resx">
       <DependentUpon>customDictionaryEdit.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="main.resx">
-      <DependentUpon>main.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="mainGUI.resx">
-      <DependentUpon>mainGUI.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mainGUI2.resx">
       <DependentUpon>mainGUI2.vb</DependentUpon>
@@ -367,6 +348,7 @@
       <LastGenOutput>StoreCommands.vb</LastGenOutput>
     </Content>
     <Content Include="netbakery.png.ico" />
+    <None Include="Resources\logo.png" />
     <None Include="Resources\folder_search.png" />
     <EmbeddedResource Include="Resources\php_keywords.txt" />
     <None Include="packages.config" />
