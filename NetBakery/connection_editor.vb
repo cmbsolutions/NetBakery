@@ -27,7 +27,7 @@ Public Class connection_editor
             btnDelete.Enabled = True
 
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
     Private Sub txtPassword_ButtonCustomClick(sender As Object, e As EventArgs) Handles txtPassword.ButtonCustomClick
@@ -69,7 +69,7 @@ Public Class connection_editor
             DialogResult = System.Windows.Forms.DialogResult.OK
             Close()
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -109,7 +109,7 @@ Public Class connection_editor
 
             c = Nothing
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -125,7 +125,7 @@ Public Class connection_editor
                 End If
             End If
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -137,7 +137,7 @@ Public Class connection_editor
                 e.IsValid = True
             End If
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -145,7 +145,7 @@ Public Class connection_editor
         Try
             StyleManager1.ManagerStyle = DirectCast([Enum].Parse(GetType(eStyle), My.Settings.gui_style), eStyle)
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 
@@ -158,7 +158,7 @@ Public Class connection_editor
                 txtPassword.PasswordChar = "*"c
             End If
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Sub
 

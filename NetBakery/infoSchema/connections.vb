@@ -99,7 +99,7 @@ Namespace infoSchema
 
                 formatter = Nothing
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Sub
 
@@ -116,7 +116,7 @@ Namespace infoSchema
                     formatter = Nothing
                 End If
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Sub
 
@@ -241,7 +241,7 @@ Namespace infoSchema
                     TripleDes.IV = TruncateHash("", TripleDes.BlockSize \ 8)
                 End Using
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Sub
 
@@ -251,7 +251,7 @@ Namespace infoSchema
                 TripleDes.Key = TruncateHash(key, TripleDes.KeySize \ 8)
                 TripleDes.IV = TruncateHash("", TripleDes.BlockSize \ 8)
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Sub
 
@@ -268,7 +268,7 @@ Namespace infoSchema
                     Return hash
                 End Using
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Function
 
@@ -291,7 +291,7 @@ Namespace infoSchema
                     Return Convert.ToBase64String(ms.ToArray)
                 End Using
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Function
 
@@ -313,7 +313,7 @@ Namespace infoSchema
                     Return System.Text.Encoding.Unicode.GetString(ms.ToArray)
                 End Using
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Function
 

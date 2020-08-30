@@ -77,7 +77,7 @@ Public Class <#= _name #>DataManager
 
 			Return table
 		Catch ex As Exception
-			Throw ex
+			Throw
 		End Try
 
 		Return Nothing
@@ -90,7 +90,7 @@ Public Class <#= _name #>DataManager
 				info.SetValue(_entity, _value)
 			End If
 		Catch ex As Exception
-			Throw ex
+			Throw
 		End Try
 	End Sub
 
@@ -169,7 +169,7 @@ Public Class <#= _name #>DataManager
 					End If
 				End If
 
-				Throw ex
+				Throw
 			Catch ex As Exception
 				'deadlock
 				If ex.GetInnerExceptionText.Contains("Deadlock") Then
@@ -179,7 +179,7 @@ Public Class <#= _name #>DataManager
 					End If
 				End If
 
-				Throw ex
+				Throw
 			End Try
 		Next
 
@@ -207,6 +207,10 @@ Namespace Models
 <# For Each table In _tables #>
 			modelBuilder.Configurations.Add(New <#= table.singleName #>Map())
 <# Next #>
+		End Sub
+
+		Public Sub Detach(ByVal entity As Object)
+			DirectCast(Me, IObjectContextAdapter).ObjectContext.Detach(entity)
 		End Sub
 	End Class
 End Namespace

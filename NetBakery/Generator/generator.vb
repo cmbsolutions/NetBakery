@@ -5,7 +5,7 @@
             Dim pageContent = page.TransformText()
             Return pageContent
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Function
 
@@ -15,7 +15,7 @@
             Dim pageContent = page.TransformText()
             Return pageContent
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Function
 
@@ -26,7 +26,7 @@
 
             Return pageContent
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Function
 
@@ -37,7 +37,7 @@
 
             Return pageContent
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Function
 
@@ -48,7 +48,7 @@
 
             Return pageContent
         Catch ex As Exception
-            Throw ex
+            Throw
         End Try
     End Function
 End Class

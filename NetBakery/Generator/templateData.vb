@@ -77,7 +77,7 @@ Namespace My.Templates
                 End If
 
             Catch ex As Exception
-                Throw ex
+                Throw
             End Try
         End Sub
         Public Function Singularize(s As String) As String
