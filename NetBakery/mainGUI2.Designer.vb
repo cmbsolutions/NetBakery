@@ -244,10 +244,10 @@ Partial Class mainGUI2
         Me.PanelDockContainer2.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.PanelDockContainer2.Controls.Add(Me.txtLog)
         Me.PanelDockContainer2.DisabledBackColor = System.Drawing.Color.Empty
-        Me.PanelDockContainer2.Location = New System.Drawing.Point(3, 23)
+        Me.PanelDockContainer2.Location = New System.Drawing.Point(3, 24)
         Me.PanelDockContainer2.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.PanelDockContainer2.Name = "PanelDockContainer2"
-        Me.PanelDockContainer2.Size = New System.Drawing.Size(1667, 69)
+        Me.PanelDockContainer2.Size = New System.Drawing.Size(1667, 68)
         Me.PanelDockContainer2.Style.Alignment = System.Drawing.StringAlignment.Center
         Me.PanelDockContainer2.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground
         Me.PanelDockContainer2.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
@@ -274,7 +274,7 @@ Partial Class mainGUI2
         Me.txtLog.PreventEnterBeep = True
         Me.txtLog.ReadOnly = True
         Me.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtLog.Size = New System.Drawing.Size(1667, 69)
+        Me.txtLog.Size = New System.Drawing.Size(1667, 68)
         Me.txtLog.TabIndex = 0
         '
         'DockContainerItem2
@@ -943,10 +943,10 @@ Partial Class mainGUI2
         Me.PanelDockContainer1.Controls.Add(Me.advtreeDatabases)
         Me.PanelDockContainer1.Controls.Add(Me.Bar1)
         Me.PanelDockContainer1.DisabledBackColor = System.Drawing.Color.Empty
-        Me.PanelDockContainer1.Location = New System.Drawing.Point(3, 23)
+        Me.PanelDockContainer1.Location = New System.Drawing.Point(3, 24)
         Me.PanelDockContainer1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.PanelDockContainer1.Name = "PanelDockContainer1"
-        Me.PanelDockContainer1.Size = New System.Drawing.Size(302, 444)
+        Me.PanelDockContainer1.Size = New System.Drawing.Size(302, 443)
         Me.PanelDockContainer1.Style.Alignment = System.Drawing.StringAlignment.Center
         Me.PanelDockContainer1.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground
         Me.PanelDockContainer1.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
@@ -979,7 +979,7 @@ Partial Class mainGUI2
         Me.advtreeDatabases.NodeStyle = Me.ElementStyle1
         Me.advtreeDatabases.PathSeparator = ";"
         Me.advtreeDatabases.SelectionBoxStyle = DevComponents.AdvTree.eSelectionStyle.FullRowSelect
-        Me.advtreeDatabases.Size = New System.Drawing.Size(302, 409)
+        Me.advtreeDatabases.Size = New System.Drawing.Size(302, 408)
         Me.advtreeDatabases.Styles.Add(Me.ElementStyle1)
         Me.advtreeDatabases.TabIndex = 1
         Me.advtreeDatabases.Text = "AdvTree1"
@@ -1116,10 +1116,10 @@ Partial Class mainGUI2
         Me.PanelDockContainer3.Controls.Add(Me.TableLayoutPanel1)
         Me.PanelDockContainer3.Controls.Add(Me.Bar3)
         Me.PanelDockContainer3.DisabledBackColor = System.Drawing.Color.Empty
-        Me.PanelDockContainer3.Location = New System.Drawing.Point(3, 23)
+        Me.PanelDockContainer3.Location = New System.Drawing.Point(3, 24)
         Me.PanelDockContainer3.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.PanelDockContainer3.Name = "PanelDockContainer3"
-        Me.PanelDockContainer3.Size = New System.Drawing.Size(311, 444)
+        Me.PanelDockContainer3.Size = New System.Drawing.Size(311, 443)
         Me.PanelDockContainer3.Style.Alignment = System.Drawing.StringAlignment.Center
         Me.PanelDockContainer3.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground
         Me.PanelDockContainer3.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
@@ -1141,7 +1141,7 @@ Partial Class mainGUI2
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(311, 409)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(311, 408)
         Me.TableLayoutPanel1.TabIndex = 3
         '
         'txtSearchOutput
