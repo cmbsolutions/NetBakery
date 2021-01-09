@@ -45,7 +45,7 @@ Namespace Models
     
     For Each fk in _f
  #>
-        Public Property <#= fk.propertyAlias #>() As ICollection(Of <#= p.Singularize(fk.tableName) #>)
+        Public Property <#= fk.propertyAlias #>() As List(Of <#= p.Singularize(fk.tableName) #>)
 <#  Next #>
     End Class
 End Namespace
