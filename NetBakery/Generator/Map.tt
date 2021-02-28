@@ -52,6 +52,7 @@ Namespace Models.Mapping
 		if not c.isNullable then configLines.add(".IsRequired()")
 		if c.vbType = "String" AndAlso c.maximumLength > 0 AndAlso c.maximumLength < 65536 then configLines.add(String.format(".HasMaxLength({0})", c.maximumLength))
 		if c.autoincrement then configLines.add(".HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity)")
+		if c.key = "PRI" and not c.autoincrement then configLines.add(".HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)")
 
 		if configLines.Any() then
 #>
