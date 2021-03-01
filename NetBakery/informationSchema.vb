@@ -398,6 +398,10 @@ Public Class informationSchema
                                 c.ordinalPosition = CInt(row.ItemArray(d.Columns.IndexOf("ColumnOrdinal")))
                                 c.isNullable = CBool(row.ItemArray(d.Columns.IndexOf("AllowDBNull")))
 
+                                If _routine.returnLayout Is Nothing Then
+                                    _routine.returnsRecordset = True
+                                    _routine.returnLayout = New Table With {.tableName = _routine.routineName, .singleName = _p.Singularize(_routine.routineName), .pluralName = _p.Pluralize(_routine.routineName), .columns = New List(Of Column)}
+                                End If
                                 _routine.returnLayout.columns.Add(c)
                             Next
                         End Using

@@ -396,10 +396,10 @@ Partial Class main
         'tabProcedure
         '
         Me.tabProcedure.Controls.Add(Me.TableLayoutPanel1)
-        Me.tabProcedure.Location = New System.Drawing.Point(4, 25)
+        Me.tabProcedure.Location = New System.Drawing.Point(4, 29)
         Me.tabProcedure.Margin = New System.Windows.Forms.Padding(0)
         Me.tabProcedure.Name = "tabProcedure"
-        Me.tabProcedure.Size = New System.Drawing.Size(1061, 485)
+        Me.tabProcedure.Size = New System.Drawing.Size(1061, 481)
         Me.tabProcedure.TabIndex = 3
         Me.tabProcedure.Text = "Procedure inspector"
         Me.tabProcedure.UseVisualStyleBackColor = True
@@ -421,7 +421,7 @@ Partial Class main
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1061, 485)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1061, 481)
         Me.TableLayoutPanel1.TabIndex = 1
         '
         'scProcedure
@@ -435,7 +435,7 @@ Partial Class main
         Me.scProcedure.Name = "scProcedure"
         Me.scProcedure.ReadOnly = True
         Me.TableLayoutPanel1.SetRowSpan(Me.scProcedure, 3)
-        Me.scProcedure.Size = New System.Drawing.Size(706, 479)
+        Me.scProcedure.Size = New System.Drawing.Size(706, 475)
         Me.scProcedure.TabIndex = 3
         Me.scProcedure.UseTabs = True
         '
@@ -445,7 +445,7 @@ Partial Class main
         Me.cmdExecuteProcedure.Dock = System.Windows.Forms.DockStyle.Fill
         Me.cmdExecuteProcedure.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmdExecuteProcedure.ForeColor = System.Drawing.Color.Red
-        Me.cmdExecuteProcedure.Location = New System.Drawing.Point(0, 226)
+        Me.cmdExecuteProcedure.Location = New System.Drawing.Point(0, 224)
         Me.cmdExecuteProcedure.Margin = New System.Windows.Forms.Padding(0)
         Me.cmdExecuteProcedure.Name = "cmdExecuteProcedure"
         Me.cmdExecuteProcedure.Size = New System.Drawing.Size(349, 32)
@@ -458,9 +458,9 @@ Partial Class main
         Me.ListView1.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.cFieldName, Me.cvbType})
         Me.ListView1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListView1.HideSelection = False
-        Me.ListView1.Location = New System.Drawing.Point(3, 261)
+        Me.ListView1.Location = New System.Drawing.Point(3, 259)
         Me.ListView1.Name = "ListView1"
-        Me.ListView1.Size = New System.Drawing.Size(343, 221)
+        Me.ListView1.Size = New System.Drawing.Size(343, 219)
         Me.ListView1.TabIndex = 2
         Me.ListView1.UseCompatibleStateImageBehavior = False
         Me.ListView1.View = System.Windows.Forms.View.Details
@@ -488,7 +488,7 @@ Partial Class main
         Me.dgProcedure.RowHeadersVisible = False
         Me.dgProcedure.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgProcedure.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.dgProcedure.Size = New System.Drawing.Size(343, 220)
+        Me.dgProcedure.Size = New System.Drawing.Size(343, 218)
         Me.dgProcedure.TabIndex = 4
         '
         'tabContext
@@ -544,7 +544,7 @@ Partial Class main
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(1053, 455)
+        Me.TabPage2.Size = New System.Drawing.Size(1053, 459)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "StoreCommands"
         Me.TabPage2.UseVisualStyleBackColor = True
@@ -560,7 +560,7 @@ Partial Class main
         Me.sPreviewStoreCommands.Location = New System.Drawing.Point(3, 3)
         Me.sPreviewStoreCommands.Name = "sPreviewStoreCommands"
         Me.sPreviewStoreCommands.ReadOnly = True
-        Me.sPreviewStoreCommands.Size = New System.Drawing.Size(1047, 449)
+        Me.sPreviewStoreCommands.Size = New System.Drawing.Size(1047, 453)
         Me.sPreviewStoreCommands.TabIndex = 4
         Me.sPreviewStoreCommands.UseTabs = True
         '
