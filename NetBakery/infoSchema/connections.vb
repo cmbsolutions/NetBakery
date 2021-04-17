@@ -127,20 +127,22 @@ Namespace infoSchema
                 Using mainReg = My.Computer.Registry.CurrentUser.OpenSubKey(registryRoot, False)
                     Dim RegexObj As New Regex("^(DEV|TST|APP|PRD) - (\w+)$", RegexOptions.IgnoreCase)
 
-                    For Each entry In mainReg.GetSubKeyNames
-                        If RegexObj.IsMatch(entry) Then
-                            Using subKey = mainReg.OpenSubKey(entry)
-                                _internal.Add(New connection With {
-                                              .fromNavicat = True,
-                                              .host = subKey.GetValue("Host").ToString,
-                                              .user = subKey.GetValue("UserName").ToString,
-                                              .pass = subKey.GetValue("Pwd").ToString,
-                                              .description = entry,
-                                              .sslmode = eSslMode.Required
-                                              })
-                            End Using
-                        End If
-                    Next
+                    If mainReg IsNot Nothing Then
+                        For Each entry In mainReg.GetSubKeyNames
+                            If RegexObj.IsMatch(entry) Then
+                                Using subKey = mainReg.OpenSubKey(entry)
+                                    _internal.Add(New connection With {
+                                                  .fromNavicat = True,
+                                                  .host = subKey.GetValue("Host").ToString,
+                                                  .user = subKey.GetValue("UserName").ToString,
+                                                  .pass = subKey.GetValue("Pwd").ToString,
+                                                  .description = entry,
+                                                  .sslmode = eSslMode.Required
+                                                  })
+                                End Using
+                            End If
+                        Next
+                    End If
 
                 End Using
             Catch ex As Exception

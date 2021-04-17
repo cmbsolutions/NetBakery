@@ -8,6 +8,8 @@ Public Class Project
     Property projectlocation As String
     Property projectoutputlocation As String
     Property outputtype As String
+    Property needsSave As Boolean
+
 
     Property database As databaseObjects
 

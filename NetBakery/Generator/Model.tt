@@ -45,7 +45,7 @@ Namespace Models
     
     For Each fk in  _t.foreignKeys
  #>
-        Public Property <#= fk.referencedTable.name #>() As ICollection(Of <#= p.Singularize(fk.referencedTable.name) #>)
+        Public Property <#= fk.referencedTable.name #>() As List(Of <#= p.Singularize(fk.referencedTable.name) #>)
 <#  Next #>
     End Class
 End Namespace
