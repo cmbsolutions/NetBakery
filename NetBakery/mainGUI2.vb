@@ -418,7 +418,7 @@ Public Class mainGUI2
             Dim tmpContext As AdvTree.Node = tplContextAndStoreCommands.DeepCopy
 
             tmpContext.Name = "nContext"
-            tmpContext.Text = String.Format("{0}Context.vb", "<ProjectName>")
+            tmpContext.Text = $"{txtProjectName.Text}Context.vb"
             AddHandler tmpContext.NodeDoubleClick, AddressOf explorerContextNodeHandler
             mModel.Nodes.Add(tmpContext)
 
@@ -426,7 +426,7 @@ Public Class mainGUI2
             tmpContext = tplContextAndStoreCommands.DeepCopy
 
             tmpContext.Name = "nStoreCommandsContext"
-            tmpContext.Text = String.Format("{0}StoreCommandsContext.vb", "<ProjectName>")
+            tmpContext.Text = $"{txtProjectName.Text}StoreCommandsContext.vb"
             AddHandler tmpContext.NodeDoubleClick, AddressOf explorerStoreCommandsNodeHandler
             mModel.Nodes.Add(tmpContext)
 
