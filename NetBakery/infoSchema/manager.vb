@@ -36,6 +36,22 @@ Namespace infoSchema
             End Try
         End Function
 
+        Public Function generateContext(name As String) As String
+            Try
+                Return _generator.generateContext(tables, name, False)
+            Catch ex As Exception
+                Throw
+            End Try
+        End Function
+
+        Public Function generateStoreCommands(name As String) As String
+            Try
+                Return _generator.generateStoreCommands(routines.Where(Function(c) c.isFunction And c.hasExport).ToList, routines.Where(Function(c) Not c.isFunction And c.hasExport).ToList, name)
+            Catch ex As Exception
+                Throw
+            End Try
+        End Function
+
         Public Sub New()
             initSchema()
         End Sub

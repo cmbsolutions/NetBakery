@@ -1,5 +1,6 @@
 Imports DevComponents
 Imports DevComponents.DotNetBar
+Imports Newtonsoft.Json
 
 Public Class mainGUI2
     Private _mngr As New infoSchema.manager
@@ -10,6 +11,8 @@ Public Class mainGUI2
 
     Private _dockFile As IO.FileInfo
     Private _connectionsFile As IO.FileInfo
+
+    Private _currentProject As New Project
 
     Private Sub mainGUI2_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
@@ -374,14 +377,14 @@ Public Class mainGUI2
                 tmpModel.Name = "n" & table.name
                 tmpModel.TagString = table.name
 
-                tmpModel.Text = String.Format("{0}.vb", table.singleName)
-                AddHandler tmpModel.NodeDoubleClick, AddressOf explorerModelNodeHandler
+                tmpModel.Text = $"{table.singleName}.vb"
+                AddHandler tmpModel.NodeClick, AddressOf explorerModelNodeHandler
                 mModel.Nodes.Add(tmpModel)
 
-                tmpMapping.Name = "n" & table.name & "Mapping"
+                tmpMapping.Name = $"n{table.name}Mapping"
                 tmpMapping.TagString = table.name
-                tmpMapping.Text = String.Format("{0}Mapping.vb", table.singleName)
-                AddHandler tmpMapping.NodeDoubleClick, AddressOf explorerMappingNodeHandler
+                tmpMapping.Text = $"{table.singleName}Mapping.vb"
+                AddHandler tmpMapping.NodeClick, AddressOf explorerMappingNodeHandler
 
                 mMapping.Nodes.Add(tmpMapping)
             Next
@@ -396,19 +399,19 @@ Public Class mainGUI2
                     tmpNode = tplProcedures.DeepCopy
                 End If
 
-                tmpNode.Name = String.Format("n{0}", routine.name)
+                tmpNode.Name = $"n{routine.name}"
                 tmpNode.TagString = routine.name
-                tmpNode.Text = String.Format("{0}.vb", routine.name)
-                AddHandler tmpNode.NodeDoubleClick, AddressOf explorerRoutineNodeHandler
+                tmpNode.Text = $"{routine.name}.vb"
+                AddHandler tmpNode.NodeClick, AddressOf explorerRoutineNodeHandler
 
                 mStoreCommands.Nodes.Add(tmpNode)
 
                 If routine.returnsRecordset Then
                     tmpNode = tplModelAndMapping.DeepCopy
-                    tmpNode.Name = String.Format("n{0}Model", routine.name)
+                    tmpNode.Name = $"n{routine.name}Model"
                     tmpNode.TagString = routine.name
-                    tmpNode.Text = String.Format("{0}Model.vb", routine.name)
-                    AddHandler tmpNode.NodeDoubleClick, AddressOf explorerModelNodeHandler
+                    tmpNode.Text = $"{routine.name}Model.vb"
+                    AddHandler tmpNode.NodeClick, AddressOf explorerModelNodeHandler
 
                     mStoreCommandModels.Nodes.Add(tmpNode)
                 End If
@@ -419,7 +422,7 @@ Public Class mainGUI2
 
             tmpContext.Name = "nContext"
             tmpContext.Text = $"{txtProjectName.Text}Context.vb"
-            AddHandler tmpContext.NodeDoubleClick, AddressOf explorerContextNodeHandler
+            AddHandler tmpContext.NodeClick, AddressOf explorerContextNodeHandler
             mModel.Nodes.Add(tmpContext)
 
             ' StoreCommandsContext
@@ -427,7 +430,7 @@ Public Class mainGUI2
 
             tmpContext.Name = "nStoreCommandsContext"
             tmpContext.Text = $"{txtProjectName.Text}StoreCommandsContext.vb"
-            AddHandler tmpContext.NodeDoubleClick, AddressOf explorerStoreCommandsNodeHandler
+            AddHandler tmpContext.NodeClick, AddressOf explorerStoreCommandsNodeHandler
             mModel.Nodes.Add(tmpContext)
 
             advtreeOutputExplorer.Refresh()
@@ -438,7 +441,24 @@ Public Class mainGUI2
 
     Private Sub btnSaveLayout_Click(sender As Object, e As EventArgs) Handles btnSaveLayout.Click
         Try
-            advtreeOutputExplorer.Save("c:\test.xml")
+
+            If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models")
+            If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\Mapping") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\Mapping")
+            If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommandSchemas") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommandSchemas")
+
+            For Each t In _mngr.tables.Where(Function(c) c.hasExport)
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{t.singleName}.vb", _mngr.generateModel(t))
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\Mapping\{t.singleName}Map.vb", _mngr.generateModel(t))
+            Next
+
+            For Each s In _mngr.routines.Where(Function(c) c.hasExport And c.returnsRecordset)
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommandSchemas\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
+            Next
+
+            IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}DataContext.vb", _mngr.generateContext($"{txtProjectName.Text}Data"))
+            IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}StoreCommands.vb", _mngr.generateStoreCommands($"{txtProjectName.Text}Data"))
+
+            MessageBox.Show("Output generated")
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -449,7 +469,13 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
+            Dim t = _mngr.tables.FirstOrDefault(Function(c) c.name = node.TagString)
 
+            If t IsNot Nothing Then
+                scCodePreview.Text = _mngr.generateModel(t)
+                scCodePreview.Colorize(0, scCodePreview.Text.Length)
+                dcCodePreview.Selected = True
+            End If
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -460,6 +486,13 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
+            Dim t = _mngr.tables.FirstOrDefault(Function(c) c.name = node.TagString)
+
+            If t IsNot Nothing Then
+                scCodePreview.Text = _mngr.generateMap(t)
+                scCodePreview.Colorize(0, scCodePreview.Text.Length)
+                dcCodePreview.Selected = True
+            End If
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -470,7 +503,6 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -480,6 +512,9 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
+            scCodePreview.Text = _mngr.generateContext(txtProjectName.Text)
+            scCodePreview.Colorize(0, scCodePreview.Text.Length)
+            dcCodePreview.Selected = True
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -490,6 +525,9 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
+            scCodePreview.Text = _mngr.generateStoreCommands(txtProjectName.Text)
+            scCodePreview.Colorize(0, scCodePreview.Text.Length)
+            dcCodePreview.Selected = True
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -803,6 +841,46 @@ Public Class mainGUI2
                 txtOutputFolder.Text = FolderBrowserDialog1.SelectedPath
             End If
 
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub btnSaveProject_Click(sender As Object, e As EventArgs) Handles btnSaveProject.Click
+        Try
+            SaveFileDialog1.FileName = txtProjectName.Text
+
+            If SaveFileDialog1.ShowDialog = DialogResult.OK Then
+                _currentProject.application_version = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
+                _currentProject.projectname = txtProjectName.Text
+                _currentProject.projectlocation = txtProjectFolder.Text
+                _currentProject.projectoutputlocation = txtOutputFolder.Text
+                _currentProject.outputtype = cboOutputType.Text
+
+                _currentProject.database = New databaseObjects With {
+                    .connection = _currentConnection,
+                    .databasename = _mngr.database,
+                    .tables = _mngr.tables,
+                    .routines = _mngr.routines
+                }
+
+                _currentProject.generatedoutputs = New List(Of outputItem)
+
+                For Each pf In (From f In IO.Directory.EnumerateFiles(_currentProject.projectoutputlocation, "*.*", IO.SearchOption.AllDirectories) Select New IO.FileInfo(f)).ToList
+                    _currentProject.generatedoutputs.Add(New outputItem With {
+                                                         .filename = pf.Name,
+                                                         .location = pf.DirectoryName,
+                                                         .objecttype = "file",
+                                                         .hash = pf.GetHashCode.ToString})
+                Next
+
+                Using fs As New IO.FileStream(SaveFileDialog1.FileName, IO.FileMode.Create, IO.FileAccess.Write, IO.FileShare.None)
+                    Using sw As New IO.StreamWriter(fs, System.Text.Encoding.UTF8)
+                        Dim js As New JsonSerializer
+                        js.Serialize(sw, _currentProject)
+                    End Using
+                End Using
+            End If
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
