@@ -37,7 +37,7 @@ Namespace My.Templates
   If _t.foreignKeys.Any() Then 
             
             #End ExternalSource
-            Me.Write("        Public Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("        Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\Model.tt",13)
       For Each fk in  _t.foreignKeys 
@@ -78,7 +78,7 @@ Namespace My.Templates
       If c.isNullable And c.vbType <> GetType(System.String) Then 
             
             #End ExternalSource
-            Me.Write("        Public Property ")
+            Me.Write("        Property ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\Model.tt",21)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
@@ -96,7 +96,7 @@ Namespace My.Templates
       else 
             
             #End ExternalSource
-            Me.Write("        Public Property ")
+            Me.Write("        Property ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\Model.tt",23)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
@@ -163,7 +163,7 @@ Namespace My.Templates
 
             
             #End ExternalSource
-            Me.Write("        Public Property ")
+            Me.Write("        Property ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\Model.tt",42)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(r.alias))
@@ -185,7 +185,7 @@ Namespace My.Templates
  
             
             #End ExternalSource
-            Me.Write("        Public Property ")
+            Me.Write("        Property ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\Model.tt",48)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedTable.name))

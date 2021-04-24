@@ -195,12 +195,12 @@ Namespace Models
 			Database.SetInitializer(Of <#= _name #>DataContext)(Nothing)
 		End Sub
 
-		Public Sub New(connection As DbConnection)
+		Sub New(connection As DbConnection)
 			MyBase.New(connection, True)
 		End Sub
 
 <# For Each table In _tables #>
-		Public Property <#= table.pluralName #>() As DbSet(Of <#= table.singleName #>)
+		Property <#= table.pluralName #>() As DbSet(Of <#= table.singleName #>)
 <# Next #>
 
 		Protected Overrides Sub OnModelCreating(modelBuilder As DbModelBuilder)
@@ -209,7 +209,7 @@ Namespace Models
 <# Next #>
 		End Sub
 
-		Public Sub Detach(ByVal entity As Object)
+		Sub Detach(ByVal entity As Object)
 			DirectCast(Me, IObjectContextAdapter).ObjectContext.Detach(entity)
 		End Sub
 	End Class

@@ -850,7 +850,8 @@ Public Class mainGUI2
         Try
             SaveFileDialog1.FileName = txtProjectName.Text
 
-            If SaveFileDialog1.ShowDialog = DialogResult.OK Then
+            If (_currentProject.projectfilename <> "" AndAlso IO.File.Exists(_currentProject.projectfilename)) Or SaveFileDialog1.ShowDialog = DialogResult.OK Then
+                _currentProject.projectfilename = SaveFileDialog1.FileName
                 _currentProject.application_version = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
                 _currentProject.projectname = txtProjectName.Text
                 _currentProject.projectlocation = txtProjectFolder.Text
@@ -876,10 +877,44 @@ Public Class mainGUI2
 
                 Using fs As New IO.FileStream(SaveFileDialog1.FileName, IO.FileMode.Create, IO.FileAccess.Write, IO.FileShare.None)
                     Using sw As New IO.StreamWriter(fs, System.Text.Encoding.UTF8)
-                        Dim js As New JsonSerializer
-                        js.Serialize(sw, _currentProject)
+
+                        sw.Write(JsonConvert.SerializeObject(_currentProject, Formatting.Indented, New JsonSerializerSettings With {
+                                                                                                        .ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                                                                                                        .PreserveReferencesHandling = PreserveReferencesHandling.Objects}))
+
+                        'Dim js As New JsonSerializer
+                        'js.Serialize(sw, _currentProject)
                     End Using
                 End Using
+
+                _tracelistener.WriteLine("Project saved!")
+            End If
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub btnOpenProject_Click(sender As Object, e As EventArgs) Handles btnOpenProject.Click
+        Try
+            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
+                If MessageBox.Show("Project has changed. Save changes?", "Save changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    btnSaveProject.RaiseClick()
+                End If
+            End If
+
+            If OpenFileDialog1.ShowDialog = DialogResult.OK Then
+
+                _currentProject = CType(JsonConvert.DeserializeObject(IO.File.ReadAllText(OpenFileDialog1.FileName), GetType(Project)), Project)
+
+                txtProjectName.Text = _currentProject.projectname
+                txtProjectFolder.Text = _currentProject.projectlocation
+                txtOutputFolder.Text = _currentProject.projectoutputlocation
+                cboOutputType.Text = _currentProject.outputtype
+
+                _currentConnection = _currentProject.database.connection
+                _mngr.database = _currentProject.database.databasename
+                _mngr.tables = _currentProject.database.tables
+                _mngr.routines = _currentProject.database.routines
             End If
         Catch ex As Exception
             FormHelpers.dumpException(ex)

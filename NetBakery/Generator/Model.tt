@@ -9,7 +9,7 @@ Imports System.Collections.Generic
 Namespace Models
     Public Partial Class <#= _t.singleName #>
 <#  If _t.foreignKeys.Any() Then #>
-        Public Sub New()
+        Sub New()
 <#      For Each fk in  _t.foreignKeys #>
             <#= fk.referencedTable.name #> = New List(Of <#= p.Singularize(fk.referencedTable.name) #>)()
 <#      Next #>
@@ -18,9 +18,9 @@ Namespace Models
 
 <#  For each c in _t.columns #>
 <#      If c.isNullable And c.vbType <> GetType(System.String) Then #>
-        Public Property <#= c.alias #>() as <#= c.vbType #>?
+        Property <#= c.alias #>() as <#= c.vbType #>?
 <#      else #>
-        Public Property <#= c.alias #>() as <#= c.vbType #>
+        Property <#= c.alias #>() as <#= c.vbType #>
 <#      end if
 
         If c.mysqlType = "enum" AndAlso c.vbType <> GetType(System.String) Then
@@ -39,13 +39,13 @@ Namespace Models
 
     For Each r in _t.relations
 #>
-        Public Property <#= r.alias #>() As <#= p.Singularize(r.toTable.name) #>
+        Property <#= r.alias #>() As <#= p.Singularize(r.toTable.name) #>
 <#
     Next
     
     For Each fk in  _t.foreignKeys
  #>
-        Public Property <#= fk.referencedTable.name #>() As List(Of <#= p.Singularize(fk.referencedTable.name) #>)
+        Property <#= fk.referencedTable.name #>() As List(Of <#= p.Singularize(fk.referencedTable.name) #>)
 <#  Next #>
     End Class
 End Namespace

@@ -29,9 +29,9 @@ Namespace Models.Mapping
 		Next
 	End If
 #>
-	Public Class <#= _t.singleName #>Map
+	Public Partial Class <#= _t.singleName #>Map
 		Inherits EntityTypeConfiguration(Of <#= _t.singleName #>)
-		Public Sub New()
+		Sub New()
 			' Primary Key
 <#
 	If keys.Any() Then

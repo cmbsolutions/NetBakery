@@ -51,7 +51,7 @@ Namespace My.Templates
 
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&"Public Class ")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&"Public Partial Class ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\Map.tt",32)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
@@ -63,7 +63,7 @@ Namespace My.Templates
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
             
             #End ExternalSource
-            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Public Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Primary Key"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Primary Key"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\Map.tt",36)
 

@@ -9,7 +9,7 @@ Public Class Project
     Property projectoutputlocation As String
     Property outputtype As String
     Property needsSave As Boolean
-
+    Property projectfilename As String
 
     Property database As databaseObjects
 

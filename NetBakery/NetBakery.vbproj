@@ -340,6 +340,15 @@
       <CustomToolNamespace>My.Templates</CustomToolNamespace>
       <LastGenOutput>Model.vb</LastGenOutput>
     </Content>
+    <Content Include="Generator\StoreCommand.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreCommand.tt</DependentUpon>
+    </Content>
+    <Content Include="Generator\StoreCommand.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StoreCommand.cs</LastGenOutput>
+    </Content>
     <Content Include="Generator\StoreCommandModel.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>My.Templates</CustomToolNamespace>

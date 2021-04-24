@@ -1,0 +1,45 @@
+﻿<#@ template language="VB" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+Imports System.Data.Entity
+Imports System.Data.Entity.Infrastructure
+
+Namespace Models.StoreCommands
+    Public Class StoreCommands
+        Private _context As <#= _name #>DataContext
+
+        Sub New(ByRef context As <#= _name #>DataContext)
+            _context = context
+        End Sub
+<#
+    For Each f In _functions
+        Dim p1 As New List(Of String)
+        Dim p2 As New List(Of String)
+        Dim p3 As New List(Of String)
+        Dim i As Integer = 0
+
+        For Each p In f.params
+            p1.add(String.Format("{0} As {1}", p.name, p.vbType))
+            p2.Add("{" & i & "}")
+            p3.Add(String.Format(p.name))
+            i += 1
+        Next
+
+        If p1.count() > 0 Then
+#>
+        Public Overridable Function <#= f.name #>(<#= String.Join(", ", p1) #>) As <#= f.returnParam.vbType #>
+            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= f.returnParam.vbType #>)("SELECT <#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>).FirstOrDefault
+        End Function
+
+<#
+        Else
+#>
+        Public Overridable Function <#= f.name #>() As <#= f.returnParam.vbType #>
+            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= f.returnParam.vbType #>)("SELECT <#= f.name #>()").FirstOrDefault
+        End Function
+
+<#
+        End If
+    Next
