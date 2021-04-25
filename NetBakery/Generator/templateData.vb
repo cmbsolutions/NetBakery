@@ -8,7 +8,6 @@ Namespace My.Templates
 
         Public Sub New(ByVal t As infoSchema.table)
             _t = t
-
         End Sub
     End Class
 

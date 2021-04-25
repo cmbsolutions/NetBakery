@@ -172,7 +172,7 @@ Public Class mainGUI2
                 advtreeDatabases.Nodes.Clear()
 
                 For Each db In _mngr.databases
-                    Dim node As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .Text = db}
+                    Dim node As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .Text = db, .Name = db}
 
                     AddHandler node.NodeDoubleClick, AddressOf databaseNodeHandler
                     advtreeDatabases.Nodes.Add(node)
@@ -208,7 +208,7 @@ Public Class mainGUI2
             routineNode.Cells.Add(New AdvTree.Cell With {.Editable = False, .Text = "0", .TextDisplayFormat = "(0)", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter})
 
             ' Process all tables/views
-            For Each table In _mngr.tables
+            For Each table In _mngr.tables.Where(Function(c) c.isView = False)
                 ' Clone the templates
                 Dim tmpNode = itemNode.DeepCopy
                 Dim tmpCell = New AdvTree.Cell With {.Editable = False, .Text = "0", .TextDisplayFormat = "(0)", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter}
@@ -219,11 +219,20 @@ Public Class mainGUI2
 
                 AddHandler tmpNode.NodeClick, AddressOf tableNodeHandler
 
-                If table.isView Then
-                    viewNode.Nodes.Add(tmpNode)
-                Else
-                    tableNode.Nodes.Add(tmpNode)
-                End If
+                tableNode.Nodes.Add(tmpNode)
+            Next
+
+            For Each view In _mngr.tables.Where(Function(c) c.isView = True)
+                ' Clone the templates
+                Dim tmpNode = itemNode.DeepCopy
+                Dim tmpCell = New AdvTree.Cell With {.Editable = False, .Text = "0", .TextDisplayFormat = "(0)", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter}
+
+                tmpCell.Text = view.columns.Count.ToString
+                tmpNode.Text = view.name
+                tmpNode.Cells.Add(tmpCell)
+
+                AddHandler tmpNode.NodeClick, AddressOf viewNodeHandler
+                viewNode.Nodes.Add(tmpNode)
             Next
 
             ' Process all routines
@@ -311,6 +320,42 @@ Public Class mainGUI2
                 dcObjectInfo.Selected = True
                 TabControl1.SelectedPanel = TabControlPanel1
 
+            End If
+
+
+            _mngr.tables.First(Function(c) c.name = node.Text).hasExport = node.Checked
+
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub viewNodeHandler(sender As Object, e As EventArgs)
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            If nodeEvent.Button = MouseButtons.Left Then
+                Dim viewFields = (From f In _mngr.tables Where f.isView = True AndAlso f.name = node.Text Select f).FirstOrDefault
+
+                If viewFields IsNot Nothing Then
+                    dgvFields.DataSource = viewFields.columns.ToArray
+
+                    dgvForeignKeys.DataSource = Nothing
+
+                    scGeneratedModel.Text = _mngr.generateModel(viewFields)
+                    scGeneratedModel.Colorize(0, scGeneratedModel.Text.Length)
+
+                    scGeneratedMapping.Text = _mngr.generateMap(viewFields)
+                    scGeneratedMapping.Colorize(0, scGeneratedMapping.Text.Length)
+                End If
+
+                dgvFields.Refresh()
+                dgvForeignKeys.Refresh()
+
+                dcObjectInfo.Selected = True
+                TabControl1.SelectedPanel = TabControlPanel1
             End If
 
 
@@ -604,7 +649,7 @@ Public Class mainGUI2
 
             lexer.StyleClearAll()
 
-            lexer.HScrollBar = False
+            lexer.HScrollBar = True
             lexer.VScrollBar = True
 
             lexer.Styles(ScintillaNET.Style.Default).BackColor = Color.FromArgb(30, 30, 30)
@@ -685,7 +730,7 @@ Public Class mainGUI2
 
             lexer.StyleClearAll()
 
-            lexer.HScrollBar = False
+            lexer.HScrollBar = True
             lexer.VScrollBar = True
 
             lexer.Styles(ScintillaNET.Style.Default).BackColor = Color.FromArgb(30, 30, 30)
@@ -911,10 +956,21 @@ Public Class mainGUI2
                 txtOutputFolder.Text = _currentProject.projectoutputlocation
                 cboOutputType.Text = _currentProject.outputtype
 
+                cboConnecions.Text = _currentProject.database.connection.description
                 _currentConnection = _currentProject.database.connection
+
+                btnConnect.RaiseClick()
+
                 _mngr.database = _currentProject.database.databasename
                 _mngr.tables = _currentProject.database.tables
                 _mngr.routines = _currentProject.database.routines
+
+                Dim selectedDB = advtreeDatabases.FindNodeByName(_currentProject.database.databasename)
+
+                If selectedDB IsNot Nothing Then
+                    advtreeDatabases.SelectNode(selectedDB, AdvTree.eTreeAction.Code)
+                    databaseNodeHandler(selectedDB, New AdvTree.AdvTreeNodeEventArgs(AdvTree.eTreeAction.Keyboard, selectedDB))
+                End If
             End If
         Catch ex As Exception
             FormHelpers.dumpException(ex)

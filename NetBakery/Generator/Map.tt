@@ -78,7 +78,7 @@ Namespace Models.Mapping
 	For Each r in _t.relations
 		If r.isOptional Then
 #>
-			Me.HasisOptional(Function(t) t.<#= r.toTable.name #>).WithMany(Function(t) t.<#= r.alias #>).HasForeignKey(Function(d) d.<#= r.toColumn.name #>)
+			Me.HasOptional(Function(t) t.<#= r.toTable.name #>).WithMany(Function(t) t.<#= r.alias #>).HasForeignKey(Function(d) d.<#= r.toColumn.name #>)
 <#      Else #>
 			Me.HasRequired(Function(t) t.<#= r.toTable.name #>).WithMany(Function(t) t.<#= r.alias #>).HasForeignKey(Function(d) d.<#= r.toColumn.name #>)
 <#

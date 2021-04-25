@@ -159,7 +159,7 @@ Namespace infoSchema
             Try
                 Using _dbCommand = New MySqlCommand
                     _dbCommand.Connection = dbConnection()
-                    _dbCommand.CommandText = "SELECT CONSTRAINT_NAME, TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM KEY_COLUMN_USAGE WHERE CONSTRAINT_SCHEMA = @database AND REFERENCED_TABLE_NAME is not null"
+                    _dbCommand.CommandText = "SELECT CONSTRAINT_NAME, TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM KEY_COLUMN_USAGE WHERE CONSTRAINT_SCHEMA = @database AND REFERENCED_TABLE_NAME is not null ORDER BY TABLE_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT"
                     _dbCommand.Parameters.AddWithValue("database", database)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
@@ -179,7 +179,7 @@ Namespace infoSchema
                             Dim rt As table = (From t1 In tables Where t1.name = rdr("REFERENCED_TABLE_NAME").ToString Select t1).FirstOrDefault
                             If rt IsNot Nothing Then f.referencedTable = rt
 
-                            Dim rc As column = (From c1 In t.columns Where c1.name = rdr("REFERENCED_COLUMN_NAME").ToString Select c1).FirstOrDefault
+                            Dim rc As column = (From c1 In rt.columns Where c1.name = rdr("REFERENCED_COLUMN_NAME").ToString Select c1).FirstOrDefault
                             If rc IsNot Nothing Then f.referencedColumn = rc
 
                             If t.foreignKeys.Where(Function(d) d.table.name = f.table.name AndAlso d.referencedTable.name = f.referencedTable.name).Count > 0 Then

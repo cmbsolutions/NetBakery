@@ -180,7 +180,7 @@ Namespace My.Templates
 
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.HasisOptional(Function(t) t.")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.HasOptional(Function(t) t.")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\Map.tt",81)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(r.toTable.name))

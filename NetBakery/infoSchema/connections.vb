@@ -213,6 +213,10 @@ Namespace infoSchema
         Public Overrides Function ToString() As String
             Return $"server={host};user id={user};password={decryptedPass()};allowuservariables=True;characterset=utf8;interactivesession=True;treattinyasboolean=False;compress=True;persistsecurityinfo=True;sslmode={sslmode.ToString}"
         End Function
+
+        Public Sub Clone(ByRef [to] As connection)
+            [to] = DirectCast(Me.MemberwiseClone(), connection)
+        End Sub
     End Class
 
     <Serializable>
