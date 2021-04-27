@@ -195,12 +195,15 @@
     </Compile>
     <Compile Include="customTextTraceListener.vb" />
     <Compile Include="formHelpers.vb" />
+    <Compile Include="Generators\iGenerator.vb" />
+    <Compile Include="Generators\net5Templates.vb" />
+    <Compile Include="Generators\net5Generator.vb" />
+    <Compile Include="Generators\legacy_netGenerator.vb" />
     <Compile Include="Generators\legacy\Context.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Generators\legacy\generator.vb" />
     <Compile Include="Generators\legacy\Map.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -221,7 +224,38 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StoreCommands.tt</DependentUpon>
     </Compile>
-    <Compile Include="Generators\legacy\templateData.vb" />
+    <Compile Include="Generators\legacy_netTemplates.vb" />
+    <Compile Include="Generators\net5\Context.vb">
+      <DependentUpon>Context.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Generators\net5\Map.vb">
+      <DependentUpon>Map.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Generators\net5\Model.vb">
+      <DependentUpon>Model.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Generators\net5\StoreCommand.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreCommand.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\net5\StoreCommandModel.vb">
+      <DependentUpon>StoreCommandModel.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Generators\net5\StoreCommands.vb">
+      <DependentUpon>StoreCommands.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Generators\pluralizationService.vb" />
     <Compile Include="infoSchema\column.vb" />
     <Compile Include="infoSchema\connections.vb" />
     <Compile Include="infoSchema\enums.vb" />
@@ -328,17 +362,19 @@
   <ItemGroup>
     <Content Include="Generators\legacy\Context.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <CustomToolNamespace>My.Templates</CustomToolNamespace>
+      <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
       <LastGenOutput>Context.vb</LastGenOutput>
+      <Parameters>&lt;%3fxml version="1.0" encoding="utf-16"%3f&gt;
+&lt;ArrayOfParameterStorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Parameters>
     </Content>
     <Content Include="Generators\legacy\Map.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <CustomToolNamespace>My.Templates</CustomToolNamespace>
+      <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
       <LastGenOutput>Map.vb</LastGenOutput>
     </Content>
     <Content Include="Generators\legacy\Model.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <CustomToolNamespace>My.Templates</CustomToolNamespace>
+      <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
       <LastGenOutput>Model.vb</LastGenOutput>
     </Content>
     <Content Include="Generators\legacy\StoreCommand.cs">
@@ -347,18 +383,53 @@
       <DependentUpon>StoreCommand.tt</DependentUpon>
     </Content>
     <Content Include="Generators\legacy\StoreCommand.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>StoreCommand.cs</LastGenOutput>
+      <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
     </Content>
     <Content Include="Generators\legacy\StoreCommandModel.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <CustomToolNamespace>My.Templates</CustomToolNamespace>
+      <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
       <LastGenOutput>StoreCommandModel.vb</LastGenOutput>
     </Content>
     <Content Include="Generators\legacy\StoreCommands.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <CustomToolNamespace>My.Templates</CustomToolNamespace>
+      <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
       <LastGenOutput>StoreCommands.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\net5\Context.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>Context.vb</LastGenOutput>
+      <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+    </Content>
+    <Content Include="Generators\net5\Map.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>Map.vb</LastGenOutput>
+      <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+    </Content>
+    <Content Include="Generators\net5\Model.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>Model.vb</LastGenOutput>
+      <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+    </Content>
+    <Content Include="Generators\net5\StoreCommand.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+      <Parameters>&lt;%3fxml version="1.0" encoding="utf-16"%3f&gt;
+&lt;ArrayOfParameterStorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Parameters>
+      <LastGenOutput>StoreCommand.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\net5\StoreCommandModel.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>StoreCommandModel.vb</LastGenOutput>
+      <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+    </Content>
+    <Content Include="Generators\net5\StoreCommands.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>StoreCommands.vb</LastGenOutput>
+      <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+      <Parameters>&lt;%3fxml version="1.0" encoding="utf-16"%3f&gt;
+&lt;ArrayOfParameterStorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Parameters>
     </Content>
     <Content Include="netbakery.png.ico" />
     <None Include="Resources\pngwing.com.png" />
@@ -380,7 +451,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Generators\net5\" />
     <Folder Include="Generators\php\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

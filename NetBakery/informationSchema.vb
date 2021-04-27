@@ -6,7 +6,7 @@ Public Class informationSchema
     Property connectionString As String = ""
     Private _dbConnection As MySqlConnection
     Private _dbCommand As MySqlCommand
-    Private _p As New My.Templates.PluralizationService
+    Private _p As New PluralizationService
     Private _keywords As New List(Of String)
 
     Property database As String = ""
@@ -21,7 +21,7 @@ Public Class informationSchema
         _keywords.AddRange(My.Settings.keywords.Split(" "c))
     End Sub
     Public Sub updatePluralizationService()
-        _p = New My.Templates.PluralizationService
+        _p = New PluralizationService
     End Sub
     Public Function TryConnect() As Boolean
         Try

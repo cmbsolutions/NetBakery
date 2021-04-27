@@ -15,7 +15,7 @@ Option Explicit On
 Namespace My
     
     <Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
-     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0"),  _
+     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0"),  _
      Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
     Partial Friend NotInheritable Class MySettings
         Inherits Global.System.Configuration.ApplicationSettingsBase
@@ -57,8 +57,8 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("server={0};user id={1};password={2};database=information_schema;allowuservariable"& _ 
-            "s=True;characterset=utf8;interactivesession=True;treattinyasboolean=False;compre"& _ 
-            "ss=True;persistsecurityinfo=True;sslmode={3}")>  _
+            "s=True;characterset=utf8mb4;interactivesession=True;treattinyasboolean=False;com"& _ 
+            "press=True;persistsecurityinfo=True;sslmode={3}")>  _
         Public Property defaultConnectionString() As String
             Get
                 Return CType(Me("defaultConnectionString"),String)
