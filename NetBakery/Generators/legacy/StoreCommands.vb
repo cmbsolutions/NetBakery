@@ -26,19 +26,19 @@ Namespace My.Templates
             Me.Write("Imports System.Data.Entity"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Imports System.Data.Entity.Infrastructure"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespac"& _ 
                     "e Models"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    Public Class StoreCommands"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        Private _context As ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",11)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",11)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_name))
             
             #End ExternalSource
             Me.Write("DataContext"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        Sub New(ByRef context As ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",13)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",13)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_name))
             
             #End ExternalSource
             Me.Write("DataContext)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            _context = context"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",16)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",16)
 
     For Each f In _functions
         Dim p1 As New List(Of String)
@@ -59,50 +59,50 @@ Namespace My.Templates
             #End ExternalSource
             Me.Write("        Public Overridable Function ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",32)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",32)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",32)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",32)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p1)))
             
             #End ExternalSource
             Me.Write(") As ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",32)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",32)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnParam.vbType))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Ex"& _ 
                     "ecuteStoreQuery(Of ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",33)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",33)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnParam.vbType))
             
             #End ExternalSource
             Me.Write(")(""SELECT ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",33)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",33)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",33)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",33)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
             
             #End ExternalSource
             Me.Write(")"", ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",33)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",33)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p3)))
             
             #End ExternalSource
             Me.Write(").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",36)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",36)
 
         Else
 
@@ -110,32 +110,32 @@ Namespace My.Templates
             #End ExternalSource
             Me.Write("        Public Overridable Function ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",39)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",39)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("() As ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",39)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",39)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnParam.vbType))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Ex"& _ 
                     "ecuteStoreQuery(Of ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",40)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",40)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnParam.vbType))
             
             #End ExternalSource
             Me.Write(")(""SELECT ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",40)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",40)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("()"").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",43)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",43)
 
         End If
     Next
@@ -160,50 +160,50 @@ Namespace My.Templates
             #End ExternalSource
             Me.Write("        Public Overridable Function ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",63)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",63)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",63)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",63)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p1)))
             
             #End ExternalSource
             Me.Write(") As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",63)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",63)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnLayout.singleName))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.E"& _ 
                     "xecuteStoreQuery(Of Models.StoreCommandSchemas.")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",64)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",64)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnLayout.singleName))
             
             #End ExternalSource
             Me.Write(")(""")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",64)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",64)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",64)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",64)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
             
             #End ExternalSource
             Me.Write(")"", ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",64)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",64)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p3)))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",66)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",66)
 
             else
 
@@ -211,38 +211,38 @@ Namespace My.Templates
             #End ExternalSource
             Me.Write("        Public Overridable Sub ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",69)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",69)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",69)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",69)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p1)))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteS"& _ 
                     "toreCommand(""")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",70)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",70)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",70)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",70)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
             
             #End ExternalSource
             Me.Write(")"", ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",70)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",70)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p3)))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",72)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",72)
           
             End If
         Else
@@ -252,32 +252,32 @@ Namespace My.Templates
             #End ExternalSource
             Me.Write("        Public Overridable Function ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",77)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",77)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("() As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",77)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",77)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnLayout.singleName))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.E"& _ 
                     "xecuteStoreQuery(Of Models.StoreCommandSchemas.")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",78)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",78)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnLayout.singleName))
             
             #End ExternalSource
             Me.Write(")(""")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",78)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",78)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("()"")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",80)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",80)
 
             else
 
@@ -285,20 +285,20 @@ Namespace My.Templates
             #End ExternalSource
             Me.Write("        Public Overridable Sub ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",83)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",83)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            DirectCast(_context, IObjectContextAdapter).ObjectContext.Execute"& _ 
                     "StoreCommand(""")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",84)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",84)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("()"")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generator\StoreCommands.tt",86)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",86)
 
             End If
         End If

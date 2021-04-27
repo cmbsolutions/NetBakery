@@ -8,6 +8,8 @@ Public Class Project
     Property projectlocation As String
     Property projectoutputlocation As String
     Property outputtype As String
+    Property useEnums As Boolean
+
     Property needsSave As Boolean
     Property projectfilename As String
 

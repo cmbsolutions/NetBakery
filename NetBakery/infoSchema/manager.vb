@@ -17,6 +17,7 @@ Namespace infoSchema
         Public Property databases As List(Of String)
         Public Property tables As List(Of table)
         Public Property routines As List(Of routine)
+        Public Property useEnums As Boolean
 
         Private _generator As New generator
 
@@ -143,6 +144,14 @@ Namespace infoSchema
                                     c.autoIncrement = If(rdr("EXTRA").ToString = "auto_increment", True, False)
                                 End If
                                 c.vbType = getVbType(rdr("DATA_TYPE").ToString)
+
+                                If rdr("DATA_TYPE").ToString = "enum" Then
+                                    Dim RegexObj As New Regex("\(([^)]+)")
+                                    Dim tmpData As String = RegexObj.Match(rdr("COLUMN_TYPE").ToString()).Groups(1).Value
+
+                                    c.enums = New List(Of String)
+                                    c.enums.AddRange(tmpData.Replace("'", "").Split(","c))
+                                End If
 
                                 t.columns.Add(c)
                             End While
@@ -324,7 +333,7 @@ Namespace infoSchema
                     Return GetType(Integer)
                 Case "bigint", "int64", "uint64"
                     Return GetType(Long)
-                Case "char", "varchar", "text", "tinytext", "mediumtext", "longtext", "string", "varstring", "varbinary", "binary", "tinyblob", "mediumblob", "longblob", "enum", "set"
+                Case "char", "varchar", "text", "tinytext", "mediumtext", "longtext", "string", "varstring", "varbinary", "binary", "tinyblob", "mediumblob", "longblob", "set", "enum"
                     Return GetType(String)
                 Case "time", "timestamp"
                     Return GetType(TimeSpan)

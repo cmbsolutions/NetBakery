@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "NetBakery"
-#define MyAppVersion "0.9.261"
+#define MyAppVersion "1.0.309"
 #define MyAppPublisher "CMBSolutions"
 #define MyAppExeName "NetBakery.exe"
 
@@ -24,7 +24,7 @@ OutputBaseFilename={#MyAppName}Setup{#MyAppVersion}
 SetupIconFile={#MyAppName}\netbakery.png.ico
 Compression=lzma
 SolidCompression=yes
-AppCopyright=CMBSolutions 2017-2019
+AppCopyright=CMBSolutions 2017-2021
 UninstallDisplayName={#MyAppName} {#MyAppVersion}
 UninstallDisplayIcon={app}\netbakery.png.ico
 

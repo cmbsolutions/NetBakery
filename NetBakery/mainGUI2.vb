@@ -902,6 +902,7 @@ Public Class mainGUI2
                 _currentProject.projectlocation = txtProjectFolder.Text
                 _currentProject.projectoutputlocation = txtOutputFolder.Text
                 _currentProject.outputtype = cboOutputType.Text
+                _currentProject.useEnums = sbEnums.Value
 
                 _currentProject.database = New databaseObjects With {
                     .connection = _currentConnection,
@@ -955,6 +956,7 @@ Public Class mainGUI2
                 txtProjectFolder.Text = _currentProject.projectlocation
                 txtOutputFolder.Text = _currentProject.projectoutputlocation
                 cboOutputType.Text = _currentProject.outputtype
+                sbEnums.SetValue(_currentProject.useEnums, eEventSource.Code)
 
                 cboConnecions.Text = _currentProject.database.connection.description
                 _currentConnection = _currentProject.database.connection
@@ -972,6 +974,34 @@ Public Class mainGUI2
                     databaseNodeHandler(selectedDB, New AdvTree.AdvTreeNodeEventArgs(AdvTree.eTreeAction.Keyboard, selectedDB))
                 End If
             End If
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub btnCloseProject_Click(sender As Object, e As EventArgs) Handles btnCloseProject.Click
+        Try
+            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
+                If MessageBox.Show("Project has changed. Save changes?", "Save changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    btnSaveProject.RaiseClick()
+                End If
+            End If
+
+            _currentProject = Nothing
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub btnNewProject_Click(sender As Object, e As EventArgs) Handles btnNewProject.Click
+        Try
+            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
+                If MessageBox.Show("Project has changed. Save changes?", "Save changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    btnSaveProject.RaiseClick()
+                End If
+            End If
+
+            _currentProject = New Project
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try

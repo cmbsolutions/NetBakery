@@ -195,35 +195,36 @@
     </Compile>
     <Compile Include="customTextTraceListener.vb" />
     <Compile Include="formHelpers.vb" />
-    <Compile Include="Generator\Context.vb">
+    <Compile Include="Generators\legacy\Context.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Generator\generator.vb" />
-    <Compile Include="Generator\Map.vb">
+    <Compile Include="Generators\legacy\generator.vb" />
+    <Compile Include="Generators\legacy\Map.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Map.tt</DependentUpon>
     </Compile>
-    <Compile Include="Generator\Model.vb">
+    <Compile Include="Generators\legacy\Model.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="Generator\StoreCommandModel.vb">
+    <Compile Include="Generators\legacy\StoreCommandModel.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StoreCommandModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Generator\StoreCommands.vb">
+    <Compile Include="Generators\legacy\StoreCommands.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StoreCommands.tt</DependentUpon>
     </Compile>
-    <Compile Include="Generator\templateData.vb" />
+    <Compile Include="Generators\legacy\templateData.vb" />
     <Compile Include="infoSchema\column.vb" />
     <Compile Include="infoSchema\connections.vb" />
+    <Compile Include="infoSchema\enums.vb" />
     <Compile Include="infoSchema\foreignKey.vb" />
     <Compile Include="infoSchema\inflector.vb" />
     <Compile Include="infoSchema\manager.vb" />
@@ -325,41 +326,42 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Generator\Context.tt">
+    <Content Include="Generators\legacy\Context.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>My.Templates</CustomToolNamespace>
       <LastGenOutput>Context.vb</LastGenOutput>
     </Content>
-    <Content Include="Generator\Map.tt">
+    <Content Include="Generators\legacy\Map.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>My.Templates</CustomToolNamespace>
       <LastGenOutput>Map.vb</LastGenOutput>
     </Content>
-    <Content Include="Generator\Model.tt">
+    <Content Include="Generators\legacy\Model.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>My.Templates</CustomToolNamespace>
       <LastGenOutput>Model.vb</LastGenOutput>
     </Content>
-    <Content Include="Generator\StoreCommand.cs">
+    <Content Include="Generators\legacy\StoreCommand.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StoreCommand.tt</DependentUpon>
     </Content>
-    <Content Include="Generator\StoreCommand.tt">
+    <Content Include="Generators\legacy\StoreCommand.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>StoreCommand.cs</LastGenOutput>
     </Content>
-    <Content Include="Generator\StoreCommandModel.tt">
+    <Content Include="Generators\legacy\StoreCommandModel.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>My.Templates</CustomToolNamespace>
       <LastGenOutput>StoreCommandModel.vb</LastGenOutput>
     </Content>
-    <Content Include="Generator\StoreCommands.tt">
+    <Content Include="Generators\legacy\StoreCommands.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>My.Templates</CustomToolNamespace>
       <LastGenOutput>StoreCommands.vb</LastGenOutput>
     </Content>
     <Content Include="netbakery.png.ico" />
+    <None Include="Resources\pngwing.com.png" />
     <None Include="Resources\logo.png" />
     <None Include="Resources\folder_search.png" />
     <EmbeddedResource Include="Resources\php_keywords.txt" />
@@ -376,6 +378,10 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Generators\net5\" />
+    <Folder Include="Generators\php\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
