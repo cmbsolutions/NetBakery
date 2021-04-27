@@ -61,6 +61,8 @@ Public Class mainGUI2
 
             saveConnections()
 
+            If _currentProject.needsSave Then btnSaveProject.RaiseClick()
+
             For Each frm As Form In My.Application.OpenForms
                 If frm.Name <> Name Then
                     frm.Close()
@@ -385,12 +387,19 @@ Public Class mainGUI2
 #Region "outputExplorer"
     Private Sub btnHomeOutputExplorer_Click(sender As Object, e As EventArgs) Handles btnHomeOutputExplorer.Click
         Try
-            Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
-                advtreeOutputExplorer.Nodes.Clear()
-                advtreeOutputExplorer.Load(ts)
-                advtreeOutputExplorer.Refresh()
-            End Using
-
+            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype = ".NET" Then
+                Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
+                    advtreeOutputExplorer.Nodes.Clear()
+                    advtreeOutputExplorer.Load(ts)
+                    advtreeOutputExplorer.Refresh()
+                End Using
+            Else
+                Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
+                    advtreeOutputExplorer.Nodes.Clear()
+                    advtreeOutputExplorer.Load(ts)
+                    advtreeOutputExplorer.Refresh()
+                End Using
+            End If
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -398,10 +407,17 @@ Public Class mainGUI2
 
     Private Sub btnRefreshOutputExplorer_Click(sender As Object, e As EventArgs) Handles btnRefreshOutputExplorer.Click
         Try
-            Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
-                advtreeOutputExplorer.Nodes.Clear()
-                advtreeOutputExplorer.Load(ts)
-            End Using
+            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype = ".NET" Then
+                Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
+                    advtreeOutputExplorer.Nodes.Clear()
+                    advtreeOutputExplorer.Load(ts)
+                End Using
+            Else
+                Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
+                    advtreeOutputExplorer.Nodes.Clear()
+                    advtreeOutputExplorer.Load(ts)
+                End Using
+            End If
 
             Dim tplModelAndMapping As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 4}
             Dim tplContextAndStoreCommands As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 5}
@@ -412,6 +428,8 @@ Public Class mainGUI2
             Dim mModel As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapModels", True).FirstOrDefault
             Dim mMapping As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapMapping", True).FirstOrDefault
             Dim mStoreCommands As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommands", True).FirstOrDefault
+            Dim mStoreCommandFunctions As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommandFunctions", True).FirstOrDefault
+            Dim mStoreCommandsProcedures As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommandProcedures", True).FirstOrDefault
             Dim mStoreCommandModels As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
 
             ' Tables and views
@@ -449,14 +467,18 @@ Public Class mainGUI2
                 tmpNode.Text = $"{routine.name}.vb"
                 AddHandler tmpNode.NodeClick, AddressOf explorerRoutineNodeHandler
 
-                mStoreCommands.Nodes.Add(tmpNode)
+                If routine.isFunction Then
+                    mStoreCommandFunctions.Nodes.Add(tmpNode)
+                Else
+                    mStoreCommandsProcedures.Nodes.Add(tmpNode)
+                End If
 
                 If routine.returnsRecordset Then
                     tmpNode = tplModelAndMapping.DeepCopy
                     tmpNode.Name = $"n{routine.name}Model"
                     tmpNode.TagString = routine.name
                     tmpNode.Text = $"{routine.name}Model.vb"
-                    AddHandler tmpNode.NodeClick, AddressOf explorerModelNodeHandler
+                    AddHandler tmpNode.NodeClick, AddressOf explorerRoutineModelNodeHandler
 
                     mStoreCommandModels.Nodes.Add(tmpNode)
                 End If
@@ -486,22 +508,47 @@ Public Class mainGUI2
 
     Private Sub btnSaveLayout_Click(sender As Object, e As EventArgs) Handles btnSaveLayout.Click
         Try
-
             If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models")
             If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\Mapping") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\Mapping")
-            If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommandSchemas") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommandSchemas")
+
+            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype = ".NET" Then
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands")
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands\Functions") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands\Functions")
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands\Procedures") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands\Procedures")
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands\Procedures\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands\Procedures\Models")
+            Else
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommandSchemas") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommandSchemas")
+            End If
 
             For Each t In _mngr.tables.Where(Function(c) c.hasExport)
                 IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{t.singleName}.vb", _mngr.generateModel(t))
                 IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\Mapping\{t.singleName}Map.vb", _mngr.generateModel(t))
             Next
 
-            For Each s In _mngr.routines.Where(Function(c) c.hasExport And c.returnsRecordset)
-                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommandSchemas\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
+            For Each s In _mngr.routines.Where(Function(c) c.hasExport)
+                If _currentProject IsNot Nothing AndAlso _currentProject.outputtype = ".NET" Then
+                    If s.isFunction Then
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Functions\{s.name}.vb", _mngr.generateStoreCommand(s))
+                    Else
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Procedures\{s.name}.vb", _mngr.generateStoreCommand(s))
+                        If s.returnsRecordset Then
+                            IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Procedures\Models\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
+                        End If
+                    End If
+                Else
+                    If s.returnsRecordset Then
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommandSchemas\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
+                    End If
+                End If
             Next
 
             IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}DataContext.vb", _mngr.generateContext($"{txtProjectName.Text}Data"))
-            IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}StoreCommands.vb", _mngr.generateStoreCommands($"{txtProjectName.Text}Data"))
+
+            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype = ".NET" Then
+
+            Else
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}StoreCommands.vb", _mngr.generateStoreCommands($"{txtProjectName.Text}Data"))
+            End If
 
             MessageBox.Show("Output generated")
         Catch ex As Exception
@@ -548,10 +595,36 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
+            Dim r = _mngr.routines.FirstOrDefault(Function(c) c.name = node.TagString)
+
+            If r IsNot Nothing Then
+                scCodePreview.Text = _mngr.generateStoreCommand(r)
+                scCodePreview.Colorize(0, scCodePreview.Text.Length)
+                dcCodePreview.Selected = True
+            End If
+
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
     End Sub
+    Private Sub explorerRoutineModelNodeHandler(sender As Object, e As EventArgs)
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim r = _mngr.routines.FirstOrDefault(Function(c) c.name = node.TagString)
+
+            If r IsNot Nothing AndAlso r.returnLayout IsNot Nothing Then
+                scCodePreview.Text = _mngr.generateModel(r.returnLayout)
+                scCodePreview.Colorize(0, scCodePreview.Text.Length)
+                dcCodePreview.Selected = True
+            End If
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
     Private Sub explorerContextNodeHandler(sender As Object, e As EventArgs)
         Try
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
@@ -871,6 +944,7 @@ Public Class mainGUI2
             FolderBrowserDialog1.Description = "Select project folder"
             If FolderBrowserDialog1.ShowDialog = DialogResult.OK Then
                 txtProjectFolder.Text = FolderBrowserDialog1.SelectedPath
+                WriteProject()
             End If
 
         Catch ex As Exception
@@ -884,6 +958,7 @@ Public Class mainGUI2
             FolderBrowserDialog1.Description = "Select output folder"
             If FolderBrowserDialog1.ShowDialog = DialogResult.OK Then
                 txtOutputFolder.Text = FolderBrowserDialog1.SelectedPath
+                WriteProject()
             End If
 
         Catch ex As Exception
@@ -895,31 +970,9 @@ Public Class mainGUI2
         Try
             SaveFileDialog1.FileName = txtProjectName.Text
 
-            If (_currentProject.projectfilename <> "" AndAlso IO.File.Exists(_currentProject.projectfilename)) Or SaveFileDialog1.ShowDialog = DialogResult.OK Then
+            If (_currentProject.projectfilename <> "" AndAlso IO.File.Exists(_currentProject.projectfilename)) OrElse SaveFileDialog1.ShowDialog = DialogResult.OK Then
                 _currentProject.projectfilename = SaveFileDialog1.FileName
-                _currentProject.application_version = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
-                _currentProject.projectname = txtProjectName.Text
-                _currentProject.projectlocation = txtProjectFolder.Text
-                _currentProject.projectoutputlocation = txtOutputFolder.Text
-                _currentProject.outputtype = cboOutputType.Text
-                _currentProject.useEnums = sbEnums.Value
-
-                _currentProject.database = New databaseObjects With {
-                    .connection = _currentConnection,
-                    .databasename = _mngr.database,
-                    .tables = _mngr.tables,
-                    .routines = _mngr.routines
-                }
-
-                _currentProject.generatedoutputs = New List(Of outputItem)
-
-                For Each pf In (From f In IO.Directory.EnumerateFiles(_currentProject.projectoutputlocation, "*.*", IO.SearchOption.AllDirectories) Select New IO.FileInfo(f)).ToList
-                    _currentProject.generatedoutputs.Add(New outputItem With {
-                                                         .filename = pf.Name,
-                                                         .location = pf.DirectoryName,
-                                                         .objecttype = "file",
-                                                         .hash = pf.GetHashCode.ToString})
-                Next
+                WriteProject()
 
                 Using fs As New IO.FileStream(SaveFileDialog1.FileName, IO.FileMode.Create, IO.FileAccess.Write, IO.FileShare.None)
                     Using sw As New IO.StreamWriter(fs, System.Text.Encoding.UTF8)
@@ -940,6 +993,38 @@ Public Class mainGUI2
         End Try
     End Sub
 
+    Private Sub WriteProject()
+        Try
+            _currentProject.needsSave = True
+            _currentProject.application_version = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
+            _currentProject.projectname = txtProjectName.Text
+            _currentProject.projectlocation = txtProjectFolder.Text
+            _currentProject.projectoutputlocation = txtOutputFolder.Text
+            _currentProject.outputtype = cboOutputType.Text
+            _currentProject.useEnums = sbEnums.Value
+
+            _currentProject.database = New databaseObjects With {
+                .connection = _currentConnection,
+                .databasename = _mngr.database,
+                .tables = _mngr.tables,
+                .routines = _mngr.routines
+            }
+
+            _currentProject.generatedoutputs = New List(Of outputItem)
+
+            If _currentProject.projectoutputlocation <> "" Then
+                For Each pf In (From f In IO.Directory.EnumerateFiles(_currentProject.projectoutputlocation, "*.*", IO.SearchOption.AllDirectories) Select New IO.FileInfo(f)).ToList
+                    _currentProject.generatedoutputs.Add(New outputItem With {
+                                                         .filename = pf.Name,
+                                                         .location = pf.DirectoryName,
+                                                         .objecttype = "file",
+                                                         .hash = pf.GetHashCode.ToString})
+                Next
+            End If
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
     Private Sub btnOpenProject_Click(sender As Object, e As EventArgs) Handles btnOpenProject.Click
         Try
             If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
@@ -963,6 +1048,7 @@ Public Class mainGUI2
 
                 btnConnect.RaiseClick()
 
+                _mngr.setGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString)
                 _mngr.database = _currentProject.database.databasename
                 _mngr.tables = _currentProject.database.tables
                 _mngr.routines = _currentProject.database.routines
@@ -1005,5 +1091,9 @@ Public Class mainGUI2
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
+    End Sub
+
+    Private Sub cboOutputType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboOutputType.SelectedIndexChanged
+        WriteProject()
     End Sub
 End Class

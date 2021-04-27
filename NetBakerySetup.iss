@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "NetBakery"
-#define MyAppVersion "1.0.309"
+#define MyAppVersion "1.0.324"
 #define MyAppPublisher "CMBSolutions"
 #define MyAppExeName "NetBakery.exe"
 

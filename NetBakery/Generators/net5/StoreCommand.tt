@@ -1,0 +1,75 @@
+﻿<#@ template language="VB" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+Imports System.Data.Entity
+Imports System.Data.Entity.Infrastructure
+
+<# if _routine.isFunction then #>
+Namespace Models.StoreCommands.Functions
+<# Else #>
+Namespace Models.StoreCommands.Procedures
+<# End If #>
+    Public Class <#= _routine.name #>
+<#
+    Dim p1 As New List(Of String)
+    Dim p2 As New List(Of String)
+    Dim p3 As New List(Of String)
+    Dim i As Integer = 0
+
+    For Each p In _routine.params
+        p1.add(String.Format("{0} As {1}", p.name, p.vbType))
+        p2.Add("{" & i & "}")
+        p3.Add(String.Format(p.name))
+        i += 1
+    Next
+
+    If p1.count() > 0 Then
+        If _routine.isFunction then
+
+#>
+    Public Overridable Function Execute(<#= String.Join(", ", p1) #>) As <#= _routine.returnParam.vbType #>
+        Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= _routine.returnParam.vbType #>)("SELECT <#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>).FirstOrDefault
+    End Function
+<#
+        Else
+            If _routine.returnsRecordset AndAlso _routine.returnLayout.columns IsNot Nothing AndAlso _routine.returnLayout.columns.Any() then
+#>
+        Public Overridable Function Execute(<#= String.Join(", ", p1) #>) As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.<#= _routine.returnLayout.singleName #>)
+            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= _routine.returnLayout.singleName #>)("<#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
+        End Function
+<#
+            Else
+#>
+        Public Overridable Sub <#= _routine.name #>(<#= String.Join(", ", p1) #>)
+            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
+        End Sub
+<#          
+            End If
+
+        End if
+    Else
+        If _routine.isFunction then
+#>
+    Public Overridable Function Execute() As <#= _routine.returnParam.vbType #>
+        Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= _routine.returnParam.vbType #>)("SELECT <#= _routine.name #>()").FirstOrDefault
+    End Function
+<#      Else
+            If _routine.returnsRecordset AndAlso _routine.returnLayout.columns IsNot Nothing AndAlso _routine.returnLayout.columns.Any() then
+#>
+        Public Overridable Function Execute() As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.<#= _routine.returnLayout.singleName #>)
+            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= _routine.returnLayout.singleName #>)("<#= _routine.name #>()")
+        End Function
+<#
+            Else
+#>
+        Public Overridable sub Execute()
+            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= _routine.name #>()")
+        End Sub
+<#
+            End If
+
+        End If
+    End If
+#>

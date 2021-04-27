@@ -13,7 +13,7 @@ Imports System
 '    the code is regenerated.
 '</auto-generated>
 '------------------------------------------------------------------------------
-Namespace My.Templates
+Namespace My.Templates.legacy_net
     '''<summary>
     '''Class to produce the template output
     '''</summary>

@@ -154,4 +154,17 @@
   <data name="pngwing.com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pngwing.com.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="net5OutputExplorer" xml:space="preserve">
+    <value>&lt;AdvTree&gt;
+  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Models" ImageIndex="1" ImageExpandedIndex="0"&gt;
+    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Mapping" ImageIndex="1" ImageExpandedIndex="0" /&gt;
+    &lt;Node Expanded="true" Name="mapStoreCommands" DragDropEnabled="false" Text="StoreCommands" ImageIndex="1" ImageExpandedIndex="0"&gt;
+      &lt;Node Expanded="true" Name="mapStoreCommandFunctions" DragDropEnabled="false" Text="Functions" ImageIndex="1" ImageExpandedIndex="0" /&gt;
+      &lt;Node Expanded="true" Name="mapStoreCommandProcedures" DragDropEnabled="false" Text="Procedures" ImageIndex="1" ImageExpandedIndex="0"&gt;
+		&lt;Node Expanded="true" Name="mapStoreCommandModels" DragDropEnabled="false" Text="Models" ImageIndex="1" ImageExpandedIndex="0" /&gt;
+	  &lt;/Node&gt;
+    &lt;/Node&gt;
+  &lt;/Node&gt;
+&lt;/AdvTree&gt;</value>
+  </data>
 </root>

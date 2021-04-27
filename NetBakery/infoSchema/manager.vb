@@ -18,8 +18,24 @@ Namespace infoSchema
         Public Property tables As List(Of table)
         Public Property routines As List(Of routine)
         Public Property useEnums As Boolean
+        Private Property useGenerator As String = "net5"
 
-        Private _generator As New generator
+        Private _generator As iGenerator = New net5Generator
+
+        Public Sub setGenerator(_v As String)
+            useGenerator = _v
+
+            Select Case useGenerator
+                Case "net"
+                    _generator = New legacy_netGenerator
+                Case "net5"
+                    _generator = New net5Generator
+                Case "php"
+                    '_generator = New phpGenerator
+                Case Else
+
+            End Select
+        End Sub
 
         Public Function generateModel(t As table) As String
             Try
@@ -48,6 +64,14 @@ Namespace infoSchema
         Public Function generateStoreCommands(name As String) As String
             Try
                 Return _generator.generateStoreCommands(routines.Where(Function(c) c.isFunction And c.hasExport).ToList, routines.Where(Function(c) Not c.isFunction And c.hasExport).ToList, name)
+            Catch ex As Exception
+                Throw
+            End Try
+        End Function
+
+        Public Function generateStoreCommand(r As infoSchema.routine) As String
+            Try
+                Return _generator.generateStoreCommand(r)
             Catch ex As Exception
                 Throw
             End Try
