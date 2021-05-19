@@ -165,5 +165,14 @@ Namespace My.Resources
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to https://www.cmbsolutions.nl/netbakery/v2/latest.php.
+        '''</summary>
+        Friend ReadOnly Property updateLocation() As String
+            Get
+                Return ResourceManager.GetString("updateLocation", resourceCulture)
+            End Get
+        End Property
     End Module
 End Namespace

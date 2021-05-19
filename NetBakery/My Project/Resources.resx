@@ -167,4 +167,7 @@
   &lt;/Node&gt;
 &lt;/AdvTree&gt;</value>
   </data>
+  <data name="updateLocation" xml:space="preserve">
+    <value>https://www.cmbsolutions.nl/netbakery/v2/latest.php</value>
+  </data>
 </root>

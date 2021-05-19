@@ -37,12 +37,6 @@ Namespace Models
 <#      End If
     Next
 
-    For Each r in _t.relations
-#>
-        Property <#= r.alias #>() As <#= p.Singularize(r.toTable.name) #>
-<#
-    Next
-    
     For Each fk in  _t.foreignKeys
  #>
         Property <#= fk.referencedTable.name #>() As List(Of <#= p.Singularize(fk.referencedTable.name) #>)

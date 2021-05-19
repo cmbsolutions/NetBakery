@@ -12,7 +12,7 @@ Public Class mainGUI2
     Private _dockFile As IO.FileInfo
     Private _connectionsFile As IO.FileInfo
 
-    Private _currentProject As New Project
+    Private _currentProject As Project
 
     Private Sub mainGUI2_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
@@ -25,18 +25,24 @@ Public Class mainGUI2
 
             TitleText = FormHelpers.ApplicationTitle
             Text = TitleText
+            cboOutputType.Text = ".NET"
 
             _dockFile = New IO.FileInfo(String.Format("{0}\{1}\{2}\layout.xml", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CMBSolutions", "NetBakery"))
 
             If _dockFile.Exists Then
                 dnbBarManager.LoadLayout(_dockFile.FullName)
+            Else
+                If Not _dockFile.Directory.Exists Then _dockFile.Directory.Create()
             End If
 
             _connectionsFile = New IO.FileInfo(String.Format("{0}\{1}\{2}\connections.bin", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CMBSolutions", "NetBakery"))
 
             If _connectionsFile.Exists Then
                 _connections.LoadFromFile(_connectionsFile)
+            Else
+                If Not _connectionsFile.Directory.Exists Then _connectionsFile.Directory.Create()
             End If
+
             _connections.LoadFromNavicat()
 
             cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
@@ -47,6 +53,16 @@ Public Class mainGUI2
             setVbStyle(scGeneratedMapping)
 
             dcProjectSettings.Selected = True
+
+            If My.Settings.checkUpdates Then
+                Dim uh As New updateHelper
+                If uh.needsUpdate Then
+                    Debug.WriteLine($"New version {uh.updateVersion} detected. Please update current {uh.currentVersion} version.")
+                Else
+                    Debug.WriteLine($"No updates detected. Current version {uh.currentVersion} is latest.")
+                End If
+            End If
+            enableOrDisableFields()
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -995,31 +1011,33 @@ Public Class mainGUI2
 
     Private Sub WriteProject()
         Try
-            _currentProject.needsSave = True
-            _currentProject.application_version = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
-            _currentProject.projectname = txtProjectName.Text
-            _currentProject.projectlocation = txtProjectFolder.Text
-            _currentProject.projectoutputlocation = txtOutputFolder.Text
-            _currentProject.outputtype = cboOutputType.Text
-            _currentProject.useEnums = sbEnums.Value
+            If _currentProject IsNot Nothing Then
+                _currentProject.needsSave = True
+                _currentProject.application_version = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
+                _currentProject.projectname = txtProjectName.Text
+                _currentProject.projectlocation = txtProjectFolder.Text
+                _currentProject.projectoutputlocation = txtOutputFolder.Text
+                _currentProject.outputtype = cboOutputType.Text
+                _currentProject.useEnums = sbEnums.Value
 
-            _currentProject.database = New databaseObjects With {
-                .connection = _currentConnection,
-                .databasename = _mngr.database,
-                .tables = _mngr.tables,
-                .routines = _mngr.routines
-            }
+                _currentProject.database = New databaseObjects With {
+                    .connection = _currentConnection,
+                    .databasename = _mngr.database,
+                    .tables = _mngr.tables,
+                    .routines = _mngr.routines
+                }
 
-            _currentProject.generatedoutputs = New List(Of outputItem)
+                _currentProject.generatedoutputs = New List(Of outputItem)
 
-            If _currentProject.projectoutputlocation <> "" Then
-                For Each pf In (From f In IO.Directory.EnumerateFiles(_currentProject.projectoutputlocation, "*.*", IO.SearchOption.AllDirectories) Select New IO.FileInfo(f)).ToList
-                    _currentProject.generatedoutputs.Add(New outputItem With {
-                                                         .filename = pf.Name,
-                                                         .location = pf.DirectoryName,
-                                                         .objecttype = "file",
-                                                         .hash = pf.GetHashCode.ToString})
-                Next
+                If _currentProject.projectoutputlocation <> "" Then
+                    For Each pf In (From f In IO.Directory.EnumerateFiles(_currentProject.projectoutputlocation, "*.*", IO.SearchOption.AllDirectories) Select New IO.FileInfo(f)).ToList
+                        _currentProject.generatedoutputs.Add(New outputItem With {
+                                                             .filename = pf.Name,
+                                                             .location = pf.DirectoryName,
+                                                             .objecttype = "file",
+                                                             .hash = pf.GetHashCode.ToString})
+                    Next
+                End If
             End If
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -1060,6 +1078,8 @@ Public Class mainGUI2
                     databaseNodeHandler(selectedDB, New AdvTree.AdvTreeNodeEventArgs(AdvTree.eTreeAction.Keyboard, selectedDB))
                 End If
             End If
+            enableOrDisableFields()
+
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -1074,6 +1094,7 @@ Public Class mainGUI2
             End If
 
             _currentProject = Nothing
+            enableOrDisableFields()
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -1088,6 +1109,7 @@ Public Class mainGUI2
             End If
 
             _currentProject = New Project
+            enableOrDisableFields()
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -1095,5 +1117,30 @@ Public Class mainGUI2
 
     Private Sub cboOutputType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboOutputType.SelectedIndexChanged
         WriteProject()
+        If cboOutputType.Text = ".NET" Then
+            Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
+                advtreeOutputExplorer.Nodes.Clear()
+                advtreeOutputExplorer.Load(ts)
+            End Using
+        Else
+            Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
+                advtreeOutputExplorer.Nodes.Clear()
+                advtreeOutputExplorer.Load(ts)
+            End Using
+        End If
+    End Sub
+
+    Private Sub enableOrDisableFields()
+        Try
+            Dim enabled As Boolean = False
+
+            If _currentProject IsNot Nothing Then enabled = True
+
+            dcProjectSettings.Enabled = enabled
+            dcObjectInfo.Enabled = enabled
+            dcCodePreview.Enabled = enabled
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
     End Sub
 End Class

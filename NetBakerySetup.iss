@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "NetBakery"
-#define MyAppVersion "1.0.324"
+#define MyAppVersion "1.0.329"
 #define MyAppPublisher "CMBSolutions"
 #define MyAppExeName "NetBakery.exe"
 
@@ -15,8 +15,8 @@ AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-DefaultDirName={pf}\{#MyAppPublisher}\{#MyAppName}
-DisableDirPage=yes
+DefaultDirName={autopf64}\{#MyAppPublisher}\{#MyAppName}
+DisableDirPage=no
 DefaultGroupName={#MyAppPublisher}\{#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=Installer

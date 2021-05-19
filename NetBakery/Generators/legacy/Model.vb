@@ -159,47 +159,25 @@ Namespace My.Templates.legacy_net
       End If
     Next
 
-    For Each r in _t.relations
-
-            
-            #End ExternalSource
-            Me.Write("        Property ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",42)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(r.alias))
-            
-            #End ExternalSource
-            Me.Write("() As ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",42)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(r.toTable.name)))
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",43)
-
-    Next
-    
     For Each fk in  _t.foreignKeys
  
             
             #End ExternalSource
             Me.Write("        Property ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",48)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",42)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedTable.name))
             
             #End ExternalSource
             Me.Write("() As List(Of ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",48)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",42)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.referencedTable.name)))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",49)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",43)
   Next 
             
             #End ExternalSource
