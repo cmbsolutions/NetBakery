@@ -247,6 +247,9 @@ Namespace infoSchema
                         While rdr.Read
                             If rt Is Nothing OrElse rt.name <> rdr("ROUTINE_NAME").ToString Then
                                 If rt IsNot Nothing Then
+                                    If rt.returnsRecordset Then
+                                        getRoutineLayout(rt)
+                                    End If
                                     routines.Add(rt)
                                 End If
                                 rt = New routine With {.name = rdr("ROUTINE_NAME").ToString, .hasExport = True, .definition = rdr("ROUTINE_DEFINITION").ToString}
@@ -280,6 +283,9 @@ Namespace infoSchema
                         End While
 
                         If rt IsNot Nothing Then
+                            If rt.returnsRecordset Then
+                                getRoutineLayout(rt)
+                            End If
                             routines.Add(rt)
                         End If
                     End Using
@@ -289,6 +295,51 @@ Namespace infoSchema
             End Try
         End Sub
 
+        Private Sub getRoutineLayout(ByRef _r As routine)
+            Try
+                Using localConnection As New MySqlConnection(_dbConnection.ConnectionString)
+                    localConnection.Open()
+
+                    Using _dbxCommand = New MySqlCommand
+                        _dbxCommand.Connection = localConnection
+                        localConnection.ChangeDatabase(database)
+
+                        _dbxCommand.CommandType = CommandType.Text
+                        _dbxCommand.CommandText = $"CALL {_r.name}({String.Join(",", (From r In _r.params Order By r.ordinalPosition Select "@" & r.name))})"
+
+                        For Each param In _r.params.OrderBy(Function(o) o.ordinalPosition)
+                            _dbxCommand.Parameters.AddWithValue("@" & param.name, 1)
+                        Next
+
+                        Using rdr As MySqlDataReader = _dbxCommand.ExecuteReader()
+
+                            Using d As DataTable = rdr.GetSchemaTable
+
+                                For Each row As DataRow In d.Rows
+                                    Dim c As New column
+
+                                    c.name = row.ItemArray(d.Columns.IndexOf("ColumnName")).ToString
+                                    c.alias = AliasGenerator(c.name)
+
+                                    c.ordinalPosition = CInt(row.ItemArray(d.Columns.IndexOf("ColumnOrdinal")))
+                                    'c.defaultValue = rdr("COLUMN_DEFAULT").ToString
+                                    c.isNullable = CBool(row.ItemArray(d.Columns.IndexOf("AllowDBNull")))
+                                    c.mysqlType = [Enum].GetName(GetType(MySqlDbType), row.ItemArray(d.Columns.IndexOf("ProviderType")))
+                                    'c.maximumLength = ToInt(rdr("CHARACTER_MAXIMUM_LENGTH"))
+                                    'c.numericPrecision = ToInt(rdr("NUMERIC_PRECISION"))
+                                    'c.numericScale = ToInt(rdr("NUMERIC_SCALE"))
+                                    'c.key = rdr("COLUMN_KEY").ToString
+                                    c.vbType = getVbType(c.mysqlType)
+                                    _r.returnLayout.columns.Add(c)
+                                Next
+                            End Using
+                        End Using
+                    End Using
+                End Using
+            Catch ex As Exception
+                Throw
+            End Try
+        End Sub
 #End Region
 
 #Region "helpers"
@@ -365,7 +416,7 @@ Namespace infoSchema
                     Return GetType(Date)
                 Case "double", "float"
                     Return GetType(Double)
-                Case "decimal", "numeric"
+                Case "decimal", "numeric", "newdecimal"
                     Return GetType(Decimal)
                 Case "byte", "bit"
                     Return GetType(Boolean)

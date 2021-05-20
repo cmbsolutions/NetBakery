@@ -435,6 +435,7 @@ Public Class mainGUI2
                 End Using
             End If
 
+
             Dim tplModelAndMapping As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 4}
             Dim tplContextAndStoreCommands As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 5}
             Dim tplFunctions As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 6}
@@ -444,9 +445,9 @@ Public Class mainGUI2
             Dim mModel As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapModels", True).FirstOrDefault
             Dim mMapping As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapMapping", True).FirstOrDefault
             Dim mStoreCommands As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommands", True).FirstOrDefault
-            Dim mStoreCommandFunctions As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommandFunctions", True).FirstOrDefault
-            Dim mStoreCommandsProcedures As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommandProcedures", True).FirstOrDefault
-            Dim mStoreCommandModels As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
+            Dim mStoreCommandFunctions As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandFunctions", True).FirstOrDefault
+            Dim mStoreCommandsProcedures As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandProcedures", True).FirstOrDefault
+            Dim mStoreCommandModels As AdvTree.Node = mStoreCommandsProcedures.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
 
             ' Tables and views
             For Each table In _mngr.tables.Where(Function(t) t.hasExport)
@@ -1109,6 +1110,8 @@ Public Class mainGUI2
             End If
 
             _currentProject = New Project
+            _currentProject.outputtype = cboOutputType.Text
+            _currentProject.useEnums = sbEnums.Value
             enableOrDisableFields()
         Catch ex As Exception
             FormHelpers.dumpException(ex)
