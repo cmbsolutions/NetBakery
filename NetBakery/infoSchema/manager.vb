@@ -311,29 +311,35 @@ Namespace infoSchema
                             _dbxCommand.Parameters.AddWithValue("@" & param.name, 1)
                         Next
 
-                        Using rdr As MySqlDataReader = _dbxCommand.ExecuteReader()
+                        Try
+                            Using rdr As MySqlDataReader = _dbxCommand.ExecuteReader()
 
-                            Using d As DataTable = rdr.GetSchemaTable
+                                Using d As DataTable = rdr.GetSchemaTable
+                                    If d IsNot Nothing Then
+                                        For Each row As DataRow In d.Rows
+                                            Dim c As New column
 
-                                For Each row As DataRow In d.Rows
-                                    Dim c As New column
+                                            c.name = row.ItemArray(d.Columns.IndexOf("ColumnName")).ToString
+                                            c.alias = AliasGenerator(c.name)
 
-                                    c.name = row.ItemArray(d.Columns.IndexOf("ColumnName")).ToString
-                                    c.alias = AliasGenerator(c.name)
-
-                                    c.ordinalPosition = CInt(row.ItemArray(d.Columns.IndexOf("ColumnOrdinal")))
-                                    'c.defaultValue = rdr("COLUMN_DEFAULT").ToString
-                                    c.isNullable = CBool(row.ItemArray(d.Columns.IndexOf("AllowDBNull")))
-                                    c.mysqlType = [Enum].GetName(GetType(MySqlDbType), row.ItemArray(d.Columns.IndexOf("ProviderType")))
-                                    'c.maximumLength = ToInt(rdr("CHARACTER_MAXIMUM_LENGTH"))
-                                    'c.numericPrecision = ToInt(rdr("NUMERIC_PRECISION"))
-                                    'c.numericScale = ToInt(rdr("NUMERIC_SCALE"))
-                                    'c.key = rdr("COLUMN_KEY").ToString
-                                    c.vbType = getVbType(c.mysqlType)
-                                    _r.returnLayout.columns.Add(c)
-                                Next
+                                            c.ordinalPosition = CInt(row.ItemArray(d.Columns.IndexOf("ColumnOrdinal")))
+                                            'c.defaultValue = rdr("COLUMN_DEFAULT").ToString
+                                            c.isNullable = CBool(row.ItemArray(d.Columns.IndexOf("AllowDBNull")))
+                                            c.mysqlType = [Enum].GetName(GetType(MySqlDbType), row.ItemArray(d.Columns.IndexOf("ProviderType")))
+                                            'c.maximumLength = ToInt(rdr("CHARACTER_MAXIMUM_LENGTH"))
+                                            'c.numericPrecision = ToInt(rdr("NUMERIC_PRECISION"))
+                                            'c.numericScale = ToInt(rdr("NUMERIC_SCALE"))
+                                            'c.key = rdr("COLUMN_KEY").ToString
+                                            c.vbType = getVbType(c.mysqlType)
+                                            _r.returnLayout.columns.Add(c)
+                                        Next
+                                    End If
+                                End Using
                             End Using
-                        End Using
+                        Catch mex As MySqlException
+                            _r.returnLayout = Nothing
+                            _r.returnsRecordset = False
+                        End Try
                     End Using
                 End Using
             Catch ex As Exception
@@ -378,6 +384,18 @@ Namespace infoSchema
                         _dbConnection = New MySqlConnection(connection.ToString)
                         _dbConnection.Open()
                     End Try
+                Else
+                    If _dbConnection.ConnectionString <> connection.ToString Then
+                        _dbConnection.Close()
+                        Try
+                            _dbConnection = New MySqlConnection(connection.ToString)
+                            _dbConnection.Open()
+                        Catch msex As MySqlException
+                            connection.sslmode = eSslMode.Prefered
+                            _dbConnection = New MySqlConnection(connection.ToString)
+                            _dbConnection.Open()
+                        End Try
+                    End If
                 End If
 
                 _dbConnection.ChangeDatabase("INFORMATION_SCHEMA")

@@ -1,11 +1,11 @@
-﻿Public Class updateHelper
+﻿Imports System.Net
+
+Public Class updateHelper
     Property currentVersion As String = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
     Property updateVersion As String = ""
 
-    Public Function needsUpdate() As Boolean
+    Public Function needsUpdate() As updateFile
         Try
-            Dim doUpdate As Boolean = False
-
             Dim client As New RestSharp.RestClient(My.Resources.updateLocation) With {
                 .Timeout = -1
             }
@@ -15,27 +15,48 @@
             If response.IsSuccessful Then
                 Dim uf As updateFile = Newtonsoft.Json.JsonConvert.DeserializeObject(Of updateFile)(response.Content)
 
-                If uf.major > My.Application.Info.Version.Major Then doUpdate = True
-                If uf.major >= My.Application.Info.Version.Major And uf.minor > My.Application.Info.Version.Minor Then doUpdate = True
-                If uf.major >= My.Application.Info.Version.Major And uf.minor >= My.Application.Info.Version.Minor And uf.revision > My.Application.Info.Version.Build Then doUpdate = True
+                If uf.major > My.Application.Info.Version.Major Then uf.doUpdate = True
+                If uf.major >= My.Application.Info.Version.Major And uf.minor > My.Application.Info.Version.Minor Then uf.doUpdate = True
+                If uf.major >= My.Application.Info.Version.Major And uf.minor >= My.Application.Info.Version.Minor And uf.revision > My.Application.Info.Version.Build Then uf.doUpdate = True
 
-                If doUpdate Then
-                    updateVersion = $"{uf.major}.{uf.minor}.{uf.revision}"
-                Else
-                    updateVersion = currentVersion
-                End If
+                Return uf
             End If
 
-            Return doUpdate
+            Return New updateFile With {.doUpdate = False}
+
         Catch ex As Exception
             FormHelpers.dumpException(ex)
+            Return Nothing
         End Try
+    End Function
 
-        Return False
+    Public Async Function downloadUpdate(setupfile As String, saveto As String) As Task(Of Boolean)
+        Try
+            Using client As New WebClient()
+                If IO.File.Exists(saveto) Then IO.File.Delete(saveto)
+                If Not IO.Directory.Exists(IO.Path.GetDirectoryName(saveto)) Then IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(saveto))
+
+                Dim dl As Task = client.DownloadFileTaskAsync(New Uri($"https://cmbsolutions.nl/netbakery/v2/{setupfile}"), saveto)
+
+                Await dl
+
+                If IO.File.Exists(saveto) Then
+                    Return True
+                Else
+                    Return False
+                End If
+
+            End Using
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+
+            Return False
+        End Try
     End Function
 End Class
 
 Public Class updateFile
+    Property doUpdate As Boolean
     Property version As String
     Property major As Integer
     Property minor As Integer

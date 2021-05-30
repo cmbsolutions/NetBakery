@@ -11,6 +11,7 @@ Public Class mainGUI2
 
     Private _dockFile As IO.FileInfo
     Private _connectionsFile As IO.FileInfo
+    Private _setupFile As IO.FileInfo
 
     Private _currentProject As Project
 
@@ -56,8 +57,12 @@ Public Class mainGUI2
 
             If My.Settings.checkUpdates Then
                 Dim uh As New updateHelper
-                If uh.needsUpdate Then
-                    Debug.WriteLine($"New version {uh.updateVersion} detected. Please update current {uh.currentVersion} version.")
+                Dim uf As updateFile = uh.needsUpdate
+                If uf IsNot Nothing AndAlso uf.doUpdate Then
+                    Debug.WriteLine($"New version {uh.updateVersion} detected. Downloading setup...")
+                    Dim _setupFile = New IO.FileInfo($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\CMBSolutions\NetBakery\tempsetup\{uf.setupfile}")
+                    Task.Run(Function() uh.downloadUpdate(uf.setupfile, _setupFile.FullName))
+                    Debug.WriteLine($"Download complete.")
                 Else
                     Debug.WriteLine($"No updates detected. Current version {uh.currentVersion} is latest.")
                 End If
@@ -77,7 +82,7 @@ Public Class mainGUI2
 
             saveConnections()
 
-            If _currentProject.needsSave Then btnSaveProject.RaiseClick()
+            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then btnSaveProject.RaiseClick()
 
             For Each frm As Form In My.Application.OpenForms
                 If frm.Name <> Name Then
@@ -407,15 +412,14 @@ Public Class mainGUI2
                 Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
                     advtreeOutputExplorer.Nodes.Clear()
                     advtreeOutputExplorer.Load(ts)
-                    advtreeOutputExplorer.Refresh()
                 End Using
             Else
                 Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
                     advtreeOutputExplorer.Nodes.Clear()
                     advtreeOutputExplorer.Load(ts)
-                    advtreeOutputExplorer.Refresh()
                 End Using
             End If
+            advtreeOutputExplorer.Refresh()
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -434,7 +438,7 @@ Public Class mainGUI2
                     advtreeOutputExplorer.Load(ts)
                 End Using
             End If
-
+            advtreeOutputExplorer.Refresh()
 
             Dim tplModelAndMapping As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 4}
             Dim tplContextAndStoreCommands As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 5}
@@ -447,7 +451,7 @@ Public Class mainGUI2
             Dim mStoreCommands As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommands", True).FirstOrDefault
             Dim mStoreCommandFunctions As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandFunctions", True).FirstOrDefault
             Dim mStoreCommandsProcedures As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandProcedures", True).FirstOrDefault
-            Dim mStoreCommandModels As AdvTree.Node = mStoreCommandsProcedures.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
+            Dim mStoreCommandModels As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
 
             ' Tables and views
             For Each table In _mngr.tables.Where(Function(t) t.hasExport)
@@ -461,9 +465,9 @@ Public Class mainGUI2
                 AddHandler tmpModel.NodeClick, AddressOf explorerModelNodeHandler
                 mModel.Nodes.Add(tmpModel)
 
-                tmpMapping.Name = $"n{table.name}Mapping"
+                tmpMapping.Name = $"n{table.name}Map"
                 tmpMapping.TagString = table.name
-                tmpMapping.Text = $"{table.singleName}Mapping.vb"
+                tmpMapping.Text = $"{table.singleName}Map.vb"
                 AddHandler tmpMapping.NodeClick, AddressOf explorerMappingNodeHandler
 
                 mMapping.Nodes.Add(tmpMapping)
@@ -509,13 +513,15 @@ Public Class mainGUI2
             AddHandler tmpContext.NodeClick, AddressOf explorerContextNodeHandler
             mModel.Nodes.Add(tmpContext)
 
-            ' StoreCommandsContext
-            tmpContext = tplContextAndStoreCommands.DeepCopy
+            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype <> ".NET" Then
+                ' StoreCommandsContext
+                tmpContext = tplContextAndStoreCommands.DeepCopy
 
-            tmpContext.Name = "nStoreCommandsContext"
-            tmpContext.Text = $"{txtProjectName.Text}StoreCommandsContext.vb"
-            AddHandler tmpContext.NodeClick, AddressOf explorerStoreCommandsNodeHandler
-            mModel.Nodes.Add(tmpContext)
+                tmpContext.Name = "nStoreCommandsContext"
+                tmpContext.Text = $"{txtProjectName.Text}StoreCommandsContext.vb"
+                AddHandler tmpContext.NodeClick, AddressOf explorerStoreCommandsNodeHandler
+                mModel.Nodes.Add(tmpContext)
+            End If
 
             advtreeOutputExplorer.Refresh()
         Catch ex As Exception
@@ -1140,7 +1146,7 @@ Public Class mainGUI2
             If _currentProject IsNot Nothing Then enabled = True
 
             dcProjectSettings.Enabled = enabled
-            dcObjectInfo.Enabled = enabled
+            'dcObjectInfo.Enabled = enabled
             dcCodePreview.Enabled = enabled
         Catch ex As Exception
             FormHelpers.dumpException(ex)
