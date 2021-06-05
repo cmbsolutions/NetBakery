@@ -333,6 +333,9 @@ Namespace infoSchema
                                             c.vbType = getVbType(c.mysqlType)
                                             _r.returnLayout.columns.Add(c)
                                         Next
+                                    Else
+                                        _r.returnLayout = Nothing
+                                        _r.returnsRecordset = False
                                     End If
                                 End Using
                             End Using

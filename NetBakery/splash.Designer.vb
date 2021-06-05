@@ -78,7 +78,8 @@ Partial Class splash
         Me.ProgressBarX1.Size = New System.Drawing.Size(334, 23)
         Me.ProgressBarX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.ProgressBarX1.TabIndex = 3
-        Me.ProgressBarX1.Text = "ProgressBarX1"
+        Me.ProgressBarX1.Text = "...message..."
+        Me.ProgressBarX1.TextVisible = True
         '
         'Timer1
         '

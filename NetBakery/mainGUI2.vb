@@ -55,18 +55,6 @@ Public Class mainGUI2
 
             dcProjectSettings.Selected = True
 
-            If My.Settings.checkUpdates Then
-                Dim uh As New updateHelper
-                Dim uf As updateFile = uh.needsUpdate
-                If uf IsNot Nothing AndAlso uf.doUpdate Then
-                    Debug.WriteLine($"New version {uh.updateVersion} detected. Downloading setup...")
-                    Dim _setupFile = New IO.FileInfo($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\CMBSolutions\NetBakery\tempsetup\{uf.setupfile}")
-                    Task.Run(Function() uh.downloadUpdate(uf.setupfile, _setupFile.FullName))
-                    Debug.WriteLine($"Download complete.")
-                Else
-                    Debug.WriteLine($"No updates detected. Current version {uh.currentVersion} is latest.")
-                End If
-            End If
             enableOrDisableFields()
 
         Catch ex As Exception
