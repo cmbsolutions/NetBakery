@@ -31,7 +31,7 @@ Namespace infoSchema
                 Case "net5"
                     _generator = New net5Generator
                 Case "php"
-                    '_generator = New phpGenerator
+                    _generator = New phpGenerator
                 Case Else
 
             End Select
@@ -168,7 +168,7 @@ Namespace infoSchema
                                     c.autoIncrement = If(rdr("EXTRA").ToString = "auto_increment", True, False)
                                 End If
                                 c.vbType = getVbType(rdr("DATA_TYPE").ToString)
-
+                                c.phpType = getPHPType(c.mysqlType)
                                 If rdr("DATA_TYPE").ToString = "enum" Then
                                     Dim RegexObj As New Regex("\(([^)]+)")
                                     Dim tmpData As String = RegexObj.Match(rdr("COLUMN_TYPE").ToString()).Groups(1).Value
@@ -331,6 +331,7 @@ Namespace infoSchema
                                             'c.numericScale = ToInt(rdr("NUMERIC_SCALE"))
                                             'c.key = rdr("COLUMN_KEY").ToString
                                             c.vbType = getVbType(c.mysqlType)
+                                            c.phpType = getPHPType(c.mysqlType)
                                             _r.returnLayout.columns.Add(c)
                                         Next
                                     Else
@@ -446,6 +447,28 @@ Namespace infoSchema
             End Select
         End Function
 
+        Private Function getPHPType(mysqlType As String) As String
+            Select Case mysqlType.ToLower
+                Case "tinyint", "mediumint", "integer", "int", "smallint", "int16", "int24", "int32", "uint16", "uint24", "uint32"
+                    Return "int"
+                Case "bigint", "int64", "uint64"
+                    Return "int"
+                Case "char", "varchar", "text", "tinytext", "mediumtext", "longtext", "string", "varstring", "varbinary", "binary", "tinyblob", "mediumblob", "longblob", "set", "enum"
+                    Return "string"
+                Case "time", "timestamp"
+                    Return "\Cake\I18n\FrozenTime"
+                Case "date", "datetime"
+                    Return "\Cake\I18n\FrozenTime"
+                Case "double", "float"
+                    Return "float"
+                Case "decimal", "numeric", "newdecimal"
+                    Return "float"
+                Case "byte", "bit"
+                    Return "bool"
+                Case Else
+                    Return "Unknown"
+            End Select
+        End Function
         Private Function AliasGenerator(original As String) As String
             Try
                 Dim [alias] As String = original

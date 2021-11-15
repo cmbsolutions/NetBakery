@@ -260,6 +260,38 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Generators\phpGenerator.vb" />
+    <Compile Include="Generators\phpTemplates.vb" />
+    <Compile Include="Generators\php\Context.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\php\Map.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Map.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\php\Model.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\php\StoreCommand.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreCommand.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\php\StoreCommandModel.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreCommandModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\php\StoreCommands.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreCommands.tt</DependentUpon>
+    </Compile>
     <Compile Include="Generators\pluralizationService.vb" />
     <Compile Include="infoSchema\column.vb" />
     <Compile Include="infoSchema\connections.vb" />
@@ -412,6 +444,8 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>Map.vb</LastGenOutput>
       <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+      <Parameters>&lt;%3fxml version="1.0" encoding="utf-16"%3f&gt;
+&lt;ArrayOfParameterStorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Parameters>
     </Content>
     <Content Include="Generators\net5\Model.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
@@ -437,6 +471,36 @@
       <Parameters>&lt;%3fxml version="1.0" encoding="utf-16"%3f&gt;
 &lt;ArrayOfParameterStorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Parameters>
     </Content>
+    <Content Include="Generators\php\Context.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.php</CustomToolNamespace>
+      <LastGenOutput>Context.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\php\Map.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.php</CustomToolNamespace>
+      <LastGenOutput>Map.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\php\Model.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.php</CustomToolNamespace>
+      <LastGenOutput>Model.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\php\StoreCommand.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.php</CustomToolNamespace>
+      <LastGenOutput>StoreCommand.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\php\StoreCommandModel.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.php</CustomToolNamespace>
+      <LastGenOutput>StoreCommandModel.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\php\StoreCommands.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.php</CustomToolNamespace>
+      <LastGenOutput>StoreCommands.vb</LastGenOutput>
+    </Content>
     <Content Include="netbakery.png.ico" />
     <None Include="Resources\pngwing.com.png" />
     <None Include="Resources\logo.png" />
@@ -456,9 +520,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Generators\php\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PreBuildEvent>cd $(ProjectDir)

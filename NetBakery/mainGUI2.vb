@@ -1125,6 +1125,8 @@ Public Class mainGUI2
                 advtreeOutputExplorer.Load(ts)
             End Using
         End If
+
+        If _mngr IsNot Nothing Then _mngr.setGenerator(cboOutputType.Text.ToLower)
     End Sub
 
     Private Sub enableOrDisableFields()

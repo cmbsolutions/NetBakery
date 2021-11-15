@@ -208,6 +208,7 @@ Public Class informationSchema
                             c.key = rdr("COLUMN_KEY").ToString
                             c.autoIncrement = If(rdr("EXTRA").ToString = "auto_increment", True, False)
                             c.vbType = getVbType(rdr("DATA_TYPE").ToString)
+
                             If c.vbType = "Enum" Then
                                 c.enumData = parseEnum(rdr("COLUMN_TYPE").ToString)
                                 c.vbType = "e" & c.columnName
@@ -478,6 +479,7 @@ Public Class informationSchema
                 Return "Unknown"
         End Select
     End Function
+
 
     Private Function parseEnum(_l As String) As List(Of String)
         Dim tmp = Regex.Replace(_l, "^[^']+([^)]+).*$", "$1", RegexOptions.IgnoreCase Or RegexOptions.Multiline)
