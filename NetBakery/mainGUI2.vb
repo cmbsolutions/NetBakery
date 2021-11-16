@@ -307,13 +307,13 @@ Public Class mainGUI2
                     dgvFields.DataSource = tableFields.columns.ToArray
 
                     Dim fks = (From fk In tableFields.foreignKeys Order By fk.ordinalPosition Select New With {
-                                                                      Key fk.name,
-                                                                      .tableName = fk.table.name,
-                                                                      .columnName = fk.column.name,
-                                                                      fk.ordinalPosition,
-                                                                      fk.positionInUniqueConstraint,
-                                                                      .referenceTable = fk.referencedTable.name,
-                                                                      .referenceColumn = fk.referencedColumn.name})
+                                                                    Key fk.name,
+                                                                    .tableName = fk.table.name,
+                                                                    .columnName = fk.column.name,
+                                                                    fk.ordinalPosition,
+                                                                    fk.positionInUniqueConstraint,
+                                                                    .referenceTable = fk.referencedTable.name,
+                                                                    .referenceColumn = fk.referencedColumn.name})
 
 
                     dgvForeignKeys.DataSource = fks.ToArray
@@ -415,16 +415,24 @@ Public Class mainGUI2
 
     Private Sub btnRefreshOutputExplorer_Click(sender As Object, e As EventArgs) Handles btnRefreshOutputExplorer.Click
         Try
-            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype = ".NET" Then
-                Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
-                    advtreeOutputExplorer.Nodes.Clear()
-                    advtreeOutputExplorer.Load(ts)
-                End Using
-            Else
-                Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
-                    advtreeOutputExplorer.Nodes.Clear()
-                    advtreeOutputExplorer.Load(ts)
-                End Using
+            If _currentProject IsNot Nothing Then
+                Select Case _currentProject.outputtype.ToLower
+                    Case ".net"
+                        Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
+                            advtreeOutputExplorer.Nodes.Clear()
+                            advtreeOutputExplorer.Load(ts)
+                        End Using
+                    Case "php"
+                        Using ts As New IO.StringReader(My.Resources.phpOutputExplorer)
+                            advtreeOutputExplorer.Nodes.Clear()
+                            advtreeOutputExplorer.Load(ts)
+                        End Using
+                    Case Else
+                        Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
+                            advtreeOutputExplorer.Nodes.Clear()
+                            advtreeOutputExplorer.Load(ts)
+                        End Using
+                End Select
             End If
             advtreeOutputExplorer.Refresh()
 
@@ -433,84 +441,108 @@ Public Class mainGUI2
             Dim tplFunctions As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 6}
             Dim tplProcedures As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 7}
 
+            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "php" Then
+                Dim mModel As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapModels", True).FirstOrDefault
+                Dim mMapping As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapMapping", True).FirstOrDefault
 
-            Dim mModel As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapModels", True).FirstOrDefault
-            Dim mMapping As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapMapping", True).FirstOrDefault
-            Dim mStoreCommands As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommands", True).FirstOrDefault
-            Dim mStoreCommandFunctions As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandFunctions", True).FirstOrDefault
-            Dim mStoreCommandsProcedures As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandProcedures", True).FirstOrDefault
-            Dim mStoreCommandModels As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
+                ' Tables and views
+                For Each table In _mngr.tables.Where(Function(t) t.hasExport)
+                    Dim tmpModel As AdvTree.Node = tplModelAndMapping.DeepCopy
+                    Dim tmpMapping As AdvTree.Node = tplModelAndMapping.DeepCopy
 
-            ' Tables and views
-            For Each table In _mngr.tables.Where(Function(t) t.hasExport)
-                Dim tmpModel As AdvTree.Node = tplModelAndMapping.DeepCopy
-                Dim tmpMapping As AdvTree.Node = tplModelAndMapping.DeepCopy
+                    tmpModel.Name = "n" & table.name
+                    tmpModel.TagString = table.name
 
-                tmpModel.Name = "n" & table.name
-                tmpModel.TagString = table.name
+                    tmpModel.Text = $"{table.singleName}.php"
+                    AddHandler tmpModel.NodeClick, AddressOf explorerModelNodeHandler
+                    mModel.Nodes.Add(tmpModel)
 
-                tmpModel.Text = $"{table.singleName}.vb"
-                AddHandler tmpModel.NodeClick, AddressOf explorerModelNodeHandler
-                mModel.Nodes.Add(tmpModel)
+                    tmpMapping.Name = $"n{table.name}Table"
+                    tmpMapping.TagString = table.name
+                    tmpMapping.Text = $"{table.pluralName}Table.php"
+                    AddHandler tmpMapping.NodeClick, AddressOf explorerMappingNodeHandler
 
-                tmpMapping.Name = $"n{table.name}Map"
-                tmpMapping.TagString = table.name
-                tmpMapping.Text = $"{table.singleName}Map.vb"
-                AddHandler tmpMapping.NodeClick, AddressOf explorerMappingNodeHandler
+                    mMapping.Nodes.Add(tmpMapping)
+                Next
 
-                mMapping.Nodes.Add(tmpMapping)
-            Next
+            Else
+                Dim mModel As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapModels", True).FirstOrDefault
+                Dim mMapping As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapMapping", True).FirstOrDefault
+                Dim mStoreCommands As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommands", True).FirstOrDefault
+                Dim mStoreCommandFunctions As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandFunctions", True).FirstOrDefault
+                Dim mStoreCommandsProcedures As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandProcedures", True).FirstOrDefault
+                Dim mStoreCommandModels As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
 
-            ' Routines
-            For Each routine In _mngr.routines.Where(Function(r) r.hasExport)
-                Dim tmpNode As AdvTree.Node
+                ' Tables and views
+                For Each table In _mngr.tables.Where(Function(t) t.hasExport)
+                    Dim tmpModel As AdvTree.Node = tplModelAndMapping.DeepCopy
+                    Dim tmpMapping As AdvTree.Node = tplModelAndMapping.DeepCopy
 
-                If routine.isFunction Then
-                    tmpNode = tplFunctions.DeepCopy
-                Else
-                    tmpNode = tplProcedures.DeepCopy
-                End If
+                    tmpModel.Name = "n" & table.name
+                    tmpModel.TagString = table.name
 
-                tmpNode.Name = $"n{routine.name}"
-                tmpNode.TagString = routine.name
-                tmpNode.Text = $"{routine.name}.vb"
-                AddHandler tmpNode.NodeClick, AddressOf explorerRoutineNodeHandler
+                    tmpModel.Text = $"{table.singleName}.vb"
+                    AddHandler tmpModel.NodeClick, AddressOf explorerModelNodeHandler
+                    mModel.Nodes.Add(tmpModel)
 
-                If routine.isFunction Then
-                    mStoreCommandFunctions.Nodes.Add(tmpNode)
-                Else
-                    mStoreCommandsProcedures.Nodes.Add(tmpNode)
-                End If
+                    tmpMapping.Name = $"n{table.name}Map"
+                    tmpMapping.TagString = table.name
+                    tmpMapping.Text = $"{table.singleName}Map.vb"
+                    AddHandler tmpMapping.NodeClick, AddressOf explorerMappingNodeHandler
 
-                If routine.returnsRecordset Then
-                    tmpNode = tplModelAndMapping.DeepCopy
-                    tmpNode.Name = $"n{routine.name}Model"
+                    mMapping.Nodes.Add(tmpMapping)
+                Next
+
+                ' Routines
+                For Each routine In _mngr.routines.Where(Function(r) r.hasExport)
+                    Dim tmpNode As AdvTree.Node
+
+                    If routine.isFunction Then
+                        tmpNode = tplFunctions.DeepCopy
+                    Else
+                        tmpNode = tplProcedures.DeepCopy
+                    End If
+
+                    tmpNode.Name = $"n{routine.name}"
                     tmpNode.TagString = routine.name
-                    tmpNode.Text = $"{routine.name}Model.vb"
-                    AddHandler tmpNode.NodeClick, AddressOf explorerRoutineModelNodeHandler
+                    tmpNode.Text = $"{routine.name}.vb"
+                    AddHandler tmpNode.NodeClick, AddressOf explorerRoutineNodeHandler
 
-                    mStoreCommandModels.Nodes.Add(tmpNode)
-                End If
-            Next
+                    If routine.isFunction Then
+                        mStoreCommandFunctions.Nodes.Add(tmpNode)
+                    Else
+                        mStoreCommandsProcedures.Nodes.Add(tmpNode)
+                    End If
 
-            ' Context
-            Dim tmpContext As AdvTree.Node = tplContextAndStoreCommands.DeepCopy
+                    If routine.returnsRecordset Then
+                        tmpNode = tplModelAndMapping.DeepCopy
+                        tmpNode.Name = $"n{routine.name}Model"
+                        tmpNode.TagString = routine.name
+                        tmpNode.Text = $"{routine.name}Model.vb"
+                        AddHandler tmpNode.NodeClick, AddressOf explorerRoutineModelNodeHandler
 
-            tmpContext.Name = "nContext"
-            tmpContext.Text = $"{txtProjectName.Text}Context.vb"
-            AddHandler tmpContext.NodeClick, AddressOf explorerContextNodeHandler
-            mModel.Nodes.Add(tmpContext)
+                        mStoreCommandModels.Nodes.Add(tmpNode)
+                    End If
+                Next
 
-            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype <> ".NET" Then
-                ' StoreCommandsContext
-                tmpContext = tplContextAndStoreCommands.DeepCopy
+                ' Context
+                Dim tmpContext As AdvTree.Node = tplContextAndStoreCommands.DeepCopy
 
-                tmpContext.Name = "nStoreCommandsContext"
-                tmpContext.Text = $"{txtProjectName.Text}StoreCommandsContext.vb"
-                AddHandler tmpContext.NodeClick, AddressOf explorerStoreCommandsNodeHandler
+                tmpContext.Name = "nContext"
+                tmpContext.Text = $"{txtProjectName.Text}Context.vb"
+                AddHandler tmpContext.NodeClick, AddressOf explorerContextNodeHandler
                 mModel.Nodes.Add(tmpContext)
-            End If
 
+                If _currentProject IsNot Nothing AndAlso _currentProject.outputtype <> ".NET" Then
+                    ' StoreCommandsContext
+                    tmpContext = tplContextAndStoreCommands.DeepCopy
+
+                    tmpContext.Name = "nStoreCommandsContext"
+                    tmpContext.Text = $"{txtProjectName.Text}StoreCommandsContext.vb"
+                    AddHandler tmpContext.NodeClick, AddressOf explorerStoreCommandsNodeHandler
+                    mModel.Nodes.Add(tmpContext)
+                End If
+            End If
             advtreeOutputExplorer.Refresh()
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -728,28 +760,30 @@ Public Class mainGUI2
 #End Region
 
 #Region "Scintilla lexer styles"
+
+    Private Sub ResetLexer(lexer As ScintillaNET.Scintilla)
+        lexer.StyleClearAll()
+
+        lexer.HScrollBar = True
+        lexer.VScrollBar = True
+
+        lexer.Styles(ScintillaNET.Style.Default).BackColor = Color.FromArgb(30, 30, 30)
+        lexer.Styles(ScintillaNET.Style.Default).Font = "Consolas"
+        lexer.Styles(ScintillaNET.Style.Default).ForeColor = Color.FromArgb(220, 220, 220)
+        lexer.Styles(ScintillaNET.Style.Default).Size = 10
+
+        lexer.Styles(ScintillaNET.Style.LineNumber).BackColor = Color.FromArgb(30, 30, 30)
+        lexer.Styles(ScintillaNET.Style.LineNumber).ForeColor = Color.FromArgb(43, 145, 175)
+        lexer.Styles(ScintillaNET.Style.LineNumber).Font = lexer.Styles(ScintillaNET.Style.Default).Font
+        lexer.Styles(ScintillaNET.Style.LineNumber).Size = lexer.Styles(ScintillaNET.Style.Default).Size
+
+        lexer.Margins(0).Type = ScintillaNET.MarginType.Number
+        lexer.Margins(0).Width = 30
+    End Sub
     Private Sub setVbStyle(lexer As ScintillaNET.Scintilla)
         Try
 
-            lexer.StyleClearAll()
-
-            lexer.HScrollBar = True
-            lexer.VScrollBar = True
-
-            lexer.Styles(ScintillaNET.Style.Default).BackColor = Color.FromArgb(30, 30, 30)
-            lexer.Styles(ScintillaNET.Style.Default).Font = "Consolas"
-            lexer.Styles(ScintillaNET.Style.Default).ForeColor = Color.FromArgb(220, 220, 220)
-            lexer.Styles(ScintillaNET.Style.Default).Size = 10
-
-            'lexer.SetSelectionBackColor(True, Color.FromArgb(51, 153, 255))
-
-            lexer.Styles(ScintillaNET.Style.LineNumber).BackColor = Color.FromArgb(30, 30, 30)
-            lexer.Styles(ScintillaNET.Style.LineNumber).ForeColor = Color.FromArgb(43, 145, 175)
-            lexer.Styles(ScintillaNET.Style.LineNumber).Font = lexer.Styles(ScintillaNET.Style.Default).Font
-            lexer.Styles(ScintillaNET.Style.LineNumber).Size = lexer.Styles(ScintillaNET.Style.Default).Size
-
-            lexer.Margins(0).Type = ScintillaNET.MarginType.Number
-            lexer.Margins(0).Width = 30
+            ResetLexer(lexer)
 
             lexer.Lexer = ScintillaNET.Lexer.Vb
 
@@ -802,7 +836,9 @@ Public Class mainGUI2
             lexer.Styles(ScintillaNET.Style.Vb.DocKeyword).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
             lexer.Styles(ScintillaNET.Style.Vb.DocKeyword).ForeColor = Color.FromArgb(-4862296)
 
-            lexer.SetKeywords(0, My.Settings.keywords)
+
+            lexer.SetKeywords(0, My.Resources.vb_keywords)
+
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -812,125 +848,107 @@ Public Class mainGUI2
     Private Sub setPHPStyle(lexer As ScintillaNET.Scintilla)
         Try
 
-            lexer.StyleClearAll()
-
-            lexer.HScrollBar = True
-            lexer.VScrollBar = True
-
-            lexer.Styles(ScintillaNET.Style.Default).BackColor = Color.FromArgb(30, 30, 30)
-            lexer.Styles(ScintillaNET.Style.Default).Font = "Consolas"
-            lexer.Styles(ScintillaNET.Style.Default).ForeColor = Color.FromArgb(220, 220, 220)
-            lexer.Styles(ScintillaNET.Style.Default).Size = 10
-
-            'lexer.SetSelectionBackColor(True, Color.FromArgb(51, 153, 255))
-
-            lexer.Styles(ScintillaNET.Style.LineNumber).BackColor = Color.FromArgb(30, 30, 30)
-            lexer.Styles(ScintillaNET.Style.LineNumber).ForeColor = Color.FromArgb(43, 145, 175)
-            lexer.Styles(ScintillaNET.Style.LineNumber).Font = lexer.Styles(ScintillaNET.Style.Default).Font
-            lexer.Styles(ScintillaNET.Style.LineNumber).Size = lexer.Styles(ScintillaNET.Style.Default).Size
-
-            lexer.Margins(0).Type = ScintillaNET.MarginType.Number
-            lexer.Margins(0).Width = 30
+            ResetLexer(lexer)
 
             lexer.Lexer = ScintillaNET.Lexer.PhpScript
 
             lexer.CreateDocument()
 
-            lexer.Styles(ScintillaNET.Style.PhpScript.Default).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Default).ForeColor = lexer.Styles(ScintillaNET.Style.Default).ForeColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Comment).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Comment).ForeColor = Color.FromArgb(87, 166, 74)
+            lexer.Styles(ScintillaNET.Style.PhpScript.ComplexVariable).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.ComplexVariable).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.ComplexVariable).ForeColor = Color.FromArgb(-9990991)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Default).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Default).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.Default).ForeColor = Color.FromArgb(-2039068)
+            lexer.Styles(ScintillaNET.Style.PhpScript.HString).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.HString).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.HString).ForeColor = Color.FromArgb(-1280512)
+            lexer.Styles(ScintillaNET.Style.PhpScript.SimpleString).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.SimpleString).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.SimpleString).ForeColor = Color.FromArgb(-31735)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Word).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Word).Bold = True
+            lexer.Styles(ScintillaNET.Style.PhpScript.Word).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.Word).ForeColor = Color.FromArgb(-7092381)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Word).Hotspot = True
+            lexer.Styles(ScintillaNET.Style.PhpScript.Word).Weight = 700
+            lexer.Styles(ScintillaNET.Style.PhpScript.Number).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Number).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.Number).ForeColor = Color.FromArgb(-12957)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Variable).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Variable).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.Variable).ForeColor = Color.FromArgb(-9990991)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Comment).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Comment).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.Comment).ForeColor = Color.FromArgb(-10062725)
             lexer.Styles(ScintillaNET.Style.PhpScript.Comment).Italic = True
-            lexer.Styles(ScintillaNET.Style.PhpScript.Number).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Number).ForeColor = Color.FromArgb(181, 206, 168)
-            lexer.Styles(ScintillaNET.Style.PhpScript.ComplexVariable).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.ComplexVariable).ForeColor = Color.FromArgb(86, 156, 214)
-            lexer.Styles(ScintillaNET.Style.PhpScript.SimpleString).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.SimpleString).ForeColor = Color.FromArgb(255, 128, 0)
-            lexer.Styles(ScintillaNET.Style.PhpScript.Variable).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Variable).ForeColor = Color.Gainsboro
-            lexer.Styles(ScintillaNET.Style.PhpScript.Operator).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Operator).ForeColor = Color.FromArgb(-4934476)
-            lexer.Styles(ScintillaNET.Style.PhpScript.Word).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Word).ForeColor = Color.Gainsboro
-            lexer.Styles(ScintillaNET.Style.PhpScript.HString).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.HString).ForeColor = Color.Green
-            lexer.Styles(ScintillaNET.Style.PhpScript.HStringVariable).ForeColor = Color.Navy
-            lexer.Styles(ScintillaNET.Style.PhpScript.HStringVariable).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.CommentLine).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.CommentLine).ForeColor = Color.FromArgb(-11033014)
+            lexer.Styles(ScintillaNET.Style.PhpScript.CommentLine).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.CommentLine).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.CommentLine).ForeColor = Color.FromArgb(-10062725)
             lexer.Styles(ScintillaNET.Style.PhpScript.CommentLine).Italic = True
+            lexer.Styles(ScintillaNET.Style.PhpScript.HStringVariable).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.HStringVariable).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.HStringVariable).ForeColor = Color.FromArgb(-2910405)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Operator).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Operator).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.Operator).ForeColor = Color.FromArgb(-1514820)
 
-            Using s As New IO.StreamReader(My.Resources.ResourceManager.GetStream("php_keywords"), False)
-                lexer.SetKeywords(0, s.ReadToEnd())
-            End Using
+
+            lexer.SetKeywords(0, My.Resources.php_keywords)
+
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
     End Sub
 
-    Private Sub setSQLStyle(_lexer As ScintillaNET.Scintilla)
+    Private Sub setSQLStyle(lexer As ScintillaNET.Scintilla)
         Try
-            _lexer.Styles(ScintillaNET.Style.Default).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Default).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Default).ForeColor = Color.Gainsboro
-            _lexer.Styles(ScintillaNET.Style.Default).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Default).SizeF = 10.0F
+            ResetLexer(lexer)
 
-            _lexer.StyleClearAll()
+            lexer.Lexer = ScintillaNET.Lexer.Sql
 
-            _lexer.Styles(ScintillaNET.Style.LineNumber).BackColor = Color.FromArgb(83, 83, 83)
-            _lexer.Styles(ScintillaNET.Style.LineNumber).ForeColor = Color.Gainsboro
-            _lexer.Styles(ScintillaNET.Style.LineNumber).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.LineNumber).Size = 10
-            _lexer.Styles(ScintillaNET.Style.LineNumber).SizeF = 10.0F
+            lexer.CreateDocument()
+
+            lexer.Styles(ScintillaNET.Style.Sql.Default).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Default).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.Default).ForeColor = Color.Gainsboro
+            lexer.Styles(ScintillaNET.Style.Sql.Default).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.Default).SizeF = 10.0F
+            lexer.Styles(ScintillaNET.Style.Sql.Comment).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Comment).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.Comment).ForeColor = Color.FromArgb(102, 116, 123)
+            lexer.Styles(ScintillaNET.Style.Sql.Comment).Italic = True
+            lexer.Styles(ScintillaNET.Style.Sql.Comment).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.Comment).SizeF = 10.0F
+            lexer.Styles(ScintillaNET.Style.Sql.Number).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Number).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.Number).ForeColor = Color.FromArgb(255, 205, 34)
+            lexer.Styles(ScintillaNET.Style.Sql.Number).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.Number).SizeF = 10.0F
+            lexer.Styles(ScintillaNET.Style.Sql.Word).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Word).Bold = True
+            lexer.Styles(ScintillaNET.Style.Sql.Word).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.Word).ForeColor = Color.FromArgb(147, 199, 99)
+            lexer.Styles(ScintillaNET.Style.Sql.Word).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.Word).SizeF = 10.0F
+            lexer.Styles(ScintillaNET.Style.Sql.Word).Weight = 700
+            lexer.Styles(ScintillaNET.Style.Sql.[String]).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.[String]).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.[String]).ForeColor = Color.FromArgb(236, 118, 0)
+            lexer.Styles(ScintillaNET.Style.Sql.[String]).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.[String]).SizeF = 10.0F
+            lexer.Styles(ScintillaNET.Style.Sql.[Operator]).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.[Operator]).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.[Operator]).ForeColor = Color.FromArgb(232, 226, 183)
+            lexer.Styles(ScintillaNET.Style.Sql.[Operator]).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.[Operator]).SizeF = 10.0F
+            lexer.Styles(ScintillaNET.Style.Sql.Identifier).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Identifier).ForeColor = Color.Gainsboro
 
 
-            _lexer.Margins(0).Type = ScintillaNET.MarginType.Number
-            _lexer.Margins(0).Width = 30
+            lexer.SetKeywords(0, My.Resources.sql_keywords)
 
-            _lexer.Lexer = ScintillaNET.Lexer.Sql
-
-            _lexer.CreateDocument()
-
-            _lexer.Styles(ScintillaNET.Style.Sql.Default).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.Default).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Sql.Default).ForeColor = Color.Gainsboro
-            _lexer.Styles(ScintillaNET.Style.Sql.Default).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Sql.Default).SizeF = 10.0F
-            _lexer.Styles(ScintillaNET.Style.Sql.Comment).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.Comment).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Sql.Comment).ForeColor = Color.FromArgb(102, 116, 123)
-            _lexer.Styles(ScintillaNET.Style.Sql.Comment).Italic = True
-            _lexer.Styles(ScintillaNET.Style.Sql.Comment).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Sql.Comment).SizeF = 10.0F
-            _lexer.Styles(ScintillaNET.Style.Sql.Number).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.Number).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Sql.Number).ForeColor = Color.FromArgb(255, 205, 34)
-            _lexer.Styles(ScintillaNET.Style.Sql.Number).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Sql.Number).SizeF = 10.0F
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).Bold = True
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).ForeColor = Color.FromArgb(147, 199, 99)
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).SizeF = 10.0F
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).Weight = 700
-            _lexer.Styles(ScintillaNET.Style.Sql.[String]).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.[String]).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Sql.[String]).ForeColor = Color.FromArgb(236, 118, 0)
-            _lexer.Styles(ScintillaNET.Style.Sql.[String]).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Sql.[String]).SizeF = 10.0F
-            _lexer.Styles(ScintillaNET.Style.Sql.[Operator]).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.[Operator]).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Sql.[Operator]).ForeColor = Color.FromArgb(232, 226, 183)
-            _lexer.Styles(ScintillaNET.Style.Sql.[Operator]).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Sql.[Operator]).SizeF = 10.0F
-            _lexer.Styles(ScintillaNET.Style.Sql.Identifier).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.Identifier).ForeColor = Color.Gainsboro
-
-            _lexer.SetKeywords(0, My.Settings.sql_keywords)
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -1012,7 +1030,7 @@ Public Class mainGUI2
                 _currentProject.projectname = txtProjectName.Text
                 _currentProject.projectlocation = txtProjectFolder.Text
                 _currentProject.projectoutputlocation = txtOutputFolder.Text
-                _currentProject.outputtype = cboOutputType.Text
+                _currentProject.outputtype = DirectCast(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString
                 _currentProject.useEnums = sbEnums.Value
 
                 _currentProject.database = New databaseObjects With {
@@ -1027,10 +1045,10 @@ Public Class mainGUI2
                 If _currentProject.projectoutputlocation <> "" Then
                     For Each pf In (From f In IO.Directory.EnumerateFiles(_currentProject.projectoutputlocation, "*.*", IO.SearchOption.AllDirectories) Select New IO.FileInfo(f)).ToList
                         _currentProject.generatedoutputs.Add(New outputItem With {
-                                                             .filename = pf.Name,
-                                                             .location = pf.DirectoryName,
-                                                             .objecttype = "file",
-                                                             .hash = pf.GetHashCode.ToString})
+                                                            .filename = pf.Name,
+                                                            .location = pf.DirectoryName,
+                                                            .objecttype = "file",
+                                                            .hash = pf.GetHashCode.ToString})
                     Next
                 End If
             End If
@@ -1053,7 +1071,8 @@ Public Class mainGUI2
                 txtProjectName.Text = _currentProject.projectname
                 txtProjectFolder.Text = _currentProject.projectlocation
                 txtOutputFolder.Text = _currentProject.projectoutputlocation
-                cboOutputType.Text = _currentProject.outputtype
+                Dim itm = cboOutputType.Items().Cast(Of DevComponents.Editors.ComboItem).FirstOrDefault(Function(c) c.Value.ToString = _currentProject.outputtype)
+                cboOutputType.SelectedItem = itm
                 sbEnums.SetValue(_currentProject.useEnums, eEventSource.Code)
 
                 cboConnecions.Text = _currentProject.database.connection.description
@@ -1114,19 +1133,34 @@ Public Class mainGUI2
 
     Private Sub cboOutputType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboOutputType.SelectedIndexChanged
         WriteProject()
-        If cboOutputType.Text = ".NET" Then
-            Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
-                advtreeOutputExplorer.Nodes.Clear()
-                advtreeOutputExplorer.Load(ts)
-            End Using
-        Else
-            Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
-                advtreeOutputExplorer.Nodes.Clear()
-                advtreeOutputExplorer.Load(ts)
-            End Using
-        End If
+        Select Case CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString
+            Case "net5"
+                Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
+                    advtreeOutputExplorer.Nodes.Clear()
+                    advtreeOutputExplorer.Load(ts)
+                End Using
+                setVbStyle(scCodePreview)
+                setVbStyle(scGeneratedModel)
+                setVbStyle(scGeneratedMapping)
+            Case "php"
+                Using ts As New IO.StringReader(My.Resources.phpOutputExplorer)
+                    advtreeOutputExplorer.Nodes.Clear()
+                    advtreeOutputExplorer.Load(ts)
+                End Using
+                setPHPStyle(scCodePreview)
+                setPHPStyle(scGeneratedModel)
+                setPHPStyle(scGeneratedMapping)
+            Case Else
+                Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
+                    advtreeOutputExplorer.Nodes.Clear()
+                    advtreeOutputExplorer.Load(ts)
+                End Using
+                setVbStyle(scCodePreview)
+                setVbStyle(scGeneratedModel)
+                setVbStyle(scGeneratedMapping)
+        End Select
 
-        If _mngr IsNot Nothing Then _mngr.setGenerator(cboOutputType.Text.ToLower)
+        If _mngr IsNot Nothing Then _mngr.setGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString.ToLower)
     End Sub
 
     Private Sub enableOrDisableFields()

@@ -170,4 +170,17 @@
   <data name="updateLocation" xml:space="preserve">
     <value>https://www.cmbsolutions.nl/netbakery/v2/latest.php</value>
   </data>
+  <data name="sql_keywords" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sql_keywords.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="vb_keywords" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\vb_keywords.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="phpOutputExplorer" xml:space="preserve">
+    <value>&lt;AdvTree&gt;
+  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Table" ImageIndex="1" ImageExpandedIndex="0"&gt;&lt;/Node&gt;
+    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Entity" ImageIndex="1" ImageExpandedIndex="0"&gt;
+    &lt;/Node&gt;
+&lt;/AdvTree&gt;</value>
+  </data>
 </root>

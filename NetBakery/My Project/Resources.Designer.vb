@@ -137,6 +137,19 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to &lt;AdvTree&gt;
+        '''  &lt;Node Expanded=&quot;true&quot; Name=&quot;mapModels&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Table&quot; ImageIndex=&quot;1&quot; ImageExpandedIndex=&quot;0&quot;&gt;&lt;/Node&gt;
+        '''    &lt;Node Expanded=&quot;true&quot; Name=&quot;mapMapping&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Entity&quot; ImageIndex=&quot;1&quot; ImageExpandedIndex=&quot;0&quot;&gt;
+        '''    &lt;/Node&gt;
+        '''&lt;/AdvTree&gt;.
+        '''</summary>
+        Friend ReadOnly Property phpOutputExplorer() As String
+            Get
+                Return ResourceManager.GetString("phpOutputExplorer", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property pngwing_com() As System.Drawing.Bitmap
@@ -167,11 +180,29 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to abs absolute access acos add add_months adddate admin after aggregate all allocate alter and any app_name are array as asc ascii asin assertion at atan atn2 audit authid authorization autonomous_transaction avg before begin benchmark between bfilename bigint bin binary binary_checksum binary_integer bit bit_count bit_and bit_or blob body boolean both breadth bulk by call cascade cascaded case cast catalog ceil ceiling char char_base character charindex chartorowid check checksum checksum_agg chr class clob  [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property sql_keywords() As String
+            Get
+                Return ResourceManager.GetString("sql_keywords", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to https://www.cmbsolutions.nl/netbakery/v2/latest.php.
         '''</summary>
         Friend ReadOnly Property updateLocation() As String
             Get
                 Return ResourceManager.GetString("updateLocation", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to addhandler addressof andalso alias and ansi as assembly attribute auto begin boolean byref byte byval call case catch cbool cbyte cchar cdate cdec cdbl char cint class clng cobj compare const continue cshort csng cstr ctype currency date datetime time decimal declare default delegate dim do double each else elseif end enum erase error event exit explicit false finally for friend function get gettype global gosub goto handles if implement implements imports in inherits integer interface is let lib like load  [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property vb_keywords() As String
+            Get
+                Return ResourceManager.GetString("vb_keywords", resourceCulture)
             End Get
         End Property
     End Module

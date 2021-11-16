@@ -502,6 +502,8 @@
       <LastGenOutput>StoreCommands.vb</LastGenOutput>
     </Content>
     <Content Include="netbakery.png.ico" />
+    <EmbeddedResource Include="Resources\sql_keywords.txt" />
+    <EmbeddedResource Include="Resources\vb_keywords.txt" />
     <None Include="Resources\pngwing.com.png" />
     <None Include="Resources\logo.png" />
     <None Include="Resources\folder_search.png" />

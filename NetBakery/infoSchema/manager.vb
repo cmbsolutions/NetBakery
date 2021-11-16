@@ -361,7 +361,8 @@ Namespace infoSchema
 
 
                 _keywords = New List(Of String)
-                _keywords.AddRange(My.Settings.keywords.Split(" "c))
+                _keywords.AddRange(My.Resources.vb_keywords.Split(" "c))
+
 
             Catch ex As Exception
                 Throw

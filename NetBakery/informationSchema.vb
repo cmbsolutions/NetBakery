@@ -18,7 +18,7 @@ Public Class informationSchema
     Property routines As List(Of Routine)
 
     Public Sub New()
-        _keywords.AddRange(My.Settings.keywords.Split(" "c))
+        _keywords.AddRange(My.Resources.vb_keywords.Split(" "c))
     End Sub
     Public Sub updatePluralizationService()
         _p = New PluralizationService
