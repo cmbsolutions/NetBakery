@@ -7,39 +7,27 @@
 Imports System.Collections.Generic
 
 Namespace Models
-    Public Partial Class <#= _t.singleName #>
+    Partial Public Class <#= _t.singleName #>
 <#  If _t.foreignKeys.Any() Then #>
-        Sub New()
+        Public Sub New()
 <#      For Each fk in  _t.foreignKeys #>
-            <#= fk.referencedTable.name #> = New List(Of <#= p.Singularize(fk.referencedTable.name) #>)()
+            <#= fk.referencedTable.name #> = New HashSet(Of <#= p.Singularize(fk.referencedTable.name) #>)()
 <#      Next #>
         End Sub
 <#  End If #>
 
 <#  For each c in _t.columns #>
 <#      If c.isNullable And c.vbType <> GetType(System.String) Then #>
-        Property <#= c.alias #>() as <#= c.vbType #>?
+        Public Property <#= c.alias #>() as <#= c.vbType #>?
 <#      else #>
-        Property <#= c.alias #>() as <#= c.vbType #>
+        Public Property <#= c.alias #>() as <#= c.vbType #>
 <#      end if
-
-        If c.mysqlType = "enum" AndAlso c.vbType <> GetType(System.String) Then
-            _i = 1
- #>
-
-        Enum <#= c.vbType #>
-<#          For Each e in c.enums #>
-            <#= e #> = <#= _i #>
-<#              _i += 1 #>
-<#          Next #>
-        End Enum
-
-<#      End If
     Next
 
+    ' TODO: split into 1:N 1:1 N:1 N:N
     For Each fk in  _t.foreignKeys
  #>
-        Property <#= fk.referencedTable.name #>() As List(Of <#= p.Singularize(fk.referencedTable.name) #>)
+        Public Overridable Property <#= fk.table.name #>() As ICollection(Of <#= p.Singularize(fk.table.name) #>)
 <#  Next #>
     End Class
 End Namespace

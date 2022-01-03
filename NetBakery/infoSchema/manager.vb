@@ -168,6 +168,7 @@ Namespace infoSchema
                                     c.autoIncrement = If(rdr("EXTRA").ToString = "auto_increment", True, False)
                                 End If
                                 c.vbType = getVbType(rdr("DATA_TYPE").ToString)
+                                c.MySqlColumnType = rdr("COLUMN_TYPE").ToString
                                 c.phpType = getPHPType(c.mysqlType)
                                 If rdr("DATA_TYPE").ToString = "enum" Then
                                     Dim RegexObj As New Regex("\(([^)]+)")
@@ -467,7 +468,7 @@ Namespace infoSchema
                 Case "byte", "bit"
                     Return "bool"
                 Case Else
-                    Return "Unknown"
+                    Return "null"
             End Select
         End Function
         Private Function AliasGenerator(original As String) As String

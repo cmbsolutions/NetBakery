@@ -24,8 +24,8 @@ Namespace My.Templates.net5
         '''Create the template output
         '''</summary>
         Public Overridable Function TransformText() As String
-            Me.Write("Imports System.ComponentModel.DataAnnotations.Schema"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Imports System.Data.Entity."& _ 
-                    "ModelConfiguration"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models.Mapping"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("Imports Microsoft.EntityFrameworkCore"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Imports Microsoft.EntityFrameworkCore.Meta"& _ 
+                    "data.Builders"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",11)
 
@@ -57,182 +57,76 @@ Namespace My.Templates.net5
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
             
             #End ExternalSource
-            Me.Write("Map"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Inherits EntityTypeConfiguration(Of ")
+            Me.Write("Map"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Implements IEntityTypeConfiguration(Of ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",33)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
             
             #End ExternalSource
-            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Primary Key"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Public Sub Configure(builder As EntityTypeBuilder(Of ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",36)
-
-	If keys.Any() Then
-		If keys.count() = 1 then 
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",35)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.HasKey(Function(t) t.")
+            Me.Write(")) Implements IEntityTypeConfiguration(Of ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",39)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join("", keys)))
-            
-            #End ExternalSource
-            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",40)
-      else 
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",35)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.HasKey(Function(t) New With { t.")
+            Me.Write(").Configure"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Table in database"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"builder.ToTable(""")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",41)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", t.", keys)))
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",37)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.Name))
             
             #End ExternalSource
-            Me.Write("})"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(""")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Indexes"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Fields"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",42)
- 
-		End If
-	End If
-
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Properties"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",48)
 
 	For Each c in _t.columns
 		Dim configLines as new list(of String)
 
-		if not c.isNullable then configLines.add(".IsRequired()")
+		configLines.Add(String.Format(".HasColumnName(""{0}"")", c.name))
+		If c.vbType <> GetType(String) Then
+			configLines.Add(String.Format(".HasColumnType(""{0}"")", c.MySqlColumnType))
+		End If
+
+		If not c.isNullable and not c.autoincrement then
+			configLines.add(".IsRequired()")
+		Else
+			configLines.Add(String.Format(".HasDefaultValueSql(""'{0}'"")", c.defaultValue))
+		End If
 		if c.vbType = GetType(System.String) AndAlso c.maximumLength > 0 AndAlso c.maximumLength <= 65535 then configLines.add(String.Format(".HasMaxLength({0})", c.maximumLength))
-        if c.autoincrement then configLines.add(".HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity)")
-		if c.key = "PRI" and not c.autoincrement then configLines.add(".HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)")
+		if c.autoincrement then configLines.add(".ValueGeneratedOnAdd()")
 
 		if configLines.count() > 0 then
 
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.[Property](Function(t) t.")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"builder.[Property](Function(e) e.")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",59)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",61)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
             
             #End ExternalSource
             Me.Write(")")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",59)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",61)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join("", configLines)))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",60)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",62)
 
 		end if
 	Next
 
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Table & Column Mappings"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.ToTable(""")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",65)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.name))
-            
-            #End ExternalSource
-            Me.Write(""")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",66)
-
-	For Each c in _t.columns
-		If c.name <> c.alias Then
-
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.[Property](Function(t) t.")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",70)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
-            
-            #End ExternalSource
-            Me.Write(").HasColumnName(""")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",70)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.name))
-            
-            #End ExternalSource
-            Me.Write(""")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",71)
-
-		End If
-	Next
-
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Relationships"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",77)
-
-
-	For Each r in _t.relations
-		If r.isOptional Then
-
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.HasOptional(Function(t) t.")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",82)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(r.toTable.name))
-            
-            #End ExternalSource
-            Me.Write(").WithMany(Function(t) t.")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",82)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(r.alias))
-            
-            #End ExternalSource
-            Me.Write(").HasForeignKey(Function(d) d.")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",82)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(r.toColumn.name))
-            
-            #End ExternalSource
-            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",83)
-      Else 
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.HasRequired(Function(t) t.")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",84)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(r.toTable.name))
-            
-            #End ExternalSource
-            Me.Write(").WithMany(Function(t) t.")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",84)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(r.alias))
-            
-            #End ExternalSource
-            Me.Write(").HasForeignKey(Function(d) d.")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",84)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(r.toColumn.name))
-            
-            #End ExternalSource
-            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",85)
-
-		End If
-	Next
-
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"End Class"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End Namespace")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"End Class"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End Namespace")
             Return Me.GenerationEnvironment.ToString
         End Function
     End Class

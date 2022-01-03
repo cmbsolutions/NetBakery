@@ -3,6 +3,7 @@
         Property name As String
         Property [alias] As String
         Property mysqlType As String
+        Property MySqlColumnType As String
         Property vbType As Type
         Property phpType As String
         Property ordinalPosition As Integer

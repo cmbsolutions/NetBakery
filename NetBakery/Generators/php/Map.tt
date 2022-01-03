@@ -16,9 +16,9 @@
 <#="* " & _t.singleName & "Entity"#>
 <#  For each c in _t.columns #>
 <#      If c.isNullable Then #>
-    <#="* @property  " & c.mysqlType & "|null $" & c.name #>
+    <#="* @property  " & c.phpType & "|null $" & c.name #>
 <#      Else #>
-    <#="* @property " & c.mysqlType & " $" & c.name #>
+    <#="* @property " & c.phpType & " $" & c.name #>
 <#      End If #>
 <# Next #>
 <#="*/"#>

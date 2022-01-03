@@ -417,7 +417,7 @@ Public Class mainGUI2
         Try
             If _currentProject IsNot Nothing Then
                 Select Case _currentProject.outputtype.ToLower
-                    Case ".net"
+                    Case "net5"
                         Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
                             advtreeOutputExplorer.Nodes.Clear()
                             advtreeOutputExplorer.Load(ts)
@@ -471,7 +471,7 @@ Public Class mainGUI2
                 Dim mStoreCommands As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommands", True).FirstOrDefault
                 Dim mStoreCommandFunctions As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandFunctions", True).FirstOrDefault
                 Dim mStoreCommandsProcedures As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandProcedures", True).FirstOrDefault
-                Dim mStoreCommandModels As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
+                Dim mStoreCommandModels As AdvTree.Node = mStoreCommandsProcedures.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
 
                 ' Tables and views
                 For Each table In _mngr.tables.Where(Function(t) t.hasExport)

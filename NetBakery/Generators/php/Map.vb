@@ -68,7 +68,7 @@ Namespace My.Templates.php
             Me.Write("    ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\php\Map.tt",19)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture("* @property  " & c.mysqlType & "|null $" & c.name))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("* @property  " & c.phpType & "|null $" & c.name))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
@@ -80,7 +80,7 @@ Namespace My.Templates.php
             Me.Write("    ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\php\Map.tt",21)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture("* @property " & c.mysqlType & " $" & c.name))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("* @property " & c.phpType & " $" & c.name))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))

@@ -24,7 +24,7 @@ Namespace My.Templates.net5
         '''Create the template output
         '''</summary>
         Public Overridable Function TransformText() As String
-            Me.Write("Imports System.Collections.Generic"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    Public Partial Class "& _ 
+            Me.Write("Imports System.Collections.Generic"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    Partial Public Class "& _ 
                     "")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",10)
@@ -37,7 +37,7 @@ Namespace My.Templates.net5
   If _t.foreignKeys.Any() Then 
             
             #End ExternalSource
-            Me.Write("        Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("        Public Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",13)
       For Each fk in  _t.foreignKeys 
@@ -49,7 +49,7 @@ Namespace My.Templates.net5
             Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedTable.name))
             
             #End ExternalSource
-            Me.Write(" = New List(Of ")
+            Me.Write(" = New HashSet(Of ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",14)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.referencedTable.name)))
@@ -78,7 +78,7 @@ Namespace My.Templates.net5
       If c.isNullable And c.vbType <> GetType(System.String) Then 
             
             #End ExternalSource
-            Me.Write("        Property ")
+            Me.Write("        Public Property ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",21)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
@@ -96,7 +96,7 @@ Namespace My.Templates.net5
       else 
             
             #End ExternalSource
-            Me.Write("        Property ")
+            Me.Write("        Public Property ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",23)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
@@ -112,72 +112,28 @@ Namespace My.Templates.net5
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",24)
       end if
-
-        If c.mysqlType = "enum" AndAlso c.vbType <> GetType(System.String) Then
-            _i = 1
- 
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        Enum ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",30)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.vbType))
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",31)
-          For Each e in c.enums 
-            
-            #End ExternalSource
-            Me.Write("            ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",32)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(e))
-            
-            #End ExternalSource
-            Me.Write(" = ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",32)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(_i))
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",33)
-              _i += 1 
-            
-            #End ExternalSource
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",34)
-          Next 
-            
-            #End ExternalSource
-            Me.Write("        End Enum"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",37)
-      End If
     Next
 
+    ' TODO: split into 1:N 1:1 N:1 N:N
     For Each fk in  _t.foreignKeys
  
             
             #End ExternalSource
-            Me.Write("        Property ")
+            Me.Write("        Public Overridable Property ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",42)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedTable.name))
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",30)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.table.name))
             
             #End ExternalSource
-            Me.Write("() As List(Of ")
+            Me.Write("() As ICollection(Of ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",42)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.referencedTable.name)))
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",30)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.table.name)))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",43)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",31)
   Next 
             
             #End ExternalSource
