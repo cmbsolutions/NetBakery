@@ -88,6 +88,7 @@ Namespace infoSchema
 
                 getTables()
                 getColumns()
+                getIndexes()
                 getForeignKeys()
                 getRoutines()
 
@@ -184,6 +185,37 @@ Namespace infoSchema
                     End Using
                 Next
 
+            Catch ex As Exception
+                Throw
+            End Try
+        End Sub
+
+        Private Sub getIndexes()
+            Try
+                Using _dbCommand = New MySqlCommand
+                    _dbCommand.Connection = dbConnection()
+                    _dbCommand.CommandText = $"Select i.INDEX_ID, t.`NAME` AS dbtable, i.`NAME` AS idxname, i.TYPE As idxtype, GROUP_CONCAT(f.`NAME`) As idxfields FROM INNODB_SYS_TABLES As t INNER Join INNODB_SYS_INDEXES AS i ON t.TABLE_ID = i.TABLE_ID Left Join INNODB_SYS_FIELDS AS f ON i.INDEX_ID = f.INDEX_ID	WHERE t.`NAME` LIKE '{database}%' Group BY 1"
+
+
+                    Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
+                        While rdr.Read
+                            Dim ts As String = rdr("dbtable").ToString.Replace($"{database}/", "")
+
+                            Dim table = tables.FirstOrDefault(Function(c) c.name = ts)
+
+                            Dim idx As New index With {
+                                .Name = rdr("idxname").ToString,
+                                .Type = CInt(rdr("idxtype"))
+                            }
+
+                            For Each f In Strings.Split(rdr("idxfields").ToString, ",")
+                                idx.columns.Add(table.columns.FirstOrDefault(Function(c) c.name = f))
+                            Next
+
+                            table.indexes.Add(idx)
+                        End While
+                    End Using
+                End Using
             Catch ex As Exception
                 Throw
             End Try

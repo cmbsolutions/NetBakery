@@ -297,6 +297,7 @@
     <Compile Include="infoSchema\connections.vb" />
     <Compile Include="infoSchema\enums.vb" />
     <Compile Include="infoSchema\foreignKey.vb" />
+    <Compile Include="infoSchema\index.vb" />
     <Compile Include="infoSchema\inflector.vb" />
     <Compile Include="infoSchema\manager.vb" />
     <Compile Include="infoSchema\parameter.vb" />

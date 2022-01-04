@@ -24,12 +24,15 @@ Partial Class mainGUI2
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(mainGUI2))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dnbStyleManagerAmbient = New DevComponents.DotNetBar.StyleManagerAmbient(Me.components)
         Me.dnbStyleManager = New DevComponents.DotNetBar.StyleManager(Me.components)
         Me.CheckBoxItem1 = New DevComponents.DotNetBar.CheckBoxItem()
@@ -137,6 +140,9 @@ Partial Class mainGUI2
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
+        Me.TabItem4 = New DevComponents.DotNetBar.TabItem(Me.components)
+        Me.TabControlPanel4 = New DevComponents.DotNetBar.TabControlPanel()
+        Me.dgvIndexes = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.DockSite4.SuspendLayout()
         CType(Me.barLogging, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.barLogging.SuspendLayout()
@@ -177,6 +183,8 @@ Partial Class mainGUI2
         Me.DockSite7.SuspendLayout()
         CType(Me.barMainMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
+        Me.TabControlPanel4.SuspendLayout()
+        CType(Me.dgvIndexes, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'dnbStyleManager
@@ -328,9 +336,9 @@ Partial Class mainGUI2
         Me.Bar4.CanDockTop = False
         Me.Bar4.CanHide = True
         Me.Bar4.CanUndock = False
-        Me.Bar4.Controls.Add(Me.pdcProjectSettings)
         Me.Bar4.Controls.Add(Me.pdcObjectInfo)
         Me.Bar4.Controls.Add(Me.pdcCodePreview)
+        Me.Bar4.Controls.Add(Me.pdcProjectSettings)
         Me.Bar4.DockTabAlignment = DevComponents.DotNetBar.eTabStripAlignment.Top
         Me.Bar4.FadeEffect = True
         Me.Bar4.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -340,7 +348,7 @@ Partial Class mainGUI2
         Me.Bar4.Location = New System.Drawing.Point(0, 0)
         Me.Bar4.Margin = New System.Windows.Forms.Padding(0)
         Me.Bar4.Name = "Bar4"
-        Me.Bar4.SelectedDockTab = 0
+        Me.Bar4.SelectedDockTab = 1
         Me.Bar4.Size = New System.Drawing.Size(1042, 470)
         Me.Bar4.Stretch = True
         Me.Bar4.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
@@ -646,9 +654,10 @@ Partial Class mainGUI2
         Me.TabControl1.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.TabControl1.CanReorderTabs = False
         Me.TabControl1.CloseButtonOnTabsAlwaysDisplayed = False
-        Me.TabControl1.Controls.Add(Me.TabControlPanel1)
-        Me.TabControl1.Controls.Add(Me.TabControlPanel3)
+        Me.TabControl1.Controls.Add(Me.TabControlPanel4)
         Me.TabControl1.Controls.Add(Me.TabControlPanel2)
+        Me.TabControl1.Controls.Add(Me.TabControlPanel3)
+        Me.TabControl1.Controls.Add(Me.TabControlPanel1)
         Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.ForeColor = System.Drawing.Color.White
         Me.TabControl1.ImageList = Me.ilDatabaseObjects
@@ -666,6 +675,7 @@ Partial Class mainGUI2
         Me.TabControl1.Tabs.Add(Me.TabItem1)
         Me.TabControl1.Tabs.Add(Me.TabItem2)
         Me.TabControl1.Tabs.Add(Me.TabItem3)
+        Me.TabControl1.Tabs.Add(Me.TabItem4)
         Me.TabControl1.Text = "TabControl1"
         Me.TabControl1.ThemeAware = True
         '
@@ -678,7 +688,7 @@ Partial Class mainGUI2
         Me.TabControlPanel1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.TabControlPanel1.Name = "TabControlPanel1"
         Me.TabControlPanel1.Padding = New System.Windows.Forms.Padding(1)
-        Me.TabControlPanel1.Size = New System.Drawing.Size(1036, 412)
+        Me.TabControlPanel1.Size = New System.Drawing.Size(1036, 409)
         Me.TabControlPanel1.Style.BackColor1.Color = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.TabControlPanel1.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine
         Me.TabControlPanel1.Style.BorderColor.Color = System.Drawing.Color.FromArgb(CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(91, Byte), Integer))
@@ -693,23 +703,23 @@ Partial Class mainGUI2
         Me.dgvFields.AllowUserToAddRows = False
         Me.dgvFields.AllowUserToDeleteRows = False
         Me.dgvFields.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvFields.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle7.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle7.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvFields.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle7
         Me.dgvFields.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvFields.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle8.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvFields.DefaultCellStyle = DataGridViewCellStyle8
         Me.dgvFields.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvFields.EnableHeadersVisualStyles = False
         Me.dgvFields.GridColor = System.Drawing.Color.FromArgb(CType(CType(123, Byte), Integer), CType(CType(123, Byte), Integer), CType(CType(132, Byte), Integer))
@@ -717,15 +727,15 @@ Partial Class mainGUI2
         Me.dgvFields.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.dgvFields.Name = "dgvFields"
         Me.dgvFields.ReadOnly = True
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvFields.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
-        Me.dgvFields.Size = New System.Drawing.Size(1034, 410)
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle9.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvFields.RowHeadersDefaultCellStyle = DataGridViewCellStyle9
+        Me.dgvFields.Size = New System.Drawing.Size(1034, 407)
         Me.dgvFields.TabIndex = 0
         '
         'TabItem1
@@ -746,7 +756,7 @@ Partial Class mainGUI2
         Me.TabControlPanel3.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.TabControlPanel3.Name = "TabControlPanel3"
         Me.TabControlPanel3.Padding = New System.Windows.Forms.Padding(1)
-        Me.TabControlPanel3.Size = New System.Drawing.Size(1036, 412)
+        Me.TabControlPanel3.Size = New System.Drawing.Size(1036, 409)
         Me.TabControlPanel3.Style.BackColor1.Color = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.TabControlPanel3.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine
         Me.TabControlPanel3.Style.BorderColor.Color = System.Drawing.Color.FromArgb(CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(91, Byte), Integer))
@@ -771,7 +781,7 @@ Partial Class mainGUI2
         'CollapsibleSplitContainer1.Panel2
         '
         Me.CollapsibleSplitContainer1.Panel2.Controls.Add(Me.TableLayoutPanel4)
-        Me.CollapsibleSplitContainer1.Size = New System.Drawing.Size(1034, 410)
+        Me.CollapsibleSplitContainer1.Size = New System.Drawing.Size(1034, 407)
         Me.CollapsibleSplitContainer1.SplitterDistance = 492
         Me.CollapsibleSplitContainer1.SplitterWidth = 20
         Me.CollapsibleSplitContainer1.TabIndex = 3
@@ -788,7 +798,7 @@ Partial Class mainGUI2
         Me.TableLayoutPanel3.RowCount = 2
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28.0!))
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel3.Size = New System.Drawing.Size(492, 410)
+        Me.TableLayoutPanel3.Size = New System.Drawing.Size(492, 407)
         Me.TableLayoutPanel3.TabIndex = 2
         '
         'scGeneratedModel
@@ -837,7 +847,7 @@ Partial Class mainGUI2
         Me.TableLayoutPanel4.RowCount = 2
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel4.Size = New System.Drawing.Size(522, 410)
+        Me.TableLayoutPanel4.Size = New System.Drawing.Size(522, 407)
         Me.TableLayoutPanel4.TabIndex = 3
         '
         'LabelX6
@@ -891,7 +901,7 @@ Partial Class mainGUI2
         Me.TabControlPanel2.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.TabControlPanel2.Name = "TabControlPanel2"
         Me.TabControlPanel2.Padding = New System.Windows.Forms.Padding(1)
-        Me.TabControlPanel2.Size = New System.Drawing.Size(1036, 412)
+        Me.TabControlPanel2.Size = New System.Drawing.Size(1036, 409)
         Me.TabControlPanel2.Style.BackColor1.Color = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.TabControlPanel2.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine
         Me.TabControlPanel2.Style.BorderColor.Color = System.Drawing.Color.FromArgb(CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(91, Byte), Integer))
@@ -938,7 +948,7 @@ Partial Class mainGUI2
         DataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.White
         DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvForeignKeys.RowHeadersDefaultCellStyle = DataGridViewCellStyle6
-        Me.dgvForeignKeys.Size = New System.Drawing.Size(1034, 410)
+        Me.dgvForeignKeys.Size = New System.Drawing.Size(1034, 407)
         Me.dgvForeignKeys.TabIndex = 1
         '
         'TabItem2
@@ -1686,6 +1696,72 @@ Partial Class mainGUI2
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
         Me.OpenFileDialog1.Filter = "NetBakery files|*.nb2"
         '
+        'TabItem4
+        '
+        Me.TabItem4.AttachedControl = Me.TabControlPanel4
+        Me.TabItem4.ImageIndex = 2
+        Me.TabItem4.Name = "TabItem4"
+        Me.TabItem4.Text = "Indexes"
+        Me.TabItem4.Tooltip = "Indexes"
+        '
+        'TabControlPanel4
+        '
+        Me.TabControlPanel4.Controls.Add(Me.dgvIndexes)
+        Me.TabControlPanel4.DisabledBackColor = System.Drawing.Color.Empty
+        Me.TabControlPanel4.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControlPanel4.Location = New System.Drawing.Point(0, 0)
+        Me.TabControlPanel4.Name = "TabControlPanel4"
+        Me.TabControlPanel4.Padding = New System.Windows.Forms.Padding(1)
+        Me.TabControlPanel4.Size = New System.Drawing.Size(1036, 409)
+        Me.TabControlPanel4.Style.BackColor1.Color = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.TabControlPanel4.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine
+        Me.TabControlPanel4.Style.BorderColor.Color = System.Drawing.Color.FromArgb(CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(91, Byte), Integer))
+        Me.TabControlPanel4.Style.BorderSide = CType(((DevComponents.DotNetBar.eBorderSide.Left Or DevComponents.DotNetBar.eBorderSide.Right) _
+            Or DevComponents.DotNetBar.eBorderSide.Top), DevComponents.DotNetBar.eBorderSide)
+        Me.TabControlPanel4.Style.GradientAngle = -90
+        Me.TabControlPanel4.TabIndex = 16
+        Me.TabControlPanel4.TabItem = Me.TabItem4
+        '
+        'dgvIndexes
+        '
+        Me.dgvIndexes.AllowUserToAddRows = False
+        Me.dgvIndexes.AllowUserToDeleteRows = False
+        Me.dgvIndexes.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvIndexes.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        Me.dgvIndexes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvIndexes.DefaultCellStyle = DataGridViewCellStyle2
+        Me.dgvIndexes.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dgvIndexes.EnableHeadersVisualStyles = False
+        Me.dgvIndexes.GridColor = System.Drawing.Color.FromArgb(CType(CType(123, Byte), Integer), CType(CType(123, Byte), Integer), CType(CType(132, Byte), Integer))
+        Me.dgvIndexes.Location = New System.Drawing.Point(1, 1)
+        Me.dgvIndexes.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.dgvIndexes.Name = "dgvIndexes"
+        Me.dgvIndexes.ReadOnly = True
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvIndexes.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
+        Me.dgvIndexes.Size = New System.Drawing.Size(1034, 407)
+        Me.dgvIndexes.TabIndex = 2
+        '
         'mainGUI2
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 18.0!)
@@ -1750,6 +1826,8 @@ Partial Class mainGUI2
         Me.DockSite7.ResumeLayout(False)
         CType(Me.barMainMenu, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ContextMenuStrip1.ResumeLayout(False)
+        Me.TabControlPanel4.ResumeLayout(False)
+        CType(Me.dgvIndexes, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1861,4 +1939,7 @@ Partial Class mainGUI2
     Friend WithEvents sbEnums As DevComponents.DotNetBar.Controls.SwitchButton
     Friend WithEvents LabelX7 As DevComponents.DotNetBar.LabelX
     Friend WithEvents ComboItem3 As DevComponents.Editors.ComboItem
+    Friend WithEvents TabControlPanel4 As DevComponents.DotNetBar.TabControlPanel
+    Friend WithEvents dgvIndexes As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents TabItem4 As DevComponents.DotNetBar.TabItem
 End Class

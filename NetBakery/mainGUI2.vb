@@ -323,10 +323,18 @@ Public Class mainGUI2
 
                     scGeneratedMapping.Text = _mngr.generateMap(tableFields)
                     scGeneratedMapping.Colorize(0, scGeneratedMapping.Text.Length)
+
+                    Dim idxs = (From idx In tableFields.indexes Select New With {
+                                                                    Key idx.Name,
+                                                                    .indexName = idx.Name,
+                                                                    .indexType = idx.Type
+                                                                    })
+                    dgvIndexes.DataSource = idxs.ToArray
                 End If
 
                 dgvFields.Refresh()
                 dgvForeignKeys.Refresh()
+                dgvIndexes.Refresh()
 
                 dcObjectInfo.Selected = True
                 TabControl1.SelectedPanel = TabControlPanel1

@@ -7,6 +7,7 @@
         Property pluralName As String
         Property isView As Boolean
         Property columns As New List(Of column)
+        Property indexes As New List(Of index)
         Property foreignKeys As New List(Of foreignKey)
         Property relations As New List(Of relation)
         Property hasExport As Boolean
