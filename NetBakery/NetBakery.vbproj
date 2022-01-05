@@ -236,9 +236,9 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Generators\net5\Map.vb">
-      <DependentUpon>Map.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>Map.tt</DependentUpon>
     </Compile>
     <Compile Include="Generators\net5\Model.vb">
       <DependentUpon>Model.tt</DependentUpon>
@@ -443,10 +443,10 @@
     </Content>
     <Content Include="Generators\net5\Map.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>Map.vb</LastGenOutput>
       <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
       <Parameters>&lt;%3fxml version="1.0" encoding="utf-16"%3f&gt;
 &lt;ArrayOfParameterStorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Parameters>
+      <LastGenOutput>Map.vb</LastGenOutput>
     </Content>
     <Content Include="Generators\net5\Model.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>

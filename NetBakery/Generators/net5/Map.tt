@@ -37,7 +37,25 @@ Namespace Models
 			builder.ToTable("<#=_t.Name #>")
 
 			' Indexes
+<#
+	For Each i In _t.indexes
+		Dim columnnames As new StringBuilder
 
+		If i.columns.Count > 1 Then
+			for each c In i.columns
+				columnnames.Append("e." & c.Column.alias & ",")
+			next
+			columnnames.Remove(columnnames.Length -1, 1)
+#>
+			builder.HasIndex(Function(e) New With {<#= columnnames.ToString #>}, "<#= i.Name #>")<#= If(i.IsUnique, ".IsUnique()", "") #>
+<#
+		Else
+#>
+			builder.HasIndex(Function(e) e.<#= i.columns.first.column.alias #>}, "<#= i.Name #>")<#= If(i.IsUnique, ".IsUnique()", "") #>
+<#
+		End If
+	Next
+#>
 			' Fields
 <#
 	For Each c in _t.columns
@@ -51,7 +69,7 @@ Namespace Models
 		If not c.isNullable and not c.autoincrement then
 			configLines.add(".IsRequired()")
 		Else
-			configLines.Add(String.Format(".HasDefaultValueSql(""'{0}'"")", c.defaultValue))
+			if Not c.autoincrement then configLines.Add(String.Format(".HasDefaultValueSql(""'{0}'"")", c.defaultValue))
 		End If
 		if c.vbType = GetType(System.String) AndAlso c.maximumLength > 0 AndAlso c.maximumLength <= 65535 then configLines.add(String.Format(".HasMaxLength({0})", c.maximumLength))
 		if c.autoincrement then configLines.add(".ValueGeneratedOnAdd()")

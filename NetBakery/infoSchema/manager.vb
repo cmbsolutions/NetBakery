@@ -194,25 +194,31 @@ Namespace infoSchema
             Try
                 Using _dbCommand = New MySqlCommand
                     _dbCommand.Connection = dbConnection()
-                    _dbCommand.CommandText = $"Select i.INDEX_ID, t.`NAME` AS dbtable, i.`NAME` AS idxname, i.TYPE As idxtype, GROUP_CONCAT(f.`NAME`) As idxfields FROM INNODB_SYS_TABLES As t INNER Join INNODB_SYS_INDEXES AS i ON t.TABLE_ID = i.TABLE_ID Left Join INNODB_SYS_FIELDS AS f ON i.INDEX_ID = f.INDEX_ID	WHERE t.`NAME` LIKE '{database}%' Group BY 1"
-
+                    _dbCommand.CommandText = "SELECT TABLE_NAME, NON_UNIQUE, NULLABLE, INDEX_NAME, COLUMN_NAME, SEQ_IN_INDEX FROM STATISTICS WHERE TABLE_SCHEMA=@database ORDER BY TABLE_NAME, INDEX_NAME, SEQ_IN_INDEX"
+                    _dbCommand.Parameters.AddWithValue("database", database)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         While rdr.Read
-                            Dim ts As String = rdr("dbtable").ToString.Replace($"{database}/", "")
+                            Dim table = tables.FirstOrDefault(Function(c) c.name = rdr("TABLE_NAME").ToString)
 
-                            Dim table = tables.FirstOrDefault(Function(c) c.name = ts)
+                            Dim idx = table.indexes.FirstOrDefault(Function(c) c.Name = rdr("INDEX_NAME").ToString)
 
-                            Dim idx As New index With {
-                                .Name = rdr("idxname").ToString,
-                                .Type = CInt(rdr("idxtype"))
-                            }
+                            If idx Is Nothing Then
+                                idx = New index With {
+                                    .Name = rdr("INDEX_NAME").ToString,
+                                    .IsUnique = Not CBool(rdr("NON_UNIQUE")),
+                                    .IsNullable = rdr("NULLABLE").ToString = "YES"
+                                }
+                                table.indexes.Add(idx)
+                            End If
 
-                            For Each f In Strings.Split(rdr("idxfields").ToString, ",")
-                                idx.columns.Add(table.columns.FirstOrDefault(Function(c) c.name = f))
-                            Next
+                            Dim col = table.columns.FirstOrDefault(Function(c) c.name = rdr("COLUMN_NAME").ToString)
 
-                            table.indexes.Add(idx)
+                            idx.columns.Add(New indexColumn With {
+                                            .indexPosition = CInt(rdr("SEQ_IN_INDEX")),
+                                            .column = col
+                            })
+
                         End While
                     End Using
                 End Using

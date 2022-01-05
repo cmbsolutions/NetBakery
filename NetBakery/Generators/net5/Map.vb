@@ -81,9 +81,77 @@ Namespace My.Templates.net5
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.Name))
             
             #End ExternalSource
-            Me.Write(""")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Indexes"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Fields"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(""")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Indexes"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",42)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",40)
+
+	For Each i In _t.indexes
+		Dim columnnames As new StringBuilder
+
+		If i.columns.Count > 1 Then
+			for each c In i.columns
+				columnnames.Append("e." & c.Column.alias & ",")
+			next
+			columnnames.Remove(columnnames.Length -1, 1)
+
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"builder.HasIndex(Function(e) New With {")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",50)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(columnnames.ToString))
+            
+            #End ExternalSource
+            Me.Write("}, """)
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",50)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(i.Name))
+            
+            #End ExternalSource
+            Me.Write(""")")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",50)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(If(i.IsUnique, ".IsUnique()", "")))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",51)
+
+		Else
+
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"builder.HasIndex(Function(e) e.")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",54)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(i.columns.first.column.alias))
+            
+            #End ExternalSource
+            Me.Write("}, """)
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",54)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(i.Name))
+            
+            #End ExternalSource
+            Me.Write(""")")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",54)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(If(i.IsUnique, ".IsUnique()", "")))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",55)
+
+		End If
+	Next
+
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Fields"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",60)
 
 	For Each c in _t.columns
 		Dim configLines as new list(of String)
@@ -96,7 +164,7 @@ Namespace My.Templates.net5
 		If not c.isNullable and not c.autoincrement then
 			configLines.add(".IsRequired()")
 		Else
-			configLines.Add(String.Format(".HasDefaultValueSql(""'{0}'"")", c.defaultValue))
+			if Not c.autoincrement then configLines.Add(String.Format(".HasDefaultValueSql(""'{0}'"")", c.defaultValue))
 		End If
 		if c.vbType = GetType(System.String) AndAlso c.maximumLength > 0 AndAlso c.maximumLength <= 65535 then configLines.add(String.Format(".HasMaxLength({0})", c.maximumLength))
 		if c.autoincrement then configLines.add(".ValueGeneratedOnAdd()")
@@ -107,19 +175,19 @@ Namespace My.Templates.net5
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"builder.[Property](Function(e) e.")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",61)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",79)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
             
             #End ExternalSource
             Me.Write(")")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",61)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",79)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join("", configLines)))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",62)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",80)
 
 		end if
 	Next
