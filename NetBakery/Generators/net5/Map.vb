@@ -194,6 +194,40 @@ Namespace My.Templates.net5
 
             
             #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' ForeignKeys"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",85)
+
+	For Each f In _t.foreignKeys
+		dim lineParts As New List(of String)
+
+		lineParts.Add("builder.HasOne(Function(d) d.")
+		lineparts.Add(f.referencedTable.singleName)
+		lineParts.Add(").WithMany(Function(p) p.")
+		lineParts.Add(f.table.singleName)
+		lineParts.Add(f.referencedTable.pluralName)
+		lineParts.Add(").HasForeignKey(Function(d) d.")
+		lineParts.Add(f.column.name)
+		lineParts.Add(").HasConstraintName(""")
+		lineParts.Add(f.name)
+		lineParts.Add(""")")
+
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",100)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join("", lineParts)))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",101)
+
+	Next
+
+            
+            #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"End Class"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End Namespace")
             Return Me.GenerationEnvironment.ToString
         End Function

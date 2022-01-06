@@ -81,6 +81,26 @@ Namespace Models
 		end if
 	Next
 #>
+			' ForeignKeys
+<#
+	For Each f In _t.foreignKeys
+		dim lineParts As New List(of String)
+
+		lineParts.Add("builder.HasOne(Function(d) d.")
+		lineparts.Add(f.referencedTable.singleName)
+		lineParts.Add(").WithMany(Function(p) p.")
+		lineParts.Add(f.table.singleName)
+		lineParts.Add(f.referencedTable.pluralName)
+		lineParts.Add(").HasForeignKey(Function(d) d.")
+		lineParts.Add(f.column.name)
+		lineParts.Add(").HasConstraintName(""")
+		lineParts.Add(f.name)
+		lineParts.Add(""")")
+#>
+			<#= String.Join("", lineParts) #>
+<#
+	Next
+#>
 		End Sub
 	End Class
 End Namespace
