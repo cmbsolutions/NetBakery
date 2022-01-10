@@ -11,7 +11,7 @@ Namespace Models
 <#  If _t.foreignKeys.Any() Then #>
         Public Sub New()
 <#      For Each fk in  _t.foreignKeys #>
-            <#= fk.referencedTable.name #> = New HashSet(Of <#= p.Singularize(fk.referencedTable.name) #>)()
+            <#= fk.propertyAlias #> = New HashSet(Of <#= p.Singularize(fk.referencedTable.name) #>)()
 <#      Next #>
         End Sub
 <#  End If #>
@@ -27,7 +27,12 @@ Namespace Models
     ' TODO: split into 1:N 1:1 N:1 N:N
     For Each fk in  _t.foreignKeys
  #>
-        Public Overridable Property <#= fk.table.name #>() As ICollection(Of <#= p.Singularize(fk.table.name) #>)
+        Public Overridable Property <#= fk.propertyAlias #>() As <#= p.Singularize(fk.referencedtable.name) #>
+<#  Next
+
+    For each r in _t.relations
+#>
+        Public Overridable Property <#= p.Pluralize(r.toTable.Name) #>() As ICollection(Of <#= p.Singularize(r.toTable.Name) #>)
 <#  Next #>
     End Class
 End Namespace

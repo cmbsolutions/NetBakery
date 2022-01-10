@@ -11,5 +11,6 @@
         Property foreignKeys As New List(Of foreignKey)
         Property relations As New List(Of relation)
         Property hasExport As Boolean
+        Property definition As String
     End Class
 End Namespace

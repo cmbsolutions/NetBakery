@@ -46,7 +46,7 @@ Namespace My.Templates.net5
             Me.Write("            ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",14)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedTable.name))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.propertyAlias))
             
             #End ExternalSource
             Me.Write(" = New HashSet(Of ")
@@ -122,18 +122,39 @@ Namespace My.Templates.net5
             Me.Write("        Public Overridable Property ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",30)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.table.name))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.propertyAlias))
+            
+            #End ExternalSource
+            Me.Write("() As ")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",30)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.referencedtable.name)))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",31)
+  Next
+
+    For each r in _t.relations
+
+            
+            #End ExternalSource
+            Me.Write("        Public Overridable Property ")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",35)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Pluralize(r.toTable.Name)))
             
             #End ExternalSource
             Me.Write("() As ICollection(Of ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",30)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.table.name)))
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",35)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(r.toTable.Name)))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",31)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",36)
   Next 
             
             #End ExternalSource

@@ -207,7 +207,7 @@ Namespace My.Templates.net5
 		lineParts.Add(f.table.singleName)
 		lineParts.Add(f.referencedTable.pluralName)
 		lineParts.Add(").HasForeignKey(Function(d) d.")
-		lineParts.Add(f.column.name)
+		'lineParts.Add(f.column.name)
 		lineParts.Add(").HasConstraintName(""")
 		lineParts.Add(f.name)
 		lineParts.Add(""")")

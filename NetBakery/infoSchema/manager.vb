@@ -10,7 +10,9 @@ Namespace infoSchema
 
         Public Property connection As connection
         Private Property _dbConnection As MySqlConnection
+        Private Property _dbInfoConnection As MySqlConnection
         Private Property _dbCommand As MySqlCommand
+        Private Property _dbInfoCommand As MySqlCommand
         Private Property _p As New PluralizationService
         Private Property _keywords As New List(Of String)
         Public Property database As String = ""
@@ -90,6 +92,7 @@ Namespace infoSchema
                 getColumns()
                 getIndexes()
                 getForeignKeys()
+                foreignKeyAliasBuilder()
                 getRoutines()
 
             Catch ex As Exception
@@ -121,16 +124,30 @@ Namespace infoSchema
                 Using _dbCommand = New MySqlCommand
 
                     _dbCommand.Connection = dbConnection()
-                    _dbCommand.CommandText = "SELECT TABLE_NAME, TABLE_TYPE FROM TABLES WHERE TABLE_SCHEMA=@database"
+                    _dbCommand.CommandText = "SELECT T.TABLE_NAME, T.TABLE_TYPE, V.VIEW_DEFINITION FROM	`TABLES` AS T LEFT JOIN	VIEWS AS V ON T.TABLE_SCHEMA = V.TABLE_SCHEMA AND T.TABLE_NAME = V.TABLE_NAME WHERE	T.TABLE_SCHEMA = @database;"
                     _dbCommand.Parameters.AddWithValue("database", database)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         While rdr.Read
+                            Dim t As table
                             If rdr("TABLE_TYPE").ToString = "VIEW" Then
-                                tables.Add(New table With {.name = rdr("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr("TABLE_NAME").ToString), .pluralName = _p.Pluralize(rdr("TABLE_NAME").ToString), .isView = True, .hasExport = True})
+                                t = New table With {.name = rdr("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr("TABLE_NAME").ToString), .pluralName = _p.Pluralize(rdr("TABLE_NAME").ToString), .isView = True, .hasExport = True}
                             Else
-                                tables.Add(New table With {.name = rdr("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr("TABLE_NAME").ToString), .pluralName = _p.Pluralize(rdr("TABLE_NAME").ToString), .hasExport = True})
+                                t = New table With {.name = rdr("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr("TABLE_NAME").ToString), .pluralName = _p.Pluralize(rdr("TABLE_NAME").ToString), .hasExport = True}
                             End If
+                            tables.Add(t)
+
+                            Using _dbInfoCommand = New MySqlCommand
+                                _dbInfoCommand.Connection = dbInfoConnection()
+                                _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("TABLE_TYPE").ToString.Replace("BASE ", "")} {rdr("TABLE_NAME")}"
+
+                                Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
+                                    While irdr.Read
+                                        t.definition = irdr($"Create {UcFirst(rdr("TABLE_TYPE").ToString.Replace("BASE ", ""))}").ToString
+                                    End While
+                                End Using
+
+                            End Using
                         End While
                     End Using
                 End Using
@@ -215,7 +232,7 @@ Namespace infoSchema
                             Dim col = table.columns.FirstOrDefault(Function(c) c.name = rdr("COLUMN_NAME").ToString)
 
                             idx.columns.Add(New indexColumn With {
-                                            .indexPosition = CInt(rdr("SEQ_IN_INDEX")),
+                                            .indexPosition = ToInt(rdr("SEQ_IN_INDEX")),
                                             .column = col
                             })
 
@@ -236,37 +253,58 @@ Namespace infoSchema
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         While rdr.Read
-                            Dim f As New foreignKey
-                            f.name = rdr("CONSTRAINT_NAME").ToString
+                            Dim table = tables.FirstOrDefault(Function(c) c.name = rdr("TABLE_NAME").ToString)
 
-                            Dim t As table = (From t1 In tables Where t1.name = rdr("TABLE_NAME").ToString Select t1).FirstOrDefault
-                            If t IsNot Nothing Then f.table = t
+                            Dim fk = table.foreignKeys.FirstOrDefault(Function(c) c.name = rdr("CONSTRAINT_NAME").ToString)
 
-                            Dim c As column = (From c1 In t.columns Where c1.name = rdr("COLUMN_NAME").ToString Select c1).FirstOrDefault
-                            If c IsNot Nothing Then f.column = c
-
-                            f.ordinalPosition = ToInt(rdr("ORDINAL_POSITION"))
-                            f.positionInUniqueConstraint = ToInt(rdr("POSITION_IN_UNIQUE_CONSTRAINT"))
-
-                            Dim rt As table = (From t1 In tables Where t1.name = rdr("REFERENCED_TABLE_NAME").ToString Select t1).FirstOrDefault
-                            If rt IsNot Nothing Then f.referencedTable = rt
-
-                            Dim rc As column = (From c1 In rt.columns Where c1.name = rdr("REFERENCED_COLUMN_NAME").ToString Select c1).FirstOrDefault
-                            If rc IsNot Nothing Then f.referencedColumn = rc
-
-                            If t.foreignKeys.Where(Function(d) d.table.name = f.table.name AndAlso d.referencedTable.name = f.referencedTable.name).Count > 0 Then
-                                f.propertyAlias = String.Format("{0}1", f.table.name)
-                            Else
-                                f.propertyAlias = f.table.name
+                            If fk Is Nothing Then
+                                fk = New foreignKey With {
+                                    .name = rdr("CONSTRAINT_NAME").ToString,
+                                    .table = table
+                                }
+                                table.foreignKeys.Add(fk)
                             End If
 
-                            t.foreignKeys.Add(f)
+                            Dim col = table.columns.FirstOrDefault(Function(c) c.name = rdr("COLUMN_NAME").ToString)
 
-                            t.relations.Add(New relation With {.toTable = rt, .toColumn = rc, .localColumn = c, .isOptional = c.isNullable, .alias = AliasGenerator(f.table.name)})
+                            fk.columns.Add(New fkColumn With {
+                                .fkPosition = ToInt(rdr("ORDINAL_POSITION")),
+                                .column = col
+                            })
 
+                            Dim reftable = tables.FirstOrDefault(Function(c) c.name = rdr("REFERENCED_TABLE_NAME").ToString)
+
+                            If fk.referencedTable Is Nothing Then
+                                fk.referencedTable = reftable
+                            End If
+
+                            Dim refcol = reftable.columns.FirstOrDefault(Function(c) c.name = rdr("REFERENCED_COLUMN_NAME").ToString)
+
+                            fk.referencedColumns.Add(New fkColumn With {
+                                .fkPosition = ToInt(rdr("ORDINAL_POSITION")),
+                                .column = refcol
+                            })
+
+                            table.relations.Add(New relation With {.toTable = reftable, .toColumn = refcol, .localColumn = col, .isOptional = col.isNullable, .alias = AliasGenerator(fk.table.name)})
                         End While
                     End Using
                 End Using
+            Catch ex As Exception
+                Throw
+            End Try
+        End Sub
+
+        Private Sub foreignKeyAliasBuilder()
+            Try
+                For Each table In tables.Where(Function(c) c.foreignKeys.Count > 0)
+                    For Each fk In table.foreignKeys
+                        If table.foreignKeys.LongCount(Function(c) c.referencedTable.Equals(fk.referencedTable)) > 1 Then
+                            fk.propertyAlias = fk.columns.First.column.name.Replace("_id", "")
+                        Else
+                            fk.propertyAlias = fk.referencedTable.singleName
+                        End If
+                    Next
+                Next
             Catch ex As Exception
                 Throw
             End Try
@@ -291,7 +329,7 @@ Namespace infoSchema
                                     End If
                                     routines.Add(rt)
                                 End If
-                                rt = New routine With {.name = rdr("ROUTINE_NAME").ToString, .hasExport = True, .definition = rdr("ROUTINE_DEFINITION").ToString}
+                                rt = New routine With {.name = rdr("ROUTINE_NAME").ToString, .hasExport = True}
 
                                 If rdr("ROUTINE_TYPE").ToString = "PROCEDURE" Then
                                     rt.returnsRecordset = Regex.IsMatch(rdr("ROUTINE_DEFINITION").ToString, My.Settings.routineRegex, RegexOptions.IgnoreCase Or RegexOptions.Singleline Or RegexOptions.Multiline)
@@ -319,6 +357,18 @@ Namespace infoSchema
                             If ToInt(rdr("ORDINAL_POSITION")) > 0 Then
                                 rt.params.Add(p)
                             End If
+
+                            Using _dbInfoCommand = New MySqlCommand
+                                _dbInfoCommand.Connection = dbInfoConnection()
+                                _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("ROUTINE_TYPE")} {rdr("ROUTINE_NAME")}"
+
+                                Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
+                                    While irdr.Read
+                                        rt.definition = irdr($"Create {UcFirst(rdr("ROUTINE_TYPE").ToString)}").ToString
+                                    End While
+                                End Using
+
+                            End Using
                         End While
 
                         If rt IsNot Nothing Then
@@ -450,6 +500,39 @@ Namespace infoSchema
             End Try
         End Function
 
+        Private Function dbInfoConnection() As MySqlConnection
+            Try
+                If _dbInfoConnection Is Nothing OrElse _dbInfoConnection.State = ConnectionState.Closed Then
+                    Try
+                        _dbInfoConnection = New MySqlConnection(connection.ToString)
+                        _dbInfoConnection.Open()
+                    Catch msex As MySqlException
+                        connection.sslmode = eSslMode.Prefered
+                        _dbInfoConnection = New MySqlConnection(connection.ToString)
+                        _dbInfoConnection.Open()
+                    End Try
+                Else
+                    If _dbInfoConnection.ConnectionString <> connection.ToString Then
+                        _dbInfoConnection.Close()
+                        Try
+                            _dbInfoConnection = New MySqlConnection(connection.ToString)
+                            _dbInfoConnection.Open()
+                        Catch msex As MySqlException
+                            connection.sslmode = eSslMode.Prefered
+                            _dbInfoConnection = New MySqlConnection(connection.ToString)
+                            _dbInfoConnection.Open()
+                        End Try
+                    End If
+                End If
+
+                _dbInfoConnection.ChangeDatabase(database)
+
+                Return _dbInfoConnection
+            Catch ex As Exception
+                Throw
+            End Try
+        End Function
+
         Private Function ToInt(obj As Object) As Integer
             If obj.ToString = "" Then
                 Return 0
@@ -464,6 +547,10 @@ Namespace infoSchema
             End If
         End Function
 
+        Private Function UcFirst(s As String) As String
+            Return s.Substring(0, 1).ToUpper & s.Substring(1).ToLower
+
+        End Function
         Private Function getVbType(mysqlType As String) As Type
             Select Case mysqlType.ToLower
                 Case "tinyint", "mediumint", "integer", "int", "smallint", "int16", "int24", "int32", "uint16", "uint24", "uint32"

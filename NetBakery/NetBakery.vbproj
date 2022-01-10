@@ -241,9 +241,9 @@
       <DependentUpon>Map.tt</DependentUpon>
     </Compile>
     <Compile Include="Generators\net5\Model.vb">
-      <DependentUpon>Model.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Generators\net5\StoreCommand.vb">
       <AutoGen>True</AutoGen>
@@ -450,8 +450,8 @@
     </Content>
     <Content Include="Generators\net5\Model.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>Model.vb</LastGenOutput>
       <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+      <LastGenOutput>Model.vb</LastGenOutput>
     </Content>
     <Content Include="Generators\net5\StoreCommand.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>

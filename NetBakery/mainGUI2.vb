@@ -52,6 +52,7 @@ Public Class mainGUI2
             setVbStyle(scCodePreview)
             setVbStyle(scGeneratedModel)
             setVbStyle(scGeneratedMapping)
+            setSQLStyle(scRoutine)
 
             dcProjectSettings.Selected = True
 
@@ -306,14 +307,17 @@ Public Class mainGUI2
                 If tableFields IsNot Nothing Then
                     dgvFields.DataSource = tableFields.columns.ToArray
 
-                    Dim fks = (From fk In tableFields.foreignKeys Order By fk.ordinalPosition Select New With {
-                                                                    Key fk.name,
-                                                                    .tableName = fk.table.name,
-                                                                    .columnName = fk.column.name,
-                                                                    fk.ordinalPosition,
-                                                                    fk.positionInUniqueConstraint,
-                                                                    .referenceTable = fk.referencedTable.name,
-                                                                    .referenceColumn = fk.referencedColumn.name})
+                    Dim fks = (From fk In tableFields.foreignKeys
+                               From col In fk.columns
+                               From refcol In fk.referencedColumns
+                               Select New With {
+                                            Key fk.name,
+                                            .Table = fk.table.name,
+                                            .Column = col.column.name,
+                                            .Position = col.fkPosition,
+                                            .RefTable = fk.referencedTable.name,
+                                            .RefColumn = refcol.column.name
+                                })
 
 
                     dgvForeignKeys.DataSource = fks.ToArray
@@ -323,6 +327,9 @@ Public Class mainGUI2
 
                     scGeneratedMapping.Text = _mngr.generateMap(tableFields)
                     scGeneratedMapping.Colorize(0, scGeneratedMapping.Text.Length)
+
+                    scRoutine.Text = tableFields.definition
+                    scRoutine.Colorize(0, scRoutine.Text.Length)
 
                     Dim idxs = (From idx In tableFields.indexes
                                 From col In idx.columns
@@ -334,11 +341,22 @@ Public Class mainGUI2
                                             .Position = col.indexPosition
                                 })
                     dgvIndexes.DataSource = idxs.ToArray
+
+                    Dim refs = (From ref In tableFields.relations
+                                Select New With {
+                                    Key ref.alias,
+                                    .Table = ref.toTable.name,
+                                    .Column = ref.toColumn.name,
+                                    .LocalColumn = ref.localColumn.name
+                                })
+                    dgvReferences.DataSource = refs.ToArray
+
                 End If
 
                 dgvFields.Refresh()
                 dgvForeignKeys.Refresh()
                 dgvIndexes.Refresh()
+                dgvReferences.Refresh()
 
                 dcObjectInfo.Selected = True
                 TabControl1.SelectedPanel = TabControlPanel1
@@ -372,6 +390,9 @@ Public Class mainGUI2
 
                     scGeneratedMapping.Text = _mngr.generateMap(viewFields)
                     scGeneratedMapping.Colorize(0, scGeneratedMapping.Text.Length)
+
+                    scRoutine.Text = viewFields.definition
+                    scRoutine.Colorize(0, scRoutine.Text.Length)
                 End If
 
                 dgvFields.Refresh()
@@ -395,7 +416,15 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            _mngr.routines.First(Function(c) c.name = node.Text).hasExport = node.Checked
+            If nodeEvent.Button = MouseButtons.Left Then
+                Dim rout = _mngr.routines.FirstOrDefault(Function(c) c.name = node.Text)
+
+                If rout IsNot Nothing Then
+                    scRoutine.Text = rout.definition
+                    scRoutine.Colorize(0, scRoutine.Text.Length)
+                End If
+            End If
+
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
