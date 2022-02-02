@@ -143,6 +143,30 @@ Namespace My
                 Me("lastUpdate") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1689, 633")>  _
+        Public Property windowSize() As Global.System.Drawing.Size
+            Get
+                Return CType(Me("windowSize"),Global.System.Drawing.Size)
+            End Get
+            Set
+                Me("windowSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property isMaximized() As Boolean
+            Get
+                Return CType(Me("isMaximized"),Boolean)
+            End Get
+            Set
+                Me("isMaximized") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

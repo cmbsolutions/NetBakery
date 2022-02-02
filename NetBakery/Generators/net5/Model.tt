@@ -8,10 +8,10 @@ Imports System.Collections.Generic
 
 Namespace Models
     Partial Public Class <#= _t.singleName #>
-<#  If _t.foreignKeys.Any() Then #>
+<#  If _t.children.Any() Then #>
         Public Sub New()
-<#      For Each fk in  _t.foreignKeys #>
-            <#= fk.propertyAlias #> = New HashSet(Of <#= p.Singularize(fk.referencedTable.name) #>)()
+<#      For Each child in _t.children.OrderBy(Function(c) c.name) #>
+            <#= child.pluralName #> = New HashSet(Of <#= child.singleName #>)()
 <#      Next #>
         End Sub
 <#  End If #>
@@ -23,16 +23,19 @@ Namespace Models
         Public Property <#= c.alias #>() as <#= c.vbType #>
 <#      end if
     Next
+#>
+    ' relational tables
+<#
+    For each fk in _t.foreignkeys.orderby(Function(c) c.propertyalias)
+#>
+        Public Property <#= fk.propertyAlias #>() as <#= fk.referencedtable.singlename #>
+<#  Next 
 
-    ' TODO: split into 1:N 1:1 N:1 N:N
-    For Each fk in  _t.foreignKeys
+    For Each child in  _t.children.orderby(Function(c) c.name)
  #>
-        Public Overridable Property <#= fk.propertyAlias #>() As <#= p.Singularize(fk.referencedtable.name) #>
+        Public Overridable Property <#= child.PluralName #>() As ICollection(Of <#= child.SingleName #>)
 <#  Next
 
-    For each r in _t.relations
 #>
-        Public Overridable Property <#= p.Pluralize(r.toTable.Name) #>() As ICollection(Of <#= p.Singularize(r.toTable.Name) #>)
-<#  Next #>
     End Class
 End Namespace

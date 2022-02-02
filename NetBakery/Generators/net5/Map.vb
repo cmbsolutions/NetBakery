@@ -85,7 +85,7 @@ Namespace My.Templates.net5
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",40)
 
-	For Each i In _t.indexes
+	For Each i In _t.indexes.orderby(Function(c) c.columns.first.column.name)
 		Dim columnnames As new StringBuilder
 
 		If i.columns.Count > 1 Then
@@ -198,16 +198,20 @@ Namespace My.Templates.net5
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",85)
 
-	For Each f In _t.foreignKeys
+	For Each f In _t.foreignKeys.orderby(Function(c) c.propertyalias)
 		dim lineParts As New List(of String)
 
 		lineParts.Add("builder.HasOne(Function(d) d.")
-		lineparts.Add(f.referencedTable.singleName)
+		lineparts.Add(f.propertyAlias)
 		lineParts.Add(").WithMany(Function(p) p.")
-		lineParts.Add(f.table.singleName)
-		lineParts.Add(f.referencedTable.pluralName)
+		If f.propertyAlias = f.referencedtable.singlename Then
+			lineParts.Add(f.table.PluralName)
+		else
+			lineParts.Add(f.table.singleName)
+			lineParts.Add(p.pluralize(f.propertyalias))
+		end if
 		lineParts.Add(").HasForeignKey(Function(d) d.")
-		'lineParts.Add(f.column.name)
+		lineParts.Add(f.columns.first.column.name)
 		lineParts.Add(").HasConstraintName(""")
 		lineParts.Add(f.name)
 		lineParts.Add(""")")
@@ -216,13 +220,13 @@ Namespace My.Templates.net5
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",100)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",104)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join("", lineParts)))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",101)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Map.tt",105)
 
 	Next
 

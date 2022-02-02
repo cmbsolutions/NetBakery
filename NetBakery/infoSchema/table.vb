@@ -12,5 +12,7 @@
         Property relations As New List(Of relation)
         Property hasExport As Boolean
         Property definition As String
+        Property parents As New List(Of table)
+        Property children As New List(Of table)
     End Class
 End Namespace

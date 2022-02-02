@@ -128,7 +128,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to __autoload __class__ __compiler_halt_offset__ __construct __destruct __dir__ __file__ __function__ __halt_compiler __line__ __method__ __namespace__ __sleep __trait__ __wakeup _cookie _files _get _post abday_1 abday_2 abday_3 abday_4 abday_5 abday_6 abday_7 abmon_1 abmon_10 abmon_11 abmon_12 abmon_2 abmon_3 abmon_4 abmon_5 abmon_6 abmon_7 abmon_8 abmon_9 abs abstract acos acosh addcslashes addslashes af_inet af_inet6 af_unix al_bits al_buffer al_channels al_cone_inner_angle al_cone_outer_angle al_cone_outer [rest of string was truncated]&quot;;.
+        '''  Looks up a localized string similar to int float bool string true false null void iterable object abstract and array as break callable case catch class clone const continue declare default die do echo else elseif empty enddeclare endfor endforeach endif endswitch endwhile eval exit extends final finally fn for foreach function global goto if implements include include_once instanceof insteadof interface isset list match namespace new or print private protected public require require_once return static switch throw trait try unset use var while x [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property php_keywords() As String
             Get

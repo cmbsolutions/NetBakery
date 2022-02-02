@@ -9,8 +9,7 @@ Namespace infoSchema
         Implements IDisposable
 
         Public Property connection As connection
-        Private Property _dbConnection As MySqlConnection
-        Private Property _dbInfoConnection As MySqlConnection
+        Private Property _dbConnections As Dictionary(Of String, MySqlConnection)
         Private Property _dbCommand As MySqlCommand
         Private Property _dbInfoCommand As MySqlCommand
         Private Property _p As New PluralizationService
@@ -92,7 +91,7 @@ Namespace infoSchema
                 getColumns()
                 getIndexes()
                 getForeignKeys()
-                foreignKeyAliasBuilder()
+                'foreignKeyAliasBuilder()
                 getRoutines()
 
             Catch ex As Exception
@@ -105,7 +104,7 @@ Namespace infoSchema
             Try
                 Using _dbCommand = New MySqlCommand
 
-                    _dbCommand.Connection = dbConnection()
+                    _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT SCHEMA_NAME FROM SCHEMATA WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys') ORDER BY SCHEMA_NAME"
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
@@ -123,7 +122,7 @@ Namespace infoSchema
             Try
                 Using _dbCommand = New MySqlCommand
 
-                    _dbCommand.Connection = dbConnection()
+                    _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT T.TABLE_NAME, T.TABLE_TYPE, V.VIEW_DEFINITION FROM	`TABLES` AS T LEFT JOIN	VIEWS AS V ON T.TABLE_SCHEMA = V.TABLE_SCHEMA AND T.TABLE_NAME = V.TABLE_NAME WHERE	T.TABLE_SCHEMA = @database;"
                     _dbCommand.Parameters.AddWithValue("database", database)
 
@@ -138,7 +137,7 @@ Namespace infoSchema
                             tables.Add(t)
 
                             Using _dbInfoCommand = New MySqlCommand
-                                _dbInfoCommand.Connection = dbInfoConnection()
+                                _dbInfoCommand.Connection = dbConnection(database)
                                 _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("TABLE_TYPE").ToString.Replace("BASE ", "")} {rdr("TABLE_NAME")}"
 
                                 Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
@@ -163,7 +162,7 @@ Namespace infoSchema
                     t.columns = New List(Of column)
 
                     Using _dbCommand = New MySqlCommand
-                        _dbCommand.Connection = dbConnection()
+                        _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
                         _dbCommand.CommandText = "SELECT COLUMN_NAME,ORDINAL_POSITION,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,COLUMN_TYPE,COLUMN_KEY,EXTRA FROM COLUMNS WHERE TABLE_SCHEMA = @database AND TABLE_NAME = @table ORDER BY ORDINAL_POSITION ASC"
                         _dbCommand.Parameters.AddWithValue("database", database)
                         _dbCommand.Parameters.AddWithValue("table", t.name)
@@ -210,7 +209,7 @@ Namespace infoSchema
         Private Sub getIndexes()
             Try
                 Using _dbCommand = New MySqlCommand
-                    _dbCommand.Connection = dbConnection()
+                    _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT TABLE_NAME, NON_UNIQUE, NULLABLE, INDEX_NAME, COLUMN_NAME, SEQ_IN_INDEX FROM STATISTICS WHERE TABLE_SCHEMA=@database ORDER BY TABLE_NAME, INDEX_NAME, SEQ_IN_INDEX"
                     _dbCommand.Parameters.AddWithValue("database", database)
 
@@ -247,7 +246,7 @@ Namespace infoSchema
         Private Sub getForeignKeys()
             Try
                 Using _dbCommand = New MySqlCommand
-                    _dbCommand.Connection = dbConnection()
+                    _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT CONSTRAINT_NAME, TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM KEY_COLUMN_USAGE WHERE CONSTRAINT_SCHEMA = @database AND REFERENCED_TABLE_NAME is not null ORDER BY TABLE_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT"
                     _dbCommand.Parameters.AddWithValue("database", database)
 
@@ -272,6 +271,8 @@ Namespace infoSchema
                                 .column = col
                             })
 
+                            fk.propertyAlias = col.name.Replace("_id", "")
+
                             Dim reftable = tables.FirstOrDefault(Function(c) c.name = rdr("REFERENCED_TABLE_NAME").ToString)
 
                             If fk.referencedTable Is Nothing Then
@@ -284,6 +285,9 @@ Namespace infoSchema
                                 .fkPosition = ToInt(rdr("ORDINAL_POSITION")),
                                 .column = refcol
                             })
+
+                            table.parents.Add(reftable)
+                            reftable.children.Add(table)
 
                             table.relations.Add(New relation With {.toTable = reftable, .toColumn = refcol, .localColumn = col, .isOptional = col.isNullable, .alias = AliasGenerator(fk.table.name)})
                         End While
@@ -314,7 +318,7 @@ Namespace infoSchema
             Try
                 Using _dbCommand = New MySqlCommand
 
-                    _dbCommand.Connection = dbConnection()
+                    _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT r.ROUTINE_TYPE, r.ROUTINE_NAME, r.ROUTINE_DEFINITION, p.ORDINAL_POSITION, p.PARAMETER_NAME, p.DATA_TYPE, p.CHARACTER_MAXIMUM_LENGTH, p.NUMERIC_PRECISION FROM ROUTINES AS r LEFT JOIN PARAMETERS AS p ON r.ROUTINE_SCHEMA = p.SPECIFIC_SCHEMA AND r.ROUTINE_NAME = p.SPECIFIC_NAME WHERE r.ROUTINE_SCHEMA = @database ORDER BY r.ROUTINE_TYPE, p.SPECIFIC_NAME, p.ORDINAL_POSITION"
                     _dbCommand.Parameters.AddWithValue("database", database)
 
@@ -359,7 +363,7 @@ Namespace infoSchema
                             End If
 
                             Using _dbInfoCommand = New MySqlCommand
-                                _dbInfoCommand.Connection = dbInfoConnection()
+                                _dbInfoCommand.Connection = dbConnection(database)
                                 _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("ROUTINE_TYPE")} {rdr("ROUTINE_NAME")}"
 
                                 Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
@@ -386,54 +390,48 @@ Namespace infoSchema
 
         Private Sub getRoutineLayout(ByRef _r As routine)
             Try
-                Using localConnection As New MySqlConnection(_dbConnection.ConnectionString)
-                    localConnection.Open()
+                Using _dbxCommand = New MySqlCommand
+                    _dbxCommand.Connection = dbConnection(database)
+                    _dbxCommand.CommandType = CommandType.Text
+                    _dbxCommand.CommandText = $"CALL {_r.name}({String.Join(",", (From r In _r.params Order By r.ordinalPosition Select "@" & r.name))})"
 
-                    Using _dbxCommand = New MySqlCommand
-                        _dbxCommand.Connection = localConnection
-                        localConnection.ChangeDatabase(database)
+                    For Each param In _r.params.OrderBy(Function(o) o.ordinalPosition)
+                        _dbxCommand.Parameters.AddWithValue("@" & param.name, 1)
+                    Next
 
-                        _dbxCommand.CommandType = CommandType.Text
-                        _dbxCommand.CommandText = $"CALL {_r.name}({String.Join(",", (From r In _r.params Order By r.ordinalPosition Select "@" & r.name))})"
+                    Try
+                        Using rdr As MySqlDataReader = _dbxCommand.ExecuteReader()
 
-                        For Each param In _r.params.OrderBy(Function(o) o.ordinalPosition)
-                            _dbxCommand.Parameters.AddWithValue("@" & param.name, 1)
-                        Next
+                            Using d As DataTable = rdr.GetSchemaTable
+                                If d IsNot Nothing Then
+                                    For Each row As DataRow In d.Rows
+                                        Dim c As New column
 
-                        Try
-                            Using rdr As MySqlDataReader = _dbxCommand.ExecuteReader()
+                                        c.name = row.ItemArray(d.Columns.IndexOf("ColumnName")).ToString
+                                        c.alias = AliasGenerator(c.name)
 
-                                Using d As DataTable = rdr.GetSchemaTable
-                                    If d IsNot Nothing Then
-                                        For Each row As DataRow In d.Rows
-                                            Dim c As New column
-
-                                            c.name = row.ItemArray(d.Columns.IndexOf("ColumnName")).ToString
-                                            c.alias = AliasGenerator(c.name)
-
-                                            c.ordinalPosition = CInt(row.ItemArray(d.Columns.IndexOf("ColumnOrdinal")))
-                                            'c.defaultValue = rdr("COLUMN_DEFAULT").ToString
-                                            c.isNullable = CBool(row.ItemArray(d.Columns.IndexOf("AllowDBNull")))
-                                            c.mysqlType = [Enum].GetName(GetType(MySqlDbType), row.ItemArray(d.Columns.IndexOf("ProviderType")))
-                                            'c.maximumLength = ToInt(rdr("CHARACTER_MAXIMUM_LENGTH"))
-                                            'c.numericPrecision = ToInt(rdr("NUMERIC_PRECISION"))
-                                            'c.numericScale = ToInt(rdr("NUMERIC_SCALE"))
-                                            'c.key = rdr("COLUMN_KEY").ToString
-                                            c.vbType = getVbType(c.mysqlType)
-                                            c.phpType = getPHPType(c.mysqlType)
-                                            _r.returnLayout.columns.Add(c)
-                                        Next
-                                    Else
-                                        _r.returnLayout = Nothing
-                                        _r.returnsRecordset = False
-                                    End If
-                                End Using
+                                        c.ordinalPosition = CInt(row.ItemArray(d.Columns.IndexOf("ColumnOrdinal")))
+                                        'c.defaultValue = rdr("COLUMN_DEFAULT").ToString
+                                        c.isNullable = CBool(row.ItemArray(d.Columns.IndexOf("AllowDBNull")))
+                                        c.mysqlType = [Enum].GetName(GetType(MySqlDbType), row.ItemArray(d.Columns.IndexOf("ProviderType")))
+                                        'c.maximumLength = ToInt(rdr("CHARACTER_MAXIMUM_LENGTH"))
+                                        'c.numericPrecision = ToInt(rdr("NUMERIC_PRECISION"))
+                                        'c.numericScale = ToInt(rdr("NUMERIC_SCALE"))
+                                        'c.key = rdr("COLUMN_KEY").ToString
+                                        c.vbType = getVbType(c.mysqlType)
+                                        c.phpType = getPHPType(c.mysqlType)
+                                        _r.returnLayout.columns.Add(c)
+                                    Next
+                                Else
+                                    _r.returnLayout = Nothing
+                                    _r.returnsRecordset = False
+                                End If
                             End Using
-                        Catch mex As MySqlException
-                            _r.returnLayout = Nothing
-                            _r.returnsRecordset = False
-                        End Try
-                    End Using
+                        End Using
+                    Catch mex As MySqlException
+                        _r.returnLayout = Nothing
+                        _r.returnsRecordset = False
+                    End Try
                 End Using
             Catch ex As Exception
                 Throw
@@ -467,67 +465,28 @@ Namespace infoSchema
             End Try
         End Function
 
-        Private Function dbConnection() As MySqlConnection
+        Private Function dbConnection(databasename As String) As MySqlConnection
             Try
-                If _dbConnection Is Nothing OrElse _dbConnection.State = ConnectionState.Closed Then
-                    Try
-                        _dbConnection = New MySqlConnection(connection.ToString)
-                        _dbConnection.Open()
-                    Catch msex As MySqlException
-                        connection.sslmode = eSslMode.Prefered
-                        _dbConnection = New MySqlConnection(connection.ToString)
-                        _dbConnection.Open()
-                    End Try
-                Else
-                    If _dbConnection.ConnectionString <> connection.ToString Then
-                        _dbConnection.Close()
-                        Try
-                            _dbConnection = New MySqlConnection(connection.ToString)
-                            _dbConnection.Open()
-                        Catch msex As MySqlException
-                            connection.sslmode = eSslMode.Prefered
-                            _dbConnection = New MySqlConnection(connection.ToString)
-                            _dbConnection.Open()
-                        End Try
-                    End If
+                If _dbConnections Is Nothing Then
+                    _dbConnections = New Dictionary(Of String, MySqlConnection)
                 End If
 
-                _dbConnection.ChangeDatabase("INFORMATION_SCHEMA")
-
-                Return _dbConnection
-            Catch ex As Exception
-                Throw
-            End Try
-        End Function
-
-        Private Function dbInfoConnection() As MySqlConnection
-            Try
-                If _dbInfoConnection Is Nothing OrElse _dbInfoConnection.State = ConnectionState.Closed Then
+                If _dbConnections.ContainsKey(databasename) Then
+                    Return _dbConnections.First(Function(c) c.Key = databasename).Value
+                Else
+                    Dim con = New MySqlConnection(connection.ToString)
                     Try
-                        _dbInfoConnection = New MySqlConnection(connection.ToString)
-                        _dbInfoConnection.Open()
+                        con.Open()
                     Catch msex As MySqlException
                         connection.sslmode = eSslMode.Prefered
-                        _dbInfoConnection = New MySqlConnection(connection.ToString)
-                        _dbInfoConnection.Open()
+                        con = New MySqlConnection(connection.ToString)
+                        con.Open()
                     End Try
-                Else
-                    If _dbInfoConnection.ConnectionString <> connection.ToString Then
-                        _dbInfoConnection.Close()
-                        Try
-                            _dbInfoConnection = New MySqlConnection(connection.ToString)
-                            _dbInfoConnection.Open()
-                        Catch msex As MySqlException
-                            connection.sslmode = eSslMode.Prefered
-                            _dbInfoConnection = New MySqlConnection(connection.ToString)
-                            _dbInfoConnection.Open()
-                        End Try
-                    End If
+
+                    _dbConnections.Add(databasename, con)
+                    con.ChangeDatabase(databasename)
+                    Return con
                 End If
-
-                _dbInfoConnection.ChangeDatabase(database)
-
-                Return _dbInfoConnection
             Catch ex As Exception
                 Throw
             End Try
@@ -626,7 +585,10 @@ Namespace infoSchema
         Protected Overridable Sub Dispose(disposing As Boolean)
             If Not disposedValue Then
                 If disposing Then
-                    If _dbConnection IsNot Nothing Then _dbConnection.Dispose()
+                    If _dbConnections IsNot Nothing Then
+                        _dbConnections.Values.ToList.ForEach(Sub(c) c.Dispose())
+                        _dbConnections.Clear()
+                    End If
                     If _dbCommand IsNot Nothing Then _dbCommand.Dispose()
                     If _p IsNot Nothing Then _p.Dispose()
                 End If
@@ -666,6 +628,10 @@ Namespace infoSchema
             _service = New EnglishPluralizationService()
         End Sub
 
+        Public Function Singularize(s As Object) As String
+            Return Singularize(s.ToString)
+        End Function
+
         Public Function Singularize(s As String) As String
             Dim ret As String = _service.Singularize(s)
 
@@ -700,6 +666,11 @@ Namespace infoSchema
 
             Return ret
         End Function
+
+        Public Function Pluralize(s As Object) As String
+            Return Pluralize(s.ToString)
+        End Function
+
         Public Function Pluralize(s As String) As String
             Dim ret As String = _service.Pluralize(s)
             Dim test As String = Singularize(s)
@@ -708,10 +679,19 @@ Namespace infoSchema
 
             Return ret
         End Function
+
+        Public Function isSingle(s As Object) As Boolean
+            Return isSingle(s.ToString)
+        End Function
+
         Public Function isSingle(s As String) As Boolean
             Dim tmp As String = Singularize(s)
 
             Return tmp.Equals(s)
+        End Function
+
+        Public Function isPlural(s As Object) As Boolean
+            Return isPlural(s.ToString)
         End Function
 
         Public Function isPlural(s As String) As Boolean

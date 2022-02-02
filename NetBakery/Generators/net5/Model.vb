@@ -34,25 +34,25 @@ Namespace My.Templates.net5
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",11)
-  If _t.foreignKeys.Any() Then 
+  If _t.children.Any() Then 
             
             #End ExternalSource
             Me.Write("        Public Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",13)
-      For Each fk in  _t.foreignKeys 
+      For Each child in _t.children.OrderBy(Function(c) c.name) 
             
             #End ExternalSource
             Me.Write("            ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",14)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.propertyAlias))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(child.pluralName))
             
             #End ExternalSource
             Me.Write(" = New HashSet(Of ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",14)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.referencedTable.name)))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(child.singleName))
             
             #End ExternalSource
             Me.Write(")()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
@@ -114,48 +114,55 @@ Namespace My.Templates.net5
       end if
     Next
 
-    ' TODO: split into 1:N 1:1 N:1 N:N
-    For Each fk in  _t.foreignKeys
+            
+            #End ExternalSource
+            Me.Write("    ' relational tables"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",28)
+
+    For each fk in _t.foreignkeys.orderby(Function(c) c.propertyalias)
+
+            
+            #End ExternalSource
+            Me.Write("        Public Property ")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",31)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.propertyAlias))
+            
+            #End ExternalSource
+            Me.Write("() as ")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",31)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedtable.singlename))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",32)
+  Next 
+
+    For Each child in  _t.children.orderby(Function(c) c.name)
  
             
             #End ExternalSource
             Me.Write("        Public Overridable Property ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",30)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.propertyAlias))
-            
-            #End ExternalSource
-            Me.Write("() As ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",30)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.referencedtable.name)))
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",31)
-  Next
-
-    For each r in _t.relations
-
-            
-            #End ExternalSource
-            Me.Write("        Public Overridable Property ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",35)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Pluralize(r.toTable.Name)))
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",36)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(child.PluralName))
             
             #End ExternalSource
             Me.Write("() As ICollection(Of ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",35)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(r.toTable.Name)))
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",36)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(child.SingleName))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",36)
-  Next 
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",37)
+  Next
+
+
             
             #End ExternalSource
             Me.Write("    End Class"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End Namespace")

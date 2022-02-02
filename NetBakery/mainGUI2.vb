@@ -24,6 +24,13 @@ Public Class mainGUI2
 
             dnbStyleManager.ManagerStyle = DirectCast([Enum].Parse(GetType(eStyle), My.Settings.gui_style), eStyle)
 
+            If My.Settings.isMaximized Then
+                WindowState = FormWindowState.Maximized
+            Else
+                WindowState = FormWindowState.Normal
+                Size = My.Settings.windowSize
+            End If
+
             TitleText = FormHelpers.ApplicationTitle
             Text = TitleText
             cboOutputType.Text = ".NET"
@@ -65,6 +72,9 @@ Public Class mainGUI2
 
     Private Sub mainGUI2_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Try
+            My.Settings.isMaximized = WindowState = FormWindowState.Maximized
+            My.Settings.windowSize = Size
+
             My.Settings.Save()
 
             dnbBarManager.SaveLayout(_dockFile.FullName)
@@ -316,7 +326,8 @@ Public Class mainGUI2
                                             .Column = col.column.name,
                                             .Position = col.fkPosition,
                                             .RefTable = fk.referencedTable.name,
-                                            .RefColumn = refcol.column.name
+                                            .RefColumn = refcol.column.name,
+                                            .Alias = fk.propertyAlias
                                 })
 
 
