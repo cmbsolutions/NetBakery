@@ -15,6 +15,8 @@ Public Class mainGUI2
 
     Private _currentProject As Project
 
+    Private m_EnumeratedTypes As Hashtable
+
     Private Sub mainGUI2_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
             _tracelistener = New customTextTraceListener(txtLog)
@@ -30,6 +32,8 @@ Public Class mainGUI2
                 WindowState = FormWindowState.Normal
                 Size = My.Settings.windowSize
             End If
+
+            maxDepth.Value = My.Settings.maxERDiagramDepth
 
             TitleText = FormHelpers.ApplicationTitle
             Text = TitleText
@@ -362,6 +366,8 @@ Public Class mainGUI2
                                 })
                     dgvReferences.DataSource = refs.ToArray
 
+                    LoadTreeGXTableClass(tableFields)
+
                 End If
 
                 dgvFields.Refresh()
@@ -382,6 +388,48 @@ Public Class mainGUI2
             FormHelpers.dumpException(ex)
         End Try
     End Sub
+
+#Region "TreeGX"
+    Private Sub LoadTreeGXTableClass(ByVal rootTable As infoSchema.table)
+
+        m_EnumeratedTypes = New Hashtable
+        TreeGX1.BeginUpdate()
+        TreeGX1.Nodes.Clear()
+        Try
+            Dim node As DevComponents.Tree.Node = New DevComponents.Tree.Node
+            node.Text = rootTable.pluralName
+            node.Expanded = True
+            m_EnumeratedTypes.Add(rootTable.pluralName, "")
+            TreeGX1.Nodes.Add(node)
+
+            LoadTableChildren(rootTable, node, 1)
+        Finally
+            TreeGX1.EndUpdate()
+        End Try
+        m_EnumeratedTypes.Clear()
+
+    End Sub
+
+    Private Sub LoadTableChildren(parent As infoSchema.table, parentNode As DevComponents.Tree.Node, currentDepth As Integer)
+        If currentDepth > My.Settings.maxERDiagramDepth Then Exit Sub
+
+        For Each child In parent.children
+            Dim node As DevComponents.Tree.Node = New DevComponents.Tree.Node
+            node.Text = child.pluralName
+
+            If currentDepth = My.Settings.maxERDiagramDepth Then
+                node.Style = ElementStyle4
+            Else
+                node.Style = ElementStyle3
+
+            End If
+            parentNode.Nodes.Add(node)
+
+            LoadTableChildren(child, node, currentDepth + 1)
+        Next
+    End Sub
+
+#End Region
 
     Private Sub viewNodeHandler(sender As Object, e As EventArgs)
         Try
@@ -1224,8 +1272,18 @@ Public Class mainGUI2
             dcProjectSettings.Enabled = enabled
             'dcObjectInfo.Enabled = enabled
             dcCodePreview.Enabled = enabled
+            dcERDiagram.Enabled = enabled
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
+    End Sub
+
+    Private Sub maxDepth_ValueChanged(sender As Object, e As EventArgs) Handles maxDepth.ValueChanged
+        My.Settings.maxERDiagramDepth = CInt(maxDepth.Value)
+    End Sub
+
+    Private Sub sliderZoom_ValueChanged(sender As Object, e As EventArgs) Handles sliderZoom.ValueChanged
+        TreeGX1.Zoom = CSng(sliderZoom.Value / 100)
+        sliderZoom.Text = $"{sliderZoom.Value}%"
     End Sub
 End Class
