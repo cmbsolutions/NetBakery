@@ -91,7 +91,6 @@ Namespace infoSchema
                 getColumns()
                 getIndexes()
                 getForeignKeys()
-                'foreignKeyAliasBuilder()
                 getRoutines()
 
             Catch ex As Exception
@@ -289,7 +288,22 @@ Namespace infoSchema
                             table.parents.Add(reftable)
                             reftable.children.Add(table)
 
-                            table.relations.Add(New relation With {.toTable = reftable, .toColumn = refcol, .localColumn = col, .isOptional = col.isNullable, .alias = AliasGenerator(fk.table.name)})
+                            If fk.propertyAlias = reftable.singleName Then
+                                reftable.relations.Add(New relation With {
+                                                    .toTable = table,
+                                                    .toColumn = col,
+                                                    .localColumn = refcol,
+                                                    .isOptional = col.isNullable,
+                                                    .[alias] = table.pluralName
+                                                    })
+                            Else
+                                reftable.relations.Add(New relation With {
+                                                    .toTable = table,
+                                                    .toColumn = col,
+                                                    .localColumn = refcol,
+                                                    .isOptional = col.isNullable,
+                                                    .[alias] = table.singleName & _p.Pluralize(fk.propertyAlias)})
+                            End If
                         End While
                     End Using
                 End Using
@@ -313,13 +327,28 @@ Namespace infoSchema
                 Throw
             End Try
         End Sub
+        Private Sub relationAliasBuilder()
+            Try
+                For Each table In tables.Where(Function(c) c.relations.Count > 0)
+                    For Each re In table.relations
+                        If table.relations.LongCount(Function(c) c.toTable.Equals(re.toTable)) > 1 Then
+                            re.alias = re.toColumn.name.Replace("_id", "")
+                        Else
+                            re.alias = re.toTable.singleName
+                        End If
+                    Next
+                Next
+            Catch ex As Exception
+                Throw
+            End Try
+        End Sub
 
         Private Sub getRoutines()
             Try
                 Using _dbCommand = New MySqlCommand
 
                     _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
-                    _dbCommand.CommandText = "SELECT r.ROUTINE_TYPE, r.ROUTINE_NAME, r.ROUTINE_DEFINITION, p.ORDINAL_POSITION, p.PARAMETER_NAME, p.DATA_TYPE, p.CHARACTER_MAXIMUM_LENGTH, p.NUMERIC_PRECISION FROM ROUTINES AS r LEFT JOIN PARAMETERS AS p ON r.ROUTINE_SCHEMA = p.SPECIFIC_SCHEMA AND r.ROUTINE_NAME = p.SPECIFIC_NAME WHERE r.ROUTINE_SCHEMA = @database ORDER BY r.ROUTINE_TYPE, p.SPECIFIC_NAME, p.ORDINAL_POSITION"
+                    _dbCommand.CommandText = "Select r.ROUTINE_TYPE, r.ROUTINE_NAME, r.ROUTINE_DEFINITION, p.ORDINAL_POSITION, p.PARAMETER_NAME, p.DATA_TYPE, p.CHARACTER_MAXIMUM_LENGTH, p.NUMERIC_PRECISION FROM ROUTINES As r LEFT JOIN PARAMETERS As p On r.ROUTINE_SCHEMA = p.SPECIFIC_SCHEMA And r.ROUTINE_NAME = p.SPECIFIC_NAME WHERE r.ROUTINE_SCHEMA = @database ORDER BY r.ROUTINE_TYPE, p.SPECIFIC_NAME, p.ORDINAL_POSITION"
                     _dbCommand.Parameters.AddWithValue("database", database)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
@@ -350,7 +379,7 @@ Namespace infoSchema
                             p.vbType = getVbType(rdr("DATA_TYPE").ToString)
                             p.name = rdr("PARAMETER_NAME").ToString
 
-                            If rdr("ROUTINE_TYPE").ToString = "FUNCTION" Then
+                            If rdr("ROUTINE_TYPE").ToString = "Function" Then
                                 rt.isFunction = True
 
                                 If ToInt(rdr("ORDINAL_POSITION")) = 0 Then

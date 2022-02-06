@@ -8,10 +8,10 @@ Imports System.Collections.Generic
 
 Namespace Models
     Public Partial Class <#= _t.singleName #>
-<#  If _t.foreignKeys.Any() Then #>
-        Sub New()
-<#      For Each fk in  _t.foreignKeys #>
-            <#= fk.referencedTable.name #> = New List(Of <#= p.Singularize(fk.referencedTable.name) #>)()
+<#  If _t.relations.Any() Then #>
+        Public Sub New()
+<#      For Each re in _t.relations.OrderBy(Function(c) c.toTable.name) #>
+            <#= re.alias #> = New List(Of <#= re.toTable.singleName #>)
 <#      Next #>
         End Sub
 <#  End If #>
@@ -37,9 +37,10 @@ Namespace Models
 <#      End If
     Next
 
-    For Each fk in  _t.foreignKeys
+    For Each re in  _t.relations.orderby(Function(c) c.totable.name)
  #>
-        Property <#= fk.referencedTable.name #>() As List(Of <#= p.Singularize(fk.referencedTable.name) #>)
-<#  Next #>
+        Public Overridable Property <#= re.alias #>() As List(Of <#= re.totable.SingleName #>)
+<#  Next
+#>
     End Class
 End Namespace

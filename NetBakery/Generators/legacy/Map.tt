@@ -73,20 +73,34 @@ Namespace Models.Mapping
 	Next
 #>
 
-			' Relationships
-<#
 
-	For Each r in _t.relations
-		If r.isOptional Then
-#>
-			Me.HasOptional(Function(t) t.<#= r.toTable.name #>).WithMany(Function(t) t.<#= r.alias #>).HasForeignKey(Function(d) d.<#= r.toColumn.name #>)
-<#      Else #>
-			Me.HasRequired(Function(t) t.<#= r.toTable.name #>).WithMany(Function(t) t.<#= r.alias #>).HasForeignKey(Function(d) d.<#= r.toColumn.name #>)
+			' ForeignKeys
 <#
+	For Each f In _t.foreignKeys.orderby(Function(c) c.propertyalias)
+		dim lineParts As New List(of String)
+
+		if f.columns.first.column.isNullable Then
+			lineParts.Add("Me.HasOptional(Function(t) t.")
+		Else
+			lineParts.Add("Me.HasRequired(Function(t) t.")
 		End If
+		
+		lineparts.Add(f.propertyAlias)
+		lineParts.Add(").WithMany(Function(t) t.")
+		If f.propertyAlias = f.referencedtable.singlename Then
+			lineParts.Add(f.table.PluralName)
+		else
+			lineParts.Add(f.table.singleName)
+			lineParts.Add(p.pluralize(f.propertyalias))
+		end if
+		lineParts.Add(").HasForeignKey(Function(d) d.")
+		lineParts.Add(f.columns.first.column.name)
+		lineParts.Add(")")
+#>
+			<#= String.Join("", lineParts) #>
+<#
 	Next
 #>
-
 		End Sub
 	End Class
 End Namespace

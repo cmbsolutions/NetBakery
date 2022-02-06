@@ -34,28 +34,28 @@ Namespace My.Templates.legacy_net
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",11)
-  If _t.foreignKeys.Any() Then 
+  If _t.relations.Any() Then 
             
             #End ExternalSource
-            Me.Write("        Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("        Public Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",13)
-      For Each fk in  _t.foreignKeys 
+      For Each re in _t.relations.OrderBy(Function(c) c.toTable.name) 
             
             #End ExternalSource
             Me.Write("            ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",14)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedTable.name))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.alias))
             
             #End ExternalSource
             Me.Write(" = New List(Of ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",14)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.referencedTable.name)))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.toTable.singleName))
             
             #End ExternalSource
-            Me.Write(")()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",15)
       Next 
@@ -159,26 +159,27 @@ Namespace My.Templates.legacy_net
       End If
     Next
 
-    For Each fk in  _t.foreignKeys
+    For Each re in  _t.relations.orderby(Function(c) c.totable.name)
  
             
             #End ExternalSource
-            Me.Write("        Property ")
+            Me.Write("        Public Overridable Property ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",42)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedTable.name))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.alias))
             
             #End ExternalSource
             Me.Write("() As List(Of ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",42)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.referencedTable.name)))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.totable.SingleName))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Model.tt",43)
-  Next 
+  Next
+
             
             #End ExternalSource
             Me.Write("    End Class"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End Namespace")

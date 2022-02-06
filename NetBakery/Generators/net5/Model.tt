@@ -8,10 +8,10 @@ Imports System.Collections.Generic
 
 Namespace Models
     Partial Public Class <#= _t.singleName #>
-<#  If _t.children.Any() Then #>
+<#  If _t.relations.Any() Then #>
         Public Sub New()
-<#      For Each child in _t.children.OrderBy(Function(c) c.name) #>
-            <#= child.pluralName #> = New HashSet(Of <#= child.singleName #>)()
+<#      For Each re in _t.relations.OrderBy(Function(c) c.toTable.name) #>
+            <#= re.alias #> = New HashSet(Of <#= re.toTable.singleName #>)()
 <#      Next #>
         End Sub
 <#  End If #>
@@ -31,9 +31,9 @@ Namespace Models
         Public Property <#= fk.propertyAlias #>() as <#= fk.referencedtable.singlename #>
 <#  Next 
 
-    For Each child in  _t.children.orderby(Function(c) c.name)
+    For Each re in  _t.relations.orderby(Function(c) c.totable.name)
  #>
-        Public Overridable Property <#= child.PluralName #>() As ICollection(Of <#= child.SingleName #>)
+        Public Overridable Property <#= re.alias #>() As ICollection(Of <#= re.totable.SingleName #>)
 <#  Next
 
 #>

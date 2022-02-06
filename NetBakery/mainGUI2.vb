@@ -17,6 +17,7 @@ Public Class mainGUI2
 
     Private m_EnumeratedTypes As Hashtable
 
+#Region "Start and close"
     Private Sub mainGUI2_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
             _tracelistener = New customTextTraceListener(txtLog)
@@ -103,6 +104,7 @@ Public Class mainGUI2
             FormHelpers.dumpException(ex)
         End Try
     End Sub
+#End Region
 
 #Region "Main menu items"
     Private Sub btnFile_Close_Click(sender As Object, e As EventArgs) Handles btnFile_Close.Click
@@ -111,6 +113,22 @@ Public Class mainGUI2
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
+    End Sub
+
+    Private Sub bERDiagram_Click(sender As Object, e As EventArgs) Handles bERDiagram.Click
+        dcERDiagram.Visible = Not dcERDiagram.Visible
+    End Sub
+
+    Private Sub bProjectSettings_Click(sender As Object, e As EventArgs) Handles bProjectSettings.Click
+        dcProjectSettings.Visible = Not dcProjectSettings.Visible
+    End Sub
+
+    Private Sub bObjectInfo_Click(sender As Object, e As EventArgs) Handles bObjectInfo.Click
+        dcObjectInfo.Visible = Not dcObjectInfo.Visible
+    End Sub
+
+    Private Sub bCodePreview_Click(sender As Object, e As EventArgs) Handles bCodePreview.Click
+        dcCodePreview.Visible = Not dcCodePreview.Visible
     End Sub
 #End Region
 
@@ -416,6 +434,7 @@ Public Class mainGUI2
         For Each child In parent.children
             Dim node As DevComponents.Tree.Node = New DevComponents.Tree.Node
             node.Text = child.pluralName
+            node.Expanded = True
 
             If currentDepth = My.Settings.maxERDiagramDepth Then
                 node.Style = ElementStyle4
@@ -429,6 +448,14 @@ Public Class mainGUI2
         Next
     End Sub
 
+    Private Sub maxDepth_ValueChanged(sender As Object, e As EventArgs) Handles maxDepth.ValueChanged
+        My.Settings.maxERDiagramDepth = CInt(maxDepth.Value)
+    End Sub
+
+    Private Sub sliderZoom_ValueChanged(sender As Object, e As EventArgs) Handles sliderZoom.ValueChanged
+        TreeGX1.Zoom = CSng(sliderZoom.Value / 100)
+        sliderZoom.Text = $"{sliderZoom.Value}%"
+    End Sub
 #End Region
 
     Private Sub viewNodeHandler(sender As Object, e As EventArgs)
@@ -1056,6 +1083,7 @@ Public Class mainGUI2
     End Sub
 #End Region
 
+#Region "Buttons"
     Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles btnSettings.Click
         Try
             Dim frx As New preferences
@@ -1122,40 +1150,9 @@ Public Class mainGUI2
         End Try
     End Sub
 
-    Private Sub WriteProject()
-        Try
-            If _currentProject IsNot Nothing Then
-                _currentProject.needsSave = True
-                _currentProject.application_version = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
-                _currentProject.projectname = txtProjectName.Text
-                _currentProject.projectlocation = txtProjectFolder.Text
-                _currentProject.projectoutputlocation = txtOutputFolder.Text
-                _currentProject.outputtype = DirectCast(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString
-                _currentProject.useEnums = sbEnums.Value
 
-                _currentProject.database = New databaseObjects With {
-                    .connection = _currentConnection,
-                    .databasename = _mngr.database,
-                    .tables = _mngr.tables,
-                    .routines = _mngr.routines
-                }
 
-                _currentProject.generatedoutputs = New List(Of outputItem)
 
-                If _currentProject.projectoutputlocation <> "" Then
-                    For Each pf In (From f In IO.Directory.EnumerateFiles(_currentProject.projectoutputlocation, "*.*", IO.SearchOption.AllDirectories) Select New IO.FileInfo(f)).ToList
-                        _currentProject.generatedoutputs.Add(New outputItem With {
-                                                            .filename = pf.Name,
-                                                            .location = pf.DirectoryName,
-                                                            .objecttype = "file",
-                                                            .hash = pf.GetHashCode.ToString})
-                    Next
-                End If
-            End If
-        Catch ex As Exception
-            FormHelpers.dumpException(ex)
-        End Try
-    End Sub
     Private Sub btnOpenProject_Click(sender As Object, e As EventArgs) Handles btnOpenProject.Click
         Try
             If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
@@ -1230,6 +1227,42 @@ Public Class mainGUI2
             FormHelpers.dumpException(ex)
         End Try
     End Sub
+#End Region
+
+    Private Sub WriteProject()
+        Try
+            If _currentProject IsNot Nothing Then
+                _currentProject.needsSave = True
+                _currentProject.application_version = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
+                _currentProject.projectname = txtProjectName.Text
+                _currentProject.projectlocation = txtProjectFolder.Text
+                _currentProject.projectoutputlocation = txtOutputFolder.Text
+                _currentProject.outputtype = DirectCast(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString
+                _currentProject.useEnums = sbEnums.Value
+
+                _currentProject.database = New databaseObjects With {
+                    .connection = _currentConnection,
+                    .databasename = _mngr.database,
+                    .tables = _mngr.tables,
+                    .routines = _mngr.routines
+                }
+
+                _currentProject.generatedoutputs = New List(Of outputItem)
+
+                If _currentProject.projectoutputlocation <> "" Then
+                    For Each pf In (From f In IO.Directory.EnumerateFiles(_currentProject.projectoutputlocation, "*.*", IO.SearchOption.AllDirectories) Select New IO.FileInfo(f)).ToList
+                        _currentProject.generatedoutputs.Add(New outputItem With {
+                                                            .filename = pf.Name,
+                                                            .location = pf.DirectoryName,
+                                                            .objecttype = "file",
+                                                            .hash = pf.GetHashCode.ToString})
+                    Next
+                End If
+            End If
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
 
     Private Sub cboOutputType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboOutputType.SelectedIndexChanged
         WriteProject()
@@ -1276,14 +1309,5 @@ Public Class mainGUI2
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
-    End Sub
-
-    Private Sub maxDepth_ValueChanged(sender As Object, e As EventArgs) Handles maxDepth.ValueChanged
-        My.Settings.maxERDiagramDepth = CInt(maxDepth.Value)
-    End Sub
-
-    Private Sub sliderZoom_ValueChanged(sender As Object, e As EventArgs) Handles sliderZoom.ValueChanged
-        TreeGX1.Zoom = CSng(sliderZoom.Value / 100)
-        sliderZoom.Text = $"{sliderZoom.Value}%"
     End Sub
 End Class

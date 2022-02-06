@@ -202,6 +202,11 @@
     <Compile Include="customTextTraceListener.vb" />
     <Compile Include="formHelpers.vb" />
     <Compile Include="Generators\iGenerator.vb" />
+    <Compile Include="Generators\legacy\Model.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Generators\net5Templates.vb" />
     <Compile Include="Generators\net5Generator.vb" />
     <Compile Include="Generators\legacy_netGenerator.vb" />
@@ -214,11 +219,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Map.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Generators\legacy\Model.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Generators\legacy\StoreCommandModel.vb">
       <AutoGen>True</AutoGen>

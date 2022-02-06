@@ -34,25 +34,25 @@ Namespace My.Templates.net5
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",11)
-  If _t.children.Any() Then 
+  If _t.relations.Any() Then 
             
             #End ExternalSource
             Me.Write("        Public Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",13)
-      For Each child in _t.children.OrderBy(Function(c) c.name) 
+      For Each re in _t.relations.OrderBy(Function(c) c.toTable.name) 
             
             #End ExternalSource
             Me.Write("            ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",14)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(child.pluralName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.alias))
             
             #End ExternalSource
             Me.Write(" = New HashSet(Of ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",14)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(child.singleName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.toTable.singleName))
             
             #End ExternalSource
             Me.Write(")()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
@@ -141,20 +141,20 @@ Namespace My.Templates.net5
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",32)
   Next 
 
-    For Each child in  _t.children.orderby(Function(c) c.name)
+    For Each re in  _t.relations.orderby(Function(c) c.totable.name)
  
             
             #End ExternalSource
             Me.Write("        Public Overridable Property ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",36)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(child.PluralName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.alias))
             
             #End ExternalSource
             Me.Write("() As ICollection(Of ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",36)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(child.SingleName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.totable.SingleName))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
