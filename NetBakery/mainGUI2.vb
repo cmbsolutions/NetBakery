@@ -413,6 +413,7 @@ Public Class mainGUI2
         m_EnumeratedTypes = New Hashtable
         TreeGX1.BeginUpdate()
         TreeGX1.Nodes.Clear()
+        TreeGX1.LayoutType = Tree.eNodeLayout.Map
         Try
             Dim node As DevComponents.Tree.Node = New DevComponents.Tree.Node
             node.Text = rootTable.pluralName
@@ -455,6 +456,58 @@ Public Class mainGUI2
     Private Sub sliderZoom_ValueChanged(sender As Object, e As EventArgs) Handles sliderZoom.ValueChanged
         TreeGX1.Zoom = CSng(sliderZoom.Value / 100)
         sliderZoom.Text = $"{sliderZoom.Value}%"
+    End Sub
+
+    Private Sub LoadTreeGXTableClasses()
+
+        m_EnumeratedTypes = New Hashtable
+        TreeGX1.BeginUpdate()
+        TreeGX1.Nodes.Clear()
+        TreeGX1.LayoutType = Tree.eNodeLayout.Map
+
+        Try
+        For Each t In _mngr.tables.Where(Function(c) Not c.isView And c.children.Count > 0)
+                Dim node As DevComponents.Tree.Node = New DevComponents.Tree.Node
+                node.Text = t.name
+                node.Expanded = True
+
+                If Not m_EnumeratedTypes.ContainsKey(t) Then
+                    m_EnumeratedTypes.Add(t, node)
+                    TreeGX1.Nodes.Add(node)
+                Else
+                    Dim parentNode As Tree.Node = CType(m_EnumeratedTypes.Item(t), Tree.Node)
+                    parentNode.Nodes.Add(node)
+                End If
+                LoadTableChildrenUnique(t, node)
+
+            Next
+
+        Finally
+            TreeGX1.EndUpdate()
+        End Try
+        m_EnumeratedTypes.Clear()
+
+    End Sub
+
+    Private Sub LoadTableChildrenUnique(parent As infoSchema.table, parentNode As DevComponents.Tree.Node)
+        For Each child In parent.children
+
+            Dim node As DevComponents.Tree.Node = New DevComponents.Tree.Node
+            node.Text = child.name
+            node.Expanded = True
+
+            If Not m_EnumeratedTypes.ContainsKey(child) Then
+                m_EnumeratedTypes.Add(child, node)
+                parentNode.Nodes.Add(node)
+            Else
+                Dim otherNode As Tree.Node = CType(m_EnumeratedTypes.Item(child), Tree.Node)
+
+                If otherNode.Text <> node.Text Then otherNode.Nodes.Add(node)
+            End If
+
+
+            LoadTableChildrenUnique(child, node)
+        Next
     End Sub
 #End Region
 
@@ -1309,5 +1362,9 @@ Public Class mainGUI2
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
+    End Sub
+
+    Private Sub GenerateERDiagramToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GenerateERDiagramToolStripMenuItem.Click
+        LoadTreeGXTableClasses()
     End Sub
 End Class
