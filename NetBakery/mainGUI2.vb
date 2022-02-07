@@ -16,6 +16,7 @@ Public Class mainGUI2
     Private _currentProject As Project
 
     Private m_EnumeratedTypes As Hashtable
+    Private _TreeGXUnique As Dictionary(Of String, Tree.Node)
 
 #Region "Start and close"
     Private Sub mainGUI2_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -460,54 +461,69 @@ Public Class mainGUI2
 
     Private Sub LoadTreeGXTableClasses()
 
-        m_EnumeratedTypes = New Hashtable
+        _TreeGXUnique = New Dictionary(Of String, Tree.Node)
+
         TreeGX1.BeginUpdate()
         TreeGX1.Nodes.Clear()
         TreeGX1.LayoutType = Tree.eNodeLayout.Map
 
+        Dim rootNode As New Tree.Node With {
+            .Name = _mngr.database,
+            .Text = .Name,
+            .Expanded = True
+        }
+        TreeGX1.Nodes.Add(rootNode)
+
         Try
-        For Each t In _mngr.tables.Where(Function(c) Not c.isView And c.children.Count > 0)
-                Dim node As DevComponents.Tree.Node = New DevComponents.Tree.Node
-                node.Text = t.name
-                node.Expanded = True
-
-                If Not m_EnumeratedTypes.ContainsKey(t) Then
-                    m_EnumeratedTypes.Add(t, node)
-                    TreeGX1.Nodes.Add(node)
-                Else
-                    Dim parentNode As Tree.Node = CType(m_EnumeratedTypes.Item(t), Tree.Node)
-                    parentNode.Nodes.Add(node)
-                End If
-                LoadTableChildrenUnique(t, node)
-
+            For Each t In _mngr.tables.Where(Function(c) Not c.isView)
+                LoadTableUnique(t, rootNode)
             Next
-
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
         Finally
             TreeGX1.EndUpdate()
         End Try
-        m_EnumeratedTypes.Clear()
-
     End Sub
 
-    Private Sub LoadTableChildrenUnique(parent As infoSchema.table, parentNode As DevComponents.Tree.Node)
-        For Each child In parent.children
+    Private Sub LoadTableUnique(table As infoSchema.table, parentNode As DevComponents.Tree.Node)
+        Try
+            Dim node As Tree.Node = Nothing
 
-            Dim node As DevComponents.Tree.Node = New DevComponents.Tree.Node
-            node.Text = child.name
-            node.Expanded = True
-
-            If Not m_EnumeratedTypes.ContainsKey(child) Then
-                m_EnumeratedTypes.Add(child, node)
+            If Not _TreeGXUnique.TryGetValue(table.name, node) Then
+                Trace.WriteLine($"new node {table.name} with parent {parentNode.Name}")
+                node = New Tree.Node With {
+                    .Text = table.name,
+                    .Name = table.name,
+                    .Expanded = True
+                    }
                 parentNode.Nodes.Add(node)
-            Else
-                Dim otherNode As Tree.Node = CType(m_EnumeratedTypes.Item(child), Tree.Node)
+                _TreeGXUnique.Add(table.name, node)
 
-                If otherNode.Text <> node.Text Then otherNode.Nodes.Add(node)
+            Else
+                Dim pn = (From p As Tree.Node In parentNode.Nodes.OfType(Of Tree.Node) Where p.Name = table.name Select p).FirstOrDefault
+
+                If pn Is Nothing Then
+                    parentNode.Nodes.Add(node)
+                    Trace.WriteLine($"existing node {node.Name} with original parent {node.Parent.Name} and new parent {parentNode.Name}")
+                Else
+                    Dim ln As New Tree.LinkedNode With {
+                        .Node = node
+                    }
+                    parentNode.LinkedNodes.Add(ln)
+                    Trace.WriteLine($"existing node {node.Name} with parent {node.Parent.Name} made linkednode")
+                End If
+
             End If
 
 
-            LoadTableChildrenUnique(child, node)
-        Next
+
+                For Each child In table.children
+                LoadTableUnique(child, node)
+            Next
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+            Trace.WriteLine(ex.Message)
+        End Try
     End Sub
 #End Region
 
@@ -651,7 +667,14 @@ Public Class mainGUI2
                 Dim mStoreCommands As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommands", True).FirstOrDefault
                 Dim mStoreCommandFunctions As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandFunctions", True).FirstOrDefault
                 Dim mStoreCommandsProcedures As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandProcedures", True).FirstOrDefault
-                Dim mStoreCommandModels As AdvTree.Node = mStoreCommandsProcedures.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
+                Dim mStoreCommandModels As AdvTree.Node
+
+                If mStoreCommandsProcedures IsNot Nothing Then
+                    mStoreCommandModels = mStoreCommandsProcedures.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
+                Else
+                    mStoreCommandModels = mStoreCommands.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
+                End If
+
 
                 ' Tables and views
                 For Each table In _mngr.tables.Where(Function(t) t.hasExport)
@@ -689,9 +712,17 @@ Public Class mainGUI2
                     AddHandler tmpNode.NodeClick, AddressOf explorerRoutineNodeHandler
 
                     If routine.isFunction Then
-                        mStoreCommandFunctions.Nodes.Add(tmpNode)
+                        If mStoreCommandFunctions Is Nothing Then
+                            mStoreCommands.Nodes.Add(tmpNode)
+                        Else
+                            mStoreCommandFunctions.Nodes.Add(tmpNode)
+                        End If
                     Else
-                        mStoreCommandsProcedures.Nodes.Add(tmpNode)
+                        If mStoreCommandsProcedures Is Nothing Then
+                            mStoreCommands.Nodes.Add(tmpNode)
+                        Else
+                            mStoreCommandsProcedures.Nodes.Add(tmpNode)
+                        End If
                     End If
 
                     If routine.returnsRecordset Then
