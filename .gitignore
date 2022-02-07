@@ -290,3 +290,4 @@ __pycache__/
 Installer/
 Testdatabases/dbdevcreditagricole_beveiligdmailen.sql
 Testdatabases/dbdevliander_lme.sql
+DotNetBarRuntime/*.dll
