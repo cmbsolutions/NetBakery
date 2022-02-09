@@ -9,6 +9,7 @@ Public Class Project
     Property projectoutputlocation As String
     Property outputtype As String
     Property useEnums As Boolean
+    Property generateProcedureLocks As Boolean
 
     Property needsSave As Boolean
     Property projectfilename As String

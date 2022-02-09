@@ -29,9 +29,9 @@ Namespace Models.StoreCommands.Procedures
         If _routine.isFunction then
 
 #>
-    Public Overridable Function Execute(<#= String.Join(", ", p1) #>) As <#= _routine.returnParam.vbType #>
-        Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= _routine.returnParam.vbType #>)("SELECT <#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>).FirstOrDefault
-    End Function
+        Public Overridable Function Execute(<#= String.Join(", ", p1) #>) As <#= _routine.returnParam.vbType #>
+            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= _routine.returnParam.vbType #>)("SELECT <#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>).FirstOrDefault
+        End Function
 <#
         Else
             If _routine.returnsRecordset AndAlso _routine.returnLayout.columns IsNot Nothing AndAlso _routine.returnLayout.columns.Any() then
@@ -42,7 +42,7 @@ Namespace Models.StoreCommands.Procedures
 <#
             Else
 #>
-        Public Overridable Sub <#= _routine.name #>(<#= String.Join(", ", p1) #>)
+        Public Overridable Sub Execute(<#= String.Join(", ", p1) #>)
             DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
         End Sub
 <#          
@@ -52,9 +52,9 @@ Namespace Models.StoreCommands.Procedures
     Else
         If _routine.isFunction then
 #>
-    Public Overridable Function Execute() As <#= _routine.returnParam.vbType #>
-        Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= _routine.returnParam.vbType #>)("SELECT <#= _routine.name #>()").FirstOrDefault
-    End Function
+        Public Overridable Function Execute() As <#= _routine.returnParam.vbType #>
+            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= _routine.returnParam.vbType #>)("SELECT <#= _routine.name #>()").FirstOrDefault
+        End Function
 <#      Else
             If _routine.returnsRecordset AndAlso _routine.returnLayout.columns IsNot Nothing AndAlso _routine.returnLayout.columns.Any() then
 #>
@@ -73,3 +73,5 @@ Namespace Models.StoreCommands.Procedures
         End If
     End If
 #>
+    End Class
+End NameSpace

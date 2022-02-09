@@ -200,6 +200,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="customTextTraceListener.vb" />
+    <Compile Include="FileCompare.vb" />
     <Compile Include="formHelpers.vb" />
     <Compile Include="Generators\iGenerator.vb" />
     <Compile Include="Generators\legacy\Model.vb">

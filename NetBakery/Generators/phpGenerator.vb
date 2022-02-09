@@ -34,7 +34,7 @@ Public Class phpGenerator
         End Try
     End Function
 
-    Public Function generateStoreCommands(_f As List(Of routine), _p As List(Of routine), name As String) As String Implements iGenerator.generateStoreCommands
+    Public Function generateStoreCommands(_f As List(Of routine), _p As List(Of routine), name As String, withLock As Boolean) As String Implements iGenerator.generateStoreCommands
         Try
             Dim page = New My.Templates.php.StoreCommands(_f, _p, name)
             Dim pageContent = page.TransformText

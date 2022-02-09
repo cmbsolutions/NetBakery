@@ -18,7 +18,7 @@ Public Class updateHelper
                 If uf.major > My.Application.Info.Version.Major Then uf.doUpdate = True
                 If uf.major >= My.Application.Info.Version.Major And uf.minor > My.Application.Info.Version.Minor Then uf.doUpdate = True
                 If uf.major >= My.Application.Info.Version.Major And uf.minor >= My.Application.Info.Version.Minor And uf.revision > My.Application.Info.Version.Build Then uf.doUpdate = True
-                uf.doUpdate = True
+                'uf.doUpdate = True
                 Return uf
             End If
 

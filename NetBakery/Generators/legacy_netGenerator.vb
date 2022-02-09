@@ -34,9 +34,9 @@ Public Class legacy_netGenerator
         End Try
     End Function
 
-    Public Function generateStoreCommands(_f As List(Of routine), _p As List(Of routine), name As String) As String Implements iGenerator.generateStoreCommands
+    Public Function generateStoreCommands(_f As List(Of routine), _p As List(Of routine), name As String, withLock As Boolean) As String Implements iGenerator.generateStoreCommands
         Try
-            Dim page = New My.Templates.legacy_net.StoreCommands(_f, _p, name)
+            Dim page = New My.Templates.legacy_net.StoreCommands(_f, _p, name, withLock)
             Dim pageContent = page.TransformText
 
             Return pageContent

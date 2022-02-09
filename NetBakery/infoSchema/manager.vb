@@ -14,7 +14,7 @@ Namespace infoSchema
         Private Property _dbInfoCommand As MySqlCommand
         Private Property _p As New PluralizationService
         Private Property _keywords As New List(Of String)
-        Public Property database As String = ""
+        Private Property _database As String = ""
         Public Property databases As List(Of String)
         Public Property tables As List(Of table)
         Public Property routines As List(Of routine)
@@ -62,9 +62,9 @@ Namespace infoSchema
             End Try
         End Function
 
-        Public Function generateStoreCommands(name As String) As String
+        Public Function generateStoreCommands(name As String, withLock As Boolean) As String
             Try
-                Return _generator.generateStoreCommands(routines.Where(Function(c) c.isFunction And c.hasExport).ToList, routines.Where(Function(c) Not c.isFunction And c.hasExport).ToList, name)
+                Return _generator.generateStoreCommands(routines.Where(Function(c) c.isFunction And c.hasExport).ToList, routines.Where(Function(c) Not c.isFunction And c.hasExport).ToList, name, withLock)
             Catch ex As Exception
                 Throw
             End Try
@@ -81,6 +81,13 @@ Namespace infoSchema
         Public Sub New()
             initSchema()
         End Sub
+
+        Public Sub SetDatabase(database As String)
+            _database = database
+        End Sub
+        Public Function GetDatabase() As String
+            Return _database
+        End Function
 
         Public Sub harvestObjects()
             Try
@@ -123,7 +130,7 @@ Namespace infoSchema
 
                     _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT T.TABLE_NAME, T.TABLE_TYPE, V.VIEW_DEFINITION FROM	`TABLES` AS T LEFT JOIN	VIEWS AS V ON T.TABLE_SCHEMA = V.TABLE_SCHEMA AND T.TABLE_NAME = V.TABLE_NAME WHERE	T.TABLE_SCHEMA = @database;"
-                    _dbCommand.Parameters.AddWithValue("database", database)
+                    _dbCommand.Parameters.AddWithValue("database", _database)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         While rdr.Read
@@ -136,7 +143,7 @@ Namespace infoSchema
                             tables.Add(t)
 
                             Using _dbInfoCommand = New MySqlCommand
-                                _dbInfoCommand.Connection = dbConnection(database)
+                                _dbInfoCommand.Connection = dbConnection(_database)
                                 _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("TABLE_TYPE").ToString.Replace("BASE ", "")} {rdr("TABLE_NAME")}"
 
                                 Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
@@ -163,7 +170,7 @@ Namespace infoSchema
                     Using _dbCommand = New MySqlCommand
                         _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
                         _dbCommand.CommandText = "SELECT COLUMN_NAME,ORDINAL_POSITION,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,COLUMN_TYPE,COLUMN_KEY,EXTRA FROM COLUMNS WHERE TABLE_SCHEMA = @database AND TABLE_NAME = @table ORDER BY ORDINAL_POSITION ASC"
-                        _dbCommand.Parameters.AddWithValue("database", database)
+                        _dbCommand.Parameters.AddWithValue("database", _database)
                         _dbCommand.Parameters.AddWithValue("table", t.name)
                         'Debug.WriteLine(t.tableName)
                         Using rdr As MySqlDataReader = _dbCommand.ExecuteReader()
@@ -210,7 +217,7 @@ Namespace infoSchema
                 Using _dbCommand = New MySqlCommand
                     _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT TABLE_NAME, NON_UNIQUE, NULLABLE, INDEX_NAME, COLUMN_NAME, SEQ_IN_INDEX FROM STATISTICS WHERE TABLE_SCHEMA=@database ORDER BY TABLE_NAME, INDEX_NAME, SEQ_IN_INDEX"
-                    _dbCommand.Parameters.AddWithValue("database", database)
+                    _dbCommand.Parameters.AddWithValue("database", _database)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         While rdr.Read
@@ -247,7 +254,7 @@ Namespace infoSchema
                 Using _dbCommand = New MySqlCommand
                     _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT CONSTRAINT_NAME, TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM KEY_COLUMN_USAGE WHERE CONSTRAINT_SCHEMA = @database AND REFERENCED_TABLE_NAME is not null ORDER BY TABLE_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT"
-                    _dbCommand.Parameters.AddWithValue("database", database)
+                    _dbCommand.Parameters.AddWithValue("database", _database)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         While rdr.Read
@@ -349,7 +356,7 @@ Namespace infoSchema
 
                     _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "Select r.ROUTINE_TYPE, r.ROUTINE_NAME, r.ROUTINE_DEFINITION, p.ORDINAL_POSITION, p.PARAMETER_NAME, p.DATA_TYPE, p.CHARACTER_MAXIMUM_LENGTH, p.NUMERIC_PRECISION FROM ROUTINES As r LEFT JOIN PARAMETERS As p On r.ROUTINE_SCHEMA = p.SPECIFIC_SCHEMA And r.ROUTINE_NAME = p.SPECIFIC_NAME WHERE r.ROUTINE_SCHEMA = @database ORDER BY r.ROUTINE_TYPE, p.SPECIFIC_NAME, p.ORDINAL_POSITION"
-                    _dbCommand.Parameters.AddWithValue("database", database)
+                    _dbCommand.Parameters.AddWithValue("database", _database)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         Dim rt As routine = Nothing
@@ -379,7 +386,7 @@ Namespace infoSchema
                             p.vbType = getVbType(rdr("DATA_TYPE").ToString)
                             p.name = rdr("PARAMETER_NAME").ToString
 
-                            If rdr("ROUTINE_TYPE").ToString = "Function" Then
+                            If rdr("ROUTINE_TYPE").ToString = "FUNCTION" Then
                                 rt.isFunction = True
 
                                 If ToInt(rdr("ORDINAL_POSITION")) = 0 Then
@@ -392,7 +399,7 @@ Namespace infoSchema
                             End If
 
                             Using _dbInfoCommand = New MySqlCommand
-                                _dbInfoCommand.Connection = dbConnection(database)
+                                _dbInfoCommand.Connection = dbConnection(_database)
                                 _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("ROUTINE_TYPE")} {rdr("ROUTINE_NAME")}"
 
                                 Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
@@ -420,7 +427,7 @@ Namespace infoSchema
         Private Sub getRoutineLayout(ByRef _r As routine)
             Try
                 Using _dbxCommand = New MySqlCommand
-                    _dbxCommand.Connection = dbConnection(database)
+                    _dbxCommand.Connection = dbConnection(_database)
                     _dbxCommand.CommandType = CommandType.Text
                     _dbxCommand.CommandText = $"CALL {_r.name}({String.Join(",", (From r In _r.params Order By r.ordinalPosition Select "@" & r.name))})"
 
@@ -472,6 +479,8 @@ Namespace infoSchema
         Public Sub initSchema()
             Try
                 databases = New List(Of String)
+                _dbConnections = New Dictionary(Of String, MySqlConnection)
+
                 tables = New List(Of table)
                 routines = New List(Of routine)
 

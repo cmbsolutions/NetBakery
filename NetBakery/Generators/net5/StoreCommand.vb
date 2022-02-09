@@ -69,7 +69,7 @@ Namespace My.Templates.net5
 
             
             #End ExternalSource
-            Me.Write("    Public Overridable Function Execute(")
+            Me.Write("        Public Overridable Function Execute(")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\StoreCommand.tt",32)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p1)))
@@ -81,8 +81,8 @@ Namespace My.Templates.net5
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_routine.returnParam.vbType))
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Execut"& _ 
-                    "eStoreQuery(Of ")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Ex"& _ 
+                    "ecuteStoreQuery(Of ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\StoreCommand.tt",33)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_routine.returnParam.vbType))
@@ -106,7 +106,7 @@ Namespace My.Templates.net5
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p3)))
             
             #End ExternalSource
-            Me.Write(").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\StoreCommand.tt",35)
 
@@ -160,13 +160,7 @@ Namespace My.Templates.net5
 
             
             #End ExternalSource
-            Me.Write("        Public Overridable Sub ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\StoreCommand.tt",45)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(_routine.name))
-            
-            #End ExternalSource
-            Me.Write("(")
+            Me.Write("        Public Overridable Sub Execute(")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\StoreCommand.tt",45)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", ", p1)))
@@ -203,14 +197,14 @@ Namespace My.Templates.net5
 
             
             #End ExternalSource
-            Me.Write("    Public Overridable Function Execute() As ")
+            Me.Write("        Public Overridable Function Execute() As ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\StoreCommand.tt",55)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_routine.returnParam.vbType))
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Execut"& _ 
-                    "eStoreQuery(Of ")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Ex"& _ 
+                    "ecuteStoreQuery(Of ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\StoreCommand.tt",56)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_routine.returnParam.vbType))
@@ -222,7 +216,7 @@ Namespace My.Templates.net5
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_routine.name))
             
             #End ExternalSource
-            Me.Write("()"").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("()"").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\StoreCommand.tt",58)
       Else
@@ -276,6 +270,7 @@ Namespace My.Templates.net5
 
             
             #End ExternalSource
+            Me.Write("    End Class"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End NameSpace")
             Return Me.GenerationEnvironment.ToString
         End Function
     End Class

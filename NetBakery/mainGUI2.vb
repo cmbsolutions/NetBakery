@@ -15,7 +15,6 @@ Public Class mainGUI2
 
     Private _currentProject As Project
 
-    Private m_EnumeratedTypes As Hashtable
     Private _TreeGXUnique As Dictionary(Of String, Tree.Node)
 
 #Region "Start and close"
@@ -316,7 +315,7 @@ Public Class mainGUI2
                 End If
             Next
 
-            _mngr.database = node.Text
+            _mngr.SetDatabase(node.Text)
             _mngr.harvestObjects()
 
             populateTreeNode(node)
@@ -394,8 +393,8 @@ Public Class mainGUI2
                 dgvIndexes.Refresh()
                 dgvReferences.Refresh()
 
-                dcObjectInfo.Selected = True
-                TabControl1.SelectedPanel = TabControlPanel1
+                'dcObjectInfo.Selected = True
+                'TabControl1.SelectedPanel = TabControlPanel1
 
             End If
 
@@ -410,44 +409,62 @@ Public Class mainGUI2
 
 #Region "TreeGX"
     Private Sub LoadTreeGXTableClass(ByVal rootTable As infoSchema.table)
-
-        m_EnumeratedTypes = New Hashtable
-        TreeGX1.BeginUpdate()
-        TreeGX1.Nodes.Clear()
-        TreeGX1.LayoutType = Tree.eNodeLayout.Map
         Try
-            Dim node As DevComponents.Tree.Node = New DevComponents.Tree.Node
-            node.Text = rootTable.pluralName
-            node.Expanded = True
-            m_EnumeratedTypes.Add(rootTable.pluralName, "")
-            TreeGX1.Nodes.Add(node)
+            _TreeGXUnique = New Dictionary(Of String, Tree.Node)
+            TreeGX1.BeginUpdate()
+            TreeGX1.Nodes.Clear()
+            TreeGX1.LayoutType = Tree.eNodeLayout.Map
 
+            Dim node As New Tree.Node With {
+                .Text = rootTable.name,
+                .Name = rootTable.name,
+                .Expanded = True
+            }
+
+            _TreeGXUnique.Add(rootTable.name, node)
+
+            TreeGX1.Nodes.Add(node)
             LoadTableChildren(rootTable, node, 1)
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
         Finally
             TreeGX1.EndUpdate()
         End Try
-        m_EnumeratedTypes.Clear()
+        _TreeGXUnique.Clear()
 
     End Sub
 
-    Private Sub LoadTableChildren(parent As infoSchema.table, parentNode As DevComponents.Tree.Node, currentDepth As Integer)
-        If currentDepth > My.Settings.maxERDiagramDepth Then Exit Sub
+    Private Sub LoadTableChildren(parent As infoSchema.table, ByRef parentNode As DevComponents.Tree.Node, currentDepth As Integer)
+        Try
+            If currentDepth > My.Settings.maxERDiagramDepth Then Exit Sub
 
-        For Each child In parent.children
-            Dim node As DevComponents.Tree.Node = New DevComponents.Tree.Node
-            node.Text = child.pluralName
-            node.Expanded = True
+            For Each child In parent.children
+                Dim node As Tree.Node = Nothing
 
-            If currentDepth = My.Settings.maxERDiagramDepth Then
-                node.Style = ElementStyle4
-            Else
-                node.Style = ElementStyle3
+                'If Not _TreeGXUnique.TryGetValue(child.name, node) Then
+                node = New Tree.Node With {
+                        .Text = child.name,
+                        .Name = child.name,
+                        .Expanded = True
+                    }
 
-            End If
-            parentNode.Nodes.Add(node)
+                    _TreeGXUnique.Add(child.name, node)
+                'End If
 
-            LoadTableChildren(child, node, currentDepth + 1)
-        Next
+                If currentDepth = My.Settings.maxERDiagramDepth Then
+                    node.Style = ElementStyle4
+                Else
+                    node.Style = ElementStyle3
+                End If
+
+                parentNode.Nodes.Add(node)
+
+                LoadTableChildren(child, node, currentDepth + 1)
+            Next
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+            Trace.WriteLine($"parent:{parent.name}, node: {parentNode.Name}, depth: {currentDepth}")
+        End Try
     End Sub
 
     Private Sub maxDepth_ValueChanged(sender As Object, e As EventArgs) Handles maxDepth.ValueChanged
@@ -468,7 +485,7 @@ Public Class mainGUI2
         TreeGX1.LayoutType = Tree.eNodeLayout.Map
 
         Dim rootNode As New Tree.Node With {
-            .Name = _mngr.database,
+            .Name = _mngr.GetDatabase,
             .Text = .Name,
             .Expanded = True
         }
@@ -490,7 +507,6 @@ Public Class mainGUI2
             Dim node As Tree.Node = Nothing
 
             If Not _TreeGXUnique.TryGetValue(table.name, node) Then
-                Trace.WriteLine($"new node {table.name} with parent {parentNode.Name}")
                 node = New Tree.Node With {
                     .Text = table.name,
                     .Name = table.name,
@@ -504,25 +520,19 @@ Public Class mainGUI2
 
                 If pn Is Nothing Then
                     parentNode.Nodes.Add(node)
-                    Trace.WriteLine($"existing node {node.Name} with original parent {node.Parent.Name} and new parent {parentNode.Name}")
                 Else
                     Dim ln As New Tree.LinkedNode With {
                         .Node = node
                     }
                     parentNode.LinkedNodes.Add(ln)
-                    Trace.WriteLine($"existing node {node.Name} with parent {node.Parent.Name} made linkednode")
                 End If
-
             End If
 
-
-
-                For Each child In table.children
+            For Each child In table.children
                 LoadTableUnique(child, node)
             Next
         Catch ex As Exception
             FormHelpers.dumpException(ex)
-            Trace.WriteLine(ex.Message)
         End Try
     End Sub
 #End Region
@@ -712,15 +722,11 @@ Public Class mainGUI2
                     AddHandler tmpNode.NodeClick, AddressOf explorerRoutineNodeHandler
 
                     If routine.isFunction Then
-                        If mStoreCommandFunctions Is Nothing Then
-                            mStoreCommands.Nodes.Add(tmpNode)
-                        Else
+                        If mStoreCommandFunctions IsNot Nothing Then
                             mStoreCommandFunctions.Nodes.Add(tmpNode)
                         End If
                     Else
-                        If mStoreCommandsProcedures Is Nothing Then
-                            mStoreCommands.Nodes.Add(tmpNode)
-                        Else
+                        If mStoreCommandsProcedures IsNot Nothing Then
                             mStoreCommandsProcedures.Nodes.Add(tmpNode)
                         End If
                     End If
@@ -744,7 +750,7 @@ Public Class mainGUI2
                 AddHandler tmpContext.NodeClick, AddressOf explorerContextNodeHandler
                 mModel.Nodes.Add(tmpContext)
 
-                If _currentProject IsNot Nothing AndAlso _currentProject.outputtype <> ".NET" Then
+                If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net" Then
                     ' StoreCommandsContext
                     tmpContext = tplContextAndStoreCommands.DeepCopy
 
@@ -798,10 +804,8 @@ Public Class mainGUI2
 
             IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}DataContext.vb", _mngr.generateContext($"{txtProjectName.Text}Data"))
 
-            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype = ".NET" Then
-
-            Else
-                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}StoreCommands.vb", _mngr.generateStoreCommands($"{txtProjectName.Text}Data"))
+            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net" Then
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}StoreCommands.vb", _mngr.generateStoreCommands($"{txtProjectName.Text}Data", sbProcedureLocks.Value))
             End If
 
             MessageBox.Show("Output generated")
@@ -897,7 +901,7 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            scCodePreview.Text = _mngr.generateStoreCommands(txtProjectName.Text)
+            scCodePreview.Text = _mngr.generateStoreCommands(txtProjectName.Text, sbProcedureLocks.Value)
             scCodePreview.Colorize(0, scCodePreview.Text.Length)
             dcCodePreview.Selected = True
 
@@ -1209,13 +1213,13 @@ Public Class mainGUI2
 
     Private Sub btnSaveProject_Click(sender As Object, e As EventArgs) Handles btnSaveProject.Click
         Try
-            SaveFileDialog1.FileName = txtProjectName.Text
+            SaveFileDialog1.FileName = _currentProject.projectfilename
 
             If (_currentProject.projectfilename <> "" AndAlso IO.File.Exists(_currentProject.projectfilename)) OrElse SaveFileDialog1.ShowDialog = DialogResult.OK Then
                 _currentProject.projectfilename = SaveFileDialog1.FileName
                 WriteProject()
 
-                Using fs As New IO.FileStream(SaveFileDialog1.FileName, IO.FileMode.Create, IO.FileAccess.Write, IO.FileShare.None)
+                Using fs As New IO.FileStream(_currentProject.projectfilename, IO.FileMode.Create, IO.FileAccess.Write, IO.FileShare.None)
                     Using sw As New IO.StreamWriter(fs, System.Text.Encoding.UTF8)
 
                         sw.Write(JsonConvert.SerializeObject(_currentProject, Formatting.Indented, New JsonSerializerSettings With {
@@ -1234,9 +1238,6 @@ Public Class mainGUI2
         End Try
     End Sub
 
-
-
-
     Private Sub btnOpenProject_Click(sender As Object, e As EventArgs) Handles btnOpenProject.Click
         Try
             If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
@@ -1249,20 +1250,23 @@ Public Class mainGUI2
 
                 _currentProject = CType(JsonConvert.DeserializeObject(IO.File.ReadAllText(OpenFileDialog1.FileName), GetType(Project)), Project)
 
+                _currentProject.projectfilename = OpenFileDialog1.FileName
+
                 txtProjectName.Text = _currentProject.projectname
                 txtProjectFolder.Text = _currentProject.projectlocation
                 txtOutputFolder.Text = _currentProject.projectoutputlocation
                 Dim itm = cboOutputType.Items().Cast(Of DevComponents.Editors.ComboItem).FirstOrDefault(Function(c) c.Value.ToString = _currentProject.outputtype)
                 cboOutputType.SelectedItem = itm
                 sbEnums.SetValue(_currentProject.useEnums, eEventSource.Code)
+                sbProcedureLocks.SetValue(_currentProject.generateProcedureLocks, eEventSource.Code)
 
                 cboConnecions.Text = _currentProject.database.connection.description
                 _currentConnection = _currentProject.database.connection
 
-                btnConnect.RaiseClick()
+                btnConnect.RaiseClick(eEventSource.Code)
 
                 _mngr.setGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString)
-                _mngr.database = _currentProject.database.databasename
+                _mngr.SetDatabase(_currentProject.database.databasename)
                 _mngr.tables = _currentProject.database.tables
                 _mngr.routines = _currentProject.database.routines
 
@@ -1306,6 +1310,8 @@ Public Class mainGUI2
             _currentProject = New Project
             _currentProject.outputtype = cboOutputType.Text
             _currentProject.useEnums = sbEnums.Value
+            _currentProject.generateProcedureLocks = sbProcedureLocks.Value
+
             enableOrDisableFields()
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -1323,10 +1329,11 @@ Public Class mainGUI2
                 _currentProject.projectoutputlocation = txtOutputFolder.Text
                 _currentProject.outputtype = DirectCast(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString
                 _currentProject.useEnums = sbEnums.Value
+                _currentProject.generateProcedureLocks = sbProcedureLocks.Value
 
                 _currentProject.database = New databaseObjects With {
                     .connection = _currentConnection,
-                    .databasename = _mngr.database,
+                    .databasename = _mngr.GetDatabase,
                     .tables = _mngr.tables,
                     .routines = _mngr.routines
                 }
@@ -1339,7 +1346,7 @@ Public Class mainGUI2
                                                             .filename = pf.Name,
                                                             .location = pf.DirectoryName,
                                                             .objecttype = "file",
-                                                            .hash = pf.GetHashCode.ToString})
+                                                            .hash = FileCompare.GetFileHash(pf.FullName)})
                     Next
                 End If
             End If

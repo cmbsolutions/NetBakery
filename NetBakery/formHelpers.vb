@@ -31,14 +31,14 @@ Public Class FormHelpers
     Public Shared Sub dumpException(ByRef _ex As Exception)
         Try
             Trace.IndentSize = 4
-            Trace.Write(_ex.Message)
+            Trace.WriteLine(_ex.Message)
             Trace.Indent()
 
             Dim st As StackTrace = New StackTrace(_ex, True)
             For Each sf As StackFrame In st.GetFrames
 
                 If sf.GetFileLineNumber > 0 OrElse sf.GetFileColumnNumber > 0 Then
-                    Trace.Write($"Trace line:{sf.GetFileLineNumber}, column:{sf.GetFileColumnNumber}, file:{sf.GetFileName}, method:{sf.GetMethod.Name}")
+                    Trace.WriteLine($"Trace line:{sf.GetFileLineNumber}, column:{sf.GetFileColumnNumber}, file:{sf.GetFileName}, method:{sf.GetMethod.Name}")
                 End If
 
             Next
