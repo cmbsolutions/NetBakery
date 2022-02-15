@@ -70,9 +70,9 @@ Namespace infoSchema
             End Try
         End Function
 
-        Public Function generateStoreCommand(r As infoSchema.routine) As String
+        Public Function generateStoreCommand(r As infoSchema.routine, name As String, withLock As Boolean) As String
             Try
-                Return _generator.generateStoreCommand(r)
+                Return _generator.generateStoreCommand(r, name, withLock)
             Catch ex As Exception
                 Throw
             End Try
@@ -548,26 +548,26 @@ Namespace infoSchema
             Return s.Substring(0, 1).ToUpper & s.Substring(1).ToLower
 
         End Function
-        Private Function getVbType(mysqlType As String) As Type
+        Private Function getVbType(mysqlType As String) As String
             Select Case mysqlType.ToLower
                 Case "tinyint", "mediumint", "integer", "int", "smallint", "int16", "int24", "int32", "uint16", "uint24", "uint32"
-                    Return GetType(Integer)
+                    Return "Integer"
                 Case "bigint", "int64", "uint64"
-                    Return GetType(Long)
+                    Return "Long"
                 Case "char", "varchar", "text", "tinytext", "mediumtext", "longtext", "string", "varstring", "varbinary", "binary", "tinyblob", "mediumblob", "longblob", "set", "enum"
-                    Return GetType(String)
+                    Return "String"
                 Case "time", "timestamp"
-                    Return GetType(TimeSpan)
+                    Return "TimeSpan"
                 Case "date", "datetime"
-                    Return GetType(Date)
+                    Return "Date"
                 Case "double", "float"
-                    Return GetType(Double)
+                    Return "Double"
                 Case "decimal", "numeric", "newdecimal"
-                    Return GetType(Decimal)
+                    Return "Decimal"
                 Case "byte", "bit"
-                    Return GetType(Boolean)
+                    Return "Boolean"
                 Case Else
-                    Return GetType(Object)
+                    Return "Object"
             End Select
         End Function
 

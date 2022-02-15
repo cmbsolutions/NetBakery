@@ -75,7 +75,7 @@ Namespace My.Templates.php
             #End ExternalSource
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\php\Model.tt",21)
-      If c.isNullable And c.vbType <> GetType(System.String) Then 
+      If c.isNullable And c.vbType <> "String" Then 
             
             #End ExternalSource
             Me.Write("        Property ")
@@ -113,7 +113,7 @@ Namespace My.Templates.php
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\php\Model.tt",25)
       end if
 
-        If c.mysqlType = "enum" AndAlso c.vbType <> GetType(System.String) Then
+        If c.mysqlType = "enum" AndAlso c.vbType <> "String" Then
             _i = 1
  
             

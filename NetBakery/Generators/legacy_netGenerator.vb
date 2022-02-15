@@ -56,7 +56,7 @@ Public Class legacy_netGenerator
         End Try
     End Function
 
-    Public Function generateStoreCommand(_r As routine) As String Implements iGenerator.generateStoreCommand
+    Public Function generateStoreCommand(_r As routine, contextName As String, withLock As Boolean) As String Implements iGenerator.generateStoreCommand
         Throw New NotImplementedException()
     End Function
 End Class

@@ -17,7 +17,7 @@ Namespace Models
 <#  End If #>
 
 <#  For each c in _t.columns #>
-<#      If c.isNullable And c.vbType <> GetType(System.String) Then #>
+<#      If c.isNullable And c.vbType <> "String" Then #>
         Public Property <#= c.alias #>() as <#= c.vbType #>?
 <#      else #>
         Public Property <#= c.alias #>() as <#= c.vbType #>

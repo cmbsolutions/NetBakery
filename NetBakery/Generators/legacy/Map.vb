@@ -106,7 +106,7 @@ Namespace My.Templates.legacy_net
 		Dim configLines as new list(of String)
 
 		if not c.isNullable then configLines.add(".IsRequired()")
-		if c.vbType = GetType(System.String) AndAlso c.maximumLength > 0 AndAlso c.maximumLength <= 65535 then configLines.add($".HasMaxLength({c.maximumLength})")
+		if c.vbType = "String" AndAlso c.maximumLength > 0 AndAlso c.maximumLength <= 65535 then configLines.add($".HasMaxLength({c.maximumLength})")
 		if c.autoincrement then configLines.add(".HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity)")
 		if c.key = "PRI" and not c.autoincrement then configLines.add(".HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)")
 

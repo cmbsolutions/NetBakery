@@ -14,7 +14,7 @@ Public Class mainGUI2
     Private _setupFile As IO.FileInfo
 
     Private _currentProject As Project
-
+    Private _loadingProject As Boolean = False
     Private _TreeGXUnique As Dictionary(Of String, Tree.Node)
 
 #Region "Start and close"
@@ -322,6 +322,7 @@ Public Class mainGUI2
 
             node.Expand()
 
+            WriteProject()
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -788,9 +789,9 @@ Public Class mainGUI2
             For Each s In _mngr.routines.Where(Function(c) c.hasExport)
                 If _currentProject IsNot Nothing AndAlso _currentProject.outputtype = ".NET" Then
                     If s.isFunction Then
-                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Functions\{s.name}.vb", _mngr.generateStoreCommand(s))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Functions\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}Data", sbProcedureLocks.Value))
                     Else
-                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Procedures\{s.name}.vb", _mngr.generateStoreCommand(s))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Procedures\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}Data", sbProcedureLocks.Value))
                         If s.returnsRecordset Then
                             IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Procedures\Models\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
                         End If
@@ -856,7 +857,7 @@ Public Class mainGUI2
             Dim r = _mngr.routines.FirstOrDefault(Function(c) c.name = node.TagString)
 
             If r IsNot Nothing Then
-                scCodePreview.Text = _mngr.generateStoreCommand(r)
+                scCodePreview.Text = _mngr.generateStoreCommand(r, $"{txtProjectName.Text}Data", sbProcedureLocks.Value)
                 scCodePreview.Colorize(0, scCodePreview.Text.Length)
                 dcCodePreview.Selected = True
             End If
@@ -1230,7 +1231,7 @@ Public Class mainGUI2
                         'js.Serialize(sw, _currentProject)
                     End Using
                 End Using
-
+                _currentProject.needsSave = False
                 _tracelistener.WriteLine("Project saved!")
             End If
         Catch ex As Exception
@@ -1247,7 +1248,7 @@ Public Class mainGUI2
             End If
 
             If OpenFileDialog1.ShowDialog = DialogResult.OK Then
-
+                _loadingProject = True
                 _currentProject = CType(JsonConvert.DeserializeObject(IO.File.ReadAllText(OpenFileDialog1.FileName), GetType(Project)), Project)
 
                 _currentProject.projectfilename = OpenFileDialog1.FileName
@@ -1257,8 +1258,8 @@ Public Class mainGUI2
                 txtOutputFolder.Text = _currentProject.projectoutputlocation
                 Dim itm = cboOutputType.Items().Cast(Of DevComponents.Editors.ComboItem).FirstOrDefault(Function(c) c.Value.ToString = _currentProject.outputtype)
                 cboOutputType.SelectedItem = itm
-                sbEnums.SetValue(_currentProject.useEnums, eEventSource.Code)
-                sbProcedureLocks.SetValue(_currentProject.generateProcedureLocks, eEventSource.Code)
+                sbEnums.SetValueAndAnimate(_currentProject.useEnums, eEventSource.Code)
+                sbProcedureLocks.SetValueAndAnimate(_currentProject.generateProcedureLocks, eEventSource.Code)
 
                 cboConnecions.Text = _currentProject.database.connection.description
                 _currentConnection = _currentProject.database.connection
@@ -1274,8 +1275,9 @@ Public Class mainGUI2
 
                 If selectedDB IsNot Nothing Then
                     advtreeDatabases.SelectNode(selectedDB, AdvTree.eTreeAction.Code)
-                    databaseNodeHandler(selectedDB, New AdvTree.AdvTreeNodeEventArgs(AdvTree.eTreeAction.Keyboard, selectedDB))
+                    databaseNodeHandler(selectedDB, New AdvTree.AdvTreeNodeEventArgs(AdvTree.eTreeAction.Code, selectedDB))
                 End If
+                _loadingProject = False
             End If
             enableOrDisableFields()
 
@@ -1321,7 +1323,7 @@ Public Class mainGUI2
 
     Private Sub WriteProject()
         Try
-            If _currentProject IsNot Nothing Then
+            If Not _loadingProject AndAlso _currentProject IsNot Nothing Then
                 _currentProject.needsSave = True
                 _currentProject.application_version = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
                 _currentProject.projectname = txtProjectName.Text
@@ -1404,5 +1406,14 @@ Public Class mainGUI2
 
     Private Sub GenerateERDiagramToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GenerateERDiagramToolStripMenuItem.Click
         LoadTreeGXTableClasses()
+    End Sub
+
+    Private Sub sbEnums_ValueChanged(sender As Object, e As EventArgs) Handles sbEnums.ValueChanged
+
+        If DirectCast(e, Events.EventSourceArgs).Source <> eEventSource.Code Then WriteProject()
+    End Sub
+
+    Private Sub sbProcedureLocks_ValueChanged(sender As Object, e As EventArgs) Handles sbProcedureLocks.ValueChanged
+        If DirectCast(e, Events.EventSourceArgs).Source <> eEventSource.Code Then WriteProject()
     End Sub
 End Class

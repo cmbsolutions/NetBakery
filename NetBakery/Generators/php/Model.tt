@@ -18,13 +18,13 @@ Namespace Models
 <#  End If #>
 
 <#  For each c in _t.columns #>
-<#      If c.isNullable And c.vbType <> GetType(System.String) Then #>
+<#      If c.isNullable And c.vbType <> "String" Then #>
         Property <#= c.alias #>() as <#= c.vbType #>?
 <#      else #>
         Property <#= c.alias #>() as <#= c.vbType #>
 <#      end if
 
-        If c.mysqlType = "enum" AndAlso c.vbType <> GetType(System.String) Then
+        If c.mysqlType = "enum" AndAlso c.vbType <> "String" Then
             _i = 1
  #>
 

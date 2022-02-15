@@ -208,6 +208,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Generators\legacy\StoreCommand.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreCommand.tt</DependentUpon>
+    </Compile>
     <Compile Include="Generators\net5Templates.vb" />
     <Compile Include="Generators\net5Generator.vb" />
     <Compile Include="Generators\legacy_netGenerator.vb" />
@@ -419,15 +424,10 @@
       <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
       <LastGenOutput>Model.vb</LastGenOutput>
     </Content>
-    <Content Include="Generators\legacy\StoreCommand.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>StoreCommand.tt</DependentUpon>
-    </Content>
     <Content Include="Generators\legacy\StoreCommand.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>StoreCommand.cs</LastGenOutput>
       <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
+      <LastGenOutput>StoreCommand.vb</LastGenOutput>
     </Content>
     <Content Include="Generators\legacy\StoreCommandModel.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>

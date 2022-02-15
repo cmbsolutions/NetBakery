@@ -38,7 +38,7 @@ Namespace My.Templates.net5
             #End ExternalSource
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\StoreCommandModel.tt",11)
-      If c.isNullable And c.vbType <> GetType(System.String) Then 
+      If c.isNullable And c.vbType <> "String" Then 
             
             #End ExternalSource
             Me.Write("        Public Property ")

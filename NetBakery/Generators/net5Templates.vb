@@ -38,11 +38,13 @@ Namespace My.Templates.net5
         Private _functions As List(Of infoSchema.routine)
         Private _procedures As List(Of infoSchema.routine)
         Private _name As String
+        Private _withLock As Boolean
 
-        Public Sub New(ByVal functions As List(Of infoSchema.routine), ByVal procedures As List(Of infoSchema.routine), ByVal name As String)
+        Public Sub New(ByVal functions As List(Of infoSchema.routine), ByVal procedures As List(Of infoSchema.routine), ByVal name As String, withLock As Boolean)
             _functions = functions
             _procedures = procedures
             _name = name
+            _withLock = withLock
         End Sub
     End Class
 
@@ -56,9 +58,13 @@ Namespace My.Templates.net5
 
     Partial Public Class StoreCommand
         Private _routine As infoSchema.routine
+        Private _ContextName As String
+        Private _withLock As Boolean
 
-        Sub New(_r As infoSchema.routine)
+        Sub New(_r As infoSchema.routine, contextName As String, withLock As Boolean)
             _routine = _r
+            _ContextName = contextName
+            _withLock = withLock
         End Sub
     End Class
 

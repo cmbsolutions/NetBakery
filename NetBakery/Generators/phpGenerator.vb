@@ -56,7 +56,7 @@ Public Class phpGenerator
         End Try
     End Function
 
-    Public Function generateStoreCommand(_r As routine) As String Implements iGenerator.generateStoreCommand
+    Public Function generateStoreCommand(_r As routine, contextName As String, withLock As Boolean) As String Implements iGenerator.generateStoreCommand
         Try
             Dim page = New My.Templates.php.StoreCommand(_r)
             Dim pageContent = page.TransformText
@@ -66,5 +66,6 @@ Public Class phpGenerator
             Throw
         End Try
     End Function
+
 End Class
 

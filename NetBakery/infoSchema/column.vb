@@ -4,7 +4,7 @@
         Property [alias] As String
         Property mysqlType As String
         Property MySqlColumnType As String
-        Property vbType As Type
+        Property vbType As String
         Property phpType As String
         Property ordinalPosition As Integer
         Property defaultValue As String
