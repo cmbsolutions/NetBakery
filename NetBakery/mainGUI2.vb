@@ -442,15 +442,15 @@ Public Class mainGUI2
             For Each child In parent.children
                 Dim node As Tree.Node = Nothing
 
-                'If Not _TreeGXUnique.TryGetValue(child.name, node) Then
-                node = New Tree.Node With {
+                If Not _TreeGXUnique.TryGetValue(child.name, node) Then
+                    node = New Tree.Node With {
                         .Text = child.name,
                         .Name = child.name,
                         .Expanded = True
                     }
 
                     _TreeGXUnique.Add(child.name, node)
-                'End If
+                End If
 
                 If currentDepth = My.Settings.maxERDiagramDepth Then
                     node.Style = ElementStyle4
@@ -772,7 +772,7 @@ Public Class mainGUI2
             If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models")
             If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\Mapping") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\Mapping")
 
-            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype = ".NET" Then
+            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net5" Then
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands")
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands\Functions") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands\Functions")
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands\Procedures") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands\Procedures")
@@ -783,15 +783,15 @@ Public Class mainGUI2
 
             For Each t In _mngr.tables.Where(Function(c) c.hasExport)
                 IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{t.singleName}.vb", _mngr.generateModel(t))
-                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\Mapping\{t.singleName}Map.vb", _mngr.generateModel(t))
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\Mapping\{t.singleName}Map.vb", _mngr.generateMap(t))
             Next
 
             For Each s In _mngr.routines.Where(Function(c) c.hasExport)
-                If _currentProject IsNot Nothing AndAlso _currentProject.outputtype = ".NET" Then
+                If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net5" Then
                     If s.isFunction Then
-                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Functions\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}Data", sbProcedureLocks.Value))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Functions\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
                     Else
-                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Procedures\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}Data", sbProcedureLocks.Value))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Procedures\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
                         If s.returnsRecordset Then
                             IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Procedures\Models\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
                         End If
@@ -803,10 +803,10 @@ Public Class mainGUI2
                 End If
             Next
 
-            IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}DataContext.vb", _mngr.generateContext($"{txtProjectName.Text}Data"))
+            IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}DataContext.vb", _mngr.generateContext($"{txtProjectName.Text}"))
 
             If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net" Then
-                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}StoreCommands.vb", _mngr.generateStoreCommands($"{txtProjectName.Text}Data", sbProcedureLocks.Value))
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}StoreCommands.vb", _mngr.generateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value))
             End If
 
             MessageBox.Show("Output generated")
