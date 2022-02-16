@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "NetBakery"
-#define MyAppVersion "1.0.439"
+#define MyAppVersion "1.0.486"
 #define MyAppPublisher "CMBSolutions"
 #define MyAppExeName "NetBakery.exe"
 
@@ -10,7 +10,7 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{38AC85A8-65CA-4307-BDE5-4CF1E64BB6A2}}
+AppId={{CABC0425-D58C-4630-89BA-D6FC5A037546}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -24,7 +24,7 @@ OutputBaseFilename={#MyAppName}Setup{#MyAppVersion}
 SetupIconFile={#MyAppName}\netbakery.png.ico
 Compression=lzma
 SolidCompression=yes
-AppCopyright=CMBSolutions 2017-2021
+AppCopyright=CMBSolutions 2017-2022
 UninstallDisplayName={#MyAppName} {#MyAppVersion}
 UninstallDisplayIcon={app}\netbakery.png.ico
 

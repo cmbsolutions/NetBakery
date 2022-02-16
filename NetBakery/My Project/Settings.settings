@@ -25,7 +25,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="lastUpdate" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1.0.329</Value>
+      <Value Profile="(Default)">1.0.486</Value>
     </Setting>
     <Setting Name="windowSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">1689, 633</Value>
