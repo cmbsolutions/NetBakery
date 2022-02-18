@@ -1214,26 +1214,21 @@ Public Class mainGUI2
 
     Private Sub btnSaveProject_Click(sender As Object, e As EventArgs) Handles btnSaveProject.Click
         Try
-            SaveFileDialog1.FileName = _currentProject.projectfilename
+            If _currentProject.projectfilename = "" Then _currentProject.projectfilename = IO.Path.Combine(_currentProject.projectlocation, $"{_currentProject.projectname}.nb2")
 
-            If (_currentProject.projectfilename <> "" AndAlso IO.File.Exists(_currentProject.projectfilename)) OrElse SaveFileDialog1.ShowDialog = DialogResult.OK Then
-                _currentProject.projectfilename = SaveFileDialog1.FileName
-                WriteProject()
+            Using fs As New IO.FileStream(_currentProject.projectfilename, IO.FileMode.Create, IO.FileAccess.Write, IO.FileShare.None)
+                Using sw As New IO.StreamWriter(fs, System.Text.Encoding.UTF8)
 
-                Using fs As New IO.FileStream(_currentProject.projectfilename, IO.FileMode.Create, IO.FileAccess.Write, IO.FileShare.None)
-                    Using sw As New IO.StreamWriter(fs, System.Text.Encoding.UTF8)
+                    sw.Write(JsonConvert.SerializeObject(_currentProject, Formatting.Indented, New JsonSerializerSettings With {
+                                                                                                    .ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                                                                                                    .PreserveReferencesHandling = PreserveReferencesHandling.Objects}))
 
-                        sw.Write(JsonConvert.SerializeObject(_currentProject, Formatting.Indented, New JsonSerializerSettings With {
-                                                                                                        .ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                                                                                                        .PreserveReferencesHandling = PreserveReferencesHandling.Objects}))
-
-                        'Dim js As New JsonSerializer
-                        'js.Serialize(sw, _currentProject)
-                    End Using
+                    'Dim js As New JsonSerializer
+                    'js.Serialize(sw, _currentProject)
                 End Using
-                _currentProject.needsSave = False
-                _tracelistener.WriteLine("Project saved!")
-            End If
+            End Using
+            _currentProject.needsSave = False
+            _tracelistener.WriteLine("Project saved!")
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
