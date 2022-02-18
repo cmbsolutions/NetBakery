@@ -71,6 +71,46 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to &lt;AdvTree&gt;
+        '''  &lt;Node Expanded=&quot;true&quot; Name=&quot;mapModels&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Models&quot; ImageIndex=&quot;1&quot; ImageExpandedIndex=&quot;0&quot;&gt;
+        '''    &lt;Node Expanded=&quot;true&quot; Name=&quot;mapMapping&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Mapping&quot; ImageIndex=&quot;1&quot; ImageExpandedIndex=&quot;0&quot;&gt;
+        '''    &lt;/Node&gt;
+        '''    &lt;Node Expanded=&quot;true&quot; Name=&quot;mapStoreCommands&quot; DragDropEnabled=&quot;false&quot; Text=&quot;StoreCommands&quot; ImageIndex=&quot;1&quot; ImageExpandedIndex=&quot;0&quot;&gt;
+        '''      &lt;Node Expanded=&quot;true&quot; Name=&quot;mapStoreCommandModels&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Models&quot; ImageIndex=&quot;1&quot; I [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property defaultOutputExplorer() As String
+            Get
+                Return ResourceManager.GetString("defaultOutputExplorer", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to &lt;AdvTree&gt;
+        '''  &lt;Node Expanded=&quot;true&quot; Name=&quot;mapModels&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Models&quot; ImageIndex=&quot;1&quot; ImageExpandedIndex=&quot;0&quot;&gt;
+        '''    &lt;Node Expanded=&quot;true&quot; Name=&quot;mapMapping&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Mapping&quot; ImageIndex=&quot;1&quot; ImageExpandedIndex=&quot;0&quot; /&gt;
+        '''    &lt;Node Expanded=&quot;true&quot; Name=&quot;mapStoreCommands&quot; DragDropEnabled=&quot;false&quot; Text=&quot;StoreCommands&quot; ImageIndex=&quot;1&quot; ImageExpandedIndex=&quot;0&quot;&gt;
+        '''      &lt;Node Expanded=&quot;true&quot; Name=&quot;mapStoreCommandFunctions&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Functions&quot; ImageIndex=&quot;1&quot; ImageE [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property net5OutputExplorer() As String
+            Get
+                Return ResourceManager.GetString("net5OutputExplorer", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to &lt;AdvTree&gt;
+        '''  &lt;Node Expanded=&quot;true&quot; Name=&quot;mapModels&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Table&quot; ImageIndex=&quot;1&quot; ImageExpandedIndex=&quot;0&quot;&gt;&lt;/Node&gt;
+        '''    &lt;Node Expanded=&quot;true&quot; Name=&quot;mapMapping&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Entity&quot; ImageIndex=&quot;1&quot; ImageExpandedIndex=&quot;0&quot;&gt;
+        '''    &lt;/Node&gt;
+        '''&lt;/AdvTree&gt;.
+        '''</summary>
+        Friend ReadOnly Property phpOutputExplorer() As String
+            Get
+                Return ResourceManager.GetString("phpOutputExplorer", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property zoom() As System.Drawing.Bitmap
