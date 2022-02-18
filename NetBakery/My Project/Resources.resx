@@ -123,8 +123,8 @@
   </data>
   <data name="phpOutputExplorer" xml:space="preserve">
     <value>&lt;AdvTree&gt;
-  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Table" ImageIndex="1" ImageExpandedIndex="0"&gt;&lt;/Node&gt;
-    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Entity" ImageIndex="1" ImageExpandedIndex="0"&gt;
+  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Table" ImageIndex="18" ImageExpandedIndex="23"&gt;&lt;/Node&gt;
+    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Entity" ImageIndex="18" ImageExpandedIndex="23"&gt;
     &lt;/Node&gt;
 &lt;/AdvTree&gt;</value>
   </data>
@@ -157,11 +157,11 @@
   </data>
   <data name="defaultOutputExplorer" xml:space="preserve">
     <value>&lt;AdvTree&gt;
-  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Models" ImageIndex="1" ImageExpandedIndex="0"&gt;
-    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Mapping" ImageIndex="1" ImageExpandedIndex="0"&gt;
+  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23"&gt;
+    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Mapping" ImageIndex="18" ImageExpandedIndex="23"&gt;
     &lt;/Node&gt;
-    &lt;Node Expanded="true" Name="mapStoreCommands" DragDropEnabled="false" Text="StoreCommands" ImageIndex="1" ImageExpandedIndex="0"&gt;
-      &lt;Node Expanded="true" Name="mapStoreCommandModels" DragDropEnabled="false" Text="Models" ImageIndex="1" ImageExpandedIndex="0" /&gt;
+    &lt;Node Expanded="true" Name="mapStoreCommands" DragDropEnabled="false" Text="StoreCommands" ImageIndex="18" ImageExpandedIndex="23"&gt;
+      &lt;Node Expanded="true" Name="mapStoreCommandModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23" /&gt;
     &lt;/Node&gt;
   &lt;/Node&gt;
 &lt;/AdvTree&gt;</value>
@@ -172,12 +172,12 @@
   </data>
   <data name="net5OutputExplorer" xml:space="preserve">
     <value>&lt;AdvTree&gt;
-  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Models" ImageIndex="1" ImageExpandedIndex="0"&gt;
-    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Mapping" ImageIndex="1" ImageExpandedIndex="0" /&gt;
-    &lt;Node Expanded="true" Name="mapStoreCommands" DragDropEnabled="false" Text="StoreCommands" ImageIndex="1" ImageExpandedIndex="0"&gt;
-      &lt;Node Expanded="true" Name="mapStoreCommandFunctions" DragDropEnabled="false" Text="Functions" ImageIndex="1" ImageExpandedIndex="0" /&gt;
-      &lt;Node Expanded="true" Name="mapStoreCommandProcedures" DragDropEnabled="false" Text="Procedures" ImageIndex="1" ImageExpandedIndex="0"&gt;
-		&lt;Node Expanded="true" Name="mapStoreCommandModels" DragDropEnabled="false" Text="Models" ImageIndex="1" ImageExpandedIndex="0" /&gt;
+  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23"&gt;
+    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Mapping" ImageIndex="18" ImageExpandedIndex="23" /&gt;
+    &lt;Node Expanded="true" Name="mapStoreCommands" DragDropEnabled="false" Text="StoreCommands" ImageIndex="18" ImageExpandedIndex="23"&gt;
+      &lt;Node Expanded="true" Name="mapStoreCommandFunctions" DragDropEnabled="false" Text="Functions" ImageIndex="18" ImageExpandedIndex="23" /&gt;
+      &lt;Node Expanded="true" Name="mapStoreCommandProcedures" DragDropEnabled="false" Text="Procedures" ImageIndex="18" ImageExpandedIndex="23"&gt;
+		&lt;Node Expanded="true" Name="mapStoreCommandModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23" /&gt;
 	  &lt;/Node&gt;
     &lt;/Node&gt;
   &lt;/Node&gt;

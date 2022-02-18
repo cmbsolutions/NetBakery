@@ -16,6 +16,7 @@ Public Class mainGUI2
     Private _currentProject As Project
     Private _loadingProject As Boolean = False
     Private _TreeGXUnique As Dictionary(Of String, Tree.Node)
+    Private _FileComparer As New FileComparer
 
 #Region "Start and close"
     Private Sub mainGUI2_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -216,7 +217,7 @@ Public Class mainGUI2
                 advtreeDatabases.Nodes.Clear()
 
                 For Each db In _mngr.databases
-                    Dim node As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .Text = db, .Name = db}
+                    Dim node As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .Text = db, .Name = db, .ContextMenu = dbNodes}
 
                     AddHandler node.NodeDoubleClick, AddressOf databaseNodeHandler
                     advtreeDatabases.Nodes.Add(node)
@@ -227,6 +228,10 @@ Public Class mainGUI2
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
+    End Sub
+
+    Private Sub CloseDatabaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseDatabaseToolStripMenuItem.Click
+        advtreeDatabases.SelectedNode.Nodes.Clear()
     End Sub
 
     Private Sub toolbtnSettings_Click(sender As Object, e As EventArgs)
@@ -450,15 +455,19 @@ Public Class mainGUI2
                     }
 
                     _TreeGXUnique.Add(child.name, node)
-                End If
 
-                If currentDepth = My.Settings.maxERDiagramDepth Then
-                    node.Style = ElementStyle4
+                    If currentDepth = My.Settings.maxERDiagramDepth Then
+                        node.Style = ElementStyle4
+                    Else
+                        node.Style = ElementStyle3
+                    End If
+
+                    parentNode.Nodes.Add(node)
                 Else
-                    node.Style = ElementStyle3
+                    If Not node.Equals(parentNode) Then
+                        parentNode.Nodes.Add(node)
+                    End If
                 End If
-
-                parentNode.Nodes.Add(node)
 
                 LoadTableChildren(child, node, currentDepth + 1)
             Next
@@ -517,10 +526,11 @@ Public Class mainGUI2
                 _TreeGXUnique.Add(table.name, node)
 
             Else
+                'If Not node.Equals(parentNode) Then parentNode.Nodes.Add(node)
                 Dim pn = (From p As Tree.Node In parentNode.Nodes.OfType(Of Tree.Node) Where p.Name = table.name Select p).FirstOrDefault
 
                 If pn Is Nothing Then
-                    parentNode.Nodes.Add(node)
+                    If Not node.Equals(parentNode) Then parentNode.Nodes.Add(node)
                 Else
                     Dim ln As New Tree.LinkedNode With {
                         .Node = node
@@ -529,7 +539,7 @@ Public Class mainGUI2
                 End If
             End If
 
-            For Each child In table.children
+            For Each child In table.children.Where(Function(c) Not c.Equals(table))
                 LoadTableUnique(child, node)
             Next
         Catch ex As Exception
@@ -643,10 +653,10 @@ Public Class mainGUI2
             End If
             advtreeOutputExplorer.Refresh()
 
-            Dim tplModelAndMapping As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 4}
-            Dim tplContextAndStoreCommands As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 5}
-            Dim tplFunctions As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 6}
-            Dim tplProcedures As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 7}
+            Dim tplModelAndMapping As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 13}
+            Dim tplContextAndStoreCommands As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 8}
+            Dim tplFunctions As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 28}
+            Dim tplProcedures As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 33}
 
             If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "php" Then
                 Dim mModel As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapModels", True).FirstOrDefault
@@ -662,12 +672,29 @@ Public Class mainGUI2
 
                     tmpModel.Text = $"{table.singleName}.php"
                     AddHandler tmpModel.NodeClick, AddressOf explorerModelNodeHandler
+
+                    If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpModel.Text) > 0 Then
+                        tmpModel.ImageIndex += 3
+                        If mModel.ImageIndex = 18 Then
+                            mModel.ImageIndex += 3
+                            mModel.ImageExpandedIndex += 3
+                        End If
+                    End If
+
                     mModel.Nodes.Add(tmpModel)
 
                     tmpMapping.Name = $"n{table.name}Table"
                     tmpMapping.TagString = table.name
                     tmpMapping.Text = $"{table.pluralName}Table.php"
                     AddHandler tmpMapping.NodeClick, AddressOf explorerMappingNodeHandler
+
+                    If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpMapping.Text) > 0 Then
+                        tmpMapping.ImageIndex += 3
+                        If mMapping.ImageIndex = 18 Then
+                            mMapping.ImageIndex += 3
+                            mMapping.ImageExpandedIndex += 3
+                        End If
+                    End If
 
                     mMapping.Nodes.Add(tmpMapping)
                 Next
@@ -697,13 +724,26 @@ Public Class mainGUI2
 
                     tmpModel.Text = $"{table.singleName}.vb"
                     AddHandler tmpModel.NodeClick, AddressOf explorerModelNodeHandler
+                    If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpModel.Text) > 0 Then
+                        tmpModel.ImageIndex += 3
+                        If mModel.ImageIndex = 18 Then
+                            mModel.ImageIndex += 3
+                            mModel.ImageExpandedIndex += 3
+                        End If
+                    End If
                     mModel.Nodes.Add(tmpModel)
 
                     tmpMapping.Name = $"n{table.name}Map"
                     tmpMapping.TagString = table.name
                     tmpMapping.Text = $"{table.singleName}Map.vb"
                     AddHandler tmpMapping.NodeClick, AddressOf explorerMappingNodeHandler
-
+                    If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpMapping.Text) > 0 Then
+                        tmpMapping.ImageIndex += 3
+                        If mMapping.ImageIndex = 18 Then
+                            mMapping.ImageIndex += 3
+                            mMapping.ImageExpandedIndex += 3
+                        End If
+                    End If
                     mMapping.Nodes.Add(tmpMapping)
                 Next
 
@@ -721,10 +761,14 @@ Public Class mainGUI2
                     tmpNode.TagString = routine.name
                     tmpNode.Text = $"{routine.name}.vb"
                     AddHandler tmpNode.NodeClick, AddressOf explorerRoutineNodeHandler
+                    If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
+                        tmpNode.ImageIndex += 3
+                    End If
 
                     If routine.isFunction Then
                         If mStoreCommandFunctions IsNot Nothing Then
                             mStoreCommandFunctions.Nodes.Add(tmpNode)
+
                         End If
                     Else
                         If mStoreCommandsProcedures IsNot Nothing Then
@@ -738,7 +782,10 @@ Public Class mainGUI2
                         tmpNode.TagString = routine.name
                         tmpNode.Text = $"{routine.name}Model.vb"
                         AddHandler tmpNode.NodeClick, AddressOf explorerRoutineModelNodeHandler
-
+                        If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
+                            tmpNode.ImageIndex += 3
+                            If mStoreCommandModels.ImageIndex = 23 Then mStoreCommandModels.ImageIndex += 3
+                        End If
                         mStoreCommandModels.Nodes.Add(tmpNode)
                     End If
                 Next
@@ -749,6 +796,9 @@ Public Class mainGUI2
                 tmpContext.Name = "nContext"
                 tmpContext.Text = $"{txtProjectName.Text}Context.vb"
                 AddHandler tmpContext.NodeClick, AddressOf explorerContextNodeHandler
+                If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpContext.Text) > 0 Then
+                    tmpContext.ImageIndex += 3
+                End If
                 mModel.Nodes.Add(tmpContext)
 
                 If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net" Then
@@ -758,6 +808,9 @@ Public Class mainGUI2
                     tmpContext.Name = "nStoreCommandsContext"
                     tmpContext.Text = $"{txtProjectName.Text}StoreCommandsContext.vb"
                     AddHandler tmpContext.NodeClick, AddressOf explorerStoreCommandsNodeHandler
+                    If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpContext.Text) > 0 Then
+                        tmpContext.ImageIndex += 3
+                    End If
                     mModel.Nodes.Add(tmpContext)
                 End If
             End If
@@ -1272,6 +1325,24 @@ Public Class mainGUI2
                     advtreeDatabases.SelectNode(selectedDB, AdvTree.eTreeAction.Code)
                     databaseNodeHandler(selectedDB, New AdvTree.AdvTreeNodeEventArgs(AdvTree.eTreeAction.Code, selectedDB))
                 End If
+
+                _FileComparer.ScanForFiles(_currentProject.projectoutputlocation)
+
+                Dim MatchedPs = (From v In _currentProject.generatedoutputs
+                                 Join p In _FileComparer.PhysicalFiles On p.filename Equals v.filename
+                                 Select p).ToList
+
+                Dim MatchedVs = (From v In _currentProject.generatedoutputs
+                                 Join p In _FileComparer.PhysicalFiles On p.filename Equals v.filename
+                                 Select v).ToList
+
+                Dim newPs = _FileComparer.PhysicalFiles.Except(MatchedPs).ToList
+                Dim missingVs = _currentProject.generatedoutputs.Except(MatchedVs).ToList
+
+                _FileComparer.ChangedFiles = MatchedPs.Except(From mp In MatchedPs
+                                                              Join mv In MatchedVs On mp.filename Equals mv.filename And mp.hash Equals mv.hash
+                                                              Select mp).ToList
+
                 _loadingProject = False
             End If
             enableOrDisableFields()
@@ -1324,7 +1395,7 @@ Public Class mainGUI2
                 _currentProject.projectname = txtProjectName.Text
                 _currentProject.projectlocation = txtProjectFolder.Text
                 _currentProject.projectoutputlocation = txtOutputFolder.Text
-                _currentProject.outputtype = DirectCast(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString
+                _currentProject.outputtype = cboOutputType.Text
                 _currentProject.useEnums = sbEnums.Value
                 _currentProject.generateProcedureLocks = sbProcedureLocks.Value
 
@@ -1335,17 +1406,17 @@ Public Class mainGUI2
                     .routines = _mngr.routines
                 }
 
-                _currentProject.generatedoutputs = New List(Of outputItem)
+                '_currentProject.generatedoutputs = New List(Of outputItem)
 
-                If _currentProject.projectoutputlocation <> "" Then
-                    For Each pf In (From f In IO.Directory.EnumerateFiles(_currentProject.projectoutputlocation, "*.*", IO.SearchOption.AllDirectories) Select New IO.FileInfo(f)).ToList
-                        _currentProject.generatedoutputs.Add(New outputItem With {
-                                                            .filename = pf.Name,
-                                                            .location = pf.DirectoryName,
-                                                            .objecttype = "file",
-                                                            .hash = FileCompare.GetFileHash(pf.FullName)})
-                    Next
-                End If
+                'If _currentProject.projectoutputlocation <> "" Then
+                '    For Each pf In (From f In IO.Directory.EnumerateFiles(_currentProject.projectoutputlocation, "*.*", IO.SearchOption.AllDirectories) Select New IO.FileInfo(f)).ToList
+                '        _currentProject.generatedoutputs.Add(New outputItem With {
+                '                                            .filename = pf.Name,
+                '                                            .location = pf.DirectoryName,
+                '                                            .objecttype = "file",
+                '                                            .hash = FileCompare.GetFileHash(pf.FullName)})
+                '    Next
+                'End If
             End If
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -1411,4 +1482,6 @@ Public Class mainGUI2
     Private Sub sbProcedureLocks_ValueChanged(sender As Object, e As EventArgs) Handles sbProcedureLocks.ValueChanged
         If DirectCast(e, Events.EventSourceArgs).Source <> eEventSource.Code Then WriteProject()
     End Sub
+
+
 End Class

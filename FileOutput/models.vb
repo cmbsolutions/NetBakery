@@ -1,16 +1,16 @@
 ﻿Imports Ardalis.SmartEnum
+Imports DevComponents
 
 Namespace Models
     Public Class Explorer
-        Property files As List(Of File)
-
-
+        Property PhysicalFiles As List(Of File)
+        Property VirtualFiles As List(Of File)
     End Class
 
     Public Class File
         Property filename As String
         Property location As String
-        Property treepath As String
+        Property treenode As AdvTree.Node
         Property fileType As FileTypeEnum
         Property known_hash As String
         Property actual_hash As String

@@ -1,8 +1,25 @@
 ﻿Imports System.Security.Cryptography
 Imports System.Text
 
-Public Class FileCompare
-    Public Shared Function GetFileHash(filename As String) As String
+Public Class FileComparer
+    Property PhysicalFiles As List(Of outputItem)
+    Property ChangedFiles As List(Of outputItem)
+
+    Public Sub ScanForFiles(location As String)
+        If Not IO.Directory.Exists(location) Then Exit Sub
+
+        PhysicalFiles = New List(Of outputItem)
+
+        For Each f In IO.Directory.EnumerateFiles(location, "*.*", IO.SearchOption.AllDirectories)
+            PhysicalFiles.Add(New outputItem With {
+                        .filename = IO.Path.GetFileName(f),
+                        .location = IO.Path.GetDirectoryName(f),
+                        .hash = GetFileHash(f)
+                        })
+        Next
+    End Sub
+
+    Public Function GetFileHash(filename As String) As String
         Using f = IO.File.OpenRead(filename)
             Using sha256Hash As SHA256 = SHA256.Create
                 Dim data() As Byte = sha256Hash.ComputeHash(f)
@@ -17,7 +34,7 @@ Public Class FileCompare
         End Using
     End Function
 
-    Public Shared Function GetHash(ByVal hashAlgorithm As HashAlgorithm, ByVal input As String) As String
+    Public Function GetHash(ByVal hashAlgorithm As HashAlgorithm, ByVal input As String) As String
 
         ' Convert the input string to a byte array and compute the hash.
         Dim data As Byte() = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(input))
