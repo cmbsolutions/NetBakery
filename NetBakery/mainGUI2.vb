@@ -16,7 +16,7 @@ Public Class mainGUI2
     Private _currentProject As Project
     Private _loadingProject As Boolean = False
     Private _TreeGXUnique As Dictionary(Of String, Tree.Node)
-    Private _FileComparer As New FileComparer
+    Private _FileComparer As New FileManager
 
 #Region "Start and close"
     Private Sub mainGUI2_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -1327,6 +1327,12 @@ Public Class mainGUI2
                 End If
 
                 _FileComparer.ScanForFiles(_currentProject.projectoutputlocation)
+
+                AdvTreeFiles.Nodes.Clear()
+                AdvTreeFiles.Load(_FileComparer.GetPhysicalFilesTree)
+                AdvTreeFiles.DeepSort = True
+                AdvTreeFiles.Nodes.Sort()
+                AdvTreeFiles.Refresh()
 
                 Dim MatchedPs = (From v In _currentProject.generatedoutputs
                                  Join p In _FileComparer.PhysicalFiles On p.filename Equals v.filename

@@ -186,6 +186,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdvTreeModel.vb" />
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="connection_editor.Designer.vb">
       <DependentUpon>connection_editor.vb</DependentUpon>
@@ -200,7 +201,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="customTextTraceListener.vb" />
-    <Compile Include="FileComparer.vb" />
+    <Compile Include="FileManager.vb" />
     <Compile Include="formHelpers.vb" />
     <Compile Include="Generators\iGenerator.vb" />
     <Compile Include="Generators\legacy\Model.vb">
