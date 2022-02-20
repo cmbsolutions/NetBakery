@@ -4,6 +4,7 @@
 ''' </summary>
 Public Class Project
     Property application_version As String
+    Property save_date As Date
     Property projectname As String
     Property projectlocation As String
     Property projectoutputlocation As String

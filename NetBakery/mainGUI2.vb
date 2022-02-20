@@ -862,6 +862,26 @@ Public Class mainGUI2
                 IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}StoreCommands.vb", _mngr.generateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value))
             End If
 
+            _currentProject.generatedoutputs = New List(Of outputItem)
+
+
+            For Each pf In (From f In IO.Directory.EnumerateFiles(_currentProject.projectoutputlocation, "*.*", IO.SearchOption.AllDirectories) Select New IO.FileInfo(f)).ToList
+                _currentProject.generatedoutputs.Add(New outputItem With {
+                                                    .filename = pf.Name,
+                                                    .location = pf.DirectoryName,
+                                                    .objecttype = "file",
+                                                    .hash = _FileComparer.GetFileHash(pf.FullName)})
+            Next
+            WriteProject()
+
+            _FileComparer.ScanForFiles(_currentProject.projectoutputlocation)
+
+            AdvTreeFiles.Nodes.Clear()
+            AdvTreeFiles.Load(_FileComparer.GetPhysicalFilesTree)
+            AdvTreeFiles.DeepSort = True
+            AdvTreeFiles.Nodes.Sort()
+            AdvTreeFiles.Refresh()
+
             MessageBox.Show("Output generated")
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -1367,6 +1387,10 @@ Public Class mainGUI2
             End If
 
             _currentProject = Nothing
+            AdvTreeFiles.Nodes.Clear()
+            advtreeOutputExplorer.Nodes.Clear()
+            advtreeDatabases.Nodes.Clear()
+
             enableOrDisableFields()
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -1398,10 +1422,13 @@ Public Class mainGUI2
             If Not _loadingProject AndAlso _currentProject IsNot Nothing Then
                 _currentProject.needsSave = True
                 _currentProject.application_version = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
+                _currentProject.save_date = Now
                 _currentProject.projectname = txtProjectName.Text
                 _currentProject.projectlocation = txtProjectFolder.Text
                 _currentProject.projectoutputlocation = txtOutputFolder.Text
-                _currentProject.outputtype = cboOutputType.Text
+                Dim x As Editors.ComboItem = CType(cboOutputType.SelectedItem, Editors.ComboItem)
+
+                _currentProject.outputtype = x.Value.ToString
                 _currentProject.useEnums = sbEnums.Value
                 _currentProject.generateProcedureLocks = sbProcedureLocks.Value
 
@@ -1411,18 +1438,6 @@ Public Class mainGUI2
                     .tables = _mngr.tables,
                     .routines = _mngr.routines
                 }
-
-                '_currentProject.generatedoutputs = New List(Of outputItem)
-
-                'If _currentProject.projectoutputlocation <> "" Then
-                '    For Each pf In (From f In IO.Directory.EnumerateFiles(_currentProject.projectoutputlocation, "*.*", IO.SearchOption.AllDirectories) Select New IO.FileInfo(f)).ToList
-                '        _currentProject.generatedoutputs.Add(New outputItem With {
-                '                                            .filename = pf.Name,
-                '                                            .location = pf.DirectoryName,
-                '                                            .objecttype = "file",
-                '                                            .hash = FileCompare.GetFileHash(pf.FullName)})
-                '    Next
-                'End If
             End If
         Catch ex As Exception
             FormHelpers.dumpException(ex)

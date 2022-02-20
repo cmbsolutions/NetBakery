@@ -1,6 +1,7 @@
 ﻿Imports System.Globalization
 Imports System.Security.Cryptography
 Imports System.Text
+Imports System.Text.RegularExpressions
 Imports System.Xml
 Imports System.Xml.Serialization
 
@@ -8,9 +9,12 @@ Public Class FileManager
     Property PhysicalFiles As List(Of outputItem)
     Property ChangedFiles As List(Of outputItem)
 
+    Private ScanPath As String
+
     Public Sub ScanForFiles(location As String)
         If Not IO.Directory.Exists(location) Then Exit Sub
 
+        ScanPath = location
         PhysicalFiles = New List(Of outputItem)
 
         For Each f In IO.Directory.EnumerateFiles(location, "*.*", IO.SearchOption.AllDirectories)
@@ -47,7 +51,7 @@ Public Class FileManager
 
                 If lastDir = "" Then
                     pNode = cNode
-                    at.node = pNode
+                    at.Node = pNode
                     lastDir = p.Parent
                 ElseIf p.Parent.StartsWith(lastDir) Then
                     cNode.TextField = p.Parent.Replace(lastDir, "")
@@ -71,8 +75,7 @@ Public Class FileManager
                    .Expanded = False,
                    .Name = child.filename,
                    .TextField = child.filename,
-                   .ImageIndex = 13,
-                   .ImageExpandedIndex = 13
+                   .ImageIndex = GetFileType($"{ScanPath}{child.location}\{child.filename}")
                })
             Next
         Next
@@ -90,6 +93,23 @@ Public Class FileManager
         Dim doc As New XmlDocument
         doc.LoadXml(Text.Encoding.UTF8.GetString(buffer))
         Return doc
+    End Function
+
+
+    Private Function GetFileType(filename As String) As Integer
+        If Not IO.File.Exists(filename) Then Return 42
+
+        Dim contents As String = IO.File.ReadAllText(filename)
+
+        If Regex.IsMatch(contents, "Models.{1,30}StoreCommands", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return 39
+        If Regex.IsMatch(contents, "Inherits Models.*?Context", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return 38
+        If Regex.IsMatch(contents, "Models.*?qprod", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return 41
+        If Regex.IsMatch(contents, "Models.*?qfunc", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return 41
+        If Regex.IsMatch(contents, "Models.*?Map", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return 43
+        If Regex.IsMatch(contents, "Models.*?qsel", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return 40
+
+
+        Return 42
     End Function
 
     Public Function GetFileHash(filename As String) As String

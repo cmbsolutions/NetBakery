@@ -126,27 +126,11 @@ Partial Class mainGUI2
         Me.DockContainerItem1 = New DevComponents.DotNetBar.DockContainerItem()
         Me.DockSite2 = New DevComponents.DotNetBar.DockSite()
         Me.Bar2 = New DevComponents.DotNetBar.Bar()
-        Me.pFileExplorer = New DevComponents.DotNetBar.PanelDockContainer()
-        Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
-        Me.tSearchFiles = New DevComponents.DotNetBar.Controls.TextBoxX()
-        Me.AdvTreeFiles = New DevComponents.AdvTree.AdvTree()
-        Me.ilExplorer = New System.Windows.Forms.ImageList(Me.components)
-        Me.Node1 = New DevComponents.AdvTree.Node()
-        Me.Node2 = New DevComponents.AdvTree.Node()
-        Me.Node3 = New DevComponents.AdvTree.Node()
-        Me.Node4 = New DevComponents.AdvTree.Node()
-        Me.Node5 = New DevComponents.AdvTree.Node()
-        Me.Node6 = New DevComponents.AdvTree.Node()
-        Me.Node7 = New DevComponents.AdvTree.Node()
-        Me.Node8 = New DevComponents.AdvTree.Node()
-        Me.Node9 = New DevComponents.AdvTree.Node()
-        Me.Node10 = New DevComponents.AdvTree.Node()
-        Me.NodeConnector7 = New DevComponents.AdvTree.NodeConnector()
-        Me.ElementStyle5 = New DevComponents.DotNetBar.ElementStyle()
         Me.PanelDockContainer3 = New DevComponents.DotNetBar.PanelDockContainer()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.txtSearchOutput = New DevComponents.DotNetBar.Controls.TextBoxX()
         Me.advtreeOutputExplorer = New DevComponents.AdvTree.AdvTree()
+        Me.ilExplorer = New System.Windows.Forms.ImageList(Me.components)
         Me.nModels = New DevComponents.AdvTree.Node()
         Me.mapMapping = New DevComponents.AdvTree.Node()
         Me.tplMapping = New DevComponents.AdvTree.Node()
@@ -163,6 +147,22 @@ Partial Class mainGUI2
         Me.btnHomeOutputExplorer = New DevComponents.DotNetBar.ButtonItem()
         Me.btnRefreshOutputExplorer = New DevComponents.DotNetBar.ButtonItem()
         Me.btnSaveLayout = New DevComponents.DotNetBar.ButtonItem()
+        Me.pFileExplorer = New DevComponents.DotNetBar.PanelDockContainer()
+        Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
+        Me.tSearchFiles = New DevComponents.DotNetBar.Controls.TextBoxX()
+        Me.AdvTreeFiles = New DevComponents.AdvTree.AdvTree()
+        Me.Node1 = New DevComponents.AdvTree.Node()
+        Me.Node2 = New DevComponents.AdvTree.Node()
+        Me.Node3 = New DevComponents.AdvTree.Node()
+        Me.Node4 = New DevComponents.AdvTree.Node()
+        Me.Node5 = New DevComponents.AdvTree.Node()
+        Me.Node6 = New DevComponents.AdvTree.Node()
+        Me.Node7 = New DevComponents.AdvTree.Node()
+        Me.Node8 = New DevComponents.AdvTree.Node()
+        Me.Node9 = New DevComponents.AdvTree.Node()
+        Me.Node10 = New DevComponents.AdvTree.Node()
+        Me.NodeConnector7 = New DevComponents.AdvTree.NodeConnector()
+        Me.ElementStyle5 = New DevComponents.DotNetBar.ElementStyle()
         Me.DockContainerItem3 = New DevComponents.DotNetBar.DockContainerItem()
         Me.DockContainerItem4 = New DevComponents.DotNetBar.DockContainerItem()
         Me.DockSite8 = New DevComponents.DotNetBar.DockSite()
@@ -237,13 +237,13 @@ Partial Class mainGUI2
         Me.DockSite2.SuspendLayout()
         CType(Me.Bar2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Bar2.SuspendLayout()
-        Me.pFileExplorer.SuspendLayout()
-        Me.TableLayoutPanel5.SuspendLayout()
-        CType(Me.AdvTreeFiles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.PanelDockContainer3.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.advtreeOutputExplorer, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Bar3, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.pFileExplorer.SuspendLayout()
+        Me.TableLayoutPanel5.SuspendLayout()
+        CType(Me.AdvTreeFiles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DockSite7.SuspendLayout()
         CType(Me.barMainMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
@@ -399,10 +399,10 @@ Partial Class mainGUI2
         Me.Bar4.CanDockTop = False
         Me.Bar4.CanHide = True
         Me.Bar4.CanUndock = False
-        Me.Bar4.Controls.Add(Me.pdcERDiagram)
         Me.Bar4.Controls.Add(Me.pdcProjectSettings)
         Me.Bar4.Controls.Add(Me.pdcObjectInfo)
         Me.Bar4.Controls.Add(Me.pdcCodePreview)
+        Me.Bar4.Controls.Add(Me.pdcERDiagram)
         Me.Bar4.DockTabAlignment = DevComponents.DotNetBar.eTabStripAlignment.Top
         Me.Bar4.FadeEffect = True
         Me.Bar4.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -412,7 +412,7 @@ Partial Class mainGUI2
         Me.Bar4.Location = New System.Drawing.Point(0, 0)
         Me.Bar4.Margin = New System.Windows.Forms.Padding(0)
         Me.Bar4.Name = "Bar4"
-        Me.Bar4.SelectedDockTab = 3
+        Me.Bar4.SelectedDockTab = 0
         Me.Bar4.Size = New System.Drawing.Size(1042, 470)
         Me.Bar4.Stretch = True
         Me.Bar4.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
@@ -1743,8 +1743,8 @@ Partial Class mainGUI2
         Me.Bar2.AutoHide = True
         Me.Bar2.AutoSyncBarCaption = True
         Me.Bar2.CanCustomize = False
-        Me.Bar2.Controls.Add(Me.pFileExplorer)
         Me.Bar2.Controls.Add(Me.PanelDockContainer3)
+        Me.Bar2.Controls.Add(Me.pFileExplorer)
         Me.Bar2.DisplayMoreItemsOnMenu = True
         Me.Bar2.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Bar2.GrabHandleStyle = DevComponents.DotNetBar.eGrabHandleStyle.Caption
@@ -1754,246 +1754,13 @@ Partial Class mainGUI2
         Me.Bar2.Location = New System.Drawing.Point(3, 0)
         Me.Bar2.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Bar2.Name = "Bar2"
-        Me.Bar2.SelectedDockTab = 1
+        Me.Bar2.SelectedDockTab = 0
         Me.Bar2.Size = New System.Drawing.Size(317, 470)
         Me.Bar2.Stretch = True
         Me.Bar2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.Bar2.TabIndex = 0
         Me.Bar2.TabStop = False
-        Me.Bar2.Text = "Files"
-        '
-        'pFileExplorer
-        '
-        Me.pFileExplorer.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
-        Me.pFileExplorer.Controls.Add(Me.TableLayoutPanel5)
-        Me.pFileExplorer.DisabledBackColor = System.Drawing.Color.Empty
-        Me.pFileExplorer.Location = New System.Drawing.Point(3, 24)
-        Me.pFileExplorer.Name = "pFileExplorer"
-        Me.pFileExplorer.Size = New System.Drawing.Size(311, 418)
-        Me.pFileExplorer.Style.Alignment = System.Drawing.StringAlignment.Center
-        Me.pFileExplorer.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground
-        Me.pFileExplorer.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
-        Me.pFileExplorer.Style.GradientAngle = 90
-        Me.pFileExplorer.TabIndex = 5
-        '
-        'TableLayoutPanel5
-        '
-        Me.TableLayoutPanel5.BackColor = System.Drawing.Color.Transparent
-        Me.TableLayoutPanel5.ColumnCount = 1
-        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
-        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 23.0!))
-        Me.TableLayoutPanel5.Controls.Add(Me.tSearchFiles, 0, 0)
-        Me.TableLayoutPanel5.Controls.Add(Me.AdvTreeFiles, 0, 1)
-        Me.TableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel5.Location = New System.Drawing.Point(0, 0)
-        Me.TableLayoutPanel5.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
-        Me.TableLayoutPanel5.RowCount = 2
-        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26.0!))
-        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel5.Size = New System.Drawing.Size(311, 418)
-        Me.TableLayoutPanel5.TabIndex = 4
-        '
-        'tSearchFiles
-        '
-        Me.tSearchFiles.BackColor = System.Drawing.Color.Black
-        '
-        '
-        '
-        Me.tSearchFiles.Border.Class = "TextBoxBorder"
-        Me.tSearchFiles.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.tSearchFiles.ButtonCustom.Symbol = "59574"
-        Me.tSearchFiles.ButtonCustom.SymbolColor = System.Drawing.SystemColors.Highlight
-        Me.tSearchFiles.ButtonCustom.SymbolSet = DevComponents.DotNetBar.eSymbolSet.Material
-        Me.tSearchFiles.ButtonCustom.Visible = True
-        Me.tSearchFiles.DisabledBackColor = System.Drawing.Color.Black
-        Me.tSearchFiles.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.tSearchFiles.ForeColor = System.Drawing.Color.White
-        Me.tSearchFiles.Location = New System.Drawing.Point(0, 0)
-        Me.tSearchFiles.Margin = New System.Windows.Forms.Padding(0)
-        Me.tSearchFiles.MaxLength = 255
-        Me.tSearchFiles.Name = "tSearchFiles"
-        Me.tSearchFiles.PreventEnterBeep = True
-        Me.tSearchFiles.Size = New System.Drawing.Size(311, 26)
-        Me.tSearchFiles.TabIndex = 0
-        Me.tSearchFiles.WatermarkText = "Search files..."
-        '
-        'AdvTreeFiles
-        '
-        Me.AdvTreeFiles.AccessibleRole = System.Windows.Forms.AccessibleRole.Outline
-        Me.AdvTreeFiles.AllowDrop = False
-        Me.AdvTreeFiles.AllowExternalDrop = False
-        Me.AdvTreeFiles.BackColor = System.Drawing.SystemColors.Window
-        '
-        '
-        '
-        Me.AdvTreeFiles.BackgroundStyle.Class = "TreeBorderKey"
-        Me.AdvTreeFiles.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.AdvTreeFiles.ColumnsVisible = False
-        Me.AdvTreeFiles.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.AdvTreeFiles.DragDropEnabled = False
-        Me.AdvTreeFiles.DragDropNodeCopyEnabled = False
-        Me.AdvTreeFiles.GridColumnLines = False
-        Me.AdvTreeFiles.ImageList = Me.ilExplorer
-        Me.AdvTreeFiles.Location = New System.Drawing.Point(0, 26)
-        Me.AdvTreeFiles.Margin = New System.Windows.Forms.Padding(0)
-        Me.AdvTreeFiles.MultiNodeDragCountVisible = False
-        Me.AdvTreeFiles.MultiNodeDragDropAllowed = False
-        Me.AdvTreeFiles.Name = "AdvTreeFiles"
-        Me.AdvTreeFiles.Nodes.AddRange(New DevComponents.AdvTree.Node() {Me.Node1})
-        Me.AdvTreeFiles.NodesConnector = Me.NodeConnector7
-        Me.AdvTreeFiles.NodeStyle = Me.ElementStyle5
-        Me.AdvTreeFiles.PaintDragDropInsertMarker = False
-        Me.AdvTreeFiles.PathSeparator = ";"
-        Me.AdvTreeFiles.SelectionBoxStyle = DevComponents.AdvTree.eSelectionStyle.FullRowSelect
-        Me.AdvTreeFiles.Size = New System.Drawing.Size(311, 392)
-        Me.AdvTreeFiles.Styles.Add(Me.ElementStyle5)
-        Me.AdvTreeFiles.TabIndex = 1
-        Me.AdvTreeFiles.Text = "AdvTree1"
-        '
-        'ilExplorer
-        '
-        Me.ilExplorer.ImageStream = CType(resources.GetObject("ilExplorer.ImageStream"), System.Windows.Forms.ImageListStreamer)
-        Me.ilExplorer.TransparentColor = System.Drawing.Color.Transparent
-        Me.ilExplorer.Images.SetKeyName(0, "folder.png")
-        Me.ilExplorer.Images.SetKeyName(1, "folder_closed.png")
-        Me.ilExplorer.Images.SetKeyName(2, "application_form.png")
-        Me.ilExplorer.Images.SetKeyName(3, "file_extension_txt.png")
-        Me.ilExplorer.Images.SetKeyName(4, "file_extension_vb.png")
-        Me.ilExplorer.Images.SetKeyName(5, "sitemap_image.png")
-        Me.ilExplorer.Images.SetKeyName(6, "file_extension_mcd.png")
-        Me.ilExplorer.Images.SetKeyName(7, "file_extension_ses.png")
-        Me.ilExplorer.Images.SetKeyName(8, "application.png")
-        Me.ilExplorer.Images.SetKeyName(9, "application-add.png")
-        Me.ilExplorer.Images.SetKeyName(10, "application-check.png")
-        Me.ilExplorer.Images.SetKeyName(11, "application-error.png")
-        Me.ilExplorer.Images.SetKeyName(12, "application-remove.png")
-        Me.ilExplorer.Images.SetKeyName(13, "document_text.png")
-        Me.ilExplorer.Images.SetKeyName(14, "document_text-add.png")
-        Me.ilExplorer.Images.SetKeyName(15, "document_text-check.png")
-        Me.ilExplorer.Images.SetKeyName(16, "document_text-error.png")
-        Me.ilExplorer.Images.SetKeyName(17, "document_text-remove.png")
-        Me.ilExplorer.Images.SetKeyName(18, "folder.png")
-        Me.ilExplorer.Images.SetKeyName(19, "folder-add.png")
-        Me.ilExplorer.Images.SetKeyName(20, "folder-check.png")
-        Me.ilExplorer.Images.SetKeyName(21, "folder-error.png")
-        Me.ilExplorer.Images.SetKeyName(22, "folder-remove.png")
-        Me.ilExplorer.Images.SetKeyName(23, "folder_open.png")
-        Me.ilExplorer.Images.SetKeyName(24, "folder_open-add.png")
-        Me.ilExplorer.Images.SetKeyName(25, "folder_open-check.png")
-        Me.ilExplorer.Images.SetKeyName(26, "folder_open-error.png")
-        Me.ilExplorer.Images.SetKeyName(27, "folder_open-remove.png")
-        Me.ilExplorer.Images.SetKeyName(28, "notepad.png")
-        Me.ilExplorer.Images.SetKeyName(29, "notepad-add.png")
-        Me.ilExplorer.Images.SetKeyName(30, "notepad-check.png")
-        Me.ilExplorer.Images.SetKeyName(31, "notepad-error.png")
-        Me.ilExplorer.Images.SetKeyName(32, "notepad-remove.png")
-        Me.ilExplorer.Images.SetKeyName(33, "book_open.png")
-        Me.ilExplorer.Images.SetKeyName(34, "book_open-add.png")
-        Me.ilExplorer.Images.SetKeyName(35, "book_open-check.png")
-        Me.ilExplorer.Images.SetKeyName(36, "book_open-error.png")
-        Me.ilExplorer.Images.SetKeyName(37, "book_open-remove.png")
-        '
-        'Node1
-        '
-        Me.Node1.DragDropEnabled = False
-        Me.Node1.Editable = False
-        Me.Node1.Expanded = True
-        Me.Node1.ImageExpandedIndex = 23
-        Me.Node1.ImageIndex = 18
-        Me.Node1.Name = "Node1"
-        Me.Node1.Nodes.AddRange(New DevComponents.AdvTree.Node() {Me.Node2, Me.Node4, Me.Node8, Me.Node9, Me.Node10})
-        Me.Node1.Text = "Models"
-        '
-        'Node2
-        '
-        Me.Node2.DragDropEnabled = False
-        Me.Node2.Editable = False
-        Me.Node2.Expanded = True
-        Me.Node2.ImageExpandedIndex = 23
-        Me.Node2.ImageIndex = 18
-        Me.Node2.Name = "Node2"
-        Me.Node2.Nodes.AddRange(New DevComponents.AdvTree.Node() {Me.Node3})
-        Me.Node2.Text = "Mapping"
-        '
-        'Node3
-        '
-        Me.Node3.DragDropEnabled = False
-        Me.Node3.Editable = False
-        Me.Node3.ImageIndex = 4
-        Me.Node3.Name = "Node3"
-        Me.Node3.Text = "mapping.vb"
-        '
-        'Node4
-        '
-        Me.Node4.DragDropEnabled = False
-        Me.Node4.Editable = False
-        Me.Node4.Expanded = True
-        Me.Node4.ImageExpandedIndex = 23
-        Me.Node4.ImageIndex = 18
-        Me.Node4.Name = "Node4"
-        Me.Node4.Nodes.AddRange(New DevComponents.AdvTree.Node() {Me.Node5, Me.Node6, Me.Node7})
-        Me.Node4.Text = "StoreCommands"
-        '
-        'Node5
-        '
-        Me.Node5.DragDropEnabled = False
-        Me.Node5.Editable = False
-        Me.Node5.Expanded = True
-        Me.Node5.ImageExpandedIndex = 23
-        Me.Node5.ImageIndex = 18
-        Me.Node5.Name = "Node5"
-        Me.Node5.Text = "Models"
-        '
-        'Node6
-        '
-        Me.Node6.DragDropEnabled = False
-        Me.Node6.Editable = False
-        Me.Node6.ImageIndex = 6
-        Me.Node6.Name = "Node6"
-        Me.Node6.Text = "function.vb"
-        '
-        'Node7
-        '
-        Me.Node7.DragDropEnabled = False
-        Me.Node7.Editable = False
-        Me.Node7.ImageIndex = 7
-        Me.Node7.Name = "Node7"
-        Me.Node7.Text = "procedure.vb"
-        '
-        'Node8
-        '
-        Me.Node8.DragDropEnabled = False
-        Me.Node8.Editable = False
-        Me.Node8.ImageIndex = 5
-        Me.Node8.Name = "Node8"
-        Me.Node8.Text = "context.vb"
-        '
-        'Node9
-        '
-        Me.Node9.DragDropEnabled = False
-        Me.Node9.Editable = False
-        Me.Node9.ImageIndex = 5
-        Me.Node9.Name = "Node9"
-        Me.Node9.Text = "storeCommands.vb"
-        '
-        'Node10
-        '
-        Me.Node10.DragDropEnabled = False
-        Me.Node10.Editable = False
-        Me.Node10.ImageIndex = 4
-        Me.Node10.Name = "Node10"
-        Me.Node10.Text = "model.vb"
-        '
-        'NodeConnector7
-        '
-        Me.NodeConnector7.LineColor = System.Drawing.SystemColors.InactiveCaption
-        '
-        'ElementStyle5
-        '
-        Me.ElementStyle5.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ElementStyle5.Name = "ElementStyle5"
-        Me.ElementStyle5.TextColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
+        Me.Bar2.Text = "Generated Output"
         '
         'PanelDockContainer3
         '
@@ -2001,10 +1768,10 @@ Partial Class mainGUI2
         Me.PanelDockContainer3.Controls.Add(Me.TableLayoutPanel1)
         Me.PanelDockContainer3.Controls.Add(Me.Bar3)
         Me.PanelDockContainer3.DisabledBackColor = System.Drawing.Color.Empty
-        Me.PanelDockContainer3.Location = New System.Drawing.Point(3, 24)
+        Me.PanelDockContainer3.Location = New System.Drawing.Point(3, 23)
         Me.PanelDockContainer3.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.PanelDockContainer3.Name = "PanelDockContainer3"
-        Me.PanelDockContainer3.Size = New System.Drawing.Size(311, 418)
+        Me.PanelDockContainer3.Size = New System.Drawing.Size(311, 419)
         Me.PanelDockContainer3.Style.Alignment = System.Drawing.StringAlignment.Center
         Me.PanelDockContainer3.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground
         Me.PanelDockContainer3.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
@@ -2026,7 +1793,7 @@ Partial Class mainGUI2
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(311, 383)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(311, 384)
         Me.TableLayoutPanel1.TabIndex = 3
         '
         'txtSearchOutput
@@ -2085,6 +1852,55 @@ Partial Class mainGUI2
         Me.advtreeOutputExplorer.Styles.Add(Me.ElementStyle2)
         Me.advtreeOutputExplorer.TabIndex = 1
         Me.advtreeOutputExplorer.Text = "AdvTree1"
+        '
+        'ilExplorer
+        '
+        Me.ilExplorer.ImageStream = CType(resources.GetObject("ilExplorer.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.ilExplorer.TransparentColor = System.Drawing.Color.Transparent
+        Me.ilExplorer.Images.SetKeyName(0, "folder.png")
+        Me.ilExplorer.Images.SetKeyName(1, "folder_closed.png")
+        Me.ilExplorer.Images.SetKeyName(2, "application_form.png")
+        Me.ilExplorer.Images.SetKeyName(3, "file_extension_txt.png")
+        Me.ilExplorer.Images.SetKeyName(4, "file_extension_vb.png")
+        Me.ilExplorer.Images.SetKeyName(5, "sitemap_image.png")
+        Me.ilExplorer.Images.SetKeyName(6, "file_extension_mcd.png")
+        Me.ilExplorer.Images.SetKeyName(7, "file_extension_ses.png")
+        Me.ilExplorer.Images.SetKeyName(8, "application.png")
+        Me.ilExplorer.Images.SetKeyName(9, "application-add.png")
+        Me.ilExplorer.Images.SetKeyName(10, "application-check.png")
+        Me.ilExplorer.Images.SetKeyName(11, "application-error.png")
+        Me.ilExplorer.Images.SetKeyName(12, "application-remove.png")
+        Me.ilExplorer.Images.SetKeyName(13, "document_text.png")
+        Me.ilExplorer.Images.SetKeyName(14, "document_text-add.png")
+        Me.ilExplorer.Images.SetKeyName(15, "document_text-check.png")
+        Me.ilExplorer.Images.SetKeyName(16, "document_text-error.png")
+        Me.ilExplorer.Images.SetKeyName(17, "document_text-remove.png")
+        Me.ilExplorer.Images.SetKeyName(18, "folder.png")
+        Me.ilExplorer.Images.SetKeyName(19, "folder-add.png")
+        Me.ilExplorer.Images.SetKeyName(20, "folder-check.png")
+        Me.ilExplorer.Images.SetKeyName(21, "folder-error.png")
+        Me.ilExplorer.Images.SetKeyName(22, "folder-remove.png")
+        Me.ilExplorer.Images.SetKeyName(23, "folder_open.png")
+        Me.ilExplorer.Images.SetKeyName(24, "folder_open-add.png")
+        Me.ilExplorer.Images.SetKeyName(25, "folder_open-check.png")
+        Me.ilExplorer.Images.SetKeyName(26, "folder_open-error.png")
+        Me.ilExplorer.Images.SetKeyName(27, "folder_open-remove.png")
+        Me.ilExplorer.Images.SetKeyName(28, "notepad.png")
+        Me.ilExplorer.Images.SetKeyName(29, "notepad-add.png")
+        Me.ilExplorer.Images.SetKeyName(30, "notepad-check.png")
+        Me.ilExplorer.Images.SetKeyName(31, "notepad-error.png")
+        Me.ilExplorer.Images.SetKeyName(32, "notepad-remove.png")
+        Me.ilExplorer.Images.SetKeyName(33, "book_open.png")
+        Me.ilExplorer.Images.SetKeyName(34, "book_open-add.png")
+        Me.ilExplorer.Images.SetKeyName(35, "book_open-check.png")
+        Me.ilExplorer.Images.SetKeyName(36, "book_open-error.png")
+        Me.ilExplorer.Images.SetKeyName(37, "book_open-remove.png")
+        Me.ilExplorer.Images.SetKeyName(38, "database.png")
+        Me.ilExplorer.Images.SetKeyName(39, "document_script.png")
+        Me.ilExplorer.Images.SetKeyName(40, "query.png")
+        Me.ilExplorer.Images.SetKeyName(41, "script.png")
+        Me.ilExplorer.Images.SetKeyName(42, "table.png")
+        Me.ilExplorer.Images.SetKeyName(43, "datasheet.png")
         '
         'nModels
         '
@@ -2242,6 +2058,196 @@ Partial Class mainGUI2
         Me.btnSaveLayout.FixedSize = New System.Drawing.Size(32, 32)
         Me.btnSaveLayout.ImageIndex = 6
         Me.btnSaveLayout.Name = "btnSaveLayout"
+        '
+        'pFileExplorer
+        '
+        Me.pFileExplorer.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.pFileExplorer.Controls.Add(Me.TableLayoutPanel5)
+        Me.pFileExplorer.DisabledBackColor = System.Drawing.Color.Empty
+        Me.pFileExplorer.Location = New System.Drawing.Point(3, 23)
+        Me.pFileExplorer.Name = "pFileExplorer"
+        Me.pFileExplorer.Size = New System.Drawing.Size(311, 419)
+        Me.pFileExplorer.Style.Alignment = System.Drawing.StringAlignment.Center
+        Me.pFileExplorer.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground
+        Me.pFileExplorer.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
+        Me.pFileExplorer.Style.GradientAngle = 90
+        Me.pFileExplorer.TabIndex = 5
+        '
+        'TableLayoutPanel5
+        '
+        Me.TableLayoutPanel5.BackColor = System.Drawing.Color.Transparent
+        Me.TableLayoutPanel5.ColumnCount = 1
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 23.0!))
+        Me.TableLayoutPanel5.Controls.Add(Me.tSearchFiles, 0, 0)
+        Me.TableLayoutPanel5.Controls.Add(Me.AdvTreeFiles, 0, 1)
+        Me.TableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel5.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel5.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
+        Me.TableLayoutPanel5.RowCount = 2
+        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26.0!))
+        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanel5.Size = New System.Drawing.Size(311, 419)
+        Me.TableLayoutPanel5.TabIndex = 4
+        '
+        'tSearchFiles
+        '
+        Me.tSearchFiles.BackColor = System.Drawing.Color.Black
+        '
+        '
+        '
+        Me.tSearchFiles.Border.Class = "TextBoxBorder"
+        Me.tSearchFiles.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.tSearchFiles.ButtonCustom.Symbol = "59574"
+        Me.tSearchFiles.ButtonCustom.SymbolColor = System.Drawing.SystemColors.Highlight
+        Me.tSearchFiles.ButtonCustom.SymbolSet = DevComponents.DotNetBar.eSymbolSet.Material
+        Me.tSearchFiles.ButtonCustom.Visible = True
+        Me.tSearchFiles.DisabledBackColor = System.Drawing.Color.Black
+        Me.tSearchFiles.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tSearchFiles.ForeColor = System.Drawing.Color.White
+        Me.tSearchFiles.Location = New System.Drawing.Point(0, 0)
+        Me.tSearchFiles.Margin = New System.Windows.Forms.Padding(0)
+        Me.tSearchFiles.MaxLength = 255
+        Me.tSearchFiles.Name = "tSearchFiles"
+        Me.tSearchFiles.PreventEnterBeep = True
+        Me.tSearchFiles.Size = New System.Drawing.Size(311, 26)
+        Me.tSearchFiles.TabIndex = 0
+        Me.tSearchFiles.WatermarkText = "Search files..."
+        '
+        'AdvTreeFiles
+        '
+        Me.AdvTreeFiles.AccessibleRole = System.Windows.Forms.AccessibleRole.Outline
+        Me.AdvTreeFiles.AllowDrop = False
+        Me.AdvTreeFiles.AllowExternalDrop = False
+        Me.AdvTreeFiles.BackColor = System.Drawing.SystemColors.Window
+        '
+        '
+        '
+        Me.AdvTreeFiles.BackgroundStyle.Class = "TreeBorderKey"
+        Me.AdvTreeFiles.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.AdvTreeFiles.ColumnsVisible = False
+        Me.AdvTreeFiles.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.AdvTreeFiles.DragDropEnabled = False
+        Me.AdvTreeFiles.DragDropNodeCopyEnabled = False
+        Me.AdvTreeFiles.GridColumnLines = False
+        Me.AdvTreeFiles.ImageList = Me.ilExplorer
+        Me.AdvTreeFiles.Location = New System.Drawing.Point(0, 26)
+        Me.AdvTreeFiles.Margin = New System.Windows.Forms.Padding(0)
+        Me.AdvTreeFiles.MultiNodeDragCountVisible = False
+        Me.AdvTreeFiles.MultiNodeDragDropAllowed = False
+        Me.AdvTreeFiles.Name = "AdvTreeFiles"
+        Me.AdvTreeFiles.Nodes.AddRange(New DevComponents.AdvTree.Node() {Me.Node1})
+        Me.AdvTreeFiles.NodesConnector = Me.NodeConnector7
+        Me.AdvTreeFiles.NodeStyle = Me.ElementStyle5
+        Me.AdvTreeFiles.PaintDragDropInsertMarker = False
+        Me.AdvTreeFiles.PathSeparator = ";"
+        Me.AdvTreeFiles.SelectionBoxStyle = DevComponents.AdvTree.eSelectionStyle.FullRowSelect
+        Me.AdvTreeFiles.Size = New System.Drawing.Size(311, 393)
+        Me.AdvTreeFiles.Styles.Add(Me.ElementStyle5)
+        Me.AdvTreeFiles.TabIndex = 1
+        Me.AdvTreeFiles.Text = "AdvTree1"
+        '
+        'Node1
+        '
+        Me.Node1.DragDropEnabled = False
+        Me.Node1.Editable = False
+        Me.Node1.Expanded = True
+        Me.Node1.ImageExpandedIndex = 23
+        Me.Node1.ImageIndex = 18
+        Me.Node1.Name = "Node1"
+        Me.Node1.Nodes.AddRange(New DevComponents.AdvTree.Node() {Me.Node2, Me.Node4, Me.Node8, Me.Node9, Me.Node10})
+        Me.Node1.Text = "Models"
+        '
+        'Node2
+        '
+        Me.Node2.DragDropEnabled = False
+        Me.Node2.Editable = False
+        Me.Node2.Expanded = True
+        Me.Node2.ImageExpandedIndex = 23
+        Me.Node2.ImageIndex = 18
+        Me.Node2.Name = "Node2"
+        Me.Node2.Nodes.AddRange(New DevComponents.AdvTree.Node() {Me.Node3})
+        Me.Node2.Text = "Mapping"
+        '
+        'Node3
+        '
+        Me.Node3.DragDropEnabled = False
+        Me.Node3.Editable = False
+        Me.Node3.ImageIndex = 4
+        Me.Node3.Name = "Node3"
+        Me.Node3.Text = "mapping.vb"
+        '
+        'Node4
+        '
+        Me.Node4.DragDropEnabled = False
+        Me.Node4.Editable = False
+        Me.Node4.Expanded = True
+        Me.Node4.ImageExpandedIndex = 23
+        Me.Node4.ImageIndex = 18
+        Me.Node4.Name = "Node4"
+        Me.Node4.Nodes.AddRange(New DevComponents.AdvTree.Node() {Me.Node5, Me.Node6, Me.Node7})
+        Me.Node4.Text = "StoreCommands"
+        '
+        'Node5
+        '
+        Me.Node5.DragDropEnabled = False
+        Me.Node5.Editable = False
+        Me.Node5.Expanded = True
+        Me.Node5.ImageExpandedIndex = 23
+        Me.Node5.ImageIndex = 18
+        Me.Node5.Name = "Node5"
+        Me.Node5.Text = "Models"
+        '
+        'Node6
+        '
+        Me.Node6.DragDropEnabled = False
+        Me.Node6.Editable = False
+        Me.Node6.ImageIndex = 6
+        Me.Node6.Name = "Node6"
+        Me.Node6.Text = "function.vb"
+        '
+        'Node7
+        '
+        Me.Node7.DragDropEnabled = False
+        Me.Node7.Editable = False
+        Me.Node7.ImageIndex = 7
+        Me.Node7.Name = "Node7"
+        Me.Node7.Text = "procedure.vb"
+        '
+        'Node8
+        '
+        Me.Node8.DragDropEnabled = False
+        Me.Node8.Editable = False
+        Me.Node8.ImageIndex = 5
+        Me.Node8.Name = "Node8"
+        Me.Node8.Text = "context.vb"
+        '
+        'Node9
+        '
+        Me.Node9.DragDropEnabled = False
+        Me.Node9.Editable = False
+        Me.Node9.ImageIndex = 5
+        Me.Node9.Name = "Node9"
+        Me.Node9.Text = "storeCommands.vb"
+        '
+        'Node10
+        '
+        Me.Node10.DragDropEnabled = False
+        Me.Node10.Editable = False
+        Me.Node10.ImageIndex = 4
+        Me.Node10.Name = "Node10"
+        Me.Node10.Text = "model.vb"
+        '
+        'NodeConnector7
+        '
+        Me.NodeConnector7.LineColor = System.Drawing.SystemColors.InactiveCaption
+        '
+        'ElementStyle5
+        '
+        Me.ElementStyle5.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ElementStyle5.Name = "ElementStyle5"
+        Me.ElementStyle5.TextColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
         '
         'DockContainerItem3
         '
@@ -2588,13 +2594,13 @@ Partial Class mainGUI2
         Me.DockSite2.ResumeLayout(False)
         CType(Me.Bar2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Bar2.ResumeLayout(False)
-        Me.pFileExplorer.ResumeLayout(False)
-        Me.TableLayoutPanel5.ResumeLayout(False)
-        CType(Me.AdvTreeFiles, System.ComponentModel.ISupportInitialize).EndInit()
         Me.PanelDockContainer3.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
         CType(Me.advtreeOutputExplorer, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Bar3, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.pFileExplorer.ResumeLayout(False)
+        Me.TableLayoutPanel5.ResumeLayout(False)
+        CType(Me.AdvTreeFiles, System.ComponentModel.ISupportInitialize).EndInit()
         Me.DockSite7.ResumeLayout(False)
         CType(Me.barMainMenu, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ContextMenuStrip1.ResumeLayout(False)

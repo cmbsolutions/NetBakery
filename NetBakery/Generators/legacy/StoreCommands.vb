@@ -87,44 +87,63 @@ Namespace My.Templates.legacy_net
  If _withLock Then 
             
             #End ExternalSource
-            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"                Return DirectCast(_context, IObj"& _ 
+                    "ectContextAdapter).ObjectContext.ExecuteStoreQuery(Of ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",37)
- End If 
-            
-            #End ExternalSource
-            Me.Write("            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Exec"& _ 
-                    "uteStoreQuery(Of ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",38)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnParam.vbType))
             
             #End ExternalSource
             Me.Write(")(""SELECT ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",38)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",37)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",38)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",37)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
             
             #End ExternalSource
             Me.Write(")"", ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",38)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",37)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p3)))
+            
+            #End ExternalSource
+            Me.Write(").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",39)
+ Else 
+            
+            #End ExternalSource
+            Me.Write("            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Exec"& _ 
+                    "uteStoreQuery(Of ")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",40)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnParam.vbType))
+            
+            #End ExternalSource
+            Me.Write(")(""SELECT ")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",40)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
+            
+            #End ExternalSource
+            Me.Write("(")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",40)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
+            
+            #End ExternalSource
+            Me.Write(")"", ")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",40)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p3)))
             
             #End ExternalSource
             Me.Write(").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",39)
- If _withLock Then 
-            
-            #End ExternalSource
-            Me.Write("            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",41)
  End If 
@@ -162,32 +181,39 @@ Namespace My.Templates.legacy_net
  If _withLock Then 
             
             #End ExternalSource
-            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"                Return DirectCast(_context, IObj"& _ 
+                    "ectContextAdapter).ObjectContext.ExecuteStoreQuery(Of ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",51)
- End If 
-            
-            #End ExternalSource
-            Me.Write("            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Exec"& _ 
-                    "uteStoreQuery(Of ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",52)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnParam.vbType))
             
             #End ExternalSource
             Me.Write(")(""SELECT ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",52)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",51)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
+            
+            #End ExternalSource
+            Me.Write("()"").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",53)
+ Else 
+            
+            #End ExternalSource
+            Me.Write("            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Exec"& _ 
+                    "uteStoreQuery(Of ")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",54)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnParam.vbType))
+            
+            #End ExternalSource
+            Me.Write(")(""SELECT ")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",54)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("()"").FirstOrDefault"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",53)
- If _withLock Then 
-            
-            #End ExternalSource
-            Me.Write("            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",55)
  End If 
@@ -253,44 +279,64 @@ Namespace My.Templates.legacy_net
  If _withLock Then 
             
             #End ExternalSource
-            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"                Return DirectCast(_context, IObj"& _ 
+                    "ectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas"& _ 
+                    ".")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",86)
- End If 
-            
-            #End ExternalSource
-            Me.Write("            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Exec"& _ 
-                    "uteStoreQuery(Of Models.StoreCommandSchemas.")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",87)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnLayout.singleName))
             
             #End ExternalSource
             Me.Write(")(""")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",87)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",86)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",87)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",86)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
             
             #End ExternalSource
             Me.Write(")"", ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",87)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",86)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p3)))
+            
+            #End ExternalSource
+            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",88)
+ Else 
+            
+            #End ExternalSource
+            Me.Write("            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Exec"& _ 
+                    "uteStoreQuery(Of Models.StoreCommandSchemas.")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",89)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnLayout.singleName))
+            
+            #End ExternalSource
+            Me.Write(")(""")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",89)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
+            
+            #End ExternalSource
+            Me.Write("(")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",89)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
+            
+            #End ExternalSource
+            Me.Write(")"", ")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",89)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p3)))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",88)
- If _withLock Then 
-            
-            #End ExternalSource
-            Me.Write("            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",90)
  End If 
@@ -327,38 +373,51 @@ Namespace My.Templates.legacy_net
  If _withLock Then 
             
             #End ExternalSource
-            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"                DirectCast(_context, IObjectCont"& _ 
+                    "extAdapter).ObjectContext.ExecuteStoreCommand(""")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",98)
- End If 
-            
-            #End ExternalSource
-            Me.Write("            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStor"& _ 
-                    "eCommand(""")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",99)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("(")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",99)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",98)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
             
             #End ExternalSource
             Me.Write(")"", ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",99)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",98)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p3)))
+            
+            #End ExternalSource
+            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",100)
+ Else 
+            
+            #End ExternalSource
+            Me.Write("            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStor"& _ 
+                    "eCommand(""")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",101)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
+            
+            #End ExternalSource
+            Me.Write("(")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",101)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p2)))
+            
+            #End ExternalSource
+            Me.Write(")"", ")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",101)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(",", p3)))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",100)
- If _withLock Then 
-            
-            #End ExternalSource
-            Me.Write("            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",102)
  End If 
@@ -398,32 +457,40 @@ Namespace My.Templates.legacy_net
  If _withLock Then 
             
             #End ExternalSource
-            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"                Return DirectCast(_context, IObj"& _ 
+                    "ectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas"& _ 
+                    ".")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",112)
- End If 
-            
-            #End ExternalSource
-            Me.Write("            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Exec"& _ 
-                    "uteStoreQuery(Of Models.StoreCommandSchemas.")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",113)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnLayout.singleName))
             
             #End ExternalSource
             Me.Write(")(""")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",113)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",112)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
+            
+            #End ExternalSource
+            Me.Write("()"")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",114)
+ Else 
+            
+            #End ExternalSource
+            Me.Write("            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.Exec"& _ 
+                    "uteStoreQuery(Of Models.StoreCommandSchemas.")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",115)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.returnLayout.singleName))
+            
+            #End ExternalSource
+            Me.Write(")(""")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",115)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("()"")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",114)
- If _withLock Then 
-            
-            #End ExternalSource
-            Me.Write("            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",116)
  End If 
@@ -455,26 +522,27 @@ Namespace My.Templates.legacy_net
  If _withLock Then 
             
             #End ExternalSource
-            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("            SyncLock sharedLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"                DirectCast(_context, IObjectCont"& _ 
+                    "extAdapter).ObjectContext.ExecuteStoreCommand(""")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",124)
- End If 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
+            
+            #End ExternalSource
+            Me.Write("()"")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",126)
+ Else 
             
             #End ExternalSource
             Me.Write("            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStor"& _ 
                     "eCommand(""")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",125)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",127)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(f.name))
             
             #End ExternalSource
             Me.Write("()"")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",126)
- If _withLock Then 
-            
-            #End ExternalSource
-            Me.Write("            End SyncLock"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommands.tt",128)
  End If 

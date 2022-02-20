@@ -6,14 +6,14 @@ Public Class updateHelper
 
     Public Function needsUpdate() As updateFile
         Try
-            Dim client As New RestSharp.RestClient(My.Resources.updateLocation) With {
-                .Timeout = -1
-            }
-            Dim request As New RestSharp.RestRequest(RestSharp.Method.GET)
-            Dim response = client.Execute(request)
+            Dim client As New RestSharp.RestClient(My.Resources.updateLocationBaseURL)
+            Dim request As New RestSharp.RestRequest(My.Resources.updateLocationResource, RestSharp.Method.Get)
+            Dim response = client.ExecuteAsync(request)
 
-            If response.IsSuccessful Then
-                Dim uf As updateFile = Newtonsoft.Json.JsonConvert.DeserializeObject(Of updateFile)(response.Content)
+            response.Wait(5000)
+
+            If response.Result.IsSuccessful Then
+                Dim uf As updateFile = Newtonsoft.Json.JsonConvert.DeserializeObject(Of updateFile)(response.Result.Content)
 
                 If uf.major > My.Application.Info.Version.Major Then uf.doUpdate = True
                 If uf.major >= My.Application.Info.Version.Major And uf.minor > My.Application.Info.Version.Minor Then uf.doUpdate = True

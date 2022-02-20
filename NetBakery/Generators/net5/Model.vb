@@ -116,7 +116,7 @@ Namespace My.Templates.net5
 
             
             #End ExternalSource
-            Me.Write("    ' relational tables"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("        ' relational tables"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",28)
 
@@ -142,7 +142,7 @@ Namespace My.Templates.net5
   Next 
 
     For Each re in  _t.relations.orderby(Function(c) c.totable.name)
- 
+
             
             #End ExternalSource
             Me.Write("        Public Overridable Property ")

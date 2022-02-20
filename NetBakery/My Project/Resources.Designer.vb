@@ -199,11 +199,20 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to https://www.cmbsolutions.nl/netbakery/v2/latest.php.
+        '''  Looks up a localized string similar to https://www.cmbsolutions.nl.
         '''</summary>
-        Friend ReadOnly Property updateLocation() As String
+        Friend ReadOnly Property updateLocationBaseURL() As String
             Get
-                Return ResourceManager.GetString("updateLocation", resourceCulture)
+                Return ResourceManager.GetString("updateLocationBaseURL", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to netbakery/v2/latest.php.
+        '''</summary>
+        Friend ReadOnly Property updateLocationResource() As String
+            Get
+                Return ResourceManager.GetString("updateLocationResource", resourceCulture)
             End Get
         End Property
         

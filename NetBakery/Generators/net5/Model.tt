@@ -24,7 +24,7 @@ Namespace Models
 <#      end if
     Next
 #>
-    ' relational tables
+        ' relational tables
 <#
     For each fk in _t.foreignkeys.orderby(Function(c) c.propertyalias)
 #>
@@ -32,7 +32,7 @@ Namespace Models
 <#  Next 
 
     For Each re in  _t.relations.orderby(Function(c) c.totable.name)
- #>
+#>
         Public Overridable Property <#= re.alias #>() As ICollection(Of <#= re.totable.SingleName #>)
 <#  Next
 
