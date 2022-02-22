@@ -25,6 +25,9 @@ Partial Class preferences
         Me.VisualStudio2012Light = New DevComponents.Editors.ComboItem()
         Me.VisualStudio2012Dark = New DevComponents.Editors.ComboItem()
         Me.LabelX2 = New DevComponents.DotNetBar.LabelX()
+        Me.erdepth = New DevComponents.Editors.IntegerInput()
+        Me.LabelX3 = New DevComponents.DotNetBar.LabelX()
+        CType(Me.erdepth, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'LabelX1
@@ -50,11 +53,13 @@ Partial Class preferences
         Me.txtDescription.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.NetBakery.My.MySettings.Default, "routineRegex", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
         Me.txtDescription.DisabledBackColor = System.Drawing.Color.Black
         Me.txtDescription.ForeColor = System.Drawing.Color.White
-        Me.txtDescription.Location = New System.Drawing.Point(102, 13)
-        Me.txtDescription.MaxLength = 255
+        Me.txtDescription.Location = New System.Drawing.Point(12, 38)
+        Me.txtDescription.MaxLength = 1000
+        Me.txtDescription.Multiline = True
         Me.txtDescription.Name = "txtDescription"
         Me.txtDescription.PreventEnterBeep = True
-        Me.txtDescription.Size = New System.Drawing.Size(389, 23)
+        Me.txtDescription.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.txtDescription.Size = New System.Drawing.Size(348, 50)
         Me.txtDescription.TabIndex = 14
         Me.txtDescription.Text = Global.NetBakery.My.MySettings.Default.routineRegex
         Me.txtDescription.WatermarkText = "Enter a description..."
@@ -68,9 +73,9 @@ Partial Class preferences
         Me.cboStyle.FormattingEnabled = True
         Me.cboStyle.ItemHeight = 18
         Me.cboStyle.Items.AddRange(New Object() {Me.VisualStudio2012Light, Me.VisualStudio2012Dark})
-        Me.cboStyle.Location = New System.Drawing.Point(102, 42)
+        Me.cboStyle.Location = New System.Drawing.Point(145, 94)
         Me.cboStyle.Name = "cboStyle"
-        Me.cboStyle.Size = New System.Drawing.Size(389, 24)
+        Me.cboStyle.Size = New System.Drawing.Size(155, 24)
         Me.cboStyle.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.cboStyle.TabIndex = 16
         Me.cboStyle.Text = Global.NetBakery.My.MySettings.Default.gui_style
@@ -91,16 +96,51 @@ Partial Class preferences
         '
         '
         Me.LabelX2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.LabelX2.Location = New System.Drawing.Point(12, 41)
+        Me.LabelX2.Location = New System.Drawing.Point(12, 94)
         Me.LabelX2.Name = "LabelX2"
         Me.LabelX2.Size = New System.Drawing.Size(84, 20)
         Me.LabelX2.TabIndex = 17
         Me.LabelX2.Text = "Overall style"
         '
+        'erdepth
+        '
+        Me.erdepth.AllowEmptyState = False
+        '
+        '
+        '
+        Me.erdepth.BackgroundStyle.Class = "DateTimeInputBackground"
+        Me.erdepth.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.erdepth.ButtonFreeText.Shortcut = DevComponents.DotNetBar.eShortcut.F2
+        Me.erdepth.DataBindings.Add(New System.Windows.Forms.Binding("Value", Global.NetBakery.My.MySettings.Default, "maxERDiagramDepth", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+        Me.erdepth.InputMouseWheelEnabled = False
+        Me.erdepth.Location = New System.Drawing.Point(145, 124)
+        Me.erdepth.MaxValue = 10
+        Me.erdepth.MinValue = 1
+        Me.erdepth.MouseWheelValueChangeEnabled = False
+        Me.erdepth.Name = "erdepth"
+        Me.erdepth.ShowUpDown = True
+        Me.erdepth.Size = New System.Drawing.Size(59, 23)
+        Me.erdepth.TabIndex = 18
+        Me.erdepth.Value = Global.NetBakery.My.MySettings.Default.maxERDiagramDepth
+        '
+        'LabelX3
+        '
+        '
+        '
+        '
+        Me.LabelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX3.Location = New System.Drawing.Point(12, 124)
+        Me.LabelX3.Name = "LabelX3"
+        Me.LabelX3.Size = New System.Drawing.Size(125, 20)
+        Me.LabelX3.TabIndex = 19
+        Me.LabelX3.Text = "Max ERDiagram Depth"
+        '
         'preferences
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
-        Me.ClientSize = New System.Drawing.Size(503, 220)
+        Me.ClientSize = New System.Drawing.Size(513, 220)
+        Me.Controls.Add(Me.LabelX3)
+        Me.Controls.Add(Me.erdepth)
         Me.Controls.Add(Me.LabelX2)
         Me.Controls.Add(Me.cboStyle)
         Me.Controls.Add(Me.LabelX1)
@@ -110,6 +150,9 @@ Partial Class preferences
         Me.Controls.SetChildIndex(Me.LabelX1, 0)
         Me.Controls.SetChildIndex(Me.cboStyle, 0)
         Me.Controls.SetChildIndex(Me.LabelX2, 0)
+        Me.Controls.SetChildIndex(Me.erdepth, 0)
+        Me.Controls.SetChildIndex(Me.LabelX3, 0)
+        CType(Me.erdepth, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -120,4 +163,6 @@ Partial Class preferences
     Friend WithEvents VisualStudio2012Light As DevComponents.Editors.ComboItem
     Friend WithEvents VisualStudio2012Dark As DevComponents.Editors.ComboItem
     Friend WithEvents LabelX2 As DevComponents.DotNetBar.LabelX
+    Friend WithEvents erdepth As DevComponents.Editors.IntegerInput
+    Friend WithEvents LabelX3 As DevComponents.DotNetBar.LabelX
 End Class
