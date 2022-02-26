@@ -7,7 +7,7 @@ Imports System.Xml.Serialization
 
 Public Class FileManager
     Property PhysicalFiles As List(Of outputItem)
-    Property ChangedFiles As List(Of outputItem)
+    Property ChangedFiles As New List(Of outputItem)
 
     Private ScanPath As String
 
@@ -18,11 +18,13 @@ Public Class FileManager
         PhysicalFiles = New List(Of outputItem)
 
         For Each f In IO.Directory.EnumerateFiles(location, "*.*", IO.SearchOption.AllDirectories)
-            PhysicalFiles.Add(New outputItem With {
+            If IO.Path.GetDirectoryName(f).Replace(location, "") <> "" Then
+                PhysicalFiles.Add(New outputItem With {
                         .filename = IO.Path.GetFileName(f),
                         .location = IO.Path.GetDirectoryName(f).Replace(location, ""),
                         .hash = GetFileHash(f)
                         })
+            End If
         Next
     End Sub
 

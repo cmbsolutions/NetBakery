@@ -1354,24 +1354,25 @@ Public Class mainGUI2
                 AdvTreeFiles.Nodes.Sort()
                 AdvTreeFiles.Refresh()
 
-                Dim MatchedPs = (From v In _currentProject.generatedoutputs
-                                 Join p In _FileComparer.PhysicalFiles On p.filename Equals v.filename
-                                 Select p).ToList
+                If _currentProject.generatedoutputs IsNot Nothing Then
+                    Dim MatchedPs = (From v In _currentProject.generatedoutputs
+                                     Join p In _FileComparer.PhysicalFiles On p.filename Equals v.filename
+                                     Select p).ToList
 
-                Dim MatchedVs = (From v In _currentProject.generatedoutputs
-                                 Join p In _FileComparer.PhysicalFiles On p.filename Equals v.filename
-                                 Select v).ToList
+                    Dim MatchedVs = (From v In _currentProject.generatedoutputs
+                                     Join p In _FileComparer.PhysicalFiles On p.filename Equals v.filename
+                                     Select v).ToList
 
-                Dim newPs = _FileComparer.PhysicalFiles.Except(MatchedPs).ToList
-                Dim missingVs = _currentProject.generatedoutputs.Except(MatchedVs).ToList
+                    Dim newPs = _FileComparer.PhysicalFiles.Except(MatchedPs).ToList
+                    Dim missingVs = _currentProject.generatedoutputs.Except(MatchedVs).ToList
 
-                _FileComparer.ChangedFiles = MatchedPs.Except(From mp In MatchedPs
-                                                              Join mv In MatchedVs On mp.filename Equals mv.filename And mp.hash Equals mv.hash
-                                                              Select mp).ToList
-
+                    _FileComparer.ChangedFiles = MatchedPs.Except(From mp In MatchedPs
+                                                                  Join mv In MatchedVs On mp.filename Equals mv.filename And mp.hash Equals mv.hash
+                                                                  Select mp).ToList
+                End If
                 _loadingProject = False
-            End If
-            enableOrDisableFields()
+                End If
+                enableOrDisableFields()
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -1504,5 +1505,8 @@ Public Class mainGUI2
         If DirectCast(e, Events.EventSourceArgs).Source <> eEventSource.Code Then WriteProject()
     End Sub
 
-
+    Private Sub ReloadDatabaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReloadDatabaseToolStripMenuItem.Click
+        advtreeDatabases.SelectedNode.Nodes.Clear()
+        databaseNodeHandler(advtreeDatabases.SelectedNode, New EventArgs)
+    End Sub
 End Class
