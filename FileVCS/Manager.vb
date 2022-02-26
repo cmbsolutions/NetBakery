@@ -12,15 +12,18 @@ Public Class Manager
     Public Sub ScanForFiles(location As String)
         If Not IO.Directory.Exists(location) Then Exit Sub
 
-        ScanPath = location
+        If Not IO.Directory.Exists(IO.Path.Combine(location, "Models")) Then IO.Directory.CreateDirectory(IO.Path.Combine(location, "Models"))
+        ScanPath = IO.Path.Combine(location, "Models")
+
         PhysicalFiles = New List(Of Models.vcsObject)
 
         For Each f In IO.Directory.EnumerateFiles(location, "*.*", IO.SearchOption.AllDirectories)
             PhysicalFiles.Add(New Models.vcsObject With {
-                        .filename = IO.Path.GetFileName(f),
-                        .location = IO.Path.GetDirectoryName(f).Replace(location, ""),
-                        .hash = Utils.GetFileHash(f)
-                        })
+                    .filename = IO.Path.GetFileName(f),
+                    .location = IO.Path.GetDirectoryName(f).Replace(location, "\Models"),
+                    .hash = Utils.GetFileHash(f)
+                    })
+
         Next
     End Sub
 
@@ -93,19 +96,18 @@ Public Class Manager
         Return doc
     End Function
 
-
     Private Function GetFileType(filename As String) As Integer
         If Not IO.File.Exists(filename) Then Return 42
 
         Dim contents As String = IO.File.ReadAllText(filename)
 
-        If Regex.IsMatch(contents, "Models.{1,30}StoreCommands", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return 39
-        If Regex.IsMatch(contents, "Inherits Models.*?Context", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return 38
-        If Regex.IsMatch(contents, "Models.*?qprod", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return 41
-        If Regex.IsMatch(contents, "Models.*?qfunc", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return 41
-        If Regex.IsMatch(contents, "Models.*?Map", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return 43
-        If Regex.IsMatch(contents, "Models.*?qsel", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return 40
+        If Regex.IsMatch(contents, "Models.{1,30}StoreCommands", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return Models.ExplorerImage.DOCUMENTSCRIPT
+        If Regex.IsMatch(contents, "Inherits Models.*?Context", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return Models.ExplorerImage.DATABASE
+        If Regex.IsMatch(contents, "Models.*?qprod", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return Models.ExplorerImage.SCRIPT
+        If Regex.IsMatch(contents, "Models.*?qfunc", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return Models.ExplorerImage.SCRIPT
+        If Regex.IsMatch(contents, "Models.*?Map", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return Models.ExplorerImage.DATASHEET
+        If Regex.IsMatch(contents, "Models.*?qsel", RegexOptions.IgnoreCase Or RegexOptions.Singleline) Then Return Models.ExplorerImage.QUERY
 
-        Return 42
+        Return Models.ExplorerImage.TABLE
     End Function
 End Class

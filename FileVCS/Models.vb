@@ -45,5 +45,28 @@
         <Xml.Serialization.XmlAttributeAttribute()>
         Property ImageExpandedIndex As Integer = 23
     End Class
+
+    ''' <summary>
+    ''' Add 0 to get `original`
+    ''' Add 1 to get `add`
+    ''' Add 2 to get `check`
+    ''' Add 3 to get `error`
+    ''' Add 4 to get `remove`
+    ''' The above only works below 30
+    ''' </summary>
+    Public Enum ExplorerImage
+        APPLICATION = 0
+        DOCUMENT = 5
+        FOLDER = 10
+        FOLDEROPEN = 15
+        NOTEPAD = 20
+        BOOKOPEN = 25
+        DATABASE = 30
+        DOCUMENTSCRIPT = 31
+        QUERY = 32
+        SCRIPT = 33
+        TABLE = 34
+        DATASHEET = 35
+    End Enum
 End Namespace
 
