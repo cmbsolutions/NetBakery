@@ -4,44 +4,71 @@ Imports System.Xml.Serialization
 Imports System.Globalization
 
 Public Class Manager
-    Property PhysicalFiles As List(Of Models.vcsObject)
-    Property ChangedFiles As List(Of Models.vcsObject)
+    Property CurrentFiles As New List(Of Models.vcsObject)
+    Property OriginalFiles As New List(Of Models.vcsObject)
+    Property ChangedFiles As New List(Of Models.vcsObject)
+    Property NewFiles As New List(Of Models.vcsObject)
+    Property DeletedFiles As New List(Of Models.vcsObject)
+    Property MissingFiles As New List(Of Models.vcsObject)
 
     Private ScanPath As String
 
     Public Sub ScanForFiles(location As String)
         If Not IO.Directory.Exists(location) Then Exit Sub
 
-        If Not IO.Directory.Exists(IO.Path.Combine(location, "Models")) Then IO.Directory.CreateDirectory(IO.Path.Combine(location, "Models"))
-        ScanPath = IO.Path.Combine(location, "Models")
+        ScanPath = location
 
-        PhysicalFiles = New List(Of Models.vcsObject)
+        CurrentFiles = New List(Of Models.vcsObject)
 
         For Each f In IO.Directory.EnumerateFiles(location, "*.*", IO.SearchOption.AllDirectories)
-            PhysicalFiles.Add(New Models.vcsObject With {
-                    .filename = IO.Path.GetFileName(f),
-                    .location = IO.Path.GetDirectoryName(f).Replace(location, "\Models"),
-                    .hash = Utils.GetFileHash(f)
-                    })
+            Dim filePath = IO.Path.GetDirectoryName(f).Replace(location, "")
 
+            If filePath.ToLower.in({"models", "storecommands", "model", "table"}) Then
+                CurrentFiles.Add(New Models.vcsObject With {
+                                            .filename = IO.Path.GetFileName(f),
+                                            .location = IO.Path.GetDirectoryName(f).Replace(location, ""),
+                                            .hash = Utils.GetFileHash(f)
+                                            })
+            End If
         Next
+
+        CheckForChanged()
     End Sub
 
-    Public Function GetPhysicalFilesTree() As XmlDocument
-        If PhysicalFiles Is Nothing Then Return New XmlDocument
+    Private Sub CheckForChanged()
+        If CurrentFiles Is Nothing Or OriginalFiles Is Nothing Then Exit Sub
 
-        Dim tInfo As TextInfo = New CultureInfo("nl-NL", False).TextInfo
+        Dim MatchedPs = (From v In OriginalFiles
+                         Join p In CurrentFiles On p.filename Equals v.filename
+                         Select p).ToList
+
+        Dim MatchedVs = (From v In OriginalFiles
+                         Join p In CurrentFiles On p.filename Equals v.filename
+                         Select v).ToList
+
+        'Dim newPs = CurrentFiles.Except(MatchedPs).ToList
+        'Dim missingVs = OriginalFiles.Except(MatchedVs).ToList
+
+        NewFiles = OriginalFiles.Except(MatchedVs).ToList
+
+        ChangedFiles = MatchedPs.Except(From mp In MatchedPs
+                                        Join mv In MatchedVs On mp.filename Equals mv.filename And mp.hash Equals mv.hash
+                                        Select mp).ToList
+    End Sub
+
+    Public Function GetCurrentFilesTree() As XmlDocument
+        If CurrentFiles Is Nothing Then Return New XmlDocument
 
         Dim at As New Models.AdvTree
         Dim lastDir As String = ""
         Dim pNode As Models.AdvTreeNode = Nothing
         Dim cNode As Models.AdvTreeNode = Nothing
 
+        CheckForChanged()
 
-        Dim groupedFiles = From file In PhysicalFiles
+        Dim groupedFiles = From file In CurrentFiles
                            Group By fileLocation = file.location Into Group = Group
                            Select New Models.GroupedFiles With {.Parent = fileLocation, .Files = Group.ToList}
-
 
         For Each p In groupedFiles
             If lastDir <> p.Parent Then

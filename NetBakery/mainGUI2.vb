@@ -16,7 +16,7 @@ Public Class mainGUI2
     Private _currentProject As Project
     Private _loadingProject As Boolean = False
     Private _TreeGXUnique As Dictionary(Of String, Tree.Node)
-    Private _FileComparer As New FileManager
+    Private _FileManager As New FileVCS.Manager
 
 #Region "Start and close"
     Private Sub mainGUI2_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -39,7 +39,8 @@ Public Class mainGUI2
 
             TitleText = FormHelpers.ApplicationTitle
             Text = TitleText
-            cboOutputType.Text = ".NET"
+            cboOutputType.SelectedIndex = 2
+            ExplorerControl1.ExplorerManager = _FileManager
 
             _dockFile = New IO.FileInfo(String.Format("{0}\{1}\{2}\layout.xml", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CMBSolutions", "NetBakery"))
 
@@ -673,7 +674,7 @@ Public Class mainGUI2
                     tmpModel.Text = $"{table.singleName}.php"
                     AddHandler tmpModel.NodeClick, AddressOf explorerModelNodeHandler
 
-                    If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpModel.Text) > 0 Then
+                    If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpModel.Text) > 0 Then
                         tmpModel.ImageIndex += 3
                         If mModel.ImageIndex = 18 Then
                             mModel.ImageIndex += 3
@@ -688,7 +689,7 @@ Public Class mainGUI2
                     tmpMapping.Text = $"{table.pluralName}Table.php"
                     AddHandler tmpMapping.NodeClick, AddressOf explorerMappingNodeHandler
 
-                    If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpMapping.Text) > 0 Then
+                    If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpMapping.Text) > 0 Then
                         tmpMapping.ImageIndex += 3
                         If mMapping.ImageIndex = 18 Then
                             mMapping.ImageIndex += 3
@@ -724,7 +725,7 @@ Public Class mainGUI2
 
                     tmpModel.Text = $"{table.singleName}.vb"
                     AddHandler tmpModel.NodeClick, AddressOf explorerModelNodeHandler
-                    If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpModel.Text) > 0 Then
+                    If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpModel.Text) > 0 Then
                         tmpModel.ImageIndex += 3
                         If mModel.ImageIndex = 18 Then
                             mModel.ImageIndex += 3
@@ -737,7 +738,7 @@ Public Class mainGUI2
                     tmpMapping.TagString = table.name
                     tmpMapping.Text = $"{table.singleName}Map.vb"
                     AddHandler tmpMapping.NodeClick, AddressOf explorerMappingNodeHandler
-                    If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpMapping.Text) > 0 Then
+                    If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpMapping.Text) > 0 Then
                         tmpMapping.ImageIndex += 3
                         If mMapping.ImageIndex = 18 Then
                             mMapping.ImageIndex += 3
@@ -761,7 +762,7 @@ Public Class mainGUI2
                     tmpNode.TagString = routine.name
                     tmpNode.Text = $"{routine.name}.vb"
                     AddHandler tmpNode.NodeClick, AddressOf explorerRoutineNodeHandler
-                    If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
+                    If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
                         tmpNode.ImageIndex += 3
                     End If
 
@@ -782,7 +783,7 @@ Public Class mainGUI2
                         tmpNode.TagString = routine.name
                         tmpNode.Text = $"{routine.name}Model.vb"
                         AddHandler tmpNode.NodeClick, AddressOf explorerRoutineModelNodeHandler
-                        If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
+                        If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
                             tmpNode.ImageIndex += 3
                             If mStoreCommandModels.ImageIndex = 23 Then mStoreCommandModels.ImageIndex += 3
                         End If
@@ -796,7 +797,7 @@ Public Class mainGUI2
                 tmpContext.Name = "nContext"
                 tmpContext.Text = $"{txtProjectName.Text}Context.vb"
                 AddHandler tmpContext.NodeClick, AddressOf explorerContextNodeHandler
-                If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpContext.Text) > 0 Then
+                If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpContext.Text) > 0 Then
                     tmpContext.ImageIndex += 3
                 End If
                 mModel.Nodes.Add(tmpContext)
@@ -808,7 +809,7 @@ Public Class mainGUI2
                     tmpContext.Name = "nStoreCommandsContext"
                     tmpContext.Text = $"{txtProjectName.Text}StoreCommandsContext.vb"
                     AddHandler tmpContext.NodeClick, AddressOf explorerStoreCommandsNodeHandler
-                    If _FileComparer.ChangedFiles.LongCount(Function(c) c.filename = tmpContext.Text) > 0 Then
+                    If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpContext.Text) > 0 Then
                         tmpContext.ImageIndex += 3
                     End If
                     mModel.Nodes.Add(tmpContext)
@@ -862,25 +863,13 @@ Public Class mainGUI2
                 IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}StoreCommands.vb", _mngr.generateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value))
             End If
 
-            _currentProject.generatedoutputs = New List(Of outputItem)
-
-
-            For Each pf In (From f In IO.Directory.EnumerateFiles(_currentProject.projectoutputlocation, "*.*", IO.SearchOption.AllDirectories) Select New IO.FileInfo(f)).ToList
-                _currentProject.generatedoutputs.Add(New outputItem With {
-                                                    .filename = pf.Name,
-                                                    .location = pf.DirectoryName,
-                                                    .objecttype = "file",
-                                                    .hash = _FileComparer.GetFileHash(pf.FullName)})
-            Next
             WriteProject()
+            _FileManager.OriginalFiles = _FileManager.CurrentFiles
+            _currentProject.generatedoutputs = _FileManager.OriginalFiles
 
-            _FileComparer.ScanForFiles(_currentProject.projectoutputlocation)
+            _FileManager.ScanForFiles(_currentProject.projectoutputlocation)
 
-            AdvTreeFiles.Nodes.Clear()
-            AdvTreeFiles.Load(_FileComparer.GetPhysicalFilesTree)
-            AdvTreeFiles.DeepSort = True
-            AdvTreeFiles.Nodes.Sort()
-            AdvTreeFiles.Refresh()
+            ExplorerControl1.RefreshExplorer()
 
             MessageBox.Show("Output generated")
         Catch ex As Exception
@@ -1346,33 +1335,14 @@ Public Class mainGUI2
                     databaseNodeHandler(selectedDB, New AdvTree.AdvTreeNodeEventArgs(AdvTree.eTreeAction.Code, selectedDB))
                 End If
 
-                _FileComparer.ScanForFiles(_currentProject.projectoutputlocation)
+                _FileManager.ScanForFiles(_currentProject.projectoutputlocation)
+                If _currentProject.generatedoutputs IsNot Nothing Then _FileManager.OriginalFiles = _currentProject.generatedoutputs
 
-                AdvTreeFiles.Nodes.Clear()
-                AdvTreeFiles.Load(_FileComparer.GetPhysicalFilesTree)
-                AdvTreeFiles.DeepSort = True
-                AdvTreeFiles.Nodes.Sort()
-                AdvTreeFiles.Refresh()
+                ExplorerControl1.RefreshExplorer()
 
-                If _currentProject.generatedoutputs IsNot Nothing Then
-                    Dim MatchedPs = (From v In _currentProject.generatedoutputs
-                                     Join p In _FileComparer.PhysicalFiles On p.filename Equals v.filename
-                                     Select p).ToList
-
-                    Dim MatchedVs = (From v In _currentProject.generatedoutputs
-                                     Join p In _FileComparer.PhysicalFiles On p.filename Equals v.filename
-                                     Select v).ToList
-
-                    Dim newPs = _FileComparer.PhysicalFiles.Except(MatchedPs).ToList
-                    Dim missingVs = _currentProject.generatedoutputs.Except(MatchedVs).ToList
-
-                    _FileComparer.ChangedFiles = MatchedPs.Except(From mp In MatchedPs
-                                                                  Join mv In MatchedVs On mp.filename Equals mv.filename And mp.hash Equals mv.hash
-                                                                  Select mp).ToList
-                End If
                 _loadingProject = False
-                End If
-                enableOrDisableFields()
+            End If
+            enableOrDisableFields()
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -1388,7 +1358,7 @@ Public Class mainGUI2
             End If
 
             _currentProject = Nothing
-            AdvTreeFiles.Nodes.Clear()
+
             advtreeOutputExplorer.Nodes.Clear()
             advtreeDatabases.Nodes.Clear()
 
@@ -1405,6 +1375,9 @@ Public Class mainGUI2
                     btnSaveProject.RaiseClick()
                 End If
             End If
+
+            If cboOutputType.SelectedItem Is Nothing Then cboOutputType.SelectedIndex = 2
+            _FileManager = New FileVCS.Manager
 
             _currentProject = New Project
             _currentProject.outputtype = cboOutputType.Text
