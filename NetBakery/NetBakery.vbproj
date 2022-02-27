@@ -229,7 +229,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="customTextTraceListener.vb" />
-    <Compile Include="FileManager.vb" />
+    <Compile Include="Extensions.vb" />
     <Compile Include="formHelpers.vb" />
     <Compile Include="Generators\iGenerator.vb" />
     <Compile Include="Generators\legacy\Model.vb">
@@ -555,6 +555,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FileVCS\FileVCS.vbproj">
+      <Project>{fd714691-44dd-42e1-889b-895234e7e40c}</Project>
+      <Name>FileVCS</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

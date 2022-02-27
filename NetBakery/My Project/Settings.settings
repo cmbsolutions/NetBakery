@@ -5,13 +5,6 @@
     <Setting Name="defaultConnectionString" Type="System.String" Scope="User">
       <Value Profile="(Default)">server={0};user id={1};password={2};database=information_schema;allowuservariables=True;characterset=utf8mb4;interactivesession=True;treattinyasboolean=False;compress=True;persistsecurityinfo=True;sslmode={3}</Value>
     </Setting>
-    <Setting Name="customDictionary" Type="System.Collections.Specialized.StringCollection" Scope="User">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;string&gt;emailuse|emailuses&lt;/string&gt;
-  &lt;string&gt;erroremailuse|erroremailuses&lt;/string&gt;
-&lt;/ArrayOfString&gt;</Value>
-    </Setting>
     <Setting Name="gui_style" Type="System.String" Scope="User">
       <Value Profile="(Default)">VisualStudio2012Dark</Value>
     </Setting>
@@ -35,6 +28,13 @@
     </Setting>
     <Setting Name="maxERDiagramDepth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="customDictionary" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;emailuse|emailuses&lt;/string&gt;
+  &lt;string&gt;erroremailuse|erroremailuses&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
     </Setting>
   </Settings>
 </SettingsFile>

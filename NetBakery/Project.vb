@@ -17,7 +17,7 @@ Public Class Project
 
     Property database As databaseObjects
 
-    Property generatedoutputs As List(Of outputItem)
+    Property generatedoutputs As List(Of FileVCS.Models.vcsObject)
 End Class
 
 Public Class databaseObjects
@@ -25,11 +25,4 @@ Public Class databaseObjects
     Property databasename As String
     Property tables As List(Of infoSchema.table)
     Property routines As List(Of infoSchema.routine)
-End Class
-
-Public Class outputItem
-    Property filename As String
-    Property location As String
-    Property objecttype As String
-    Property hash As String
 End Class
