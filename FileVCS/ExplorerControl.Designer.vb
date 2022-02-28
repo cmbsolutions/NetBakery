@@ -22,14 +22,15 @@ Partial Class ExplorerControl
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ExplorerControl))
         Me.atExplorer = New DevComponents.AdvTree.AdvTree()
+        Me.ilExplorer = New System.Windows.Forms.ImageList(Me.components)
         Me.Node1 = New DevComponents.AdvTree.Node()
         Me.NodeConnector1 = New DevComponents.AdvTree.NodeConnector()
         Me.ElementStyle1 = New DevComponents.DotNetBar.ElementStyle()
-        Me.StyleManager1 = New DevComponents.DotNetBar.StyleManager()
-        Me.StyleManagerAmbient1 = New DevComponents.DotNetBar.StyleManagerAmbient()
-        Me.ilExplorer = New System.Windows.Forms.ImageList()
+        Me.StyleManager1 = New DevComponents.DotNetBar.StyleManager(Me.components)
+        Me.StyleManagerAmbient1 = New DevComponents.DotNetBar.StyleManagerAmbient(Me.components)
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.tSearch = New DevComponents.DotNetBar.Controls.TextBoxX()
         CType(Me.atExplorer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -63,27 +64,6 @@ Partial Class ExplorerControl
         Me.atExplorer.Styles.Add(Me.ElementStyle1)
         Me.atExplorer.TabIndex = 0
         Me.atExplorer.Text = "AdvTree1"
-        '
-        'Node1
-        '
-        Me.Node1.Expanded = True
-        Me.Node1.Name = "Node1"
-        Me.Node1.Text = "Node1"
-        '
-        'NodeConnector1
-        '
-        Me.NodeConnector1.LineColor = System.Drawing.SystemColors.ControlText
-        '
-        'ElementStyle1
-        '
-        Me.ElementStyle1.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ElementStyle1.Name = "ElementStyle1"
-        Me.ElementStyle1.TextColor = System.Drawing.SystemColors.ControlText
-        '
-        'StyleManager1
-        '
-        Me.StyleManager1.ManagerStyle = DevComponents.DotNetBar.eStyle.VisualStudio2012Dark
-        Me.StyleManager1.MetroColorParameters = New DevComponents.DotNetBar.Metro.ColorTables.MetroColorGeneratorParameters(System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(122, Byte), Integer), CType(CType(204, Byte), Integer)))
         '
         'ilExplorer
         '
@@ -125,6 +105,28 @@ Partial Class ExplorerControl
         Me.ilExplorer.Images.SetKeyName(33, "script.png")
         Me.ilExplorer.Images.SetKeyName(34, "table.png")
         Me.ilExplorer.Images.SetKeyName(35, "datasheet.png")
+        '
+        'Node1
+        '
+        Me.Node1.Expanded = True
+        Me.Node1.Name = "Node1"
+        Me.Node1.Text = "Node1"
+        '
+        'NodeConnector1
+        '
+        Me.NodeConnector1.LineColor = System.Drawing.Color.LightGray
+        '
+        'ElementStyle1
+        '
+        Me.ElementStyle1.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ElementStyle1.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ElementStyle1.Name = "ElementStyle1"
+        Me.ElementStyle1.TextColor = System.Drawing.Color.WhiteSmoke
+        '
+        'StyleManager1
+        '
+        Me.StyleManager1.ManagerStyle = DevComponents.DotNetBar.eStyle.VisualStudio2012Dark
+        Me.StyleManager1.MetroColorParameters = New DevComponents.DotNetBar.Metro.ColorTables.MetroColorGeneratorParameters(System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(122, Byte), Integer), CType(CType(204, Byte), Integer)))
         '
         'TableLayoutPanel1
         '
@@ -178,8 +180,6 @@ Partial Class ExplorerControl
         Me.ResumeLayout(False)
 
     End Sub
-
-    Friend WithEvents atExplorer As DevComponents.AdvTree.AdvTree
     Friend WithEvents Node1 As DevComponents.AdvTree.Node
     Friend WithEvents NodeConnector1 As DevComponents.AdvTree.NodeConnector
     Friend WithEvents ElementStyle1 As DevComponents.DotNetBar.ElementStyle
@@ -188,4 +188,5 @@ Partial Class ExplorerControl
     Friend WithEvents ilExplorer As ImageList
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents tSearch As DevComponents.DotNetBar.Controls.TextBoxX
+    Protected WithEvents atExplorer As DevComponents.AdvTree.AdvTree
 End Class

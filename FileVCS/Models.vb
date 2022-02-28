@@ -40,10 +40,10 @@
         Property Text As String
 
         <Xml.Serialization.XmlAttributeAttribute()>
-        Property ImageIndex As Integer = 18
+        Property ImageIndex As Integer = 10
 
         <Xml.Serialization.XmlAttributeAttribute()>
-        Property ImageExpandedIndex As Integer = 23
+        Property ImageExpandedIndex As Integer = 15
     End Class
 
     ''' <summary>

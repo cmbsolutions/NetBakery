@@ -117,8 +117,24 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="find" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\..\..\IconSets\Axialis icons\AxialisIcons-RibbonToolbar-Basic\png_format_32bpp_alpha\16x16\find.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="find" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMSSURBVDhPdZBrSFNhGMc7XtFPQUQfFPpYQSB+KQmi0FK3
+        eStNw0tooGmSlzlnad529YYiiBhUphiKmPfIeTubTs1Mm5VTp06nThnh1Dl1bu59es9oS4kO/N7r//9/
+        n+ecAQAbHH7JVQ6vuKKQVzxQwBHuFHKLpJgGfE47qTuJbYFFWdhkwgA2Ib6wzETN1D6/UAA4tJ0rKHU+
+        aaawDPgihTLzsKmpu2/xk2zhs2hmVTrwc3mktVc8X1xWaSjgCABX95HLL3E6FYCNXpj90oqqg95vc+MN
+        3zeGX83pxa+XjGSzykiK1QfiiUX1WHll9cGfkKRTAXkF/AaqxBYRqWic0QyVL5jJIgWQVUuIrFtBZJca
+        kTKtmZTNL09hLdXOStaLPMIWwGLnqDKzcqBfvjJSu2w6ZW5dR2TfJiKntpBkc98sEZaU77PY2cBkPXex
+        BcQ/SYa0DLZBqtJK6lTIZm7DZlKDhqe16ItSh6a2Ds2TPGHJnkWfzvK0BYQ/jFrFwKR6e6h9A5H1OIR6
+        WaJB0kUdkmsNaGPnCNZ0R2jmWSrzkNJmsNjnEhKTLW2cYQQEv6cHBEF9S+f81y0z2YNL7t9E4tkdJNMZ
+        4ZfhGHR7RqSSyRWzlI4RGLIWHpNkb6uARg/08/NnQFBIqGlauT42t2smZ7bR8MY+kutNoNEb0apyXTMb
+        /SjuiNLRQqL5DxIEf38iNeCLWmtI44eOefW2fnTvCP3Q6g8VokGJMiom1mKm34uF+5mdhjB2R01y0YCD
+        LcCfFuCMBe8okZW4x/GH+BxZ94HhiRCe2QbVXavArByHyOyet8zyEXtLgBUs9PX1o1fjtuR4fYxnNZ0R
+        3H2HFvE0NKUFypqV0DSyC0MKE6SXSSEys7PyVAAFnRFEhIVF2HG4fFcWi+3o4xto537xsrN3mECUKhRD
+        3eAWtE3ooWV0G0KTmvb+CbDC5QmIl7n5xM3b/sQFt0tODo4ubt7BnOE0/iC8EWkgKa8Hbtxl1ljE+DuP
+        cf8PHgRh50UQxC3Czj7I83rMhE9A7vEVj+BOF9ez134Djep8S1j5oG4AAAAASUVORK5CYII=
+</value>
   </data>
 </root>

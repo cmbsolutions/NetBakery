@@ -2,6 +2,7 @@ Imports DevComponents
 Imports DevComponents.DotNetBar
 Imports Newtonsoft.Json
 
+
 Public Class mainGUI2
     Private _mngr As New infoSchema.manager
     Private _currentConnection As infoSchema.connection
@@ -88,7 +89,11 @@ Public Class mainGUI2
 
             saveConnections()
 
-            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then btnSaveProject.RaiseClick()
+            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
+                If MessageBox.Show("Project has changed. Save changes?", "Save changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    btnSaveProject.RaiseClick()
+                End If
+            End If
 
             For Each frm As Form In My.Application.OpenForms
                 If frm.Name <> Name Then
@@ -137,15 +142,16 @@ Public Class mainGUI2
 #Region "Databases and connections tab"
 
     Private Sub btnNewConnection_Click(sender As Object, e As EventArgs) Handles btnNewConnection.Click
-        Dim frx = New connection_editor
+        Using frx = New connection_editor
 
-        frx._conn = _connections
+            frx._conn = _connections
 
-        If frx.ShowDialog = DialogResult.OK Then
-            saveConnections()
-            cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
-            cboConnecions.Refresh()
-        End If
+            If frx.ShowDialog = DialogResult.OK Then
+                saveConnections()
+                cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
+                cboConnecions.Refresh()
+            End If
+        End Using
     End Sub
 
     Private Sub saveConnections()
@@ -189,16 +195,17 @@ Public Class mainGUI2
                 End If
             End If
 
-            Dim frx = New connection_editor
+            Using frx = New connection_editor
 
-            frx._conn = _connections
-            frx.loadConnection(cboConnecions.Text)
+                frx._conn = _connections
+                frx.loadConnection(cboConnecions.Text)
 
-            If frx.ShowDialog = DialogResult.OK Then
-                saveConnections()
-                cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
-                cboConnecions.Refresh()
-            End If
+                If frx.ShowDialog = DialogResult.OK Then
+                    saveConnections()
+                    cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
+                    cboConnecions.Refresh()
+                End If
+            End Using
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -400,8 +407,8 @@ Public Class mainGUI2
                 dgvIndexes.Refresh()
                 dgvReferences.Refresh()
 
-                'dcObjectInfo.Selected = True
-                'TabControl1.SelectedPanel = TabControlPanel1
+                dcObjectInfo.Selected = True
+                TabControl1.SelectedPanel = TabControlPanel1
 
             End If
 
@@ -614,16 +621,24 @@ Public Class mainGUI2
 #Region "outputExplorer"
     Private Sub btnHomeOutputExplorer_Click(sender As Object, e As EventArgs) Handles btnHomeOutputExplorer.Click
         Try
-            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype = ".NET" Then
-                Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
-                    advtreeOutputExplorer.Nodes.Clear()
-                    advtreeOutputExplorer.Load(ts)
-                End Using
-            Else
-                Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
-                    advtreeOutputExplorer.Nodes.Clear()
-                    advtreeOutputExplorer.Load(ts)
-                End Using
+            If _currentProject IsNot Nothing Then
+                Select Case _currentProject.outputtype.ToLower
+                    Case "net5"
+                        Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
+                            advtreeOutputExplorer.Nodes.Clear()
+                            advtreeOutputExplorer.Load(ts)
+                        End Using
+                    Case "php"
+                        Using ts As New IO.StringReader(My.Resources.phpOutputExplorer)
+                            advtreeOutputExplorer.Nodes.Clear()
+                            advtreeOutputExplorer.Load(ts)
+                        End Using
+                    Case Else
+                        Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
+                            advtreeOutputExplorer.Nodes.Clear()
+                            advtreeOutputExplorer.Load(ts)
+                        End Using
+                End Select
             End If
             advtreeOutputExplorer.Refresh()
         Catch ex As Exception
@@ -654,6 +669,7 @@ Public Class mainGUI2
             End If
             advtreeOutputExplorer.Refresh()
 
+            'TODO: Move this code to FileVCS.dll
             Dim tplModelAndMapping As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 13}
             Dim tplContextAndStoreCommands As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 8}
             Dim tplFunctions As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 28}
@@ -1278,6 +1294,15 @@ Public Class mainGUI2
         Try
             If _currentProject.projectfilename = "" Then _currentProject.projectfilename = IO.Path.Combine(_currentProject.projectlocation, $"{_currentProject.projectname}.nb2")
 
+            'Create backup file
+            If IO.File.Exists(_currentProject.projectfilename) Then
+                Dim backupFile As String = _currentProject.projectfilename.Replace(".nb2", $"_{Now:yyyyMMdd_HHmmss_fffff}.nbz")
+                Using zip As New Ionic.Zip.ZipFile(backupFile)
+                    zip.CompressionLevel = Ionic.Zlib.CompressionLevel.BestCompression
+                    zip.AddFile(_currentProject.projectfilename, "")
+                    zip.Save()
+                End Using
+            End If
             Using fs As New IO.FileStream(_currentProject.projectfilename, IO.FileMode.Create, IO.FileAccess.Write, IO.FileShare.None)
                 Using sw As New IO.StreamWriter(fs, System.Text.Encoding.UTF8)
 
@@ -1304,6 +1329,8 @@ Public Class mainGUI2
                 End If
             End If
 
+            _currentProject = New Project
+
             If OpenFileDialog1.ShowDialog = DialogResult.OK Then
                 _loadingProject = True
                 _currentProject = CType(JsonConvert.DeserializeObject(IO.File.ReadAllText(OpenFileDialog1.FileName), GetType(Project)), Project)
@@ -1322,7 +1349,7 @@ Public Class mainGUI2
                 _currentConnection = _currentProject.database.connection
 
                 btnConnect.RaiseClick(eEventSource.Code)
-
+                'TODO: Create database vcs
                 _mngr.setGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString)
                 _mngr.SetDatabase(_currentProject.database.databasename)
                 _mngr.tables = _currentProject.database.tables
@@ -1335,9 +1362,11 @@ Public Class mainGUI2
                     databaseNodeHandler(selectedDB, New AdvTree.AdvTreeNodeEventArgs(AdvTree.eTreeAction.Code, selectedDB))
                 End If
 
+                _FileManager = New FileVCS.Manager
+                ExplorerControl1.ExplorerManager = _FileManager
                 _FileManager.ScanForFiles(_currentProject.projectoutputlocation)
                 If _currentProject.generatedoutputs IsNot Nothing Then _FileManager.OriginalFiles = _currentProject.generatedoutputs
-
+                ExplorerControl1.ClearExplorer()
                 ExplorerControl1.RefreshExplorer()
 
                 _loadingProject = False
@@ -1361,6 +1390,7 @@ Public Class mainGUI2
 
             advtreeOutputExplorer.Nodes.Clear()
             advtreeDatabases.Nodes.Clear()
+            ExplorerControl1.ClearExplorer()
 
             enableOrDisableFields()
         Catch ex As Exception
@@ -1378,9 +1408,11 @@ Public Class mainGUI2
 
             If cboOutputType.SelectedItem Is Nothing Then cboOutputType.SelectedIndex = 2
             _FileManager = New FileVCS.Manager
+            ExplorerControl1.ClearExplorer()
 
             _currentProject = New Project
-            _currentProject.outputtype = cboOutputType.Text
+            Dim x As Editors.ComboItem = CType(cboOutputType.SelectedItem, Editors.ComboItem)
+            _currentProject.outputtype = x.Value.ToString
             _currentProject.useEnums = sbEnums.Value
             _currentProject.generateProcedureLocks = sbProcedureLocks.Value
 
@@ -1400,8 +1432,8 @@ Public Class mainGUI2
                 _currentProject.projectname = txtProjectName.Text
                 _currentProject.projectlocation = txtProjectFolder.Text
                 _currentProject.projectoutputlocation = txtOutputFolder.Text
-                Dim x As Editors.ComboItem = CType(cboOutputType.SelectedItem, Editors.ComboItem)
 
+                Dim x As Editors.ComboItem = CType(cboOutputType.SelectedItem, Editors.ComboItem)
                 _currentProject.outputtype = x.Value.ToString
                 _currentProject.useEnums = sbEnums.Value
                 _currentProject.generateProcedureLocks = sbProcedureLocks.Value

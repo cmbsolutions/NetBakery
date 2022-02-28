@@ -10,4 +10,8 @@
         atExplorer.Nodes.Sort()
         atExplorer.Refresh()
     End Sub
+
+    Public Sub ClearExplorer()
+        atExplorer.Nodes.Clear()
+    End Sub
 End Class
