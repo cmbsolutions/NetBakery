@@ -51,7 +51,7 @@ Namespace Models
 <#
 		Else
 #>
-			builder.HasIndex(Function(e) e.<#= i.columns.first.column.alias #>}, "<#= i.Name #>")<#= If(i.IsUnique, ".IsUnique()", "") #>
+			builder.HasIndex(Function(e) e.<#= i.columns.first.column.alias #>, "<#= i.Name #>")<#= If(i.IsUnique, ".IsUnique()", "") #>
 <#
 		End If
 	Next
