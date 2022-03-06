@@ -3,8 +3,7 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
-Imports System.Data.Entity
-Imports System.Data.Entity.Infrastructure
+Imports Microsoft.EntityFrameworkCore
 
 <# if _routine.isFunction then #>
 Namespace Models.StoreCommands.Functions
@@ -12,6 +11,11 @@ Namespace Models.StoreCommands.Functions
 Namespace Models.StoreCommands.Procedures
 <# End If #>
     Public Class <#= _routine.name #>
+        Inherits StoreCommandsBase
+
+        Public Sub New(ctx As DbContext)
+            MyBase.New(ctx)
+        End Sub
 <#
     Dim p1 As New List(Of String)
     Dim p2 As New List(Of String)
@@ -32,23 +36,43 @@ Namespace Models.StoreCommands.Procedures
         Public Overridable Function Execute(<#= String.Join(", ", p1) #><#= If(_withLock, ", sharedLock As Object", "") #>) As <#= _routine.returnParam.vbType #>
 <# If _withLock Then #>
             SyncLock sharedLock
-<# End If #>            
-            <#= If(_withLock, " ","") #>Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= _routine.returnParam.vbType #>)("SELECT <#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>).FirstOrDefault
-<# If _withLock Then #>
+                Dim result = context.Set(Of Models.<#= _routine.returnParam.vbType #>Model).FromSqlRaw("SELECT <#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>).FirstOrDefault
+                If result IsNot Nothing Then
+                    Return result.value
+                Else
+                    Return Nothing
+                End If
             End SyncLock
+<# Else #>
+            Dim result = context.Set(Of Models.<#= _routine.returnParam.vbType #>Model).FromSqlRaw("SELECT <#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>).FirstOrDefault
+            If result IsNot Nothing Then
+                Return result.value
+            Else
+                Return Nothing
+            End If
 <# End If #>
         End Function
 <#
         Else
             If _routine.returnsRecordset AndAlso _routine.returnLayout.columns IsNot Nothing AndAlso _routine.returnLayout.columns.Any() then
 #>
-        Public Overridable Function Execute(<#= String.Join(", ", p1) #><#= If(_withLock, ", sharedLock As Object", "") #>) As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.<#= _routine.returnLayout.singleName #>)
+        Public Overridable Function Execute(<#= String.Join(", ", p1) #><#= If(_withLock, ", sharedLock As Object", "") #>) As List(Of Models.<#= _routine.returnLayout.singleName #>)
 <# If _withLock Then #>
             SyncLock sharedLock
-<# End If #>            
-            <#= If(_withLock, " ","") #>Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= _routine.returnLayout.singleName #>)("<#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
-<# If _withLock Then #>
+                Dim result = context.Set(Of Models.<#= _routine.returnLayout.singleName #>).FromSqlRaw("CALL <#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>).ToList
+                If result IsNot Nothing Then
+                    Return result
+                Else
+                    Return Nothing
+                End If
             End SyncLock
+<# Else #>
+            Dim result = context.Set(Of Models.<#= _routine.returnLayout.singleName #>).FromSqlRaw("CALL <#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>).ToList
+            If result IsNot Nothing Then
+                Return result
+            Else
+                Return Nothing
+            End If
 <# End If #>
         End Function
 <#
@@ -57,10 +81,10 @@ Namespace Models.StoreCommands.Procedures
         Public Overridable Sub Execute(<#= String.Join(", ", p1) #><#= If(_withLock, ", sharedLock As Object", "") #>)
 <# If _withLock Then #>
             SyncLock sharedLock
-<# End If #>            
-            <#= If(_withLock, " ","") #>DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
-<# If _withLock Then #>
+                context.Database.ExecuteSqlRaw("<#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
             End SyncLock
+<# Else #>
+            context.Database.ExecuteSqlRaw("<#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
 <# End If #>
         End Sub
 <#          
@@ -73,34 +97,54 @@ Namespace Models.StoreCommands.Procedures
         Public Overridable Function Execute(<#= If(_withLock, "sharedLock As Object", "") #>) As <#= _routine.returnParam.vbType #>
 <# If _withLock Then #>
             SyncLock sharedLock
-<# End If #>            
-            <#= If(_withLock, " ","") #>Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= _routine.returnParam.vbType #>)("SELECT <#= _routine.name #>()").FirstOrDefault
-<# If _withLock Then #>
+                Dim result = context.Set(Of Models.<#= _routine.returnParam.vbType #>Model).FromSqlRaw("SELECT <#= _routine.name #>()").FirstOrDefault
+                If result IsNot Nothing Then
+                    Return result.value
+                Else
+                    Return Nothing
+                End If
             End SyncLock
+<# Else #>
+            Dim result = context.Set(Of Models.<#= _routine.returnParam.vbType #>Model).FromSqlRaw("SELECT <#= _routine.name #>()").FirstOrDefault
+            If result IsNot Nothing Then
+                Return result.value
+            Else
+                Return Nothing
+            End If
 <# End If #>
         End Function
 <#      Else
             If _routine.returnsRecordset AndAlso _routine.returnLayout.columns IsNot Nothing AndAlso _routine.returnLayout.columns.Any() then
 #>
-        Public Overridable Function Execute(<#= If(_withLock, "sharedLock As Object", "") #>) As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.<#= _routine.returnLayout.singleName #>)
+        Public Overridable Function Execute(<#= If(_withLock, "sharedLock As Object", "") #>) As List(Of Models.<#= _routine.returnLayout.singleName #>)
 <# If _withLock Then #>
             SyncLock sharedLock
-<# End If #>            
-            <#= If(_withLock, " ","") #>Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= _routine.returnLayout.singleName #>)("<#= _routine.name #>()")
-<# If _withLock Then #>
+                Dim result = context.Set(Of Models.<#= _routine.returnLayout.singleName #>).FromSqlRaw("CALL <#= _routine.name #>()").ToList
+                If result IsNot Nothing Then
+                    Return result
+                Else
+                    Return Nothing
+                End If
             End SyncLock
+<# Else #>
+            Dim result = context.Set(Of Models.<#= _routine.returnLayout.singleName #>).FromSqlRaw("CALL <#= _routine.name #>()").ToList
+            If result IsNot Nothing Then
+                Return result
+            Else
+                Return Nothing
+            End If
 <# End If #>
         End Function
 <#
             Else
 #>
-        Public Overridable sub Execute(<#= If(_withLock, "sharedLock As Object", "") #>)
+        Public Overridable Sub Execute(<#= If(_withLock, "sharedLock As Object", "") #>)
 <# If _withLock Then #>
             SyncLock sharedLock
-<# End If #>            
-            <#= If(_withLock, " ","") #>DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= _routine.name #>()")
-<# If _withLock Then #>
+                context.Database.ExecuteSqlRaw("<#= _routine.name #>()")
             End SyncLock
+<# Else #>
+            context.Database.ExecuteSqlRaw("<#= _routine.name #>()")
 <# End If #>
         End Sub
 <#

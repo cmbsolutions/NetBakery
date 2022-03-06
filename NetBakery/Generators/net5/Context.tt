@@ -36,9 +36,20 @@ Namespace Models
 		End Sub
 
 		Protected Overrides Sub OnModelCreating(modelBuilder As ModelBuilder)
+			' Tablemappings
 <# For Each table In _tables #>
 			modelBuilder.ApplyConfiguration(New <#= table.singleName #>Map())
 <# Next #>
+
+			' Models for stored functions
+			modelBuilder.Entity(Of integerModel).HasNoKey()
+			modelBuilder.Entity(Of stringModel).HasNoKey()
+			modelBuilder.Entity(Of dateModel).HasNoKey()
+			modelBuilder.Entity(Of decimalModel).HasNoKey()
+
+			' Models for Stored Procedures that return a recordset
+
+
 			OnModelCreatingPartial(modelBuilder)
 		End Sub
 
