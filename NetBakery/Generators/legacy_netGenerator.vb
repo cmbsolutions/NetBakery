@@ -23,7 +23,7 @@ Public Class legacy_netGenerator
         End Try
     End Function
 
-    Public Function generateContext(_t As List(Of table), name As String, recovery As Boolean) As String Implements iGenerator.generateContext
+    Public Function generateContext(_t As List(Of table), name As String, recovery As Boolean, routines As List(Of infoSchema.routine)) As String Implements iGenerator.generateContext
         Try
             Dim page = New My.Templates.legacy_net.Context(_t, name, recovery)
             Dim pageContent = page.TransformText
@@ -58,5 +58,9 @@ Public Class legacy_netGenerator
 
     Public Function generateStoreCommand(_r As routine, contextName As String, withLock As Boolean) As String Implements iGenerator.generateStoreCommand
         Throw New NotImplementedException()
+    End Function
+
+    Public Function generateStoredFunctionModels(vbType As String) As String Implements iGenerator.generateStoredFunctionModels
+        Return ""
     End Function
 End Class

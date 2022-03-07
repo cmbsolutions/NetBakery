@@ -271,9 +271,9 @@
     </Compile>
     <Compile Include="Generators\legacy_netTemplates.vb" />
     <Compile Include="Generators\net5\Context.vb">
-      <DependentUpon>Context.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>Context.tt</DependentUpon>
     </Compile>
     <Compile Include="Generators\net5\Map.vb">
       <AutoGen>True</AutoGen>
@@ -299,6 +299,11 @@
       <DependentUpon>StoreCommands.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Generators\net5\StoredFunctionModel.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoredFunctionModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Generators\phpGenerator.vb" />
     <Compile Include="Generators\phpTemplates.vb" />
@@ -474,8 +479,8 @@
     </Content>
     <Content Include="Generators\net5\Context.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>Context.vb</LastGenOutput>
       <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+      <LastGenOutput>Context.vb</LastGenOutput>
     </Content>
     <Content Include="Generators\net5\Map.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
@@ -507,6 +512,11 @@
       <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
       <Parameters>&lt;%3fxml version="1.0" encoding="utf-16"%3f&gt;
 &lt;ArrayOfParameterStorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Parameters>
+    </Content>
+    <Content Include="Generators\net5\StoredFunctionModel.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+      <LastGenOutput>StoredFunctionModel.vb</LastGenOutput>
     </Content>
     <Content Include="Generators\php\Context.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>

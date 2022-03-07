@@ -56,7 +56,7 @@ Namespace infoSchema
 
         Public Function generateContext(name As String) As String
             Try
-                Return _generator.generateContext(tables, name, False)
+                Return _generator.generateContext(tables, name, False, routines)
             Catch ex As Exception
                 Throw
             End Try

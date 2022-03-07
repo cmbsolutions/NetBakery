@@ -24,13 +24,13 @@ Namespace My.Templates.net5
     Partial Public Class Context
         Private _tables As List(Of infoSchema.table)
         Private _name As String
-        Private _recovery As Boolean
+        Private _routines As List(Of infoSchema.routine)
         Private p As New PluralizationService
 
-        Public Sub New(ByVal tables As List(Of infoSchema.table), ByVal name As String, ByVal recovery As Boolean)
+        Public Sub New(ByVal tables As List(Of infoSchema.table), ByVal name As String, ByVal routines As List(Of infoSchema.routine))
             _tables = tables
             _name = name
-            _recovery = recovery
+            _routines = routines
         End Sub
     End Class
 
@@ -65,6 +65,13 @@ Namespace My.Templates.net5
             _routine = _r
             _ContextName = contextName
             _withLock = withLock
+        End Sub
+    End Class
+
+    Partial Public Class StoredFunctionModel
+        Private _type As String
+        Public Sub New(vbType As String)
+            _type = vbType
         End Sub
     End Class
 

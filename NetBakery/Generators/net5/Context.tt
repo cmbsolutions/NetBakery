@@ -48,8 +48,9 @@ Namespace Models
 			modelBuilder.Entity(Of decimalModel).HasNoKey()
 
 			' Models for Stored Procedures that return a recordset
-
-
+<# For Each proc In _routines #>
+			modelBuilder.Entity(Of <#= proc.returnLayout.singleName #>).HasNoKey()
+<# Next #>
 			OnModelCreatingPartial(modelBuilder)
 		End Sub
 

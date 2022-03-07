@@ -23,7 +23,7 @@ Public Class phpGenerator
         End Try
     End Function
 
-    Public Function generateContext(_t As List(Of table), name As String, recovery As Boolean) As String Implements iGenerator.generateContext
+    Public Function generateContext(_t As List(Of table), name As String, recovery As Boolean, routines As List(Of infoSchema.routine)) As String Implements iGenerator.generateContext
         Try
             Dim page = New My.Templates.php.Context(_t, name, recovery)
             Dim pageContent = page.TransformText
@@ -67,5 +67,8 @@ Public Class phpGenerator
         End Try
     End Function
 
+    Public Function generateStoredFunctionModels(vbType As String) As String Implements iGenerator.generateStoredFunctionModels
+        Return ""
+    End Function
 End Class
 

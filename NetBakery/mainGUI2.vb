@@ -721,6 +721,14 @@ Public Class mainGUI2
                 Dim mMapping As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapMapping", True).FirstOrDefault
                 Dim mStoreCommands As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommands", True).FirstOrDefault
                 Dim mStoreCommandFunctions As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandFunctions", True).FirstOrDefault
+                Dim mStoreCommandFunctionModels As AdvTree.Node
+
+                If mStoreCommandFunctions IsNot Nothing Then
+                    mStoreCommandFunctionModels = mStoreCommandFunctions.Nodes.Find("mapStoreCommandFunctionModels", True).FirstOrDefault
+                Else
+                    mStoreCommandFunctionModels = mStoreCommands.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
+                End If
+
                 Dim mStoreCommandsProcedures As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandProcedures", True).FirstOrDefault
                 Dim mStoreCommandModels As AdvTree.Node
 
@@ -845,6 +853,7 @@ Public Class mainGUI2
             If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net5" Then
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands")
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands\Functions") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands\Functions")
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands\Functions\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands\Functions\Models")
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands\Procedures") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands\Procedures")
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands\Procedures\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands\Procedures\Models")
             Else
