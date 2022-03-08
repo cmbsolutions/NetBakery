@@ -66,9 +66,5 @@ Public Class phpGenerator
             Throw
         End Try
     End Function
-
-    Public Function generateStoredFunctionModels(vbType As String) As String Implements iGenerator.generateStoredFunctionModels
-        Return ""
-    End Function
 End Class
 

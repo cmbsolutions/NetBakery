@@ -7,6 +7,4 @@ Public Interface iGenerator
     Function generateStoreCommands(_f As List(Of infoSchema.routine), _p As List(Of infoSchema.routine), name As String, withLock As Boolean) As String
     Function generateStoreCommandSchema(_r As infoSchema.routine) As String
     Function generateStoreCommand(_r As infoSchema.routine, contextName As String, withLock As Boolean) As String
-
-    Function generateStoredFunctionModels(vbType As String) As String
 End Interface

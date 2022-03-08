@@ -364,7 +364,7 @@ Namespace infoSchema
                         While rdr.Read
                             If rt Is Nothing OrElse rt.name <> rdr("ROUTINE_NAME").ToString Then
                                 If rt IsNot Nothing Then
-                                    If rt.returnsRecordset Then
+                                    If rt.returnsRecordset AndAlso Not rt.isFunction Then
                                         getRoutineLayout(rt)
                                     End If
                                     routines.Add(rt)
@@ -388,9 +388,32 @@ Namespace infoSchema
 
                             If rdr("ROUTINE_TYPE").ToString = "FUNCTION" Then
                                 rt.isFunction = True
+                                rt.returnsRecordset = True
 
                                 If ToInt(rdr("ORDINAL_POSITION")) = 0 Then
                                     rt.returnParam = p
+                                    Dim specName = $"{p.vbType}Model"
+                                    Dim routineWithSameReturnLayout = routines.FirstOrDefault(Function(c) c.isFunction And c.returnLayout.name = specName)
+
+                                    If routineWithSameReturnLayout Is Nothing Then
+                                        rt.returnLayout = New table With {
+                                            .name = specName,
+                                            .singleName = _p.Singularize(.name),
+                                            .pluralName = _p.Pluralize(.name),
+                                            .columns = New List(Of column)({
+                                                                           New column With {
+                                                                                .name = "value",
+                                                                                .[alias] = AliasGenerator(.name),
+                                                                                .isNullable = True,
+                                                                                .vbType = p.vbType,
+                                                                                .mysqlType = p.mysqlType,
+                                                                                .maximumLength = p.maximumLength,
+                                                                                .numericPrecision = p.numericPrecision
+                                                                           }}
+                                            )}
+                                    Else
+                                        rt.returnLayout = routineWithSameReturnLayout.returnLayout
+                                    End If
                                 End If
                             End If
 
@@ -412,7 +435,7 @@ Namespace infoSchema
                         End While
 
                         If rt IsNot Nothing Then
-                            If rt.returnsRecordset Then
+                            If rt.returnsRecordset AndAlso Not rt.isFunction Then
                                 getRoutineLayout(rt)
                             End If
                             routines.Add(rt)

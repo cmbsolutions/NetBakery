@@ -793,7 +793,6 @@ Public Class mainGUI2
                     If routine.isFunction Then
                         If mStoreCommandFunctions IsNot Nothing Then
                             mStoreCommandFunctions.Nodes.Add(tmpNode)
-
                         End If
                     Else
                         If mStoreCommandsProcedures IsNot Nothing Then
@@ -802,16 +801,30 @@ Public Class mainGUI2
                     End If
 
                     If routine.returnsRecordset Then
-                        tmpNode = tplModelAndMapping.DeepCopy
-                        tmpNode.Name = $"n{routine.name}Model"
-                        tmpNode.TagString = routine.name
-                        tmpNode.Text = $"{routine.name}Model.vb"
-                        AddHandler tmpNode.NodeClick, AddressOf explorerRoutineModelNodeHandler
-                        If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
-                            tmpNode.ImageIndex += 3
-                            If mStoreCommandModels.ImageIndex = 23 Then mStoreCommandModels.ImageIndex += 3
+                        If routine.isFunction Then
+                            tmpNode = tplModelAndMapping.DeepCopy
+                            tmpNode.Name = routine.returnLayout.name
+                            tmpNode.TagString = routine.name
+                            tmpNode.Text = routine.returnLayout.name
+                            AddHandler tmpNode.NodeClick, AddressOf explorerRoutineModelNodeHandler
+                            If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
+                                tmpNode.ImageIndex += 3
+                                If mStoreCommandFunctionModels.ImageIndex = 23 Then mStoreCommandFunctionModels.ImageIndex += 3
+                            End If
+
+                            If mStoreCommandFunctionModels.Nodes.Find(tmpNode.Name, True).Length = 0 Then mStoreCommandFunctionModels.Nodes.Add(tmpNode)
+                        Else
+                            tmpNode = tplModelAndMapping.DeepCopy
+                            tmpNode.Name = $"n{routine.name}Model"
+                            tmpNode.TagString = routine.name
+                            tmpNode.Text = $"{routine.name}Model.vb"
+                            AddHandler tmpNode.NodeClick, AddressOf explorerRoutineModelNodeHandler
+                            If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
+                                tmpNode.ImageIndex += 3
+                                If mStoreCommandModels.ImageIndex = 23 Then mStoreCommandModels.ImageIndex += 3
+                            End If
+                            mStoreCommandModels.Nodes.Add(tmpNode)
                         End If
-                        mStoreCommandModels.Nodes.Add(tmpNode)
                     End If
                 Next
 
@@ -869,6 +882,7 @@ Public Class mainGUI2
                 If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net5" Then
                     If s.isFunction Then
                         IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Functions\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Functions\Models\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
                     Else
                         IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Procedures\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
                         If s.returnsRecordset Then

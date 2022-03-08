@@ -42,15 +42,21 @@ Namespace Models
 <# Next #>
 
 			' Models for stored functions
-			modelBuilder.Entity(Of integerModel).HasNoKey()
-			modelBuilder.Entity(Of stringModel).HasNoKey()
-			modelBuilder.Entity(Of dateModel).HasNoKey()
-			modelBuilder.Entity(Of decimalModel).HasNoKey()
+<# Dim functionGroup = From d In _routines.where(function(c) c.isFunction)
+				  Group d By dName = d.returnLayout.name 
+				  Into dGroup = Group
+				  Select dGroup
+
+	For Each grp In functionGroup
+#>
+			modelBuilder.Entity(Of <#= grp.First.returnLayout.singleName #>).HasNoKey()
+<# Next #>
 
 			' Models for Stored Procedures that return a recordset
-<# For Each proc In _routines #>
+<# For Each proc In _routines.where(function(c) not c.isFunction and c.returnsRecordset) #>
 			modelBuilder.Entity(Of <#= proc.returnLayout.singleName #>).HasNoKey()
 <# Next #>
+
 			OnModelCreatingPartial(modelBuilder)
 		End Sub
 

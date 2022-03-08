@@ -59,8 +59,4 @@ Public Class legacy_netGenerator
     Public Function generateStoreCommand(_r As routine, contextName As String, withLock As Boolean) As String Implements iGenerator.generateStoreCommand
         Throw New NotImplementedException()
     End Function
-
-    Public Function generateStoredFunctionModels(vbType As String) As String Implements iGenerator.generateStoredFunctionModels
-        Return ""
-    End Function
 End Class

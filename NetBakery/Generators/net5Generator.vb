@@ -25,7 +25,7 @@ Public Class net5Generator
 
     Public Function generateContext(_t As List(Of table), name As String, recovery As Boolean, routines As List(Of infoSchema.routine)) As String Implements iGenerator.generateContext
         Try
-            Dim page = New My.Templates.net5.Context(_t, name, routines.Where(Function(c) Not c.isFunction And c.returnsRecordset).ToList)
+            Dim page = New My.Templates.net5.Context(_t, name, routines.Where(Function(c) c.returnsRecordset).ToList)
             Dim pageContent = page.TransformText
 
             Return pageContent
@@ -60,17 +60,6 @@ Public Class net5Generator
         Try
             Dim page = New My.Templates.net5.StoreCommand(_r, contextName, withLock)
             Dim pageContent = page.TransformText
-
-            Return pageContent
-        Catch ex As Exception
-            Throw
-        End Try
-    End Function
-
-    Public Function generateStoredFunctionModels(vbType As String) As String Implements iGenerator.generateStoredFunctionModels
-        Try
-            Dim page = New My.Templates.net5.StoredFunctionModel(vbType)
-            Dim pageContent = page.transformText
 
             Return pageContent
         Catch ex As Exception

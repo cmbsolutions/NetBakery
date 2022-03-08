@@ -67,13 +67,4 @@ Namespace My.Templates.net5
             _withLock = withLock
         End Sub
     End Class
-
-    Partial Public Class StoredFunctionModel
-        Private _type As String
-        Public Sub New(vbType As String)
-            _type = vbType
-        End Sub
-    End Class
-
-
 End Namespace
