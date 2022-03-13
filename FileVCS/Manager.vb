@@ -23,7 +23,7 @@ Public Class Manager
         For Each f In IO.Directory.EnumerateFiles(location, "*.*", IO.SearchOption.AllDirectories)
             Dim filePath = IO.Path.GetDirectoryName(f).Replace(location, "")
 
-            If filePath.ToLower.in({"models", "storecommands", "model", "table"}) Then
+            If filePath.ToLower.in({"models", "storecommands", "model", "table", "mapping", "functions", "procedures"}) Then
                 CurrentFiles.Add(New Models.vcsObject With {
                                             .filename = IO.Path.GetFileName(f),
                                             .location = IO.Path.GetDirectoryName(f).Replace(location, ""),
@@ -33,6 +33,10 @@ Public Class Manager
         Next
 
         CheckForChanged()
+    End Sub
+
+    Friend Sub ScanAgain()
+        ScanForFiles(ScanPath)
     End Sub
 
     Private Sub CheckForChanged()
@@ -61,52 +65,15 @@ Public Class Manager
 
         Dim at As New Models.AdvTree
         Dim lastDir As String = ""
-        Dim pNode As Models.AdvTreeNode = Nothing
-        Dim cNode As Models.AdvTreeNode = Nothing
+        Dim pNode As New Models.AdvTreeNode With {.Expanded = True}
 
         CheckForChanged()
 
-        Dim groupedFiles = From file In CurrentFiles
-                           Group By fileLocation = file.location Into Group = Group
-                           Select New Models.GroupedFiles With {.Parent = fileLocation, .Files = Group.ToList}
+        pNode.Node = GetNodes(ScanPath)
 
-        For Each p In groupedFiles
-            If lastDir <> p.Parent Then
-                cNode = New Models.AdvTreeNode With {
-                    .Expanded = True,
-                    .Text = p.Parent
-                }
+        at.Node = pNode
 
-                If lastDir = "" Then
-                    pNode = cNode
-                    at.Node = pNode
-                    lastDir = p.Parent
-                ElseIf p.Parent.StartsWith(lastDir) Then
-                    cNode.Text = p.Parent.Replace(lastDir, "")
-                    cNode.ParentNode = pNode
-                    pNode.Node.Add(cNode)
-                    pNode = cNode
-                    lastDir = p.Parent
-                Else
-                    pNode = pNode.ParentNode
-                    cNode.ParentNode = pNode
-                    cNode.Text = p.Parent.Replace(pNode.Text, "")
-                    pNode.Node.Add(cNode)
-                    pNode = cNode
-                    lastDir = p.Parent
-                End If
-            End If
 
-            For Each child In p.Files
-                pNode.Node.Add(New Models.AdvTreeNode With {
-                   .ParentNode = pNode,
-                   .Expanded = False,
-                   .Name = child.filename,
-                   .Text = child.filename,
-                   .ImageIndex = GetFileType($"{ScanPath}{child.location}\{child.filename}")
-               })
-            Next
-        Next
 
         Dim seri As New XmlSerializer(GetType(Models.AdvTree), "")
         Dim buffer() As Byte
@@ -121,6 +88,41 @@ Public Class Manager
         Dim doc As New XmlDocument
         doc.LoadXml(Text.Encoding.UTF8.GetString(buffer))
         Return doc
+    End Function
+
+
+    Private Function GetNodes(path As String) As List(Of Models.AdvTreeNode)
+        Dim nodes As New List(Of Models.AdvTreeNode)
+
+        Try
+            For Each subPath In IO.Directory.GetDirectories(path)
+
+                Dim filePath = IO.Path.GetFileName(subPath)
+
+                If filePath.ToLower.in({"models", "storecommands", "model", "table", "mapping", "functions", "procedures"}) Then
+                    nodes.Add(New Models.AdvTreeNode With {
+                          .Expanded = True,
+                          .Text = IO.Path.GetFileName(subPath),
+                          .Name = subPath,
+                          .Node = GetNodes(subPath)
+                          })
+                End If
+            Next
+
+            For Each file In IO.Directory.GetFiles(path)
+
+                nodes.Add(New Models.AdvTreeNode With {
+                   .Expanded = False,
+                   .Name = file,
+                   .Text = IO.Path.GetFileName(file),
+                   .ImageIndex = GetFileType(file)
+                })
+            Next
+        Catch ex As Exception
+
+        End Try
+
+        Return nodes
     End Function
 
     Private Function GetFileType(filename As String) As Integer

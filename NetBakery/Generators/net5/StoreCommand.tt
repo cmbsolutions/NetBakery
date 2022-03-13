@@ -31,10 +31,13 @@ Namespace Models.StoreCommands.Procedures
 
     If p1.count() > 0 Then
         If _routine.isFunction then
-
+            If _routine.returnLayout.columns.first.isNullable and _routine.returnLayout.columns.first.vbtype <> "String" Then
 #>
-        Public Overridable Function Execute(<#= String.Join(", ", p1) #><#= If(_withLock, ", sharedLock As Object", "") #>) As <#= _routine.returnParam.vbType #>
-<# If _withLock Then #>
+        Public Overridable Function Execute(<#= String.Join(", ", p1) #><#= If(_withLock, ", sharedLock As Object", "") #>) As <#= _routine.returnLayout.columns.first.vbtype #>?
+<#          Else #>
+        Public Overridable Function Execute(<#= String.Join(", ", p1) #><#= If(_withLock, ", sharedLock As Object", "") #>) As <#= _routine.returnLayout.columns.first.vbtype #>
+<#          End If
+    If _withLock Then #>
             SyncLock sharedLock
                 Dim result = context.Set(Of Models.<#= _routine.returnParam.vbType #>Model).FromSqlRaw("SELECT <#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>).FirstOrDefault
                 If result IsNot Nothing Then
@@ -93,9 +96,13 @@ Namespace Models.StoreCommands.Procedures
         End if
     Else
         If _routine.isFunction then
+            If _routine.returnLayout.columns.first.isNullable and _routine.returnLayout.columns.first.vbtype <> "String" Then
 #>
-        Public Overridable Function Execute(<#= If(_withLock, "sharedLock As Object", "") #>) As <#= _routine.returnParam.vbType #>
-<# If _withLock Then #>
+        Public Overridable Function Execute(<#= If(_withLock, "sharedLock As Object", "") #>) As <#= _routine.returnLayout.columns.first.vbtype #>?
+<#          Else #>
+        Public Overridable Function Execute(<#= If(_withLock, "sharedLock As Object", "") #>) As <#= _routine.returnLayout.columns.first.vbtype #>
+<#          End If
+   If _withLock Then #>
             SyncLock sharedLock
                 Dim result = context.Set(Of Models.<#= _routine.returnParam.vbType #>Model).FromSqlRaw("SELECT <#= _routine.name #>()").FirstOrDefault
                 If result IsNot Nothing Then

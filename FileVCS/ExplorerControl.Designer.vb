@@ -33,8 +33,14 @@ Partial Class ExplorerControl
         Me.StyleManagerAmbient1 = New DevComponents.DotNetBar.StyleManagerAmbient(Me.components)
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.tSearch = New DevComponents.DotNetBar.Controls.TextBoxX()
+        Me.Bar1 = New DevComponents.DotNetBar.Bar()
+        Me.bRefresh = New DevComponents.DotNetBar.ButtonItem()
+        Me.bCut = New DevComponents.DotNetBar.ButtonItem()
+        Me.bCopy = New DevComponents.DotNetBar.ButtonItem()
+        Me.bPaste = New DevComponents.DotNetBar.ButtonItem()
         CType(Me.atExplorer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel1.SuspendLayout()
+        CType(Me.Bar1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'atExplorer
@@ -53,14 +59,14 @@ Partial Class ExplorerControl
         Me.atExplorer.DragDropNodeCopyEnabled = False
         Me.atExplorer.ForeColor = System.Drawing.Color.WhiteSmoke
         Me.atExplorer.ImageList = Me.ilExplorer
-        Me.atExplorer.Location = New System.Drawing.Point(0, 23)
+        Me.atExplorer.Location = New System.Drawing.Point(0, 46)
         Me.atExplorer.Margin = New System.Windows.Forms.Padding(0)
         Me.atExplorer.Name = "atExplorer"
         Me.atExplorer.Nodes.AddRange(New DevComponents.AdvTree.Node() {Me.Node1})
         Me.atExplorer.NodesConnector = Me.NodeConnector1
         Me.atExplorer.NodeStyle = Me.ElementStyle1
         Me.atExplorer.PathSeparator = ";"
-        Me.atExplorer.Size = New System.Drawing.Size(250, 360)
+        Me.atExplorer.Size = New System.Drawing.Size(250, 337)
         Me.atExplorer.Styles.Add(Me.ElementStyle1)
         Me.atExplorer.TabIndex = 0
         Me.atExplorer.Text = "AdvTree1"
@@ -105,12 +111,16 @@ Partial Class ExplorerControl
         Me.ilExplorer.Images.SetKeyName(33, "script.png")
         Me.ilExplorer.Images.SetKeyName(34, "table.png")
         Me.ilExplorer.Images.SetKeyName(35, "datasheet.png")
+        Me.ilExplorer.Images.SetKeyName(36, "clip_copy.png")
+        Me.ilExplorer.Images.SetKeyName(37, "clip_cut.png")
+        Me.ilExplorer.Images.SetKeyName(38, "clip_paste.png")
+        Me.ilExplorer.Images.SetKeyName(39, "delete_button.png")
+        Me.ilExplorer.Images.SetKeyName(40, "refresh.png")
         '
         'Node1
         '
         Me.Node1.Expanded = True
         Me.Node1.Name = "Node1"
-        Me.Node1.Text = "Node1"
         '
         'NodeConnector1
         '
@@ -130,15 +140,18 @@ Partial Class ExplorerControl
         '
         'TableLayoutPanel1
         '
+        Me.TableLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(31, Byte), Integer), CType(CType(31, Byte), Integer), CType(CType(33, Byte), Integer))
         Me.TableLayoutPanel1.ColumnCount = 1
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
-        Me.TableLayoutPanel1.Controls.Add(Me.atExplorer, 0, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.tSearch, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.atExplorer, 0, 2)
+        Me.TableLayoutPanel1.Controls.Add(Me.tSearch, 0, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.Bar1, 0, 0)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 2
+        Me.TableLayoutPanel1.RowCount = 3
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(250, 383)
@@ -157,7 +170,7 @@ Partial Class ExplorerControl
         Me.tSearch.DisabledBackColor = System.Drawing.Color.Black
         Me.tSearch.Dock = System.Windows.Forms.DockStyle.Fill
         Me.tSearch.ForeColor = System.Drawing.Color.White
-        Me.tSearch.Location = New System.Drawing.Point(0, 0)
+        Me.tSearch.Location = New System.Drawing.Point(0, 23)
         Me.tSearch.Margin = New System.Windows.Forms.Padding(0)
         Me.tSearch.MaxLength = 255
         Me.tSearch.Name = "tSearch"
@@ -165,6 +178,55 @@ Partial Class ExplorerControl
         Me.tSearch.Size = New System.Drawing.Size(250, 23)
         Me.tSearch.TabIndex = 1
         Me.tSearch.WatermarkText = "Search for files..."
+        '
+        'Bar1
+        '
+        Me.Bar1.AccessibleDescription = "Bar1 (Bar1)"
+        Me.Bar1.AccessibleName = "Bar1"
+        Me.Bar1.AccessibleRole = System.Windows.Forms.AccessibleRole.ToolBar
+        Me.Bar1.AntiAlias = True
+        Me.Bar1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Bar1.DockSide = DevComponents.DotNetBar.eDockSide.Document
+        Me.Bar1.DoubleClickBehavior = DevComponents.DotNetBar.eDoubleClickBarBehavior.None
+        Me.Bar1.EqualButtonSize = True
+        Me.Bar1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.Bar1.Images = Me.ilExplorer
+        Me.Bar1.IsMaximized = False
+        Me.Bar1.Items.AddRange(New DevComponents.DotNetBar.BaseItem() {Me.bRefresh, Me.bCut, Me.bCopy, Me.bPaste})
+        Me.Bar1.Location = New System.Drawing.Point(0, 0)
+        Me.Bar1.Margin = New System.Windows.Forms.Padding(0)
+        Me.Bar1.Name = "Bar1"
+        Me.Bar1.Size = New System.Drawing.Size(250, 25)
+        Me.Bar1.Stretch = True
+        Me.Bar1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.Bar1.TabIndex = 2
+        Me.Bar1.TabStop = False
+        Me.Bar1.Text = "Bar1"
+        '
+        'bRefresh
+        '
+        Me.bRefresh.ImageIndex = 40
+        Me.bRefresh.Name = "bRefresh"
+        Me.bRefresh.Text = "Refresh"
+        '
+        'bCut
+        '
+        Me.bCut.BeginGroup = True
+        Me.bCut.ImageIndex = 37
+        Me.bCut.Name = "bCut"
+        Me.bCut.Text = "Cut"
+        '
+        'bCopy
+        '
+        Me.bCopy.ImageIndex = 36
+        Me.bCopy.Name = "bCopy"
+        Me.bCopy.Text = "ButtonItem2"
+        '
+        'bPaste
+        '
+        Me.bPaste.ImageIndex = 38
+        Me.bPaste.Name = "bPaste"
+        Me.bPaste.Text = "Paste"
         '
         'ExplorerControl
         '
@@ -177,6 +239,7 @@ Partial Class ExplorerControl
         Me.Size = New System.Drawing.Size(250, 383)
         CType(Me.atExplorer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel1.ResumeLayout(False)
+        CType(Me.Bar1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -189,4 +252,9 @@ Partial Class ExplorerControl
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents tSearch As DevComponents.DotNetBar.Controls.TextBoxX
     Protected WithEvents atExplorer As DevComponents.AdvTree.AdvTree
+    Friend WithEvents Bar1 As DevComponents.DotNetBar.Bar
+    Friend WithEvents bRefresh As DevComponents.DotNetBar.ButtonItem
+    Friend WithEvents bCut As DevComponents.DotNetBar.ButtonItem
+    Friend WithEvents bCopy As DevComponents.DotNetBar.ButtonItem
+    Friend WithEvents bPaste As DevComponents.DotNetBar.ButtonItem
 End Class

@@ -864,11 +864,11 @@ Public Class mainGUI2
             If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\Mapping") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\Mapping")
 
             If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net5" Then
-                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands")
-                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands\Functions") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands\Functions")
-                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands\Functions\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands\Functions\Models")
-                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands\Procedures") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands\Procedures")
-                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\StoreCommands\Procedures\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\StoreCommands\Procedures\Models")
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands")
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Functions") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Functions")
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\Models")
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures")
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\Models")
             Else
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommandSchemas") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommandSchemas")
             End If
@@ -881,12 +881,12 @@ Public Class mainGUI2
             For Each s In _mngr.routines.Where(Function(c) c.hasExport)
                 If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net5" Then
                     If s.isFunction Then
-                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Functions\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
-                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Functions\Models\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\Models\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
                     Else
-                        IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Procedures\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
                         If s.returnsRecordset Then
-                            IO.File.WriteAllText($"{txtOutputFolder.Text}\StoreCommands\Procedures\Models\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
+                            IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\Models\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
                         End If
                     End If
                 Else
@@ -1536,5 +1536,11 @@ Public Class mainGUI2
     Private Sub ReloadDatabaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReloadDatabaseToolStripMenuItem.Click
         advtreeDatabases.SelectedNode.Nodes.Clear()
         databaseNodeHandler(advtreeDatabases.SelectedNode, New EventArgs)
+    End Sub
+
+    Private Sub ExplorerControl1_ShowFileContentsEvent(fileName As String) Handles ExplorerControl1.ShowFileContentsEvent
+        scCodePreview.Text = IO.File.ReadAllText(fileName)
+        scCodePreview.Colorize(0, scCodePreview.Text.Length)
+        dcCodePreview.Selected = True
     End Sub
 End Class

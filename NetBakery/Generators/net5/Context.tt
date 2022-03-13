@@ -29,6 +29,15 @@ Namespace Models
 		Public Overridable Property <#= table.pluralName #> As DbSet(Of <#= table.singleName #>)
 <# Next #>
 
+		' Stored procedures
+<#  For Each r in _routines #>
+<# If r.isFunction Then #>
+		Public Property <#= r.name #> As New StoreCommands.Functions.<#= r.name #>(Me)
+<# Else #>
+		Public Property <#= r.name #> As New StoreCommands.Procedures.<#= r.name #>(Me)
+<# End If #>
+<# Next #>
+
 		Protected Overrides Sub OnConfiguring(ByVal optionsBuilder As DbContextOptionsBuilder)
 #If DEBUG Then
 			optionsBuilder.LogTo(Sub(e) Console.WriteLine(e), Microsoft.Extensions.Logging.LogLevel.Information)

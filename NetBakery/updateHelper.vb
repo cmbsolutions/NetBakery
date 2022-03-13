@@ -1,58 +1,58 @@
 ﻿Imports System.Net
 
 Public Class updateHelper
-    Property currentVersion As String = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
-    Property updateVersion As String = ""
+    'Property currentVersion As String = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
+    'Property updateVersion As String = ""
 
-    Public Function needsUpdate() As updateFile
-        Try
-            Dim client As New RestSharp.RestClient(My.Resources.updateLocationBaseURL)
-            Dim request As New RestSharp.RestRequest(My.Resources.updateLocationResource, RestSharp.Method.Get)
-            Dim response = client.ExecuteAsync(request)
+    'Public Function needsUpdate() As updateFile
+    '    Try
+    '        Dim client As New RestSharp.RestClient(My.Resources.updateLocationBaseURL)
+    '        Dim request As New RestSharp.RestRequest(My.Resources.updateLocationResource, RestSharp.Method.Get)
+    '        Dim response = client.ExecuteAsync(request)
 
-            response.Wait(5000)
+    '        response.Wait(5000)
 
-            If response.Result.IsSuccessful Then
-                Dim uf As updateFile = Newtonsoft.Json.JsonConvert.DeserializeObject(Of updateFile)(response.Result.Content)
+    '        If response.Result.IsSuccessful Then
+    '            Dim uf As updateFile = Newtonsoft.Json.JsonConvert.DeserializeObject(Of updateFile)(response.Result.Content)
 
-                If uf.major > My.Application.Info.Version.Major Then uf.doUpdate = True
-                If uf.major >= My.Application.Info.Version.Major And uf.minor > My.Application.Info.Version.Minor Then uf.doUpdate = True
-                If uf.major >= My.Application.Info.Version.Major And uf.minor >= My.Application.Info.Version.Minor And uf.revision > My.Application.Info.Version.Build Then uf.doUpdate = True
-                'uf.doUpdate = True
-                Return uf
-            End If
+    '            If uf.major > My.Application.Info.Version.Major Then uf.doUpdate = True
+    '            If uf.major >= My.Application.Info.Version.Major And uf.minor > My.Application.Info.Version.Minor Then uf.doUpdate = True
+    '            If uf.major >= My.Application.Info.Version.Major And uf.minor >= My.Application.Info.Version.Minor And uf.revision > My.Application.Info.Version.Build Then uf.doUpdate = True
+    '            'uf.doUpdate = True
+    '            Return uf
+    '        End If
 
-            Return New updateFile With {.doUpdate = False}
+    '        Return New updateFile With {.doUpdate = False}
 
-        Catch ex As Exception
-            FormHelpers.dumpException(ex)
-            Return Nothing
-        End Try
-    End Function
+    '    Catch ex As Exception
+    '        FormHelpers.dumpException(ex)
+    '        Return Nothing
+    '    End Try
+    'End Function
 
-    Public Async Function downloadUpdate(setupfile As String, saveto As String) As Task(Of Boolean)
-        Try
-            Using client As New WebClient()
-                If IO.File.Exists(saveto) Then IO.File.Delete(saveto)
-                If Not IO.Directory.Exists(IO.Path.GetDirectoryName(saveto)) Then IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(saveto))
+    'Public Async Function downloadUpdate(setupfile As String, saveto As String) As Task(Of Boolean)
+    '    Try
+    '        Using client As New WebClient()
+    '            If IO.File.Exists(saveto) Then IO.File.Delete(saveto)
+    '            If Not IO.Directory.Exists(IO.Path.GetDirectoryName(saveto)) Then IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(saveto))
 
-                Dim dl As Task = client.DownloadFileTaskAsync(New Uri($"https://cmbsolutions.nl/netbakery/v2/{setupfile}"), saveto)
+    '            Dim dl As Task = client.DownloadFileTaskAsync(New Uri($"https://cmbsolutions.nl/netbakery/v2/{setupfile}"), saveto)
 
-                Await dl
+    '            Await dl
 
-                If IO.File.Exists(saveto) Then
-                    Return True
-                Else
-                    Return False
-                End If
+    '            If IO.File.Exists(saveto) Then
+    '                Return True
+    '            Else
+    '                Return False
+    '            End If
 
-            End Using
-        Catch ex As Exception
-            FormHelpers.dumpException(ex)
+    '        End Using
+    '    Catch ex As Exception
+    '        FormHelpers.dumpException(ex)
 
-            Return False
-        End Try
-    End Function
+    '        Return False
+    '    End Try
+    'End Function
 End Class
 
 Public Class updateFile
