@@ -385,8 +385,8 @@ Partial Class mainGUI2
         Me.Bar4.CanHide = True
         Me.Bar4.CanUndock = False
         Me.Bar4.Controls.Add(Me.pdcProjectSettings)
-        Me.Bar4.Controls.Add(Me.pdcObjectInfo)
         Me.Bar4.Controls.Add(Me.pdcCodePreview)
+        Me.Bar4.Controls.Add(Me.pdcObjectInfo)
         Me.Bar4.Controls.Add(Me.pdcERDiagram)
         Me.Bar4.DockTabAlignment = DevComponents.DotNetBar.eTabStripAlignment.Top
         Me.Bar4.FadeEffect = True
@@ -2253,6 +2253,7 @@ Partial Class mainGUI2
         '
         'bERDiagram
         '
+        Me.bERDiagram.Enabled = False
         Me.bERDiagram.Name = "bERDiagram"
         Me.bERDiagram.Symbol = ""
         Me.bERDiagram.SymbolColor = System.Drawing.SystemColors.Highlight

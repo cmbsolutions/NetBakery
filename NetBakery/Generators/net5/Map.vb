@@ -157,7 +157,7 @@ Namespace My.Templates.net5
 		Dim configLines as new list(of String)
 
 		configLines.Add(String.Format(".HasColumnName(""{0}"")", c.name))
-		If c.vbType <> "String" Then
+		If c.vbType <> "String" orelse c.mysqlType = "enum" Then
 			configLines.Add(String.Format(".HasColumnType(""{0}"")", c.MySqlColumnType))
 		End If
 
@@ -166,7 +166,7 @@ Namespace My.Templates.net5
 		Else
 			if Not c.autoincrement then configLines.Add(String.Format(".HasDefaultValueSql(""'{0}'"")", c.defaultValue))
 		End If
-		if c.vbType = "String" AndAlso c.maximumLength > 0 AndAlso c.maximumLength <= 65535 then configLines.add(String.Format(".HasMaxLength({0})", c.maximumLength))
+		if c.vbType = "String" AndAlso c.maximumLength > 0 AndAlso c.maximumLength <= 65535 andalso c.mysqlType <> "enum" then configLines.add(String.Format(".HasMaxLength({0})", c.maximumLength))
 		if c.autoincrement then configLines.add(".ValueGeneratedOnAdd()")
 
 		if configLines.count() > 0 then
