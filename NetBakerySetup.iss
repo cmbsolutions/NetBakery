@@ -5,6 +5,7 @@
 #define MyAppVersion "2.0.610"
 #define MyAppPublisher "CMBSolutions"
 #define MyAppExeName "NetBakery.exe"
+#define MyAppInstallerName "netbakerysetup.latest.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -20,7 +21,8 @@ DisableDirPage=no
 DefaultGroupName={#MyAppPublisher}\{#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=Installer
-OutputBaseFilename={#MyAppName}Setup{#MyAppVersion}
+; OutputBaseFilename={#MyAppName}Setup{#MyAppVersion}
+OutputBaseFilename={#MyAppInstallerName}
 SetupIconFile={#MyAppName}\netbakery.png.ico
 Compression=lzma
 SolidCompression=yes
