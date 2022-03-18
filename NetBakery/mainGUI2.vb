@@ -438,7 +438,11 @@ Public Class mainGUI2
             _TreeGXUnique.Add(rootTable.name, node)
 
             TreeGX1.Nodes.Add(node)
-            LoadTableChildren(rootTable, node, 1)
+
+            For Each fk In rootTable.foreignKeys
+                node.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable).ToArray)
+            Next
+
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         Finally
@@ -447,6 +451,30 @@ Public Class mainGUI2
         _TreeGXUnique.Clear()
 
     End Sub
+
+    Private Function GetForeignKeyNodes(t As infoSchema.table) As List(Of Tree.Node)
+        Dim nodes As New List(Of Tree.Node)
+        Try
+            Dim n As New Tree.Node With {
+                          .Text = t.name,
+                          .Name = t.name,
+                          .Expanded = True
+                }
+
+            nodes.Add(n)
+
+            For Each fk In t.foreignKeys
+                n.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable).ToArray)
+            Next
+
+
+        Catch ex As Exception
+
+        End Try
+
+        Return Nodes
+
+    End Function
 
     Private Sub LoadTableChildren(parent As infoSchema.table, ByRef parentNode As DevComponents.Tree.Node, currentDepth As Integer)
         Try

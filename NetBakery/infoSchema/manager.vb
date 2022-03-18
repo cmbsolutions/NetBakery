@@ -292,8 +292,8 @@ Namespace infoSchema
                                 .column = refcol
                             })
 
-                            table.parents.Add(reftable)
-                            reftable.children.Add(table)
+                            'table.parents.Add(reftable)
+                            'reftable.children.Add(table)
 
                             If fk.propertyAlias = reftable.singleName Then
                                 reftable.relations.Add(New relation With {
