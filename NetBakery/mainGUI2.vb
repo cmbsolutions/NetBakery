@@ -1,3 +1,4 @@
+Imports System.Text
 Imports DevComponents
 Imports DevComponents.DotNetBar
 Imports Newtonsoft.Json
@@ -173,6 +174,7 @@ Public Class mainGUI2
 
             If c IsNot Nothing Then
                 _currentConnection = c
+                btnConnect.Pulse(10)
             Else
                 _currentConnection = Nothing
             End If
@@ -213,6 +215,8 @@ Public Class mainGUI2
 
     Private Sub btnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
         Try
+            btnConnect.StopPulse()
+
             If _currentConnection Is Nothing Then
                 MessageBoxEx.Show("No connection selected")
                 Exit Sub
@@ -472,7 +476,7 @@ Public Class mainGUI2
 
         End Try
 
-        Return Nodes
+        Return nodes
 
     End Function
 
@@ -596,6 +600,8 @@ Public Class mainGUI2
                     dgvFields.DataSource = viewFields.columns.ToArray
 
                     dgvForeignKeys.DataSource = Nothing
+                    dgvIndexes.DataSource = Nothing
+                    dgvReferences.DataSource = Nothing
 
                     scGeneratedModel.Text = _mngr.generateModel(viewFields)
                     scGeneratedModel.Colorize(0, scGeneratedModel.Text.Length)
@@ -609,6 +615,8 @@ Public Class mainGUI2
 
                 dgvFields.Refresh()
                 dgvForeignKeys.Refresh()
+                dgvIndexes.Refresh()
+                dgvReferences.Refresh()
 
                 dcObjectInfo.Selected = True
                 TabControl1.SelectedPanel = TabControlPanel1
@@ -632,9 +640,33 @@ Public Class mainGUI2
                 Dim rout = _mngr.routines.FirstOrDefault(Function(c) c.name = node.Text)
 
                 If rout IsNot Nothing Then
+                    If rout.returnsRecordset Then
+                        dgvFields.DataSource = rout.returnLayout.columns.ToArray
+
+                        dgvForeignKeys.DataSource = Nothing
+                        dgvIndexes.DataSource = Nothing
+                        dgvReferences.DataSource = Nothing
+
+                        scGeneratedModel.Text = _mngr.generateModel(rout.returnLayout)
+                        scGeneratedModel.Colorize(0, scGeneratedModel.Text.Length)
+                    Else
+                        dgvFields.DataSource = Nothing
+                        dgvForeignKeys.DataSource = Nothing
+                        dgvIndexes.DataSource = Nothing
+                        dgvReferences.DataSource = Nothing
+                    End If
+
                     scRoutine.Text = rout.definition
                     scRoutine.Colorize(0, scRoutine.Text.Length)
                 End If
+                dgvFields.Refresh()
+                dgvForeignKeys.Refresh()
+                dgvIndexes.Refresh()
+                dgvReferences.Refresh()
+
+
+                dcObjectInfo.Selected = True
+                TabControl1.SelectedPanel = TabControlPanel1
             End If
 
 
@@ -1181,7 +1213,6 @@ Public Class mainGUI2
             lexer.Styles(ScintillaNET.Style.Vb.DocKeyword).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
             lexer.Styles(ScintillaNET.Style.Vb.DocKeyword).ForeColor = Color.FromArgb(-4862296)
 
-
             lexer.SetKeywords(0, My.Resources.vb_keywords)
 
 
@@ -1570,5 +1601,15 @@ Public Class mainGUI2
         scCodePreview.Text = IO.File.ReadAllText(fileName)
         scCodePreview.Colorize(0, scCodePreview.Text.Length)
         dcCodePreview.Selected = True
+    End Sub
+
+    Private Sub ButtonItem2_Click(sender As Object, e As EventArgs) Handles ButtonItem2.Click
+        IO.File.WriteAllText("d:\test\tables.json", JsonConvert.SerializeObject(_mngr.tables, Formatting.Indented, New JsonSerializerSettings With {
+                                                                                                    .ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                                                                                                    .PreserveReferencesHandling = PreserveReferencesHandling.Objects}))
+    End Sub
+
+    Private Sub cboConnecions_Click(sender As Object, e As EventArgs) Handles cboConnecions.Click
+
     End Sub
 End Class

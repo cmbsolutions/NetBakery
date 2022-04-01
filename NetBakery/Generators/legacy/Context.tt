@@ -34,10 +34,6 @@ Public Class <#= _name #>DataManager
 
 		' initialiseren van de database verbinding in de databasecontext
 		Me.Database.Initialize(False)
-
-<# If _recovery Then #>
-		Recover(sEnv)
-<# End If #>
 	End Sub
 
 	Public Function ConvertEntityResultSetToDataTable(EntityResultSet As Linq.IQueryable) As DataTable
@@ -94,60 +90,6 @@ Public Class <#= _name #>DataManager
 		End Try
 	End Sub
 
-<# If _recovery Then #>
-	Public Sub Recover(Optional ByVal sEnv As eSentiaEnv = eSentiaEnv.tst)
-		' Huidige ContextConfig settings opslaan
-		Dim bLazy As Boolean = Me.Configuration.LazyLoadingEnabled
-		Dim bProxy As Boolean = Me.Configuration.ProxyCreationEnabled
-
-		Try
-			' ContextConfig aanpassen
-			Me.Configuration.LazyLoadingEnabled = False
-			Me.Configuration.ProxyCreationEnabled = True
-
-			Using rContext = New AVRecoveryManager(sEnv) ' Nieuwe recoveryContext
-				' Alle recoveryrecords ophalen voor de calling process en nog niet afgehandeld
-				Dim q = From rx In rContext.recoveries Where
-							rx.datum_afgehandeld Is Nothing And
-							rx.process_name = _callerAssemblyName And
-							rx.process_guid = _callerAssemblyGUID And
-							rx.known_entitytype = True
-						Select rx
-
-				For Each r As Recovery.Models.recovery In q
-					Select Case Type.GetType(r.entity)
-<# For Each table In _tables #>
-						Case GetType(Models.<#= table.singleName #>)
-							Dim ser = New seri(Of Models.<#= table.singleName #>) ' new serializeobject aanmaken
-							ser.Deserialize(r.binary_data) ' binarydata deserializen
-
-							If Not Me.ChangeTracker.Entries(Of Models.<#= table.singleName #>).Any(Function(b) b.Entity.Equals(ser.Entity)) Then ' Controle of de nieuwe entity al bestaat in de context
-								Me.<#= table.pluralName #>.Add(ser.Entity) ' bestaat niet, aanmaken dan
-								Me.Entry(ser.Entity).State = CType([Enum].Parse(GetType(EntityState), r.action), EntityState)
-							Else
-								Me.<#= table.pluralName #>.Attach(Me.Entry(ser.Entity).Entity) ' bestaat wel, attachen dan
-							End If
-<# Next #>
-						Case Else
-
-					End Select
-
-					r.datum_afgehandeld = Now
-				Next
-
-				Me.SaveChanges()
-
-				rContext.SaveChanges()
-			End Using
-		Catch ex As Exception
-
-		Finally
-			Me.Configuration.LazyLoadingEnabled = bLazy
-			Me.Configuration.ProxyCreationEnabled = bProxy
-		End Try
-	End Sub
-
-<# End If #>
 	Public Overrides Function SaveChanges() As Integer
 		For i As Integer = 0 To CInt(My.Resources.retryCount)
 			Try
@@ -212,5 +154,45 @@ Namespace Models
 		Sub Detach(ByVal entity As Object)
 			DirectCast(Me, IObjectContextAdapter).ObjectContext.Detach(entity)
 		End Sub
+
+		Public Function GetMaxLength(Of TEntity As Class)([property] As Expression(Of Func(Of TEntity, String))) As Integer
+			Dim MaxLength As Integer
+
+			Dim entType As Type = GetType(TEntity)
+			Dim propertyName As String = DirectCast([property].Body, MemberExpression).Member.Name
+
+			MaxLength = GetMaxLength(Of EntityType)(propertyName)
+
+			Return MaxLength
+		End Function
+
+		Public Function GetMaxLength(Of TEntity As Class)([property] As String) As Integer
+			Dim MaxLength As Integer = 0
+
+			Dim test = DirectCast(Me, IObjectContextAdapter).ObjectContext.MetadataWorkspace.GetItems(DataSpace.CSpace)
+
+			If test Is Nothing Then
+				Return -1
+			End If
+
+			Dim entType As Type = GetType(TEntity)
+			Dim propertyName As String = [property]
+
+			Dim q = test.Where(Function(m) m.BuiltInTypeKind = BuiltInTypeKind.EntityType).SelectMany(Function(meta) DirectCast(meta, EntityType).Properties.Where(Function(p) p.Name = propertyName AndAlso p.TypeUsage.EdmType.Name = "String"))
+			Dim queryResult = q.Where(Function(p) entType.Name = p.DeclaringType.Name).Select(Function(sel) sel.TypeUsage.Facets("MaxLength").Value).ToList()
+
+			If queryResult.Any() Then
+				Dim result As String = queryResult.FirstOrDefault().ToString()
+
+				If result = "Max" Then
+					MaxLength = -1
+				Else
+					MaxLength = Convert.ToInt32(result)
+				End If
+			End If
+
+			Return MaxLength
+		End Function
+
 	End Class
 End Namespace

@@ -2,10 +2,10 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "NetBakery"
-#define MyAppVersion "2.0.610"
+#define MyAppVersion "2.0.616"
 #define MyAppPublisher "CMBSolutions"
 #define MyAppExeName "NetBakery.exe"
-#define MyAppInstallerName "netbakerysetup.latest.exe"
+#define MyAppInstallerName "netbakerysetup.latest"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
