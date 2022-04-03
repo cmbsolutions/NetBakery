@@ -20,6 +20,8 @@ Public Class mainGUI2
     Private _TreeGXUnique As Dictionary(Of String, Tree.Node)
     Private _FileManager As New FileVCS.Manager
 
+    Private _spRoutine As infoSchema.routine
+
 #Region "Start and close"
     Private Sub mainGUI2_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
@@ -47,7 +49,9 @@ Public Class mainGUI2
             _dockFile = New IO.FileInfo(String.Format("{0}\{1}\{2}\layout.xml", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CMBSolutions", "NetBakery"))
 
             If _dockFile.Exists Then
+                SuspendLayout()
                 dnbBarManager.LoadLayout(_dockFile.FullName)
+                ResumeLayout()
             Else
                 If Not _dockFile.Directory.Exists Then _dockFile.Directory.Create()
             End If
@@ -69,6 +73,7 @@ Public Class mainGUI2
             setVbStyle(scGeneratedModel)
             setVbStyle(scGeneratedMapping)
             setSQLStyle(scRoutine)
+            setSQLStyle(scSPRoutine)
 
             dcProjectSettings.Selected = True
 
@@ -640,8 +645,19 @@ Public Class mainGUI2
                 Dim rout = _mngr.routines.FirstOrDefault(Function(c) c.name = node.Text)
 
                 If rout IsNot Nothing Then
+                    _spRoutine = rout
+                    Dim params = (From r In rout.params Order By r.ordinalPosition Select New With {.name = r.name, .value = ""})
+                    dgvInputParams.DataSource = params.ToArray
+
+                    scSPRoutine.Text = rout.definition
+                    scSPRoutine.Colorize(0, scRoutine.Text.Length)
+
                     If rout.returnsRecordset Then
                         dgvFields.DataSource = rout.returnLayout.columns.ToArray
+
+                        Dim fields = (From f In rout.returnLayout.columns Select f.name)
+                        lbReturnFields.DataSource = fields.ToArray
+
 
                         dgvForeignKeys.DataSource = Nothing
                         dgvIndexes.DataSource = Nothing
@@ -654,6 +670,7 @@ Public Class mainGUI2
                         dgvForeignKeys.DataSource = Nothing
                         dgvIndexes.DataSource = Nothing
                         dgvReferences.DataSource = Nothing
+                        lbReturnFields.DataSource = Nothing
                     End If
 
                     scRoutine.Text = rout.definition
@@ -1609,7 +1626,27 @@ Public Class mainGUI2
                                                                                                     .PreserveReferencesHandling = PreserveReferencesHandling.Objects}))
     End Sub
 
-    Private Sub cboConnecions_Click(sender As Object, e As EventArgs) Handles cboConnecions.Click
+    Private Sub bSPexecute_Click(sender As Object, e As EventArgs) Handles bSPexecute.Click
+        Try
+            If _spRoutine IsNot Nothing Then
+                Dim par As New List(Of String)
 
+                For Each row As DataGridViewRow In dgvInputParams.Rows
+                    par.Add(row.Cells.Item(1).Value.ToString)
+                Next
+
+                Dim flds As New List(Of String)
+
+                _mngr.getRoutineLayout(_spRoutine, par.ToArray, flds)
+
+                If flds.Count > 0 Then
+                    lbReturnFields.DataSource = flds.ToArray
+                Else
+                    MessageBox.Show("The layout for the stored procedure cannot be determined. If you are sure that it should return a layout, try it again with other parameter values.")
+                End If
+            End If
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
     End Sub
 End Class

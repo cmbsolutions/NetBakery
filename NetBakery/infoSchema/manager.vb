@@ -365,7 +365,7 @@ Namespace infoSchema
                             If rt Is Nothing OrElse rt.name <> rdr("ROUTINE_NAME").ToString Then
                                 If rt IsNot Nothing Then
                                     If rt.returnsRecordset AndAlso Not rt.isFunction Then
-                                        getRoutineLayout(rt)
+                                        getRoutineLayout(rt, Nothing, Nothing)
                                     End If
                                     routines.Add(rt)
                                 End If
@@ -436,7 +436,7 @@ Namespace infoSchema
 
                         If rt IsNot Nothing Then
                             If rt.returnsRecordset AndAlso Not rt.isFunction Then
-                                getRoutineLayout(rt)
+                                getRoutineLayout(rt, Nothing, Nothing)
                             End If
                             routines.Add(rt)
                         End If
@@ -447,7 +447,7 @@ Namespace infoSchema
             End Try
         End Sub
 
-        Private Sub getRoutineLayout(ByRef _r As routine)
+        Public Sub getRoutineLayout(ByRef _r As routine, paramValues As String(), ByRef fieldNames As List(Of String))
             Try
                 Using _dbxCommand = New MySqlCommand
                     _dbxCommand.Connection = dbConnection(_database)
@@ -455,7 +455,11 @@ Namespace infoSchema
                     _dbxCommand.CommandText = $"CALL {_r.name}({String.Join(",", (From r In _r.params Order By r.ordinalPosition Select "@" & r.name))})"
 
                     For Each param In _r.params.OrderBy(Function(o) o.ordinalPosition)
-                        _dbxCommand.Parameters.AddWithValue("@" & param.name, 1)
+                        If paramValues IsNot Nothing Then
+                            _dbxCommand.Parameters.AddWithValue("@" & param.name, paramValues(param.ordinalPosition))
+                        Else
+                            _dbxCommand.Parameters.AddWithValue("@" & param.name, 1)
+                        End If
                     Next
 
                     Try
@@ -463,6 +467,7 @@ Namespace infoSchema
 
                             Using d As DataTable = rdr.GetSchemaTable
                                 If d IsNot Nothing Then
+                                    If _r.returnLayout Is Nothing Then _r.returnLayout = New table
                                     For Each row As DataRow In d.Rows
                                         Dim c As New column
 
@@ -480,6 +485,10 @@ Namespace infoSchema
                                         c.vbType = getVbType(c.mysqlType)
                                         c.phpType = getPHPType(c.mysqlType)
                                         _r.returnLayout.columns.Add(c)
+
+                                        If fieldNames IsNot Nothing Then
+                                            fieldNames.Add(c.name)
+                                        End If
                                     Next
                                 Else
                                     _r.returnLayout = Nothing
