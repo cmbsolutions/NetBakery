@@ -199,6 +199,25 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to Imports Microsoft.EntityFrameworkCore
+        '''
+        '''Namespace Models.StoreCommands
+        '''    Public MustInherit Class StoreCommandsBase
+        '''        Friend Property context As DbContext
+        '''
+        '''        Public Sub New(ctx As DbContext)
+        '''            context = ctx
+        '''        End Sub
+        '''    End Class
+        '''End Namespace.
+        '''</summary>
+        Friend ReadOnly Property storecommandsbase() As String
+            Get
+                Return ResourceManager.GetString("storecommandsbase", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to https://www.cmbsolutions.nl.
         '''</summary>
         Friend ReadOnly Property updateLocationBaseURL() As String
@@ -217,7 +236,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to addhandler addressof andalso alias and ansi as assembly attribute auto begin boolean byref byte byval call case catch cbool cbyte cchar cdate cdec cdbl char cint class clng cobj compare const continue cshort csng cstr ctype currency date datetime time decimal declare default delegate dim do double each else elseif end enum erase error event exit explicit false finally for friend function get gettype global gosub goto handles if implement implements imports in inherits integer interface is let lib like load  [rest of string was truncated]&quot;;.
+        '''  Looks up a localized string similar to addhandler addressof aggregate alias and andalso ansi as assembly async attribute auto await begin binary boolean by byref byte byval call case catch cbool cbyte cchar cdate cdbl cdec char cint class clng cobj compare const continue csbyte cshort csng cstr ctype cuint culng currency cushort custom date datetime decimal declare default delegate dim directcast distinct do double each else elseif end endif enum equals erase error event exit explicit finally for friend from function get gettype global gosub got [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property vb_keywords() As String
             Get

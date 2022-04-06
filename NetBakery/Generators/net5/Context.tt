@@ -26,7 +26,11 @@ Namespace Models
 		End Sub
 
 <# For Each table In _tables #>
+<# If table.escapeName Then #>
+		Public Overridable Property <#= table.pluralName #> As DbSet(Of [<#= table.singleName #>])
+<# Else #>
 		Public Overridable Property <#= table.pluralName #> As DbSet(Of <#= table.singleName #>)
+<# End If #>
 <# Next #>
 
 		' Stored procedures

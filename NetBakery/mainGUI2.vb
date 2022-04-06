@@ -946,6 +946,8 @@ Public Class mainGUI2
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\Models")
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures")
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\Models")
+
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\StoreCommandsBase.vb", My.Resources.storecommandsbase)
             Else
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommandSchemas") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommandSchemas")
             End If

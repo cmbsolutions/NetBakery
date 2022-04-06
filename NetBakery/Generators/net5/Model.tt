@@ -7,11 +7,20 @@
 Imports System.Collections.Generic
 
 Namespace Models
+<# If _t.escapeName then #>
+    Partial Public Class [<#= _t.singleName #>]
+<# Else #>
     Partial Public Class <#= _t.singleName #>
+<# End If #>
+
 <#  If _t.relations.Any() Then #>
         Public Sub New()
 <#      For Each re in _t.relations.OrderBy(Function(c) c.toTable.name) #>
+<#          If re.toTable.escapeName then #>
+            <#= re.alias #> = New HashSet(Of [<#= re.toTable.singleName #>])()
+<#          Else #>
             <#= re.alias #> = New HashSet(Of <#= re.toTable.singleName #>)()
+<#          End If #>
 <#      Next #>
         End Sub
 <#  End If #>
@@ -28,12 +37,20 @@ Namespace Models
 <#
     For each fk in _t.foreignkeys.orderby(Function(c) c.propertyalias)
 #>
+<#      If fk.referencedtable.escapeName then #>
+        Public Property <#= fk.propertyAlias #>() as [<#= fk.referencedtable.singlename #>]
+<#      Else #>
         Public Property <#= fk.propertyAlias #>() as <#= fk.referencedtable.singlename #>
+<#      End If #>
 <#  Next 
 
     For Each re in  _t.relations.orderby(Function(c) c.totable.name)
 #>
+<# If re.toTable.escapeName then #>
+        Public Overridable Property <#= re.alias #>() As ICollection(Of [<#= re.totable.SingleName #>])
+<# Else #>
         Public Overridable Property <#= re.alias #>() As ICollection(Of <#= re.totable.SingleName #>)
+<# End If #>
 <#  Next
 
 #>

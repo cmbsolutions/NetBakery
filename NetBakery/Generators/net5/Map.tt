@@ -30,11 +30,31 @@ Namespace Models
 	End If
 #>
 	Public Partial Class <#= _t.singleName #>Map
-		Implements IEntityTypeConfiguration(Of <#= _t.singleName #>)
+		Implements IEntityTypeConfiguration(Of <# If _t.escapeName then #>[<# End If #><#= _t.singleName #><# If _t.escapeName then #>]<# End If #>)
 
-		Public Sub Configure(builder As EntityTypeBuilder(Of <#= _t.singleName #>)) Implements IEntityTypeConfiguration(Of <#= _t.singleName #>).Configure
+		Public Sub Configure(builder As EntityTypeBuilder(Of <# If _t.escapeName then #>[<# End If #><#= _t.singleName #><# If _t.escapeName then #>]<# End If #>)) Implements IEntityTypeConfiguration(Of <# If _t.escapeName then #>[<# End If #><#= _t.singleName #><# If _t.escapeName then #>]<# End If #>).Configure
 			' Table in database
 			builder.ToTable("<#=_t.Name #>")
+
+			' Keys
+
+<#
+	If keys.count = 1 Then
+#>
+			builder.HasKey(Function(k) k.<#= keys.First() #>)
+<#
+	Else
+		Dim keynames As new StringBuilder
+		For Each key in keys
+			keynames.append("k." & key & ",")
+		Next
+		keynames.remove(keynames.length -1, 1)
+#>
+			builder.HasKey(Function(k) New With {<#= keynames.tostring #>})
+<#
+	End If
+#>
+
 
 			' Indexes
 <#
@@ -68,8 +88,10 @@ Namespace Models
 
 		If not c.isNullable and not c.autoincrement then
 			configLines.add(".IsRequired()")
-		Else
-			if Not c.autoincrement then configLines.Add(String.Format(".HasDefaultValueSql(""'{0}'"")", c.defaultValue))
+		End If
+		
+		If Not c.autoincrement And c.vbType <> "TimeSpan" And c.vbType <> "Date" then
+			configLines.Add(String.Format(".HasDefaultValueSql(""{0}"")", c.defaultValue))
 		End If
 		if c.vbType = "String" AndAlso c.maximumLength > 0 AndAlso c.maximumLength <= 65535 andalso c.mysqlType <> "enum" then configLines.add(String.Format(".HasMaxLength({0})", c.maximumLength))
 		if c.autoincrement then configLines.add(".ValueGeneratedOnAdd()")

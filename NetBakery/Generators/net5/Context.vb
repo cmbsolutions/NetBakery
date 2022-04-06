@@ -62,73 +62,101 @@ Namespace My.Templates.net5
  For Each table In _tables 
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Public Overridable Property ")
             
             #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",29)
+ If table.escapeName Then 
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Public Overridable Property ")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",30)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(table.pluralName))
+            
+            #End ExternalSource
+            Me.Write(" As DbSet(Of [")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",30)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(table.singleName))
+            
+            #End ExternalSource
+            Me.Write("])"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",31)
+ Else 
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Public Overridable Property ")
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",32)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.pluralName))
             
             #End ExternalSource
             Me.Write(" As DbSet(Of ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",29)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",32)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.singleName))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",30)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",33)
+ End If 
+            
+            #End ExternalSource
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",34)
  Next 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Stored procedures"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",33)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",37)
   For Each r in _routines 
             
             #End ExternalSource
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",34)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",38)
  If r.isFunction Then 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Public Property ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",35)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",39)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(r.name))
             
             #End ExternalSource
             Me.Write(" As New StoreCommands.Functions.")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",35)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",39)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(r.name))
             
             #End ExternalSource
             Me.Write("(Me)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",36)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",40)
  Else 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Public Property ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",37)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",41)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(r.name))
             
             #End ExternalSource
             Me.Write(" As New StoreCommands.Procedures.")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",37)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",41)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(r.name))
             
             #End ExternalSource
             Me.Write("(Me)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",38)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",42)
  End If 
             
             #End ExternalSource
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",39)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",43)
  Next 
             
             #End ExternalSource
@@ -138,25 +166,25 @@ Namespace My.Templates.net5
                     "ected Overrides Sub OnModelCreating(modelBuilder As ModelBuilder)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Tablemap"& _ 
                     "pings"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",49)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",53)
  For Each table In _tables 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"modelBuilder.ApplyConfiguration(New ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",50)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",54)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.singleName))
             
             #End ExternalSource
             Me.Write("Map())"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",51)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",55)
  Next 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Models for stored functions"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",54)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",58)
  Dim functionGroup = From d In _routines.where(function(c) c.isFunction)
 				  Group d By dName = d.returnLayout.name 
 				  Into dGroup = Group
@@ -168,31 +196,31 @@ Namespace My.Templates.net5
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"modelBuilder.Entity(Of ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",61)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",65)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(grp.First.returnLayout.singleName))
             
             #End ExternalSource
             Me.Write(").HasNoKey()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",62)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",66)
  Next 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Models for Stored Procedures that return a recordset"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",65)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",69)
  For Each proc In _routines.where(function(c) not c.isFunction and c.returnsRecordset) 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"modelBuilder.Entity(Of ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",66)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",70)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(proc.returnLayout.singleName))
             
             #End ExternalSource
             Me.Write(").HasNoKey()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",67)
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Context.tt",71)
  Next 
             
             #End ExternalSource

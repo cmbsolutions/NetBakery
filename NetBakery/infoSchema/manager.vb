@@ -26,13 +26,18 @@ Namespace infoSchema
         Public Sub setGenerator(_v As String)
             useGenerator = _v
 
+            _keywords = New List(Of String)
+
             Select Case useGenerator
                 Case "net"
                     _generator = New legacy_netGenerator
+                    _keywords.AddRange(My.Resources.vb_keywords.Split(" "c))
                 Case "net5"
                     _generator = New net5Generator
+                    _keywords.AddRange(My.Resources.vb_keywords.Split(" "c))
                 Case "php"
                     _generator = New phpGenerator
+                    _keywords.AddRange(My.Resources.php_keywords.Split(" "c))
                 Case Else
 
             End Select
@@ -140,6 +145,9 @@ Namespace infoSchema
                             Else
                                 t = New table With {.name = rdr("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr("TABLE_NAME").ToString), .pluralName = _p.Pluralize(rdr("TABLE_NAME").ToString), .hasExport = True}
                             End If
+
+                            t.escapeName = _keywords IsNot Nothing AndAlso _keywords.Exists(Function(c) c = t.singleName)
+
                             tables.Add(t)
 
                             Using _dbInfoCommand = New MySqlCommand
@@ -180,7 +188,7 @@ Namespace infoSchema
                                 c.name = rdr("COLUMN_NAME").ToString
                                 c.alias = AliasGenerator(rdr("COLUMN_NAME").ToString)
                                 c.ordinalPosition = CInt(rdr("ORDINAL_POSITION"))
-                                c.defaultValue = rdr("COLUMN_DEFAULT").ToString
+                                c.defaultValue = If(rdr("COLUMN_DEFAULT").ToString = "", "NULL", rdr("COLUMN_DEFAULT").ToString)
                                 c.isNullable = If(rdr("IS_NULLABLE").ToString = "YES", True, False)
                                 c.mysqlType = rdr("DATA_TYPE").ToString
                                 c.maximumLength = ToInt(rdr("CHARACTER_MAXIMUM_LENGTH"))
@@ -516,11 +524,6 @@ Namespace infoSchema
                 tables = New List(Of table)
                 routines = New List(Of routine)
 
-
-                _keywords = New List(Of String)
-                _keywords.AddRange(My.Resources.vb_keywords.Split(" "c))
-
-
             Catch ex As Exception
                 Throw
             End Try
@@ -627,21 +630,21 @@ Namespace infoSchema
         End Function
         Private Function AliasGenerator(original As String) As String
             Try
-                Dim [alias] As String = original
+                Dim ali As String = original.ToLower
                 Dim inc As Integer = 1
 
                 ' First check tablenames
-                While tables.Exists(Function(t) t.name = [alias] Or t.singleName = [alias] Or t.pluralName = [alias])
-                    [alias] = String.Format("{0}_{1}", original, inc)
+                While tables.Exists(Function(t) t.name.ToLower = ali Or t.singleName.ToLower = ali Or t.pluralName.ToLower = ali)
+                    ali = $"{original.ToLower}_{inc}"
                     inc += 1
                 End While
 
-                ' Then check vb keywords
-                If _keywords.Exists(Function(k) k = [alias]) Then
-                    [alias] = String.Format("[{0}]", [alias])
+                ' Then check keywords (depending on generatortype)
+                If _keywords.Exists(Function(k) k = ali) Then
+                    ali = $"[{ali}]"
                 End If
 
-                Return [alias]
+                Return ali
             Catch ex As Exception
                 Throw
             End Try
