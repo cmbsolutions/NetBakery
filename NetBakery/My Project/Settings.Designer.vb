@@ -179,6 +179,43 @@ Namespace My
                 Me("customDictionary") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property openLastProject() As Boolean
+            Get
+                Return CType(Me("openLastProject"),Boolean)
+            End Get
+            Set
+                Me("openLastProject") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("<?xml version=""1.0"" encoding=""utf-16""?>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"<ArrayOfString xmlns:xsd=""http://www.w3."& _ 
+            "org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" />")>  _
+        Public Property recentProjects() As Global.System.Collections.Specialized.StringCollection
+            Get
+                Return CType(Me("recentProjects"),Global.System.Collections.Specialized.StringCollection)
+            End Get
+            Set
+                Me("recentProjects") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property lastProject() As String
+            Get
+                Return CType(Me("lastProject"),String)
+            End Get
+            Set
+                Me("lastProject") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

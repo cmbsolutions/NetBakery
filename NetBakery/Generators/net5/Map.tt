@@ -16,18 +16,8 @@ Namespace Models
 			If c.key = "PRI" then
 				keys.add(c.alias)
 			End If
-		Else
-			If c.name.EndsWith("_id") Then
-				keys.add(c.alias)
-			End If
 		End If
 	Next
-
-	If _t.isView And Not keys.Any() Then
-		For Each c in _t.columns
-			keys.add(c.alias)
-		Next
-	End If
 #>
 	Public Partial Class <#= _t.singleName #>Map
 		Implements IEntityTypeConfiguration(Of <# If _t.escapeName then #>[<# End If #><#= _t.singleName #><# If _t.escapeName then #>]<# End If #>)
@@ -43,7 +33,7 @@ Namespace Models
 #>
 			builder.HasKey(Function(k) k.<#= keys.First() #>)
 <#
-	Else
+	Elseif keys.count > 1 then
 		Dim keynames As new StringBuilder
 		For Each key in keys
 			keynames.append("k." & key & ",")
@@ -91,7 +81,13 @@ Namespace Models
 		End If
 		
 		If Not c.autoincrement And c.vbType <> "TimeSpan" And c.vbType <> "Date" then
-			configLines.Add(String.Format(".HasDefaultValueSql(""{0}"")", c.defaultValue))
+			If not c.defaultValue.contains("'") and c.defaultValue <> "NULL" then c.defaultValue = "'" & c.defaultvalue & "'"
+
+			If not c.isNullable then
+				If c.defaultValue <> "NULL" then configLines.Add(String.Format(".HasDefaultValueSql(""{0}"")", c.defaultValue))
+			else
+				configLines.Add(String.Format(".HasDefaultValueSql(""{0}"")", c.defaultValue))
+			end if
 		End If
 		if c.vbType = "String" AndAlso c.maximumLength > 0 AndAlso c.maximumLength <= 65535 andalso c.mysqlType <> "enum" then configLines.add(String.Format(".HasMaxLength({0})", c.maximumLength))
 		if c.autoincrement then configLines.add(".ValueGeneratedOnAdd()")

@@ -77,7 +77,16 @@ Public Class mainGUI2
 
             dcProjectSettings.Selected = True
 
+
+
+            If My.Settings.openLastProject AndAlso My.Settings.lastProject <> "" Then
+                If IO.File.Exists(My.Settings.lastProject) Then
+                    loadProject(My.Settings.lastProject)
+                End If
+            End If
+
             enableOrDisableFields()
+
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -89,6 +98,9 @@ Public Class mainGUI2
             My.Settings.isMaximized = WindowState = FormWindowState.Maximized
             My.Settings.windowSize = Size
 
+            If My.Settings.openLastProject AndAlso _currentProject IsNot Nothing Then
+                My.Settings.lastProject = _currentProject.projectfilename
+            End If
             My.Settings.Save()
 
             dnbBarManager.SaveLayout(_dockFile.FullName)
@@ -1433,46 +1445,55 @@ Public Class mainGUI2
             _currentProject = New Project
 
             If OpenFileDialog1.ShowDialog = DialogResult.OK Then
-                _loadingProject = True
-                _currentProject = CType(JsonConvert.DeserializeObject(IO.File.ReadAllText(OpenFileDialog1.FileName), GetType(Project)), Project)
-
-                _currentProject.projectfilename = OpenFileDialog1.FileName
-
-                txtProjectName.Text = _currentProject.projectname
-                txtProjectFolder.Text = _currentProject.projectlocation
-                txtOutputFolder.Text = _currentProject.projectoutputlocation
-                Dim itm = cboOutputType.Items().Cast(Of DevComponents.Editors.ComboItem).FirstOrDefault(Function(c) c.Value.ToString = _currentProject.outputtype)
-                cboOutputType.SelectedItem = itm
-                sbEnums.SetValueAndAnimate(_currentProject.useEnums, eEventSource.Code)
-                sbProcedureLocks.SetValueAndAnimate(_currentProject.generateProcedureLocks, eEventSource.Code)
-
-                cboConnecions.Text = _currentProject.database.connection.description
-                _currentConnection = _currentProject.database.connection
-
-                btnConnect.RaiseClick(eEventSource.Code)
-                'TODO: Create database vcs
-                _mngr.setGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString)
-                _mngr.SetDatabase(_currentProject.database.databasename)
-                _mngr.tables = _currentProject.database.tables
-                _mngr.routines = _currentProject.database.routines
-
-                Dim selectedDB = advtreeDatabases.FindNodeByName(_currentProject.database.databasename)
-
-                If selectedDB IsNot Nothing Then
-                    advtreeDatabases.SelectNode(selectedDB, AdvTree.eTreeAction.Code)
-                    databaseNodeHandler(selectedDB, New AdvTree.AdvTreeNodeEventArgs(AdvTree.eTreeAction.Code, selectedDB))
-                End If
-
-                _FileManager = New FileVCS.Manager
-                ExplorerControl1.ExplorerManager = _FileManager
-                _FileManager.ScanForFiles(_currentProject.projectoutputlocation)
-                If _currentProject.generatedoutputs IsNot Nothing Then _FileManager.OriginalFiles = _currentProject.generatedoutputs
-                ExplorerControl1.ClearExplorer()
-                ExplorerControl1.RefreshExplorer()
-
-                _loadingProject = False
+                loadProject(OpenFileDialog1.FileName)
             End If
             enableOrDisableFields()
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub loadProject(f As String)
+        Try
+            _loadingProject = True
+            _currentProject = CType(JsonConvert.DeserializeObject(IO.File.ReadAllText(f), GetType(Project)), Project)
+
+            _currentProject.projectfilename = f
+
+            txtProjectName.Text = _currentProject.projectname
+            txtProjectFolder.Text = _currentProject.projectlocation
+            txtOutputFolder.Text = _currentProject.projectoutputlocation
+            Dim itm = cboOutputType.Items().Cast(Of DevComponents.Editors.ComboItem).FirstOrDefault(Function(c) c.Value.ToString = _currentProject.outputtype)
+            cboOutputType.SelectedItem = itm
+            sbEnums.SetValueAndAnimate(_currentProject.useEnums, eEventSource.Code)
+            sbProcedureLocks.SetValueAndAnimate(_currentProject.generateProcedureLocks, eEventSource.Code)
+
+            cboConnecions.Text = _currentProject.database.connection.description
+            _currentConnection = _currentProject.database.connection
+
+            btnConnect.RaiseClick(eEventSource.Code)
+            'TODO: Create database vcs
+            _mngr.setGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString)
+            _mngr.SetDatabase(_currentProject.database.databasename)
+            _mngr.tables = _currentProject.database.tables
+            _mngr.routines = _currentProject.database.routines
+
+            Dim selectedDB = advtreeDatabases.FindNodeByName(_currentProject.database.databasename)
+
+            If selectedDB IsNot Nothing Then
+                advtreeDatabases.SelectNode(selectedDB, AdvTree.eTreeAction.Code)
+                databaseNodeHandler(selectedDB, New AdvTree.AdvTreeNodeEventArgs(AdvTree.eTreeAction.Code, selectedDB))
+            End If
+
+            _FileManager = New FileVCS.Manager
+            ExplorerControl1.ExplorerManager = _FileManager
+            _FileManager.ScanForFiles(_currentProject.projectoutputlocation)
+            If _currentProject.generatedoutputs IsNot Nothing Then _FileManager.OriginalFiles = _currentProject.generatedoutputs
+            ExplorerControl1.ClearExplorer()
+            ExplorerControl1.RefreshExplorer()
+
+            _loadingProject = False
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)

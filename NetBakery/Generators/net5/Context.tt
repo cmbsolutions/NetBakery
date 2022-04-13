@@ -44,7 +44,7 @@ Namespace Models
 
 		Protected Overrides Sub OnConfiguring(ByVal optionsBuilder As DbContextOptionsBuilder)
 #If DEBUG Then
-			optionsBuilder.LogTo(Sub(e) Console.WriteLine(e), Microsoft.Extensions.Logging.LogLevel.Information)
+			optionsBuilder.LogTo(Sub(e) Debug.WriteLine(e), Microsoft.Extensions.Logging.LogLevel.Trace)
 #End If
 		End Sub
 
@@ -69,7 +69,11 @@ Namespace Models
 <# For Each proc In _routines.where(function(c) not c.isFunction and c.returnsRecordset) #>
 			modelBuilder.Entity(Of <#= proc.returnLayout.singleName #>).HasNoKey()
 <# Next #>
-
+			
+			' Views have no key
+<# For Each view In _tables.where(function(c) c.isView) #>
+			modelBuilder.Entity(Of <#= view.singleName #>).ToView(NameOf(<#= view.pluralName #>)).HasNoKey()
+<# Next #>
 			OnModelCreatingPartial(modelBuilder)
 		End Sub
 
