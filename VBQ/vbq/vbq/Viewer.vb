@@ -1,15 +1,55 @@
-﻿Imports System.Runtime.CompilerServices
+﻿Imports System.Drawing.Drawing2D
+Imports System.Runtime.CompilerServices
 
 Public Class Viewer
+    Private DbLinkPairs As List(Of DbLinkPair)
+    Private myPath As GraphicsPath()
+
+    Private xOffset, yOffset As Integer
+
+    Public Sub AddLink(fromName As String, toName As String)
+        If DbLinkPairs Is Nothing Then DbLinkPairs = New List(Of DbLinkPair)
+
+        Dim idx = playpen.Controls.IndexOfKey(fromName)
+        Dim f = playpen.Controls.Item(idx)
+        idx = playpen.Controls.IndexOfKey(toName)
+        Dim t = playpen.Controls.Item(idx)
+
+        DbLinkPairs.Add(New DbLinkPair With {
+                        .fromCtrl = f,
+                        .toCtrl = t
+                        })
+
+    End Sub
+
     Public Sub AddTable(name As String, fields As List(Of DbFieldInfo))
         Dim t As New DbObject
         t.lTitle.Text = name
+        t.Name = name
+        t.Left = xOffset + 10
+        t.Top = yOffset + 10
+
+        xOffset = t.Right
+
+        If xOffset > playpen.Width Then
+            xOffset = 0
+            yOffset += t.Bottom
+        End If
 
         For Each f In fields
             t.AddField(f.name, f.type, f.isKey)
         Next
 
         playpen.Controls.Add(t)
+    End Sub
+
+    Public Sub RemoveTable(name As String)
+        Dim idx = playpen.Controls.IndexOfKey(name)
+        Dim t = playpen.Controls.Item(idx)
+
+        If t IsNot Nothing Then
+            playpen.Controls.Remove(t)
+        End If
     End Sub
 
     Private Sub ViewerContainerItem_DragEnter(ByVal sender As Object, ByVal e As DragEventArgs)
@@ -46,30 +86,43 @@ Public Class Viewer
     End Sub
 
     Public Sub Redraw()
-        Dim enumerator As IEnumerator
         Dim graphics As Graphics = playpen.CreateGraphics
-        Dim pen As New Pen(Color.Black, 1.0!)
+        graphics.InterpolationMode = InterpolationMode.HighQualityBicubic
+        graphics.SmoothingMode = SmoothingMode.HighQuality
+
+        Dim pen As New Pen(Color.SlateGray, 2.0!)
         Try
-            enumerator = playpen.Controls.GetEnumerator
-            Do While enumerator.MoveNext
-                Dim current As Control = DirectCast(enumerator.Current, Control)
-                Dim view As DbObject = TryCast(current, DbObject)
-                If view IsNot Nothing Then
-                    'Dim array(,) As ucLink(0 To .,0 To .) = DirectCast(view.Get_uLink, ucLink(0 To .,0 To .)(,))
-                    'Me.myPath = New GraphicsPath(1 - 1) {}
-                    'If (Not array Is Nothing) Then
-                    '    Dim num2 As Integer = Information.UBound(array, 1)
-                    '    Dim i As Integer = 0
-                    '    Do While (i <= num2)
-                    '        Me.myPath = DirectCast(Utils.CopyArray(DirectCast(Me.myPath, Array), New GraphicsPath(((Information.UBound(Me.myPath, 1) + 1) + 1) - 1) {}), GraphicsPath())
-                    '        Me.myPath(Information.UBound(Me.myPath, 1)) = New GraphicsPath
-                    '        Me.myPath(Information.UBound(Me.myPath, 1)).AddLine((array(i, 0).Left + 6), (array(i, 0).Top + 2), array(i, 1).Left, (array(i, 1).Top + 2))
-                    '        graphics.DrawPath(pen, Me.myPath(Information.UBound(Me.myPath, 1)))
-                    '        i += 1
-                    '    Loop
-                    'End If
-                End If
-            Loop
+
+            If DbLinkPairs IsNot Nothing Then
+                For Each d In DbLinkPairs
+                    Dim fp As New Point(d.fromCtrl.Right, d.fromCtrl.Bottom - CInt(d.fromCtrl.Height / 2))
+                    Dim tp As New Point(d.toCtrl.Left, d.toCtrl.Bottom - CInt(d.toCtrl.Height / 2))
+
+                    graphics.DrawLine(pen, fp, New Point(fp.X + 10, fp.Y))
+                    graphics.DrawLine(pen, tp, New Point(tp.X - 10, tp.Y))
+                    graphics.DrawLine(pen, New Point(fp.X + 10, fp.Y), New Point(tp.X - 10, tp.Y))
+                Next
+            End If
+            'enumerator = playpen.Controls.GetEnumerator
+            'Do While enumerator.MoveNext
+            '    Dim current As Control = DirectCast(enumerator.Current, Control)
+            '    Dim view As DbObject = TryCast(current, DbObject)
+            '    If view IsNot Nothing Then
+            '        'Dim array(,) As ucLink(0 To .,0 To .) = DirectCast(view.Get_uLink, ucLink(0 To .,0 To .)(,))
+            '        'Me.myPath = New GraphicsPath(1 - 1) {}
+            '        'If (Not array Is Nothing) Then
+            '        '    Dim num2 As Integer = Information.UBound(array, 1)
+            '        '    Dim i As Integer = 0
+            '        '    Do While (i <= num2)
+            '        '        Me.myPath = DirectCast(Utils.CopyArray(DirectCast(Me.myPath, Array), New GraphicsPath(((Information.UBound(Me.myPath, 1) + 1) + 1) - 1) {}), GraphicsPath())
+            '        '        Me.myPath(Information.UBound(Me.myPath, 1)) = New GraphicsPath
+            '        '        Me.myPath(Information.UBound(Me.myPath, 1)).AddLine((array(i, 0).Left + 6), (array(i, 0).Top + 2), array(i, 1).Left, (array(i, 1).Top + 2))
+            '        '        graphics.DrawPath(pen, Me.myPath(Information.UBound(Me.myPath, 1)))
+            '        '        i += 1
+            '        '    Loop
+            '        'End If
+            '    End If
+            'Loop
         Catch ex As Exception
 
         End Try
@@ -84,4 +137,11 @@ Public Class DbFieldInfo
     Property name As String
     Property [type] As String
     Property isKey As Boolean
+End Class
+
+Public Class DbLinkPair
+    Property fromCtrl As Control
+    Property toCtrl As Control
+    Property StartFromLink As Point
+    Property EndAtLink As Point
 End Class

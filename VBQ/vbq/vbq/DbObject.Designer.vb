@@ -22,8 +22,9 @@ Partial Class DbObject
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DbObject))
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.pLeft = New System.Windows.Forms.Panel()
         Me.pRight = New System.Windows.Forms.Panel()
         Me.pCenter = New System.Windows.Forms.Panel()
         Me.Panel1 = New System.Windows.Forms.Panel()
@@ -31,7 +32,10 @@ Partial Class DbObject
         Me.lTitle = New DevComponents.DotNetBar.LabelX()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.lFields = New DevComponents.DotNetBar.ListBoxAdv()
+        Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
+        Me.ItemTemplate = New DevComponents.DotNetBar.ListBoxItem()
         Me.normalFieldTemplate = New DevComponents.DotNetBar.LabelItem()
+        Me.pLeft = New System.Windows.Forms.Panel()
         Me.Field = New DevComponents.DotNetBar.ListBoxItem()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -39,17 +43,18 @@ Partial Class DbObject
         '
         'TableLayoutPanel1
         '
-        Me.TableLayoutPanel1.ColumnCount = 3
+        Me.TableLayoutPanel1.ColumnCount = 4
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 24.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 24.0!))
-        Me.TableLayoutPanel1.Controls.Add(Me.pLeft, 0, 2)
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 1.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.pRight, 2, 2)
-        Me.TableLayoutPanel1.Controls.Add(Me.pCenter, 1, 2)
+        Me.TableLayoutPanel1.Controls.Add(Me.pCenter, 0, 2)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel1, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel2, 1, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel3, 2, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.lFields, 0, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.pLeft, 3, 0)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(0)
@@ -57,41 +62,31 @@ Partial Class DbObject
         Me.TableLayoutPanel1.RowCount = 3
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 4.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(150, 150)
         Me.TableLayoutPanel1.TabIndex = 0
-        '
-        'pLeft
-        '
-        Me.pLeft.BackColor = System.Drawing.Color.SlateGray
-        Me.pLeft.Cursor = System.Windows.Forms.Cursors.SizeNESW
-        Me.pLeft.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pLeft.Location = New System.Drawing.Point(0, 146)
-        Me.pLeft.Margin = New System.Windows.Forms.Padding(0)
-        Me.pLeft.Name = "pLeft"
-        Me.pLeft.Size = New System.Drawing.Size(24, 4)
-        Me.pLeft.TabIndex = 2
         '
         'pRight
         '
         Me.pRight.BackColor = System.Drawing.Color.SlateGray
         Me.pRight.Cursor = System.Windows.Forms.Cursors.SizeNWSE
         Me.pRight.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pRight.Location = New System.Drawing.Point(126, 146)
+        Me.pRight.Location = New System.Drawing.Point(125, 149)
         Me.pRight.Margin = New System.Windows.Forms.Padding(0)
         Me.pRight.Name = "pRight"
-        Me.pRight.Size = New System.Drawing.Size(24, 4)
+        Me.pRight.Size = New System.Drawing.Size(24, 1)
         Me.pRight.TabIndex = 0
         '
         'pCenter
         '
         Me.pCenter.BackColor = System.Drawing.Color.SlateGray
+        Me.TableLayoutPanel1.SetColumnSpan(Me.pCenter, 2)
         Me.pCenter.Cursor = System.Windows.Forms.Cursors.SizeNS
         Me.pCenter.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pCenter.Location = New System.Drawing.Point(24, 146)
+        Me.pCenter.Location = New System.Drawing.Point(0, 149)
         Me.pCenter.Margin = New System.Windows.Forms.Padding(0)
         Me.pCenter.Name = "pCenter"
-        Me.pCenter.Size = New System.Drawing.Size(102, 4)
+        Me.pCenter.Size = New System.Drawing.Size(125, 1)
         Me.pCenter.TabIndex = 0
         '
         'Panel1
@@ -114,7 +109,7 @@ Partial Class DbObject
         Me.Panel2.Location = New System.Drawing.Point(24, 0)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(102, 24)
+        Me.Panel2.Size = New System.Drawing.Size(101, 24)
         Me.Panel2.TabIndex = 0
         '
         'lTitle
@@ -132,7 +127,7 @@ Partial Class DbObject
         Me.lTitle.ForeColor = System.Drawing.Color.WhiteSmoke
         Me.lTitle.Location = New System.Drawing.Point(0, 0)
         Me.lTitle.Name = "lTitle"
-        Me.lTitle.Size = New System.Drawing.Size(102, 24)
+        Me.lTitle.Size = New System.Drawing.Size(101, 24)
         Me.lTitle.TabIndex = 0
         Me.lTitle.Text = "Tablename"
         Me.lTitle.TextAlignment = System.Drawing.StringAlignment.Center
@@ -142,7 +137,7 @@ Partial Class DbObject
         Me.Panel3.BackgroundImage = Global.vbq.My.Resources.Resources.head_right
         Me.Panel3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel3.Location = New System.Drawing.Point(126, 0)
+        Me.Panel3.Location = New System.Drawing.Point(125, 0)
         Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(24, 24)
@@ -172,25 +167,41 @@ Partial Class DbObject
         Me.lFields.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.lFields.BackgroundStyle.Font = New System.Drawing.Font("Consolas", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lFields.BackgroundStyle.TextColor = System.Drawing.Color.WhiteSmoke
-        Me.lFields.CheckStateMember = Nothing
         Me.TableLayoutPanel1.SetColumnSpan(Me.lFields, 3)
         Me.lFields.ContainerControlProcessDialogKey = True
         Me.lFields.Dock = System.Windows.Forms.DockStyle.Fill
         Me.lFields.DragDropSupport = True
         Me.lFields.EnableDragDrop = True
         Me.lFields.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lFields.Items.Add("<font color=""WhiteSmoke""><b>example_id</b></font> <font color=""DarkGray"">: int(10" &
-        ")</font>")
-        Me.lFields.Items.Add("<font color=""WhiteSmoke""><b>created</b></font> <font color=""DarkGray"">: datetime<" &
-        "/font>")
+        Me.lFields.Images = Me.ImageList1
+        Me.lFields.Items.Add(Me.ItemTemplate)
         Me.lFields.ItemSpacing = 0
         Me.lFields.ItemTemplate = Me.normalFieldTemplate
         Me.lFields.Location = New System.Drawing.Point(0, 24)
         Me.lFields.Margin = New System.Windows.Forms.Padding(0)
         Me.lFields.Name = "lFields"
-        Me.lFields.Size = New System.Drawing.Size(150, 122)
+        Me.lFields.Size = New System.Drawing.Size(149, 125)
         Me.lFields.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.lFields.TabIndex = 1
+        '
+        'ImageList1
+        '
+        Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
+        Me.ImageList1.Images.SetKeyName(0, "key.png")
+        Me.ImageList1.Images.SetKeyName(1, "link.png")
+        '
+        'ItemTemplate
+        '
+        Me.ItemTemplate.AutoCollapseOnClick = False
+        Me.ItemTemplate.CanCustomize = False
+        Me.ItemTemplate.Image = Global.vbq.My.Resources.Resources.key
+        Me.ItemTemplate.IsSelected = True
+        Me.ItemTemplate.Name = "ItemTemplate"
+        Me.ItemTemplate.ShowSubItems = False
+        Me.ItemTemplate.Text = "<span width=""20px""> </span><font color=""WhiteSmoke""><b>{name}</b></font> <font co" &
+    "lor=""DarkGray"">: {[type]}</font>"
+        Me.ItemTemplate.Visible = False
         '
         'normalFieldTemplate
         '
@@ -203,6 +214,18 @@ Partial Class DbObject
         Me.normalFieldTemplate.ShowSubItems = False
         Me.normalFieldTemplate.Text = "<font color=""WhiteSmoke""><b>{{fieldname}}</b></font> <font color=""DarkGrey"">:{{fi" &
     "eldtype}}</font>"
+        '
+        'pLeft
+        '
+        Me.pLeft.BackColor = System.Drawing.Color.SlateGray
+        Me.pLeft.Cursor = System.Windows.Forms.Cursors.SizeWE
+        Me.pLeft.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pLeft.Location = New System.Drawing.Point(149, 0)
+        Me.pLeft.Margin = New System.Windows.Forms.Padding(0)
+        Me.pLeft.Name = "pLeft"
+        Me.TableLayoutPanel1.SetRowSpan(Me.pLeft, 3)
+        Me.pLeft.Size = New System.Drawing.Size(1, 150)
+        Me.pLeft.TabIndex = 3
         '
         'Field
         '
@@ -235,8 +258,10 @@ Partial Class DbObject
     Friend WithEvents lFields As DevComponents.DotNetBar.ListBoxAdv
     Friend WithEvents Field As DevComponents.DotNetBar.ListBoxItem
     Friend WithEvents normalFieldTemplate As DevComponents.DotNetBar.LabelItem
-    Friend WithEvents pLeft As Panel
     Friend WithEvents pRight As Panel
     Friend WithEvents pCenter As Panel
     Friend WithEvents lTitle As DevComponents.DotNetBar.LabelX
+    Friend WithEvents ImageList1 As ImageList
+    Friend WithEvents ItemTemplate As DevComponents.DotNetBar.ListBoxItem
+    Friend WithEvents pLeft As Panel
 End Class
