@@ -63,7 +63,7 @@ Partial Class DbObject
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(150, 150)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(200, 150)
         Me.TableLayoutPanel1.TabIndex = 0
         '
         'pRight
@@ -71,7 +71,7 @@ Partial Class DbObject
         Me.pRight.BackColor = System.Drawing.Color.SlateGray
         Me.pRight.Cursor = System.Windows.Forms.Cursors.SizeNWSE
         Me.pRight.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pRight.Location = New System.Drawing.Point(125, 149)
+        Me.pRight.Location = New System.Drawing.Point(175, 149)
         Me.pRight.Margin = New System.Windows.Forms.Padding(0)
         Me.pRight.Name = "pRight"
         Me.pRight.Size = New System.Drawing.Size(24, 1)
@@ -86,7 +86,7 @@ Partial Class DbObject
         Me.pCenter.Location = New System.Drawing.Point(0, 149)
         Me.pCenter.Margin = New System.Windows.Forms.Padding(0)
         Me.pCenter.Name = "pCenter"
-        Me.pCenter.Size = New System.Drawing.Size(125, 1)
+        Me.pCenter.Size = New System.Drawing.Size(175, 1)
         Me.pCenter.TabIndex = 0
         '
         'Panel1
@@ -109,7 +109,7 @@ Partial Class DbObject
         Me.Panel2.Location = New System.Drawing.Point(24, 0)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(101, 24)
+        Me.Panel2.Size = New System.Drawing.Size(151, 24)
         Me.Panel2.TabIndex = 0
         '
         'lTitle
@@ -127,7 +127,7 @@ Partial Class DbObject
         Me.lTitle.ForeColor = System.Drawing.Color.WhiteSmoke
         Me.lTitle.Location = New System.Drawing.Point(0, 0)
         Me.lTitle.Name = "lTitle"
-        Me.lTitle.Size = New System.Drawing.Size(101, 24)
+        Me.lTitle.Size = New System.Drawing.Size(151, 24)
         Me.lTitle.TabIndex = 0
         Me.lTitle.Text = "Tablename"
         Me.lTitle.TextAlignment = System.Drawing.StringAlignment.Center
@@ -137,7 +137,7 @@ Partial Class DbObject
         Me.Panel3.BackgroundImage = Global.vbq.My.Resources.Resources.head_right
         Me.Panel3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel3.Location = New System.Drawing.Point(125, 0)
+        Me.Panel3.Location = New System.Drawing.Point(175, 0)
         Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(24, 24)
@@ -167,6 +167,7 @@ Partial Class DbObject
         Me.lFields.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.lFields.BackgroundStyle.Font = New System.Drawing.Font("Consolas", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lFields.BackgroundStyle.TextColor = System.Drawing.Color.WhiteSmoke
+        Me.lFields.CheckStateMember = Nothing
         Me.TableLayoutPanel1.SetColumnSpan(Me.lFields, 3)
         Me.lFields.ContainerControlProcessDialogKey = True
         Me.lFields.Dock = System.Windows.Forms.DockStyle.Fill
@@ -180,7 +181,8 @@ Partial Class DbObject
         Me.lFields.Location = New System.Drawing.Point(0, 24)
         Me.lFields.Margin = New System.Windows.Forms.Padding(0)
         Me.lFields.Name = "lFields"
-        Me.lFields.Size = New System.Drawing.Size(149, 125)
+        Me.lFields.SelectionMode = DevComponents.DotNetBar.eSelectionMode.None
+        Me.lFields.Size = New System.Drawing.Size(199, 125)
         Me.lFields.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.lFields.TabIndex = 1
         '
@@ -220,7 +222,7 @@ Partial Class DbObject
         Me.pLeft.BackColor = System.Drawing.Color.SlateGray
         Me.pLeft.Cursor = System.Windows.Forms.Cursors.SizeWE
         Me.pLeft.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pLeft.Location = New System.Drawing.Point(149, 0)
+        Me.pLeft.Location = New System.Drawing.Point(199, 0)
         Me.pLeft.Margin = New System.Windows.Forms.Padding(0)
         Me.pLeft.Name = "pLeft"
         Me.TableLayoutPanel1.SetRowSpan(Me.pLeft, 3)
@@ -245,6 +247,7 @@ Partial Class DbObject
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Font = New System.Drawing.Font("Consolas", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "DbObject"
+        Me.Size = New System.Drawing.Size(200, 150)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.ResumeLayout(False)

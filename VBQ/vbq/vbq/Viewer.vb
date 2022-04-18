@@ -91,6 +91,7 @@ Public Class Viewer
         graphics.SmoothingMode = SmoothingMode.HighQuality
 
         Dim pen As New Pen(Color.SlateGray, 2.0!)
+
         Try
 
             If DbLinkPairs IsNot Nothing Then
@@ -98,31 +99,13 @@ Public Class Viewer
                     Dim fp As New Point(d.fromCtrl.Right, d.fromCtrl.Bottom - CInt(d.fromCtrl.Height / 2))
                     Dim tp As New Point(d.toCtrl.Left, d.toCtrl.Bottom - CInt(d.toCtrl.Height / 2))
 
-                    graphics.DrawLine(pen, fp, New Point(fp.X + 10, fp.Y))
-                    graphics.DrawLine(pen, tp, New Point(tp.X - 10, tp.Y))
-                    graphics.DrawLine(pen, New Point(fp.X + 10, fp.Y), New Point(tp.X - 10, tp.Y))
+                    Dim xDist = CInt(Math.Abs(fp.X - tp.X) / 2)
+
+                    graphics.DrawLine(pen, fp, New Point(fp.X + xDist, fp.Y))
+                    graphics.DrawLine(pen, tp, New Point(tp.X - xDist, tp.Y))
+                    graphics.DrawLine(pen, New Point(fp.X + xDist, fp.Y), New Point(tp.X - xDist, tp.Y))
                 Next
             End If
-            'enumerator = playpen.Controls.GetEnumerator
-            'Do While enumerator.MoveNext
-            '    Dim current As Control = DirectCast(enumerator.Current, Control)
-            '    Dim view As DbObject = TryCast(current, DbObject)
-            '    If view IsNot Nothing Then
-            '        'Dim array(,) As ucLink(0 To .,0 To .) = DirectCast(view.Get_uLink, ucLink(0 To .,0 To .)(,))
-            '        'Me.myPath = New GraphicsPath(1 - 1) {}
-            '        'If (Not array Is Nothing) Then
-            '        '    Dim num2 As Integer = Information.UBound(array, 1)
-            '        '    Dim i As Integer = 0
-            '        '    Do While (i <= num2)
-            '        '        Me.myPath = DirectCast(Utils.CopyArray(DirectCast(Me.myPath, Array), New GraphicsPath(((Information.UBound(Me.myPath, 1) + 1) + 1) - 1) {}), GraphicsPath())
-            '        '        Me.myPath(Information.UBound(Me.myPath, 1)) = New GraphicsPath
-            '        '        Me.myPath(Information.UBound(Me.myPath, 1)).AddLine((array(i, 0).Left + 6), (array(i, 0).Top + 2), array(i, 1).Left, (array(i, 1).Top + 2))
-            '        '        graphics.DrawPath(pen, Me.myPath(Information.UBound(Me.myPath, 1)))
-            '        '        i += 1
-            '        '    Loop
-            '        'End If
-            '    End If
-            'Loop
         Catch ex As Exception
 
         End Try

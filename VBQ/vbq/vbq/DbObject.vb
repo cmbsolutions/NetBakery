@@ -5,8 +5,6 @@
     Private IsResizing As Boolean
     Private x, y As Integer
 
-
-
     Public Sub AddField(name As String, [type] As String, isKey As Boolean)
         Dim f = DirectCast(ItemTemplate.Clone, DevComponents.DotNetBar.ListBoxItem)
 
@@ -20,6 +18,7 @@
         End If
 
         f.Visible = True
+        f.SetIsSelected(False, DevComponents.DotNetBar.eEventSource.Code)
         lFields.Items.Add(f)
     End Sub
 
@@ -82,12 +81,14 @@
         If IsResizing And e.Button = MouseButtons.Left Then
             Height += e.Y - y
             Width += e.X - x
+            Parent.Refresh()
         End If
     End Sub
 
     Private Sub pLeft_MouseMove(sender As Object, e As MouseEventArgs) Handles pLeft.MouseMove
         If IsResizing And e.Button = MouseButtons.Left Then
             Width += e.X - x
+            Parent.Refresh()
         End If
     End Sub
 End Class
