@@ -3,7 +3,6 @@ Imports System.Runtime.CompilerServices
 
 Public Class Viewer
     Private DbLinkPairs As List(Of DbLinkPair)
-    Private myPath As GraphicsPath()
 
     Private xOffset, yOffset As Integer
 
@@ -23,11 +22,11 @@ Public Class Viewer
     End Sub
 
     Public Sub AddTable(name As String, fields As List(Of DbFieldInfo))
-        Dim t As New DbObject
+        Dim t As New DbTableObject
         t.lTitle.Text = name
         t.Name = name
-        t.Left = xOffset + 10
-        t.Top = yOffset + 10
+        t.Left = xOffset + 50
+        t.Top = yOffset + 50
 
         xOffset = t.Right
 
@@ -86,11 +85,15 @@ Public Class Viewer
     End Sub
 
     Public Sub Redraw()
-        Dim graphics As Graphics = playpen.CreateGraphics
+
+    End Sub
+
+    Private Sub playpen_Paint(sender As Object, e As PaintEventArgs) Handles playpen.Paint
+        Dim graphics As Graphics = e.Graphics
         graphics.InterpolationMode = InterpolationMode.HighQualityBicubic
         graphics.SmoothingMode = SmoothingMode.HighQuality
 
-        Dim pen As New Pen(Color.SlateGray, 2.0!)
+        Dim pen As New Pen(Color.Yellow, 3.0!)
 
         Try
 
@@ -101,18 +104,12 @@ Public Class Viewer
 
                     Dim xDist = CInt(Math.Abs(fp.X - tp.X) / 2)
 
-                    graphics.DrawLine(pen, fp, New Point(fp.X + xDist, fp.Y))
-                    graphics.DrawLine(pen, tp, New Point(tp.X - xDist, tp.Y))
-                    graphics.DrawLine(pen, New Point(fp.X + xDist, fp.Y), New Point(tp.X - xDist, tp.Y))
+                    graphics.DrawLines(pen, {fp, New Point(fp.X + xDist, fp.Y), New Point(tp.X - xDist, tp.Y), New Point(tp.X - xDist, tp.Y), tp})
                 Next
             End If
         Catch ex As Exception
-
+            Debug.WriteLine(ex.Message)
         End Try
-    End Sub
-
-    Private Sub Viewer_Paint(sender As Object, e As PaintEventArgs) Handles Me.Paint
-        Redraw()
     End Sub
 End Class
 

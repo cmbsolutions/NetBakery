@@ -61,6 +61,20 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        '''&lt;!-- Generator: Adobe Illustrator 18.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --&gt;
+        '''&lt;!DOCTYPE svg PUBLIC &quot;-//W3C//DTD SVG 1.1//EN&quot; &quot;http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd&quot;&gt;
+        '''&lt;svg version=&quot;1.1&quot; id=&quot;Layer_1&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; x=&quot;0px&quot; y=&quot;0px&quot;
+        '''	 viewBox=&quot;0 0 134.6 162.5&quot; enable-background=&quot;new 0 0 134.6 162.5&quot; xml:space=&quot;preserve&quot;&gt;
+        '''&lt;path fill=&quot;#2B2B30&quot; stroke=&quot;#3FA9F5&quot; stroke-width=&quot;3&quot; str [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property DbObjectBg() As String
+            Get
+                Return ResourceManager.GetString("DbObjectBg", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property grid1() As System.Drawing.Bitmap

@@ -52,6 +52,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -73,12 +75,6 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbLink.Designer.vb">
-      <DependentUpon>DbLink.vb</DependentUpon>
-    </Compile>
-    <Compile Include="DbLink.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="DbObject.Designer.vb">
       <DependentUpon>DbObject.vb</DependentUpon>
     </Compile>
@@ -88,6 +84,12 @@
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="DbTableObject.Designer.vb">
+      <DependentUpon>DbTableObject.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DbTableObject.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Viewer.vb">
       <SubType>UserControl</SubType>
@@ -110,6 +112,9 @@
   <ItemGroup>
     <EmbeddedResource Include="DbObject.resx">
       <DependentUpon>DbObject.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DbTableObject.resx">
+      <DependentUpon>DbTableObject.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
@@ -134,6 +139,11 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="resources\DbObjectBg.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

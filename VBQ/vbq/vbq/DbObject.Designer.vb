@@ -43,6 +43,7 @@ Partial Class DbObject
         '
         'TableLayoutPanel1
         '
+        Me.TableLayoutPanel1.BackColor = System.Drawing.SystemColors.Control
         Me.TableLayoutPanel1.ColumnCount = 4
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 24.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
@@ -56,6 +57,7 @@ Partial Class DbObject
         Me.TableLayoutPanel1.Controls.Add(Me.lFields, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.pLeft, 3, 0)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel1.ForeColor = System.Drawing.Color.Black
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
@@ -167,6 +169,7 @@ Partial Class DbObject
         Me.lFields.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.lFields.BackgroundStyle.Font = New System.Drawing.Font("Consolas", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lFields.BackgroundStyle.TextColor = System.Drawing.Color.WhiteSmoke
+        Me.lFields.CheckStateMember = Nothing
         Me.TableLayoutPanel1.SetColumnSpan(Me.lFields, 3)
         Me.lFields.ContainerControlProcessDialogKey = True
         Me.lFields.Dock = System.Windows.Forms.DockStyle.Fill

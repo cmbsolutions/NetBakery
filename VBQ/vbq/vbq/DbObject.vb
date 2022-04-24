@@ -74,6 +74,10 @@
         End If
     End Sub
 
+    Private Sub lFields_MouseClick(sender As Object, e As MouseEventArgs) Handles lFields.MouseClick
+        Debug.WriteLine("Click")
+    End Sub
+
     Private Sub pLeft_MouseMove(sender As Object, e As MouseEventArgs) Handles pLeft.MouseMove
         If IsResizing And e.Button = MouseButtons.Left Then
             Width += e.X - x
