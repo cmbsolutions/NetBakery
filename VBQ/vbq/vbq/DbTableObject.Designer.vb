@@ -33,6 +33,7 @@ Partial Class DbTableObject
         Me.lFields = New DevComponents.DotNetBar.ListBoxAdv()
         Me.ItemTemplate = New DevComponents.DotNetBar.ListBoxItem()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
+        Me.StyleManager1 = New DevComponents.DotNetBar.StyleManager(Me.components)
         Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -149,7 +150,7 @@ Partial Class DbTableObject
         Me.lFields.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.lFields.BackgroundStyle.Font = New System.Drawing.Font("Consolas", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lFields.BackgroundStyle.TextColor = System.Drawing.Color.WhiteSmoke
-        Me.lFields.CheckStateMember = Nothing
+        Me.lFields.CausesValidation = False
         Me.lFields.ContainerControlProcessDialogKey = True
         Me.lFields.Dock = System.Windows.Forms.DockStyle.Fill
         Me.lFields.DragDropSupport = True
@@ -160,7 +161,6 @@ Partial Class DbTableObject
         Me.lFields.Location = New System.Drawing.Point(3, 30)
         Me.lFields.Margin = New System.Windows.Forms.Padding(0)
         Me.lFields.Name = "lFields"
-        Me.lFields.SelectionMode = DevComponents.DotNetBar.eSelectionMode.None
         Me.lFields.Size = New System.Drawing.Size(194, 222)
         Me.lFields.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.lFields.TabIndex = 2
@@ -168,6 +168,7 @@ Partial Class DbTableObject
         'ItemTemplate
         '
         Me.ItemTemplate.AutoCollapseOnClick = False
+        Me.ItemTemplate.BackColors = New System.Drawing.Color() {System.Drawing.Color.MistyRose, System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))}
         Me.ItemTemplate.CanCustomize = False
         Me.ItemTemplate.Image = Global.vbq.My.Resources.Resources.key
         Me.ItemTemplate.IsSelected = True
@@ -175,6 +176,7 @@ Partial Class DbTableObject
         Me.ItemTemplate.ShowSubItems = False
         Me.ItemTemplate.Text = "<span width=""20px""> </span><font color=""WhiteSmoke""><b>{name}</b></font> <font co" &
     "lor=""DarkGray"">: {[type]}</font>"
+        Me.ItemTemplate.ThemeAware = True
         Me.ItemTemplate.Visible = False
         '
         'ImageList1
@@ -183,6 +185,11 @@ Partial Class DbTableObject
         Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
         Me.ImageList1.Images.SetKeyName(0, "key.png")
         Me.ImageList1.Images.SetKeyName(1, "link.png")
+        '
+        'StyleManager1
+        '
+        Me.StyleManager1.ManagerStyle = DevComponents.DotNetBar.eStyle.VisualStudio2012Dark
+        Me.StyleManager1.MetroColorParameters = New DevComponents.DotNetBar.Metro.ColorTables.MetroColorGeneratorParameters(System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(122, Byte), Integer), CType(CType(204, Byte), Integer)))
         '
         'DbTableObject
         '
@@ -207,4 +214,5 @@ Partial Class DbTableObject
     Friend WithEvents pBottomRight As Panel
     Friend WithEvents pRight As Panel
     Friend WithEvents ImageList1 As ImageList
+    Friend WithEvents StyleManager1 As DevComponents.DotNetBar.StyleManager
 End Class

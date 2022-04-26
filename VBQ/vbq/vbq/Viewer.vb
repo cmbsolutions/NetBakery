@@ -84,10 +84,6 @@ Public Class Viewer
         '    view4.AddLink("T"c, link, link2)
     End Sub
 
-    Public Sub Redraw()
-
-    End Sub
-
     Private Sub playpen_Paint(sender As Object, e As PaintEventArgs) Handles playpen.Paint
         Dim graphics As Graphics = e.Graphics
         graphics.InterpolationMode = InterpolationMode.HighQualityBicubic
@@ -99,6 +95,18 @@ Public Class Viewer
 
             If DbLinkPairs IsNot Nothing Then
                 For Each d In DbLinkPairs
+                    Dim lines As New List(Of Point)
+                    Dim fsp, tsp As Point
+
+                    Dim fmpx As Integer = d.fromCtrl.Left + CInt(d.fromCtrl.Width / 2)
+                    Dim tmpx As Integer = d.toCtrl.Left + CInt(d.toCtrl.Width / 2)
+
+                    If fmpx < tmpx Then ' we start on the left side
+                        fsp = New Point()
+                    Else ' we start on the right side
+
+                    End If
+
                     Dim fp As New Point(d.fromCtrl.Right, d.fromCtrl.Bottom - CInt(d.fromCtrl.Height / 2))
                     Dim tp As New Point(d.toCtrl.Left, d.toCtrl.Bottom - CInt(d.toCtrl.Height / 2))
 

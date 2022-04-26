@@ -6,6 +6,11 @@ Public Class DbTableObject
     End Function
 
 
+    Private IsMoving As Boolean
+    Private IsResizing As Boolean
+    Property IsSelected As Boolean
+    Private x, y As Integer
+
     Private _radius As Integer = 24
     Public Property Radius() As Integer
         Get
@@ -42,8 +47,6 @@ Public Class DbTableObject
         Dim path = GetRoundRectagle(bounds, Radius)
         Region = New Region(path)
 
-        'Better round rectangle
-        'Region = Region.FromHrgn(CreateRoundRectRgn(bounds.Left, bounds.Top, bounds.Right, bounds.Bottom, Radius, Radius))
         Invalidate()
     End Sub
 
@@ -51,24 +54,6 @@ Public Class DbTableObject
         MyBase.OnSizeChanged(e)
         RecreateRegion()
     End Sub
-
-    'Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
-    '    PaintTransparentBackground(Me, e)
-    '    ' TODO: Paint your actual content here with rounded corners
-    'End Sub
-
-    'Private Shared Sub PaintTransparentBackground(ByVal c As Control, ByVal e As PaintEventArgs)
-    '    If c.Parent Is Nothing OrElse Not Application.RenderWithVisualStyles Then
-    '        Exit Sub
-    '    End If
-
-    '    ButtonRenderer.DrawParentBackground(e.Graphics, c.ClientRectangle, c)
-    'End Sub
-
-    Private IsMoving As Boolean
-    Private IsResizing As Boolean
-    Property IsSelected As Boolean
-    Private x, y As Integer
 
     Public Sub AddField(name As String, [type] As String, isKey As Boolean)
         Dim f = DirectCast(ItemTemplate.Clone, DevComponents.DotNetBar.ListBoxItem)
@@ -136,10 +121,6 @@ Public Class DbTableObject
             Width += e.X - x
             Parent.Refresh()
         End If
-    End Sub
-
-    Private Sub lFields_MouseClick(sender As Object, e As MouseEventArgs) Handles lFields.MouseClick
-        Debug.WriteLine("Click")
     End Sub
 
     Private Sub pLeft_MouseMove(sender As Object, e As MouseEventArgs) Handles pRight.MouseMove
