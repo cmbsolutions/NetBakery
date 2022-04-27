@@ -87,10 +87,10 @@ Public Class Viewer
 
     Private Sub playpen_Paint(sender As Object, e As PaintEventArgs) Handles playpen.Paint
         Dim graphics As Graphics = e.Graphics
-        'graphics.InterpolationMode = InterpolationMode.HighQualityBilinear
-        'graphics.SmoothingMode = SmoothingMode.HighQuality
+        graphics.InterpolationMode = InterpolationMode.Low
+        graphics.SmoothingMode = SmoothingMode.HighSpeed
 
-        Dim pen As New Pen(Color.Yellow, 3.0!)
+        Dim pen As New Pen(Color.DarkOrange, 2.5!)
 
         Try
 
@@ -98,64 +98,51 @@ Public Class Viewer
 
                 For Each d In DbLinkPairs
                     Dim gp As New GraphicsPath
-                    Dim startLeft, endLeft As Boolean
 
-                    Dim fmpx As Integer = d.fromCtrl.Left + CInt(d.fromCtrl.Width / 2)
-                    Dim tmpx As Integer = d.toCtrl.Left + CInt(d.toCtrl.Width / 2)
-                    Dim fmpy As Integer = d.fromCtrl.Top + CInt(d.fromCtrl.Height / 2)
-                    Dim tmpy As Integer = d.toCtrl.Top + CInt(d.toCtrl.Height / 2)
-
-                    If d.fromCtrl.Right < d.toCtrl.Left Then
-                        startLeft = False
-                        endLeft = True
-                    ElseIf d.fromCtrl.Left > d.toCtrl.Right Then
-                        startLeft = True
-                        endLeft = False
-                    ElseIf fmpx < tmpx Then
-                        startLeft = True
-                        endLeft = True
-                    Else
-                        startLeft = False
-                        endLeft = False
-                    End If
-
-                    If startLeft And endLeft Then
+                    If d.startLeft And d.endLeft Then
                         Dim xmin = Math.Min(d.fromCtrl.Left, d.toCtrl.Left)
 
-                        gp.AddLine(New Point(d.fromCtrl.Left, fmpy), New Point(xmin - 10, fmpy))
-                        gp.AddLine(New Point(xmin - 10, fmpy), New Point(xmin - 10, tmpy))
-                        gp.AddLine(New Point(xmin - 10, tmpy), New Point(d.toCtrl.Left, tmpy))
+                        graphics.DrawLine(pen, New Point(d.fromCtrl.Left, d.fCtrlMidY), New Point(xmin - 10, d.fCtrlMidY))
+                        graphics.DrawLine(pen, New Point(xmin - 10, d.fCtrlMidY), New Point(xmin - 10, d.tCtrlMidY))
+                        graphics.DrawLine(pen, New Point(xmin - 10, d.tCtrlMidY), New Point(d.toCtrl.Left, d.tCtrlMidY))
                     End If
 
-                    If Not startLeft And Not endLeft Then
+                    If Not d.startLeft And Not d.endLeft Then
                         Dim xmax = Math.Max(d.fromCtrl.Right, d.toCtrl.Right)
 
-                        gp.AddLine(New Point(d.fromCtrl.Right, fmpy), New Point(xmax + 10, fmpy))
-                        gp.AddLine(New Point(xmax + 10, fmpy), New Point(xmax + 10, tmpy))
-                        gp.AddLine(New Point(xmax + 10, tmpy), New Point(d.toCtrl.Right, tmpy))
+                        graphics.DrawLine(pen, New Point(d.fromCtrl.Right, d.fCtrlMidY), New Point(xmax + 10, d.fCtrlMidY))
+                        graphics.DrawLine(pen, New Point(xmax + 10, d.fCtrlMidY), New Point(xmax + 10, d.tCtrlMidY))
+                        graphics.DrawLine(pen, New Point(xmax + 10, d.tCtrlMidY), New Point(d.toCtrl.Right, d.tCtrlMidY))
                     End If
 
-                    If startLeft And Not endLeft Then
+                    If d.startLeft And Not d.endLeft Then
                         Dim xdist = CInt(Math.Abs(d.fromCtrl.Left - d.toCtrl.Right) / 2)
 
-                        gp.AddLine(New Point(d.fromCtrl.Left, fmpy), New Point(d.fromCtrl.Left - xdist, fmpy))
-                        gp.AddLine(New Point(d.fromCtrl.Left - xdist, fmpy), New Point(d.fromCtrl.Left - xdist, tmpy))
-                        gp.AddLine(New Point(d.fromCtrl.Left - xdist, tmpy), New Point(d.toCtrl.Right, tmpy))
+                        graphics.DrawLine(pen, New Point(d.fromCtrl.Left, d.fCtrlMidY), New Point(d.fromCtrl.Left - xdist, d.fCtrlMidY))
+                        graphics.DrawLine(pen, New Point(d.fromCtrl.Left - xdist, d.fCtrlMidY), New Point(d.fromCtrl.Left - xdist, d.tCtrlMidY))
+                        graphics.DrawLine(pen, New Point(d.fromCtrl.Left - xdist, d.tCtrlMidY), New Point(d.toCtrl.Right, d.tCtrlMidY))
                     End If
 
-                    If Not startLeft And endLeft Then
+                    If Not d.startLeft And d.endLeft Then
                         Dim xdist = CInt(Math.Abs(d.fromCtrl.Right - d.toCtrl.Left) / 2)
 
-                        gp.AddLine(New Point(d.fromCtrl.Right, fmpy), New Point(d.fromCtrl.Right + xdist, fmpy))
-                        gp.AddLine(New Point(d.fromCtrl.Right + xdist, fmpy), New Point(d.fromCtrl.Right + xdist, tmpy))
-                        gp.AddLine(New Point(d.fromCtrl.Right + xdist, tmpy), New Point(d.toCtrl.Left, tmpy))
+                        graphics.DrawLine(pen, New Point(d.fromCtrl.Right, d.fCtrlMidY), New Point(d.fromCtrl.Right + xdist, d.fCtrlMidY))
+                        graphics.DrawLine(pen, New Point(d.fromCtrl.Right + xdist, d.fCtrlMidY), New Point(d.fromCtrl.Right + xdist, d.tCtrlMidY))
+                        graphics.DrawLine(pen, New Point(d.fromCtrl.Right + xdist, d.tCtrlMidY), New Point(d.toCtrl.Left, d.tCtrlMidY))
                     End If
-                    graphics.DrawPath(pen, gp)
+                    ' graphics.DrawPath(pen, gp)
                 Next
             End If
         Catch ex As Exception
             Debug.WriteLine(ex.Message)
         End Try
+    End Sub
+
+    Private Sub Viewer_Load(sender As Object, e As EventArgs) Handles Me.Load
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
+        SetStyle(ControlStyles.UserPaint, True)
+        SetStyle(ControlStyles.AllPaintingInWmPaint, True)
+        SetStyle(ControlStyles.SupportsTransparentBackColor, True)
     End Sub
 End Class
 
@@ -169,6 +156,52 @@ End Class
 Public Class DbLinkPair
     Property fromCtrl As Control
     Property toCtrl As Control
-    Property StartFromLink As Point
-    Property EndAtLink As Point
+
+    ReadOnly Property fCtrlMidX As Integer
+        Get
+            Return fromCtrl.Left + CInt(fromCtrl.Width / 2)
+        End Get
+    End Property
+    ReadOnly Property fCtrlMidY As Integer
+        Get
+            Return fromCtrl.Top + CInt(fromCtrl.Height / 2)
+        End Get
+    End Property
+    ReadOnly Property tCtrlMidX As Integer
+        Get
+            Return toCtrl.Left + CInt(toCtrl.Width / 2)
+        End Get
+    End Property
+    ReadOnly Property tCtrlMidY As Integer
+        Get
+            Return toCtrl.Top + CInt(toCtrl.Height / 2)
+        End Get
+    End Property
+
+    ReadOnly Property startLeft As Boolean
+        Get
+            If fromCtrl.Right < toCtrl.Left Then
+                Return False
+            ElseIf fromCtrl.Left > toCtrl.Right Then
+                Return True
+            ElseIf fCtrlMidX < tCtrlMidX Then
+                Return True
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+    ReadOnly Property endLeft As Boolean
+        Get
+            If fromCtrl.Right < toCtrl.Left Then
+                Return True
+            ElseIf fromCtrl.Left > toCtrl.Right Then
+                Return False
+            ElseIf fCtrlMidX < tCtrlMidX Then
+                Return True
+            Else
+                Return False
+            End If
+        End Get
+    End Property
 End Class

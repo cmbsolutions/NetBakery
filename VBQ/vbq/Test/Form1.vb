@@ -1,4 +1,12 @@
 ﻿Public Class Form1
+    Protected Overrides ReadOnly Property CreateParams() As CreateParams
+        Get
+            Dim cp As CreateParams = MyBase.CreateParams
+            cp.ExStyle = cp.ExStyle Or &H2000000 ' Turn on WS_EX_COMPOSITED
+            Return cp
+        End Get
+    End Property
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Viewer1.AddTable("examples", New List(Of vbq.DbFieldInfo)({
                                                                   New vbq.DbFieldInfo With {.name = "example_id", .type = "int(10)", .isKey = True},

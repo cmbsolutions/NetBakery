@@ -23,6 +23,15 @@ Public Class DbTableObject
         End Set
     End Property
 
+    Protected Overrides ReadOnly Property CreateParams() As CreateParams
+        Get
+            Dim parms = MyBase.CreateParams
+            parms.Style = parms.Style And Not &H2000000 ' Turn off WS_CLIPCHILDREN
+            Return parms
+        End Get
+    End Property
+
+
     Private Function GetRoundRectagle(bounds As Rectangle, radius As Integer) As GraphicsPath
         Dim r As Single = radius
         Dim r2 As Single = 0.0!
@@ -169,5 +178,11 @@ Public Class DbTableObject
         For Each col As ColumnHeader In lFields.Columns
             col.Width = nc
         Next
+    End Sub
+
+    Private Sub DbTableObject_Load(sender As Object, e As EventArgs) Handles Me.Load
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
+        SetStyle(ControlStyles.UserPaint, True)
+        SetStyle(ControlStyles.AllPaintingInWmPaint, True)
     End Sub
 End Class
