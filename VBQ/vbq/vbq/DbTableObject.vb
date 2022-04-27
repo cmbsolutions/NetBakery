@@ -1,4 +1,5 @@
 ﻿Imports System.Drawing.Drawing2D
+Imports System.Text.RegularExpressions
 
 Public Class DbTableObject
     <System.Runtime.InteropServices.DllImport("gdi32.dll")>
@@ -55,23 +56,55 @@ Public Class DbTableObject
         RecreateRegion()
     End Sub
 
-    Public Sub AddField(name As String, [type] As String, isKey As Boolean)
-        Dim f = DirectCast(ItemTemplate.Clone, DevComponents.DotNetBar.ListBoxItem)
+    Public Sub AddField(name As String, [type] As String, isKey As Boolean, isLink As Boolean)
+        Dim f As New ListViewItem With {
+            .BackColor = Color.FromArgb(43, 43, 48),
+            .ForeColor = Color.WhiteSmoke,
+            .Font = New Font("consolas", 8.25!),
+            .Name = name,
+            .Text = name,
+            .ToolTipText = $"{name} : {[type]}",
+            .UseItemStyleForSubItems = False
+        }
 
+        Dim subitem As New ListViewItem.ListViewSubItem With {
+            .BackColor = Color.FromArgb(43, 43, 48),
+            .Name = $"{name}_sub",
+            .Text = [type],
+            .Font = New Font("consolas", 8.25!, FontStyle.Bold)
+        }
 
-        f.Text = $"<font color=""WhiteSmoke""><b>{name}</b></font> <font color=""DarkGray"">: {[type]}</font>"
+        Dim RegexObj As New Regex("\([0-9, ]+\)", RegexOptions.IgnoreCase)
+        Dim subType As String = RegexObj.Replace([type], "")
+
+        Select Case subType
+            Case "date", "datetime", "time"
+                subitem.ForeColor = Color.DarkOrange
+            Case "int", "decimal", "double", "bigint"
+                subitem.ForeColor = Color.GreenYellow
+            Case "varchar", "text", "mediumtext", "char"
+                subitem.ForeColor = Color.LightSkyBlue
+            Case Else
+                subitem.ForeColor = Color.BlueViolet
+        End Select
 
         If isKey Then
-            f.Image = ImageList1.Images.Item(0)
-        Else
-            f.Text = "<span width=""20""> </span>" & f.Text
+            f.ImageIndex = 0
+        End If
+        If isLink Then
+            f.ImageIndex = 1
         End If
 
-        f.Visible = True
-        f.SetIsSelected(False, DevComponents.DotNetBar.eEventSource.Code)
+        f.SubItems.Add(subitem)
+
         lFields.Items.Add(f)
     End Sub
 
+    Public Sub EnsureVisible()
+        Dim lastItem = lFields.Items(lFields.Items.Count - 1).Bounds
+
+        Height = lTitle.Height + lastItem.Y + lastItem.Height + pBottom.Height + 10
+    End Sub
     Public Sub ClearFields()
         lFields.Items.Clear()
     End Sub
@@ -128,5 +161,13 @@ Public Class DbTableObject
             Width += e.X - x
             Parent.Refresh()
         End If
+    End Sub
+
+    Private Sub lFields_SizeChanged(sender As Object, e As EventArgs) Handles lFields.SizeChanged
+        Dim nc As Integer = CInt(Width / 2) - 10
+
+        For Each col As ColumnHeader In lFields.Columns
+            col.Width = nc
+        Next
     End Sub
 End Class

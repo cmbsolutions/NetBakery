@@ -36,9 +36,10 @@ Public Class Viewer
         End If
 
         For Each f In fields
-            t.AddField(f.name, f.type, f.isKey)
+            t.AddField(f.name, f.type, f.isKey, f.isLink)
         Next
 
+        t.EnsureVisible()
         playpen.Controls.Add(t)
     End Sub
 
@@ -86,33 +87,70 @@ Public Class Viewer
 
     Private Sub playpen_Paint(sender As Object, e As PaintEventArgs) Handles playpen.Paint
         Dim graphics As Graphics = e.Graphics
-        graphics.InterpolationMode = InterpolationMode.HighQualityBicubic
-        graphics.SmoothingMode = SmoothingMode.HighQuality
+        'graphics.InterpolationMode = InterpolationMode.HighQualityBilinear
+        'graphics.SmoothingMode = SmoothingMode.HighQuality
 
         Dim pen As New Pen(Color.Yellow, 3.0!)
 
         Try
 
             If DbLinkPairs IsNot Nothing Then
+
                 For Each d In DbLinkPairs
-                    Dim lines As New List(Of Point)
-                    Dim fsp, tsp As Point
+                    Dim gp As New GraphicsPath
+                    Dim startLeft, endLeft As Boolean
 
                     Dim fmpx As Integer = d.fromCtrl.Left + CInt(d.fromCtrl.Width / 2)
                     Dim tmpx As Integer = d.toCtrl.Left + CInt(d.toCtrl.Width / 2)
+                    Dim fmpy As Integer = d.fromCtrl.Top + CInt(d.fromCtrl.Height / 2)
+                    Dim tmpy As Integer = d.toCtrl.Top + CInt(d.toCtrl.Height / 2)
 
-                    If fmpx < tmpx Then ' we start on the left side
-                        fsp = New Point()
-                    Else ' we start on the right side
-
+                    If d.fromCtrl.Right < d.toCtrl.Left Then
+                        startLeft = False
+                        endLeft = True
+                    ElseIf d.fromCtrl.Left > d.toCtrl.Right Then
+                        startLeft = True
+                        endLeft = False
+                    ElseIf fmpx < tmpx Then
+                        startLeft = True
+                        endLeft = True
+                    Else
+                        startLeft = False
+                        endLeft = False
                     End If
 
-                    Dim fp As New Point(d.fromCtrl.Right, d.fromCtrl.Bottom - CInt(d.fromCtrl.Height / 2))
-                    Dim tp As New Point(d.toCtrl.Left, d.toCtrl.Bottom - CInt(d.toCtrl.Height / 2))
+                    If startLeft And endLeft Then
+                        Dim xmin = Math.Min(d.fromCtrl.Left, d.toCtrl.Left)
 
-                    Dim xDist = CInt(Math.Abs(fp.X - tp.X) / 2)
+                        gp.AddLine(New Point(d.fromCtrl.Left, fmpy), New Point(xmin - 10, fmpy))
+                        gp.AddLine(New Point(xmin - 10, fmpy), New Point(xmin - 10, tmpy))
+                        gp.AddLine(New Point(xmin - 10, tmpy), New Point(d.toCtrl.Left, tmpy))
+                    End If
 
-                    graphics.DrawLines(pen, {fp, New Point(fp.X + xDist, fp.Y), New Point(tp.X - xDist, tp.Y), New Point(tp.X - xDist, tp.Y), tp})
+                    If Not startLeft And Not endLeft Then
+                        Dim xmax = Math.Max(d.fromCtrl.Right, d.toCtrl.Right)
+
+                        gp.AddLine(New Point(d.fromCtrl.Right, fmpy), New Point(xmax + 10, fmpy))
+                        gp.AddLine(New Point(xmax + 10, fmpy), New Point(xmax + 10, tmpy))
+                        gp.AddLine(New Point(xmax + 10, tmpy), New Point(d.toCtrl.Right, tmpy))
+                    End If
+
+                    If startLeft And Not endLeft Then
+                        Dim xdist = CInt(Math.Abs(d.fromCtrl.Left - d.toCtrl.Right) / 2)
+
+                        gp.AddLine(New Point(d.fromCtrl.Left, fmpy), New Point(d.fromCtrl.Left - xdist, fmpy))
+                        gp.AddLine(New Point(d.fromCtrl.Left - xdist, fmpy), New Point(d.fromCtrl.Left - xdist, tmpy))
+                        gp.AddLine(New Point(d.fromCtrl.Left - xdist, tmpy), New Point(d.toCtrl.Right, tmpy))
+                    End If
+
+                    If Not startLeft And endLeft Then
+                        Dim xdist = CInt(Math.Abs(d.fromCtrl.Right - d.toCtrl.Left) / 2)
+
+                        gp.AddLine(New Point(d.fromCtrl.Right, fmpy), New Point(d.fromCtrl.Right + xdist, fmpy))
+                        gp.AddLine(New Point(d.fromCtrl.Right + xdist, fmpy), New Point(d.fromCtrl.Right + xdist, tmpy))
+                        gp.AddLine(New Point(d.fromCtrl.Right + xdist, tmpy), New Point(d.toCtrl.Left, tmpy))
+                    End If
+                    graphics.DrawPath(pen, gp)
                 Next
             End If
         Catch ex As Exception
@@ -125,6 +163,7 @@ Public Class DbFieldInfo
     Property name As String
     Property [type] As String
     Property isKey As Boolean
+    Property isLink As Boolean
 End Class
 
 Public Class DbLinkPair
