@@ -3,7 +3,7 @@ Imports System.Runtime.CompilerServices
 
 Public Class Viewer
     Private DbLinkPairs As List(Of DbLinkPair)
-
+    Private renderLinks As Boolean = True
     Private xOffset, yOffset As Integer
 
     Public Sub AddLink(fromName As String, toName As String)
@@ -39,8 +39,21 @@ Public Class Viewer
             t.AddField(f.name, f.type, f.isKey, f.isLink)
         Next
 
+        AddHandler t.ManipulationDoneEvent, AddressOf ManipulationDoneEventHandler
+        AddHandler t.ManipulationStartEvent, AddressOf ManipulationStartEventHandler
+
         t.EnsureVisible()
         playpen.Controls.Add(t)
+    End Sub
+
+    Private Sub ManipulationStartEventHandler(sender As Object)
+        renderLinks = False
+        playpen.Invalidate()
+    End Sub
+
+    Private Sub ManipulationDoneEventHandler(sender As Object)
+        renderLinks = True
+        playpen.Invalidate()
     End Sub
 
     Public Sub RemoveTable(name As String)
@@ -94,7 +107,7 @@ Public Class Viewer
 
         Try
 
-            If DbLinkPairs IsNot Nothing Then
+            If DbLinkPairs IsNot Nothing And renderLinks Then
 
                 For Each d In DbLinkPairs
                     Dim gp As New GraphicsPath

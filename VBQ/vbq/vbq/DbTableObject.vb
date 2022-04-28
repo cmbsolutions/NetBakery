@@ -6,6 +6,8 @@ Public Class DbTableObject
     Private Shared Function CreateRoundRectRgn(nLeftRect As Integer, nTopRect As Integer, nRightRect As Integer, nBottomRect As Integer, nWidthEllipse As Integer, nHeightEllipse As Integer) As IntPtr
     End Function
 
+    Public Event ManipulationStartEvent(sender As Object)
+    Public Event ManipulationDoneEvent(sender As Object)
 
     Private IsMoving As Boolean
     Private IsResizing As Boolean
@@ -122,11 +124,15 @@ Public Class DbTableObject
             IsMoving = True
             x = e.X
             y = e.Y
+            RaiseEvent ManipulationStartEvent(Me)
         End If
     End Sub
 
     Private Sub lTitle_MouseUp(sender As Object, e As MouseEventArgs) Handles lTitle.MouseUp
-        If IsMoving And e.Button = MouseButtons.Left Then IsMoving = False
+        If IsMoving And e.Button = MouseButtons.Left Then
+            IsMoving = False
+            RaiseEvent ManipulationDoneEvent(Me)
+        End If
     End Sub
 
     Private Sub lTitle_MouseMove(sender As Object, e As MouseEventArgs) Handles lTitle.MouseMove
@@ -134,7 +140,7 @@ Public Class DbTableObject
             Left += e.X - x
             Top += e.Y - y
 
-            Parent.Refresh()
+            Parent.Invalidate(New Rectangle(Left, Top, Width, Height))
         End If
     End Sub
 
@@ -143,17 +149,21 @@ Public Class DbTableObject
             IsResizing = True
             x = e.X
             y = e.Y
+            RaiseEvent ManipulationStartEvent(Me)
         End If
     End Sub
 
     Private Sub p_MouseUp(sender As Object, e As MouseEventArgs) Handles pLeft.MouseUp, pRight.MouseUp, pBottomRight.MouseUp, pBottom.MouseUp
-        If IsResizing And e.Button = MouseButtons.Left Then IsResizing = False
+        If IsResizing And e.Button = MouseButtons.Left Then
+            IsResizing = False
+            RaiseEvent ManipulationDoneEvent(Me)
+        End If
     End Sub
 
     Private Sub pBottom_MouseMove(sender As Object, e As MouseEventArgs) Handles pBottom.MouseMove
         If IsResizing And e.Button = MouseButtons.Left Then
             Height += e.Y - y
-            Parent.Refresh()
+            Parent.Invalidate(New Rectangle(Left, Top, Width, Height))
         End If
     End Sub
 
@@ -161,14 +171,14 @@ Public Class DbTableObject
         If IsResizing And e.Button = MouseButtons.Left Then
             Height += e.Y - y
             Width += e.X - x
-            Parent.Refresh()
+            Parent.Invalidate(New Rectangle(Left, Top, Width, Height))
         End If
     End Sub
 
     Private Sub pLeft_MouseMove(sender As Object, e As MouseEventArgs) Handles pRight.MouseMove
         If IsResizing And e.Button = MouseButtons.Left Then
             Width += e.X - x
-            Parent.Refresh()
+            Parent.Invalidate(New Rectangle(Left, Top, Width, Height))
         End If
     End Sub
 
