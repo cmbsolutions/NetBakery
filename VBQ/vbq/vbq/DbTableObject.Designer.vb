@@ -116,7 +116,7 @@ Partial Class DbTableObject
         '
         'pLeft
         '
-        Me.pLeft.Cursor = System.Windows.Forms.Cursors.SizeWE
+        Me.pLeft.Cursor = System.Windows.Forms.Cursors.Default
         Me.pLeft.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pLeft.Location = New System.Drawing.Point(0, 0)
         Me.pLeft.Margin = New System.Windows.Forms.Padding(0)

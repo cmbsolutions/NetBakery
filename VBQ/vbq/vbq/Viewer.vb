@@ -3,47 +3,60 @@ Imports System.Runtime.CompilerServices
 
 Public Class Viewer
     Private DbLinkPairs As List(Of DbLinkPair)
+    Private playpenObjects As List(Of playpenObject)
     Private renderLinks As Boolean = True
     Private xOffset, yOffset As Integer
 
     Public Sub AddLink(fromName As String, toName As String)
         If DbLinkPairs Is Nothing Then DbLinkPairs = New List(Of DbLinkPair)
 
-        Dim idx = playpen.Controls.IndexOfKey(fromName)
-        Dim f = playpen.Controls.Item(idx)
-        idx = playpen.Controls.IndexOfKey(toName)
-        Dim t = playpen.Controls.Item(idx)
+        Dim f = playpenObjects.FirstOrDefault(Function(c) c.name = fromName)
+        Dim t = playpenObjects.FirstOrDefault(Function(c) c.name = toName)
 
         DbLinkPairs.Add(New DbLinkPair With {
                         .fromCtrl = f,
                         .toCtrl = t
                         })
-
     End Sub
 
     Public Sub AddTable(name As String, fields As List(Of DbFieldInfo))
-        Dim t As New DbTableObject
-        t.lTitle.Text = name
-        t.Name = name
-        t.Left = xOffset + 50
-        t.Top = yOffset + 50
+        If playpenObjects Is Nothing Then playpenObjects = New List(Of PlaypenObject)
 
-        xOffset = t.Right
+        Dim p As New PlaypenObject With {
+            .name = name
+        }
+
+        p.ctrl = New DbTableObject
+        p.ctrl.lTitle.Text = name
+        p.ctrl.Name = name
+        p.ctrl.Left = xOffset + 50
+        p.ctrl.Top = yOffset + 50
+
+
+        xOffset = p.ctrl.Right
 
         If xOffset > playpen.Width Then
             xOffset = 0
-            yOffset += t.Bottom
+            yOffset += p.ctrl.Bottom
         End If
 
         For Each f In fields
-            t.AddField(f.name, f.type, f.isKey, f.isLink)
+            p.ctrl.AddField(f.name, f.type, f.isKey, f.isLink)
         Next
 
-        AddHandler t.ManipulationDoneEvent, AddressOf ManipulationDoneEventHandler
-        AddHandler t.ManipulationStartEvent, AddressOf ManipulationStartEventHandler
+        AddHandler p.ctrl.ManipulationDoneEvent, AddressOf ManipulationDoneEventHandler
+        AddHandler p.ctrl.ManipulationStartEvent, AddressOf ManipulationStartEventHandler
+        AddHandler p.ctrl.GotFocus, AddressOf DbTableObjectFocusChangedEventHandler
 
-        t.EnsureVisible()
-        playpen.Controls.Add(t)
+        p.ctrl.EnsureVisible()
+        playpenObjects.Add(p)
+        playpen.Controls.Add(p.ctrl)
+    End Sub
+
+    Private Sub DbTableObjectFocusChangedEventHandler(sender As DbTableObject)
+        playpenObjects.ForEach(Sub(f) f.HasFocus = False)
+        playpenObjects.FirstOrDefault(Function(c) c.Name = sender.Name).HasFocus = True
+        playpen.Invalidate()
     End Sub
 
     Private Sub ManipulationStartEventHandler(sender As Object)
@@ -103,47 +116,56 @@ Public Class Viewer
         graphics.InterpolationMode = InterpolationMode.Low
         graphics.SmoothingMode = SmoothingMode.HighSpeed
 
-        Dim pen As New Pen(Color.DarkOrange, 2.5!)
+        Dim Pen As New Pen(Color.DarkOrange, 2.5!)
+        Dim focusPen As New Pen(Color.OrangeRed, 2.5!)
 
         Try
 
             If DbLinkPairs IsNot Nothing And renderLinks Then
+                playpenObjects.ForEach(Sub(c) c.yOffset = 0)
 
                 For Each d In DbLinkPairs
                     Dim gp As New GraphicsPath
-
                     If d.startLeft And d.endLeft Then
-                        Dim xmin = Math.Min(d.fromCtrl.Left, d.toCtrl.Left)
+                        Dim xmin = Math.Min(d.fromCtrl.Ctrl.Left, d.toCtrl.Ctrl.Left)
 
-                        graphics.DrawLine(pen, New Point(d.fromCtrl.Left, d.fCtrlMidY), New Point(xmin - 10, d.fCtrlMidY))
-                        graphics.DrawLine(pen, New Point(xmin - 10, d.fCtrlMidY), New Point(xmin - 10, d.tCtrlMidY))
-                        graphics.DrawLine(pen, New Point(xmin - 10, d.tCtrlMidY), New Point(d.toCtrl.Left, d.tCtrlMidY))
+                        gp.AddLine(New Point(d.fromCtrl.Ctrl.Left, d.fCtrlMidY), New Point(xmin - 10, d.fCtrlMidY))
+                        gp.AddLine(gp.GetLastPoint, New Point(xmin - 10, d.tCtrlMidY))
+                        gp.AddLine(gp.GetLastPoint, New Point(d.toCtrl.Ctrl.Left, d.tCtrlMidY))
                     End If
 
                     If Not d.startLeft And Not d.endLeft Then
-                        Dim xmax = Math.Max(d.fromCtrl.Right, d.toCtrl.Right)
+                        Dim xmax = Math.Max(d.fromCtrl.Ctrl.Right, d.toCtrl.Ctrl.Right)
 
-                        graphics.DrawLine(pen, New Point(d.fromCtrl.Right, d.fCtrlMidY), New Point(xmax + 10, d.fCtrlMidY))
-                        graphics.DrawLine(pen, New Point(xmax + 10, d.fCtrlMidY), New Point(xmax + 10, d.tCtrlMidY))
-                        graphics.DrawLine(pen, New Point(xmax + 10, d.tCtrlMidY), New Point(d.toCtrl.Right, d.tCtrlMidY))
+                        gp.AddLine(New Point(d.fromCtrl.Ctrl.Right, d.fCtrlMidY), New Point(xmax + 10, d.fCtrlMidY))
+                        gp.AddLine(gp.GetLastPoint, New Point(xmax + 10, d.tCtrlMidY))
+                        gp.AddLine(gp.GetLastPoint, New Point(d.toCtrl.Ctrl.Right, d.tCtrlMidY))
                     End If
 
                     If d.startLeft And Not d.endLeft Then
-                        Dim xdist = CInt(Math.Abs(d.fromCtrl.Left - d.toCtrl.Right) / 2)
+                        Dim xdist = CInt(Math.Abs(d.fromCtrl.Ctrl.Left - d.toCtrl.Ctrl.Right) / 2)
 
-                        graphics.DrawLine(pen, New Point(d.fromCtrl.Left, d.fCtrlMidY), New Point(d.fromCtrl.Left - xdist, d.fCtrlMidY))
-                        graphics.DrawLine(pen, New Point(d.fromCtrl.Left - xdist, d.fCtrlMidY), New Point(d.fromCtrl.Left - xdist, d.tCtrlMidY))
-                        graphics.DrawLine(pen, New Point(d.fromCtrl.Left - xdist, d.tCtrlMidY), New Point(d.toCtrl.Right, d.tCtrlMidY))
+                        gp.AddLine(New Point(d.fromCtrl.Ctrl.Left, d.fCtrlMidY), New Point(d.fromCtrl.Ctrl.Left - xdist, d.fCtrlMidY))
+                        gp.AddLine(gp.GetLastPoint, New Point(d.fromCtrl.Ctrl.Left - xdist, d.tCtrlMidY))
+                        gp.AddLine(gp.GetLastPoint, New Point(d.toCtrl.Ctrl.Right, d.tCtrlMidY))
                     End If
 
                     If Not d.startLeft And d.endLeft Then
-                        Dim xdist = CInt(Math.Abs(d.fromCtrl.Right - d.toCtrl.Left) / 2)
+                        Dim xdist = CInt(Math.Abs(d.fromCtrl.Ctrl.Right - d.toCtrl.Ctrl.Left) / 2)
 
-                        graphics.DrawLine(pen, New Point(d.fromCtrl.Right, d.fCtrlMidY), New Point(d.fromCtrl.Right + xdist, d.fCtrlMidY))
-                        graphics.DrawLine(pen, New Point(d.fromCtrl.Right + xdist, d.fCtrlMidY), New Point(d.fromCtrl.Right + xdist, d.tCtrlMidY))
-                        graphics.DrawLine(pen, New Point(d.fromCtrl.Right + xdist, d.tCtrlMidY), New Point(d.toCtrl.Left, d.tCtrlMidY))
+                        gp.AddLine(New Point(d.fromCtrl.Ctrl.Right, d.fCtrlMidY), New Point(d.fromCtrl.Ctrl.Right + xdist, d.fCtrlMidY))
+                        gp.AddLine(gp.GetLastPoint, New Point(d.fromCtrl.Ctrl.Right + xdist, d.tCtrlMidY))
+                        gp.AddLine(gp.GetLastPoint, New Point(d.toCtrl.Ctrl.Left, d.tCtrlMidY))
                     End If
-                    ' graphics.DrawPath(pen, gp)
+
+                    If d.fromCtrl.HasFocus Or d.toCtrl.HasFocus Then
+                        graphics.DrawPath(focusPen, gp)
+                    Else
+                        graphics.DrawPath(Pen, gp)
+                    End If
+
+                    d.fromCtrl.yOffset += 6
+                    d.toCtrl.yOffset += 6
                 Next
             End If
         Catch ex As Exception
@@ -166,36 +188,46 @@ Public Class DbFieldInfo
     Property isLink As Boolean
 End Class
 
+Public Class PlaypenObject
+    Property Ctrl As DbTableObject
+    Property Name As String
+    Property HasFocus As Boolean
+
+    Property yOffset As Integer
+End Class
+
 Public Class DbLinkPair
-    Property fromCtrl As Control
-    Property toCtrl As Control
+    Property fromCtrl As PlaypenObject
+    Property toCtrl As PlaypenObject
+
+
 
     ReadOnly Property fCtrlMidX As Integer
         Get
-            Return fromCtrl.Left + CInt(fromCtrl.Width / 2)
+            Return fromCtrl.ctrl.Left + CInt(fromCtrl.ctrl.Width / 2)
         End Get
     End Property
     ReadOnly Property fCtrlMidY As Integer
         Get
-            Return fromCtrl.Top + CInt(fromCtrl.Height / 2)
+            Return fromCtrl.Ctrl.Top + CInt(fromCtrl.Ctrl.Height / 2) + fromCtrl.yOffset
         End Get
     End Property
     ReadOnly Property tCtrlMidX As Integer
         Get
-            Return toCtrl.Left + CInt(toCtrl.Width / 2)
+            Return toCtrl.ctrl.Left + CInt(toCtrl.ctrl.Width / 2)
         End Get
     End Property
     ReadOnly Property tCtrlMidY As Integer
         Get
-            Return toCtrl.Top + CInt(toCtrl.Height / 2)
+            Return toCtrl.Ctrl.Top + CInt(toCtrl.Ctrl.Height / 2) + toCtrl.yOffset
         End Get
     End Property
 
     ReadOnly Property startLeft As Boolean
         Get
-            If fromCtrl.Right < toCtrl.Left Then
+            If fromCtrl.ctrl.Right < toCtrl.ctrl.Left Then
                 Return False
-            ElseIf fromCtrl.Left > toCtrl.Right Then
+            ElseIf fromCtrl.ctrl.Left > toCtrl.ctrl.Right Then
                 Return True
             ElseIf fCtrlMidX < tCtrlMidX Then
                 Return True
@@ -206,9 +238,9 @@ Public Class DbLinkPair
     End Property
     ReadOnly Property endLeft As Boolean
         Get
-            If fromCtrl.Right < toCtrl.Left Then
+            If fromCtrl.ctrl.Right < toCtrl.ctrl.Left Then
                 Return True
-            ElseIf fromCtrl.Left > toCtrl.Right Then
+            ElseIf fromCtrl.ctrl.Left > toCtrl.ctrl.Right Then
                 Return False
             ElseIf fCtrlMidX < tCtrlMidX Then
                 Return True

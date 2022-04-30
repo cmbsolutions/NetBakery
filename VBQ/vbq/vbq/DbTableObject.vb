@@ -8,6 +8,7 @@ Public Class DbTableObject
 
     Public Event ManipulationStartEvent(sender As Object)
     Public Event ManipulationDoneEvent(sender As Object)
+    Public Shadows Event GotFocus(sender As DbTableObject)
 
     Private IsMoving As Boolean
     Private IsResizing As Boolean
@@ -188,6 +189,10 @@ Public Class DbTableObject
         For Each col As ColumnHeader In lFields.Columns
             col.Width = nc
         Next
+    End Sub
+
+    Private Shadows Sub MouseClick(sender As Object, e As MouseEventArgs) Handles lTitle.MouseClick, lFields.MouseClick, pBottom.MouseClick, pLeft.MouseClick, pRight.MouseClick
+        RaiseEvent GotFocus(Me)
     End Sub
 
     Private Sub DbTableObject_Load(sender As Object, e As EventArgs) Handles Me.Load
