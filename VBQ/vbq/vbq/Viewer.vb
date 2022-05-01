@@ -33,11 +33,11 @@ Public Class Viewer
         p.ctrl.Top = yOffset + 50
 
 
-        xOffset = p.ctrl.Right
+        xOffset = p.Ctrl.Right
 
-        If xOffset > playpen.Width Then
+        If xOffset + 150 > playpen.Width Then
             xOffset = 0
-            yOffset += p.ctrl.Bottom
+            yOffset = p.Ctrl.Bottom
         End If
 
         For Each f In fields
@@ -48,7 +48,7 @@ Public Class Viewer
         AddHandler p.ctrl.ManipulationStartEvent, AddressOf ManipulationStartEventHandler
         AddHandler p.ctrl.GotFocus, AddressOf DbTableObjectFocusChangedEventHandler
 
-        p.ctrl.EnsureVisible()
+        'p.ctrl.EnsureVisible()
         playpenObjects.Add(p)
         playpen.Controls.Add(p.ctrl)
     End Sub
@@ -56,6 +56,7 @@ Public Class Viewer
     Private Sub DbTableObjectFocusChangedEventHandler(sender As DbTableObject)
         playpenObjects.ForEach(Sub(f) f.HasFocus = False)
         playpenObjects.FirstOrDefault(Function(c) c.Name = sender.Name).HasFocus = True
+        playpenObjects.FirstOrDefault(Function(c) c.Name = sender.Name).Ctrl.BringToFront()
         playpen.Invalidate()
     End Sub
 

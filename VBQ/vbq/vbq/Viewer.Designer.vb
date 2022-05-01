@@ -29,7 +29,9 @@ Partial Class Viewer
         '
         Me.playpen.AutoScroll = True
         Me.playpen.AutoSize = True
+        Me.playpen.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.playpen.BackColor = System.Drawing.Color.Transparent
+        Me.playpen.BackgroundImage = Global.vbq.My.Resources.Resources.grid1
         Me.playpen.Dock = System.Windows.Forms.DockStyle.Fill
         Me.playpen.ForeColor = System.Drawing.Color.WhiteSmoke
         Me.playpen.Location = New System.Drawing.Point(0, 0)
