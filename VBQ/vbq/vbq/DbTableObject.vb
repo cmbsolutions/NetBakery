@@ -121,6 +121,7 @@ Public Class DbTableObject
         lFields.Items.Clear()
     End Sub
     Private Sub lTitle_MouseDown(sender As Object, e As MouseEventArgs) Handles lTitle.MouseDown
+        RaiseEvent GotFocus(Me)
         If Not IsMoving And Not IsResizing And e.Button = MouseButtons.Left Then
             IsMoving = True
             x = e.X
@@ -146,6 +147,7 @@ Public Class DbTableObject
     End Sub
 
     Private Sub p_MouseDown(sender As Object, e As MouseEventArgs) Handles pLeft.MouseDown, pRight.MouseDown, pBottomRight.MouseDown, pBottom.MouseDown
+        RaiseEvent GotFocus(Me)
         If Not IsMoving And Not IsResizing And e.Button = MouseButtons.Left Then
             IsResizing = True
             x = e.X
@@ -189,10 +191,6 @@ Public Class DbTableObject
         For Each col As ColumnHeader In lFields.Columns
             col.Width = nc
         Next
-    End Sub
-
-    Private Shadows Sub MouseClick(sender As Object, e As MouseEventArgs) Handles lTitle.MouseClick, lFields.MouseClick, pBottom.MouseClick, pLeft.MouseClick, pRight.MouseClick
-        RaiseEvent GotFocus(Me)
     End Sub
 
     Private Sub DbTableObject_Load(sender As Object, e As EventArgs) Handles Me.Load

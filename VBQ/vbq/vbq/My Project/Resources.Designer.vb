@@ -77,9 +77,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
-        Friend ReadOnly Property grid1() As System.Drawing.Bitmap
+        Friend ReadOnly Property grid() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("grid1", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("grid", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -89,7 +89,7 @@ Namespace My.Resources
         '''</summary>
         Friend ReadOnly Property head_left() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("head-left", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("head_left", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -99,7 +99,7 @@ Namespace My.Resources
         '''</summary>
         Friend ReadOnly Property head_mid() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("head-mid", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("head_mid", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -109,7 +109,7 @@ Namespace My.Resources
         '''</summary>
         Friend ReadOnly Property head_right() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("head-right", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("head_right", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

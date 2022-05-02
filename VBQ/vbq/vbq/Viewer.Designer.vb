@@ -31,7 +31,7 @@ Partial Class Viewer
         Me.playpen.AutoSize = True
         Me.playpen.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.playpen.BackColor = System.Drawing.Color.Transparent
-        Me.playpen.BackgroundImage = Global.vbq.My.Resources.Resources.grid1
+        Me.playpen.BackgroundImage = Global.vbq.My.Resources.Resources.grid
         Me.playpen.Dock = System.Windows.Forms.DockStyle.Fill
         Me.playpen.ForeColor = System.Drawing.Color.WhiteSmoke
         Me.playpen.Location = New System.Drawing.Point(0, 0)
@@ -47,7 +47,6 @@ Partial Class Viewer
         Me.AutoScroll = True
         Me.AutoSize = True
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(43, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.BackgroundImage = Global.vbq.My.Resources.Resources.grid1
         Me.Controls.Add(Me.playpen)
         Me.DoubleBuffered = True
         Me.Font = New System.Drawing.Font("Consolas", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
