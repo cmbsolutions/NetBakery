@@ -7,6 +7,7 @@ Public Class DbTableObject
     End Function
 
     Public Event ManipulationStartEvent(sender As Object)
+    Public Event ManipulationUpdateEvent(sender As Object, e As MovementEvent)
     Public Event ManipulationDoneEvent(sender As Object)
     Public Shadows Event GotFocus(sender As DbTableObject)
 
@@ -139,6 +140,16 @@ Public Class DbTableObject
 
     Private Sub lTitle_MouseMove(sender As Object, e As MouseEventArgs) Handles lTitle.MouseMove
         If IsMoving And e.Button = MouseButtons.Left Then
+            RaiseEvent ManipulationUpdateEvent(Me, New MovementEvent With {
+                                               .left = Left,
+                                               .top = Top,
+                                               .right = Right,
+                                               .bottom = Bottom,
+                                               .MouseX = x,
+                                               .MouseY = y,
+                                               .CurrentX = e.X,
+                                               .CurrentY = e.Y
+                                               })
             Left += e.X - x
             Top += e.Y - y
 
@@ -198,4 +209,17 @@ Public Class DbTableObject
         SetStyle(ControlStyles.UserPaint, True)
         SetStyle(ControlStyles.AllPaintingInWmPaint, True)
     End Sub
+End Class
+
+Public Class MovementEvent
+    Inherits EventArgs
+
+    Property left As Integer
+    Property top As Integer
+    Property right As Integer
+    Property bottom As Integer
+    Property MouseX As Integer
+    Property MouseY As Integer
+    Property CurrentX As Integer
+    Property CurrentY As Integer
 End Class

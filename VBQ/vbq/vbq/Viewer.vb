@@ -44,13 +44,27 @@ Public Class Viewer
             p.ctrl.AddField(f.name, f.type, f.isKey, f.isLink)
         Next
 
-        AddHandler p.ctrl.ManipulationDoneEvent, AddressOf ManipulationDoneEventHandler
+        AddHandler p.Ctrl.ManipulationDoneEvent, AddressOf ManipulationDoneEventHandler
+        AddHandler p.Ctrl.ManipulationUpdateEvent, AddressOf ManipulationUpdateEventHandler
         AddHandler p.ctrl.ManipulationStartEvent, AddressOf ManipulationStartEventHandler
         AddHandler p.ctrl.GotFocus, AddressOf DbTableObjectFocusChangedEventHandler
 
         'p.ctrl.EnsureVisible()
         playpenObjects.Add(p)
         playpen.Controls.Add(p.ctrl)
+    End Sub
+
+    Private Sub ManipulationUpdateEventHandler(sender As Object, e As MovementEvent)
+        lLeft.Text = $"Left: {e.left}"
+        lTop.Text = $"Top: {e.top}"
+        lRight.Text = $"Right: {e.right}"
+        lBottom.Text = $"Bottom: {e.bottom}"
+        lMx.Text = $"MouseX: {e.MouseX }"
+        lMy.Text = $"MouseY: {e.MouseY}"
+        lCx.Text = $"CurrentX: {e.CurrentX}"
+        lCy.Text = $"CurrentY: {e.CurrentY}"
+
+        pInfo.Invalidate()
     End Sub
 
     Private Sub DbTableObjectFocusChangedEventHandler(sender As DbTableObject)
@@ -179,6 +193,10 @@ Public Class Viewer
         SetStyle(ControlStyles.UserPaint, True)
         SetStyle(ControlStyles.AllPaintingInWmPaint, True)
         SetStyle(ControlStyles.SupportsTransparentBackColor, True)
+    End Sub
+
+    Private Sub playpen_ControlAdded(sender As Object, e As ControlEventArgs) Handles playpen.ControlAdded
+        Slider1.Maximum = playpen.Height
     End Sub
 End Class
 
