@@ -3,11 +3,13 @@
 Namespace My.Templates.legacy_net
     Partial Public Class Model
         Private _t As infoSchema.table
+        Private _IsStoreCommand As Boolean
         Private _i As Integer
         Private p As New PluralizationService
 
-        Public Sub New(ByVal t As infoSchema.table)
+        Public Sub New(ByVal t As infoSchema.table, Optional IsStoreCommand As Boolean = False)
             _t = t
+            _IsStoreCommand = IsStoreCommand
         End Sub
     End Class
 

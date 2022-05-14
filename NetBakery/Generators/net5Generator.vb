@@ -3,7 +3,7 @@
 Public Class net5Generator
     Implements iGenerator
 
-    Public Function generateModel(_t As table) As String Implements iGenerator.generateModel
+    Public Function generateModel(_t As table, Optional IsStoreCommand As Boolean = False) As String Implements iGenerator.generateModel
         Try
             Dim page = New My.Templates.net5.Model(_t)
             Dim pageContent = page.TransformText()

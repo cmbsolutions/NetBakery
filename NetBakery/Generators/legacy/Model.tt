@@ -6,7 +6,7 @@
 <#@ import namespace="Netbakery.infoSchema" #>
 Imports System.Collections.Generic
 
-Namespace Models
+Namespace Models<#= if(_IsStoreCommand, ".StoreCommandSchemas", "") #>
     Public Partial Class <#= _t.singleName #>
 <#  If _t.relations.Any() Then #>
         Public Sub New()

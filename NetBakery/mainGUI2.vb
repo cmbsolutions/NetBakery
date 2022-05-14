@@ -982,7 +982,7 @@ Public Class mainGUI2
                     End If
                 Else
                     If s.returnsRecordset Then
-                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommandSchemas\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommandSchemas\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout, True))
                     End If
                 End If
             Next

@@ -3,9 +3,9 @@
 Public Class legacy_netGenerator
     Implements iGenerator
 
-    Public Function generateModel(_t As table) As String Implements iGenerator.generateModel
+    Public Function generateModel(_t As table, Optional IsStoreCommand As Boolean = False) As String Implements iGenerator.generateModel
         Try
-            Dim page = New My.Templates.legacy_net.Model(_t)
+            Dim page = New My.Templates.legacy_net.Model(_t, IsStoreCommand)
             Dim pageContent = page.TransformText()
             Return pageContent
         Catch ex As Exception

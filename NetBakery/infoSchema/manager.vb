@@ -43,9 +43,9 @@ Namespace infoSchema
             End Select
         End Sub
 
-        Public Function generateModel(t As table) As String
+        Public Function generateModel(t As table, Optional IsStoreCommand As Boolean = False) As String
             Try
-                Return _generator.generateModel(t)
+                Return _generator.generateModel(t, IsStoreCommand)
             Catch ex As Exception
                 Throw
             End Try
