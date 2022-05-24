@@ -698,7 +698,22 @@ Namespace infoSchema
         Private _service As EnglishPluralizationService
 
         Public Sub New()
-            _service = New EnglishPluralizationService()
+            Try
+                If My.Settings.customDictionary.Count > 0 Then
+
+                    Dim userEntries As New List(Of CustomPluralizationEntry)
+
+                    For Each s In My.Settings.customDictionary
+                        userEntries.Add(New CustomPluralizationEntry(s.Split("|"c).First, s.Split("|"c).Last))
+                    Next
+                    _service = New EnglishPluralizationService(userEntries)
+                Else
+                    _service = New EnglishPluralizationService()
+                End If
+
+            Catch ex As Exception
+                Throw
+            End Try
         End Sub
 
         Public Function Singularize(s As Object) As String
