@@ -431,6 +431,7 @@ Namespace infoSchema
 
                             Using _dbInfoCommand = New MySqlCommand
                                 _dbInfoCommand.Connection = dbConnection(_database)
+                                _dbInfoCommand.CommandTimeout = 3600
                                 _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("ROUTINE_TYPE")} {rdr("ROUTINE_NAME")}"
 
                                 Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
@@ -459,6 +460,7 @@ Namespace infoSchema
             Try
                 Using _dbxCommand = New MySqlCommand
                     _dbxCommand.Connection = dbConnection(_database)
+                    _dbxCommand.CommandTimeout = 3600
                     _dbxCommand.CommandType = CommandType.Text
                     _dbxCommand.CommandText = $"CALL {_r.name}({String.Join(",", (From r In _r.params Order By r.ordinalPosition Select "@" & r.name))})"
 

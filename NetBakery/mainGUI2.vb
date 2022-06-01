@@ -350,6 +350,7 @@ Public Class mainGUI2
             Next
 
             _mngr.SetDatabase(node.Text)
+            Cursor = Cursors.WaitCursor
             _mngr.harvestObjects()
 
             populateTreeNode(node)
@@ -359,6 +360,9 @@ Public Class mainGUI2
             WriteProject()
         Catch ex As Exception
             FormHelpers.dumpException(ex)
+        Finally
+            Cursor = Cursors.Default
+
         End Try
     End Sub
 
