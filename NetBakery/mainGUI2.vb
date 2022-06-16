@@ -465,7 +465,7 @@ Public Class mainGUI2
             TreeGX1.Nodes.Add(node)
 
             For Each fk In rootTable.foreignKeys
-                node.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable).ToArray)
+                node.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, 1).ToArray)
             Next
 
         Catch ex As Exception
@@ -477,8 +477,9 @@ Public Class mainGUI2
 
     End Sub
 
-    Private Function GetForeignKeyNodes(t As infoSchema.table) As List(Of Tree.Node)
+    Private Function GetForeignKeyNodes(t As infoSchema.table, currentDepth As Integer) As List(Of Tree.Node)
         Dim nodes As New List(Of Tree.Node)
+        If currentDepth > My.Settings.maxERDiagramDepth Then Return nodes
         Try
             Dim n As New Tree.Node With {
                           .Text = t.name,
@@ -489,7 +490,7 @@ Public Class mainGUI2
             nodes.Add(n)
 
             For Each fk In t.foreignKeys
-                n.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable).ToArray)
+                n.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, currentDepth + 1).ToArray)
             Next
 
 
@@ -1425,7 +1426,8 @@ Public Class mainGUI2
 
                     sw.Write(JsonConvert.SerializeObject(_currentProject, Formatting.Indented, New JsonSerializerSettings With {
                                                                                                     .ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                                                                                                    .PreserveReferencesHandling = PreserveReferencesHandling.Objects}))
+                                                                                                    .PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                                                                                                    .MaxDepth = 128}))
 
                     'Dim js As New JsonSerializer
                     'js.Serialize(sw, _currentProject)
@@ -1461,7 +1463,10 @@ Public Class mainGUI2
     Private Sub loadProject(f As String)
         Try
             _loadingProject = True
-            _currentProject = CType(JsonConvert.DeserializeObject(IO.File.ReadAllText(f), GetType(Project)), Project)
+            _currentProject = CType(JsonConvert.DeserializeObject(IO.File.ReadAllText(f), GetType(Project), New JsonSerializerSettings With {
+                                                                                                    .ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                                                                                                    .PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                                                                                                    .MaxDepth = 128}), Project)
 
             _currentProject.projectfilename = f
 

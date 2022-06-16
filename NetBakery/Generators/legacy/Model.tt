@@ -7,7 +7,11 @@
 Imports System.Collections.Generic
 
 Namespace Models<#= if(_IsStoreCommand, ".StoreCommandSchemas", "") #>
-    Public Partial Class <#= _t.singleName #>
+<# If _t.escapeName then #>
+    Partial Public Class [<#= _t.singleName #>]
+<# Else #>
+    Partial Public Class <#= _t.singleName #>
+<# End If #>
 <#  If _t.relations.Any() Then #>
         Public Sub New()
 <#      For Each re in _t.relations.OrderBy(Function(c) c.toTable.name) #>
