@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class preferences
-    Inherits NetBakery.iDefaultDialog
+    Inherits DevComponents.DotNetBar.OfficeForm
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         If disposing AndAlso components IsNot Nothing Then
             components.Dispose()
@@ -17,8 +17,10 @@ Partial Class preferences
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.btnCancel = New DevComponents.DotNetBar.ButtonX()
+        Me.btnOk = New DevComponents.DotNetBar.ButtonX()
         Me.LabelX1 = New DevComponents.DotNetBar.LabelX()
         Me.txtDescription = New DevComponents.DotNetBar.Controls.TextBoxX()
         Me.cboStyle = New DevComponents.DotNetBar.Controls.ComboBoxEx()
@@ -29,8 +31,45 @@ Partial Class preferences
         Me.LabelX3 = New DevComponents.DotNetBar.LabelX()
         Me.LabelX4 = New DevComponents.DotNetBar.LabelX()
         Me.SwitchButton1 = New DevComponents.DotNetBar.Controls.SwitchButton()
+        Me.SwitchButton2 = New DevComponents.DotNetBar.Controls.SwitchButton()
+        Me.LabelX5 = New DevComponents.DotNetBar.LabelX()
         CType(Me.erdepth, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
+        '
+        'btnCancel
+        '
+        Me.btnCancel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton
+        Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnCancel.AntiAlias = True
+        Me.btnCancel.CausesValidation = False
+        Me.btnCancel.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
+        Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.btnCancel.Location = New System.Drawing.Point(316, 245)
+        Me.btnCancel.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(73, 25)
+        Me.btnCancel.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.btnCancel.Symbol = ""
+        Me.btnCancel.SymbolColor = System.Drawing.Color.Red
+        Me.btnCancel.TabIndex = 6
+        Me.btnCancel.Text = "Cancel"
+        '
+        'btnOk
+        '
+        Me.btnOk.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton
+        Me.btnOk.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnOk.AntiAlias = True
+        Me.btnOk.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
+        Me.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK
+        Me.btnOk.Location = New System.Drawing.Point(235, 245)
+        Me.btnOk.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnOk.Name = "btnOk"
+        Me.btnOk.Size = New System.Drawing.Size(72, 25)
+        Me.btnOk.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.btnOk.Symbol = ""
+        Me.btnOk.SymbolColor = System.Drawing.Color.Lime
+        Me.btnOk.TabIndex = 5
+        Me.btnOk.Text = "Save"
         '
         'LabelX1
         '
@@ -170,13 +209,55 @@ Partial Class preferences
         Me.SwitchButton1.TabIndex = 21
         Me.SwitchButton1.Value = Global.NetBakery.My.MySettings.Default.openLastProject
         Me.SwitchButton1.ValueFalse = "False"
-        Me.SwitchButton1.ValueObject = "True"
+        Me.SwitchButton1.ValueObject = "False"
         Me.SwitchButton1.ValueTrue = "True"
+        '
+        'SwitchButton2
+        '
+        '
+        '
+        '
+        Me.SwitchButton2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.SwitchButton2.DataBindings.Add(New System.Windows.Forms.Binding("Value", Global.NetBakery.My.MySettings.Default, "autoExecuteSP", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+        Me.SwitchButton2.Location = New System.Drawing.Point(145, 183)
+        Me.SwitchButton2.Name = "SwitchButton2"
+        Me.SwitchButton2.OffBackColor = System.Drawing.Color.Maroon
+        Me.SwitchButton2.OffText = "No"
+        Me.SwitchButton2.OnBackColor = System.Drawing.Color.DarkGreen
+        Me.SwitchButton2.OnText = "Yes"
+        Me.SwitchButton2.Size = New System.Drawing.Size(66, 22)
+        Me.SwitchButton2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.SwitchButton2.SwitchClickTogglesValue = True
+        Me.SwitchButton2.TabIndex = 23
+        Me.SwitchButton2.Value = Global.NetBakery.My.MySettings.Default.autoExecuteSP
+        Me.SwitchButton2.ValueFalse = "False"
+        Me.SwitchButton2.ValueObject = "False"
+        Me.SwitchButton2.ValueTrue = "True"
+        '
+        'LabelX5
+        '
+        '
+        '
+        '
+        Me.LabelX5.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX5.Location = New System.Drawing.Point(12, 180)
+        Me.LabelX5.Name = "LabelX5"
+        Me.LabelX5.Size = New System.Drawing.Size(125, 31)
+        Me.LabelX5.TabIndex = 22
+        Me.LabelX5.Text = "Auto discover Stored Procedure layout"
+        Me.LabelX5.WordWrap = True
         '
         'preferences
         '
+        Me.AcceptButton = Me.btnOk
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
-        Me.ClientSize = New System.Drawing.Size(513, 349)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.CancelButton = Me.btnCancel
+        Me.ClientSize = New System.Drawing.Size(398, 279)
+        Me.Controls.Add(Me.btnCancel)
+        Me.Controls.Add(Me.SwitchButton2)
+        Me.Controls.Add(Me.btnOk)
+        Me.Controls.Add(Me.LabelX5)
         Me.Controls.Add(Me.SwitchButton1)
         Me.Controls.Add(Me.LabelX4)
         Me.Controls.Add(Me.LabelX3)
@@ -185,15 +266,20 @@ Partial Class preferences
         Me.Controls.Add(Me.cboStyle)
         Me.Controls.Add(Me.LabelX1)
         Me.Controls.Add(Me.txtDescription)
+        Me.DoubleBuffered = True
+        Me.EnableGlass = False
+        Me.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "preferences"
-        Me.Controls.SetChildIndex(Me.txtDescription, 0)
-        Me.Controls.SetChildIndex(Me.LabelX1, 0)
-        Me.Controls.SetChildIndex(Me.cboStyle, 0)
-        Me.Controls.SetChildIndex(Me.LabelX2, 0)
-        Me.Controls.SetChildIndex(Me.erdepth, 0)
-        Me.Controls.SetChildIndex(Me.LabelX3, 0)
-        Me.Controls.SetChildIndex(Me.LabelX4, 0)
-        Me.Controls.SetChildIndex(Me.SwitchButton1, 0)
+        Me.RenderFormIcon = False
+        Me.ShowIcon = False
+        Me.ShowInTaskbar = False
+        Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+        Me.Text = "Preferences"
+        Me.TitleText = "Preferences"
         CType(Me.erdepth, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
@@ -209,4 +295,8 @@ Partial Class preferences
     Friend WithEvents LabelX3 As DevComponents.DotNetBar.LabelX
     Friend WithEvents LabelX4 As DevComponents.DotNetBar.LabelX
     Friend WithEvents SwitchButton1 As DevComponents.DotNetBar.Controls.SwitchButton
+    Friend WithEvents SwitchButton2 As DevComponents.DotNetBar.Controls.SwitchButton
+    Friend WithEvents LabelX5 As DevComponents.DotNetBar.LabelX
+    Friend WithEvents btnCancel As DevComponents.DotNetBar.ButtonX
+    Friend WithEvents btnOk As DevComponents.DotNetBar.ButtonX
 End Class

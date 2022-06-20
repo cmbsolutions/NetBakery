@@ -67,6 +67,7 @@ Public Class mainGUI2
             _connections.LoadFromNavicat()
 
             cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
+            cboConnecions.ComboBoxEx.Refresh()
             cboConnecions.Refresh()
 
             setVbStyle(scCodePreview)
@@ -77,8 +78,6 @@ Public Class mainGUI2
 
             dcProjectSettings.Selected = True
 
-
-
             If My.Settings.openLastProject AndAlso My.Settings.lastProject <> "" Then
                 If IO.File.Exists(My.Settings.lastProject) Then
                     loadProject(My.Settings.lastProject)
@@ -87,10 +86,26 @@ Public Class mainGUI2
 
             enableOrDisableFields()
 
+            If My.Settings.recentProjects.Count > 0 Then
+                Dim id As Integer = 0
+                For Each itm In My.Settings.recentProjects
+                    If IO.File.Exists(itm) Then
+                        Dim but As New DevComponents.DotNetBar.ButtonItem($"recentItems{id}", itm)
+                        AddHandler but.Click, AddressOf recentProjectItemClickedHandler
+                        RecentProjects.SubItems.Add(but)
+                    End If
+                Next
+            End If
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
+    End Sub
+
+    Private Sub recentProjectItemClickedHandler(sender As Object, e As EventArgs)
+        If IO.File.Exists(sender.ToString) Then
+            loadProject(sender.ToString)
+        End If
     End Sub
 
     Private Sub mainGUI2_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
@@ -320,6 +335,14 @@ Public Class mainGUI2
                 tmpNode.Text = routine.name
 
                 AddHandler tmpNode.NodeClick, AddressOf routineNodeHandler
+
+                If routine.returnsRecordset Then
+                    If routine.returnLayout IsNot Nothing AndAlso routine.returnLayout.columns.Count > 0 Then
+                        tmpNode.Style = New ElementStyle(Color.LimeGreen)
+                    Else
+                        tmpNode.Style = New ElementStyle(Color.OrangeRed)
+                    End If
+                End If
 
                 routineNode.Nodes.Add(tmpNode)
             Next
@@ -699,8 +722,7 @@ Public Class mainGUI2
                 dgvReferences.Refresh()
 
 
-                dcObjectInfo.Selected = True
-                TabControl1.SelectedPanel = TabControlPanel1
+                dcSPRunner.Selected = True
             End If
 
 
@@ -1435,6 +1457,16 @@ Public Class mainGUI2
             End Using
             _currentProject.needsSave = False
             _tracelistener.WriteLine("Project saved!")
+
+            If Not My.Settings.recentProjects.Contains(_currentProject.projectfilename) Then
+                My.Settings.recentProjects.Add(_currentProject.projectfilename)
+            End If
+
+            If My.Settings.recentProjects.Count > 10 Then
+                My.Settings.recentProjects.RemoveAt(0)
+            End If
+            My.Settings.Save()
+
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try

@@ -373,7 +373,9 @@ Namespace infoSchema
                             If rt Is Nothing OrElse rt.name <> rdr("ROUTINE_NAME").ToString Then
                                 If rt IsNot Nothing Then
                                     If rt.returnsRecordset AndAlso Not rt.isFunction Then
-                                        getRoutineLayout(rt, Nothing, Nothing)
+                                        If My.Settings.autoExecuteSP Then
+                                            getRoutineLayout(rt, Nothing, Nothing)
+                                        End If
                                     End If
                                     routines.Add(rt)
                                 End If
@@ -445,7 +447,7 @@ Namespace infoSchema
 
                         If rt IsNot Nothing Then
                             If rt.returnsRecordset AndAlso Not rt.isFunction Then
-                                getRoutineLayout(rt, Nothing, Nothing)
+                                If My.Settings.autoExecuteSP Then getRoutineLayout(rt, Nothing, Nothing)
                             End If
                             routines.Add(rt)
                         End If
