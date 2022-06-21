@@ -33,6 +33,8 @@ Partial Class preferences
         Me.SwitchButton1 = New DevComponents.DotNetBar.Controls.SwitchButton()
         Me.SwitchButton2 = New DevComponents.DotNetBar.Controls.SwitchButton()
         Me.LabelX5 = New DevComponents.DotNetBar.LabelX()
+        Me.sbDebug = New DevComponents.DotNetBar.Controls.SwitchButton()
+        Me.LabelX6 = New DevComponents.DotNetBar.LabelX()
         CType(Me.erdepth, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -44,7 +46,7 @@ Partial Class preferences
         Me.btnCancel.CausesValidation = False
         Me.btnCancel.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
         Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnCancel.Location = New System.Drawing.Point(316, 245)
+        Me.btnCancel.Location = New System.Drawing.Point(316, 250)
         Me.btnCancel.Margin = New System.Windows.Forms.Padding(0)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(73, 25)
@@ -61,7 +63,7 @@ Partial Class preferences
         Me.btnOk.AntiAlias = True
         Me.btnOk.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
         Me.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.btnOk.Location = New System.Drawing.Point(235, 245)
+        Me.btnOk.Location = New System.Drawing.Point(235, 250)
         Me.btnOk.Margin = New System.Windows.Forms.Padding(0)
         Me.btnOk.Name = "btnOk"
         Me.btnOk.Size = New System.Drawing.Size(72, 25)
@@ -114,7 +116,7 @@ Partial Class preferences
         Me.cboStyle.FormattingEnabled = True
         Me.cboStyle.ItemHeight = 18
         Me.cboStyle.Items.AddRange(New Object() {Me.VisualStudio2012Light, Me.VisualStudio2012Dark})
-        Me.cboStyle.Location = New System.Drawing.Point(145, 94)
+        Me.cboStyle.Location = New System.Drawing.Point(205, 95)
         Me.cboStyle.Name = "cboStyle"
         Me.cboStyle.Size = New System.Drawing.Size(155, 24)
         Me.cboStyle.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
@@ -137,7 +139,7 @@ Partial Class preferences
         '
         '
         Me.LabelX2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.LabelX2.Location = New System.Drawing.Point(12, 94)
+        Me.LabelX2.Location = New System.Drawing.Point(12, 99)
         Me.LabelX2.Name = "LabelX2"
         Me.LabelX2.Size = New System.Drawing.Size(84, 20)
         Me.LabelX2.TabIndex = 17
@@ -156,13 +158,13 @@ Partial Class preferences
         Me.erdepth.DataBindings.Add(New System.Windows.Forms.Binding("Value", Global.NetBakery.My.MySettings.Default, "maxERDiagramDepth", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
         Me.erdepth.ForeColor = System.Drawing.Color.WhiteSmoke
         Me.erdepth.InputMouseWheelEnabled = False
-        Me.erdepth.Location = New System.Drawing.Point(145, 124)
+        Me.erdepth.Location = New System.Drawing.Point(294, 125)
         Me.erdepth.MaxValue = 10
         Me.erdepth.MinValue = 1
         Me.erdepth.MouseWheelValueChangeEnabled = False
         Me.erdepth.Name = "erdepth"
         Me.erdepth.ShowUpDown = True
-        Me.erdepth.Size = New System.Drawing.Size(59, 23)
+        Me.erdepth.Size = New System.Drawing.Size(66, 23)
         Me.erdepth.TabIndex = 18
         Me.erdepth.Value = Global.NetBakery.My.MySettings.Default.maxERDiagramDepth
         '
@@ -172,7 +174,7 @@ Partial Class preferences
         '
         '
         Me.LabelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.LabelX3.Location = New System.Drawing.Point(12, 124)
+        Me.LabelX3.Location = New System.Drawing.Point(12, 128)
         Me.LabelX3.Name = "LabelX3"
         Me.LabelX3.Size = New System.Drawing.Size(125, 20)
         Me.LabelX3.TabIndex = 19
@@ -184,9 +186,9 @@ Partial Class preferences
         '
         '
         Me.LabelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.LabelX4.Location = New System.Drawing.Point(12, 153)
+        Me.LabelX4.Location = New System.Drawing.Point(12, 150)
         Me.LabelX4.Name = "LabelX4"
-        Me.LabelX4.Size = New System.Drawing.Size(125, 23)
+        Me.LabelX4.Size = New System.Drawing.Size(125, 26)
         Me.LabelX4.TabIndex = 20
         Me.LabelX4.Text = "Open last project"
         '
@@ -197,7 +199,7 @@ Partial Class preferences
         '
         Me.SwitchButton1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.SwitchButton1.DataBindings.Add(New System.Windows.Forms.Binding("Value", Global.NetBakery.My.MySettings.Default, "openLastProject", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-        Me.SwitchButton1.Location = New System.Drawing.Point(145, 153)
+        Me.SwitchButton1.Location = New System.Drawing.Point(294, 154)
         Me.SwitchButton1.Name = "SwitchButton1"
         Me.SwitchButton1.OffBackColor = System.Drawing.Color.Maroon
         Me.SwitchButton1.OffText = "No"
@@ -219,7 +221,7 @@ Partial Class preferences
         '
         Me.SwitchButton2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.SwitchButton2.DataBindings.Add(New System.Windows.Forms.Binding("Value", Global.NetBakery.My.MySettings.Default, "autoExecuteSP", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-        Me.SwitchButton2.Location = New System.Drawing.Point(145, 183)
+        Me.SwitchButton2.Location = New System.Drawing.Point(294, 182)
         Me.SwitchButton2.Name = "SwitchButton2"
         Me.SwitchButton2.OffBackColor = System.Drawing.Color.Maroon
         Me.SwitchButton2.OffText = "No"
@@ -240,12 +242,47 @@ Partial Class preferences
         '
         '
         Me.LabelX5.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.LabelX5.Location = New System.Drawing.Point(12, 180)
+        Me.LabelX5.Location = New System.Drawing.Point(12, 178)
         Me.LabelX5.Name = "LabelX5"
-        Me.LabelX5.Size = New System.Drawing.Size(125, 31)
+        Me.LabelX5.Size = New System.Drawing.Size(211, 26)
         Me.LabelX5.TabIndex = 22
         Me.LabelX5.Text = "Auto discover Stored Procedure layout"
         Me.LabelX5.WordWrap = True
+        '
+        'sbDebug
+        '
+        '
+        '
+        '
+        Me.sbDebug.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.sbDebug.DataBindings.Add(New System.Windows.Forms.Binding("Value", Global.NetBakery.My.MySettings.Default, "showDebug", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+        Me.sbDebug.Location = New System.Drawing.Point(294, 210)
+        Me.sbDebug.Name = "sbDebug"
+        Me.sbDebug.OffBackColor = System.Drawing.Color.Maroon
+        Me.sbDebug.OffText = "No"
+        Me.sbDebug.OnBackColor = System.Drawing.Color.DarkGreen
+        Me.sbDebug.OnText = "Yes"
+        Me.sbDebug.Size = New System.Drawing.Size(66, 22)
+        Me.sbDebug.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.sbDebug.SwitchClickTogglesValue = True
+        Me.sbDebug.TabIndex = 25
+        Me.sbDebug.Value = Global.NetBakery.My.MySettings.Default.showDebug
+        Me.sbDebug.ValueFalse = "False"
+        Me.sbDebug.ValueObject = "True"
+        Me.sbDebug.ValueTrue = "True"
+        '
+        'LabelX6
+        '
+        '
+        '
+        '
+        Me.LabelX6.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX6.Location = New System.Drawing.Point(12, 206)
+        Me.LabelX6.Name = "LabelX6"
+        Me.LabelX6.Size = New System.Drawing.Size(138, 26)
+        Me.LabelX6.TabIndex = 24
+        Me.LabelX6.Text = "Show debug information"
+        Me.LabelX6.WordWrap = True
         '
         'preferences
         '
@@ -253,7 +290,9 @@ Partial Class preferences
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnCancel
-        Me.ClientSize = New System.Drawing.Size(398, 279)
+        Me.ClientSize = New System.Drawing.Size(398, 284)
+        Me.Controls.Add(Me.sbDebug)
+        Me.Controls.Add(Me.LabelX6)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.SwitchButton2)
         Me.Controls.Add(Me.btnOk)
@@ -299,4 +338,6 @@ Partial Class preferences
     Friend WithEvents LabelX5 As DevComponents.DotNetBar.LabelX
     Friend WithEvents btnCancel As DevComponents.DotNetBar.ButtonX
     Friend WithEvents btnOk As DevComponents.DotNetBar.ButtonX
+    Friend WithEvents sbDebug As DevComponents.DotNetBar.Controls.SwitchButton
+    Friend WithEvents LabelX6 As DevComponents.DotNetBar.LabelX
 End Class

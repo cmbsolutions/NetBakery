@@ -228,6 +228,18 @@ Namespace My
                 Me("autoExecuteSP") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property showDebug() As Boolean
+            Get
+                Return CType(Me("showDebug"),Boolean)
+            End Get
+            Set
+                Me("showDebug") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
