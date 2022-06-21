@@ -1,12 +1,17 @@
 ﻿Namespace infoSchema
     Public Class foreignKey
-        Public Property constraintName As String
+        Public Property name As String
         Public Property table As table
         Public Property propertyAlias As String
-        Public Property column As column
+        Public Property columns As New List(Of fkColumn)
         Public Property ordinalPosition As Integer
         Public Property positionInUniqueConstraint As Integer
         Public Property referencedTable As table
-        Public Property referencedColumn As column
+        Public Property referencedColumns As New List(Of fkColumn)
+    End Class
+
+    Public Class fkColumn
+        Property fkPosition As Integer
+        Property column As column
     End Class
 End Namespace

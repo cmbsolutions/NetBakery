@@ -1,0 +1,134 @@
+﻿<#@ template language="VB" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+Imports System.Data.Entity
+Imports System.Data.Entity.Infrastructure
+
+Namespace Models
+    Public Class StoreCommands
+        Private _context As <#= _name #>DataContext
+
+        Sub New(ByRef context As <#= _name #>DataContext)
+            _context = context
+        End Sub
+
+        ' Stored Functions
+<#
+    For Each f In _functions
+        Dim p1 As New List(Of String)
+        Dim p2 As New List(Of String)
+        Dim p3 As New List(Of String)
+        Dim i As Integer = 0
+
+        For Each p In f.params
+            p1.add(String.Format("{0} As {1}", p.name, p.vbType))
+            p2.Add("{" & i & "}")
+            p3.Add(String.Format(p.name))
+            i += 1
+        Next
+
+        If p1.count() > 0 Then
+#>
+        Public Overridable Function <#= f.name #>(<#= String.Join(", ", p1) #><#= If(_withLock, ", sharedLock As Object", "") #>) As <#= f.returnParam.vbType #>
+<# If _withLock Then #>
+            SyncLock sharedLock
+<# End If #>            
+            <#= If(_withLock, " ","") #>Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= f.returnParam.vbType #>)("SELECT <#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>).FirstOrDefault
+<# If _withLock Then #>
+            End SyncLock
+<# End If #>
+        End Function
+
+<#
+        Else
+#>
+        Public Overridable Function <#= f.name #>(<#= If(_withLock, "sharedLock As Object", "") #>) As <#= f.returnParam.vbType #>
+<# If _withLock Then #>
+            SyncLock sharedLock
+<# End If #>
+            <#= If(_withLock, " ","") #>Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of <#= f.returnParam.vbType #>)("SELECT <#= f.name #>()").FirstOrDefault
+<# If _withLock Then #>
+            End SyncLock
+<# End If #>
+        End Function
+
+<#
+        End If
+    Next
+
+
+    ' Stored Procedures
+    For Each f In _procedures
+        Dim p1 As New List(Of String)
+        Dim p2 As New List(Of String)
+        Dim p3 As New List(Of String)
+        Dim i As Integer = 0
+
+        For Each p In f.params
+            p1.add(String.Format("{0} As {1}", p.name, p.vbType))
+            p2.Add("{" & i & "}")
+            p3.Add(String.Format(p.name))
+            i += 1
+        Next
+
+        If p1.count() > 0 Then
+            If f.returnsRecordset AndAlso f.returnLayout.columns IsNot Nothing AndAlso f.returnLayout.columns.Any() then
+#>
+        Public Overridable Function <#= f.name #>(<#= String.Join(", ", p1) #><#= If(_withLock, ", sharedLock As Object", "") #>) As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)
+<# If _withLock Then #>
+            SyncLock sharedLock
+<# End If #>
+            <#= If(_withLock, " ","") #>Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("<#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
+<# If _withLock Then #>
+            End SyncLock
+<# End If #>
+        End Function
+<#
+            else
+#>
+        Public Overridable Sub <#= f.name #>(<#= String.Join(", ", p1) #><#= If(_withLock, ", sharedLock As Object", "") #>)
+<# If _withLock Then #>
+            SyncLock sharedLock
+<# End If #>
+            <#= If(_withLock, " ","") #>DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
+<# If _withLock Then #>
+            End SyncLock
+<# End If #>
+        End Sub
+<#          
+            End If
+        Else
+            If f.returnsRecordset AndAlso f.returnLayout.columns IsNot Nothing AndAlso f.returnLayout.columns.Any() then
+#>
+        Public Overridable Function <#= f.name #>(<#= If(_withLock, "sharedLock As Object", "") #>) As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)
+<# If _withLock Then #>
+            SyncLock sharedLock
+<# End If #>
+            <#= If(_withLock, " ","") #>Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("<#= f.name #>()")
+<# If _withLock Then #>
+            End SyncLock
+<# End If #>
+        End Function
+<#
+            else
+#>
+        Public Overridable Sub <#= f.name #>(<#= If(_withLock, "sharedLock As Object", "") #>)
+<# If _withLock Then #>
+            SyncLock sharedLock
+<# End If #>
+            <#= If(_withLock, " ","") #>DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= f.name #>()")
+<# If _withLock Then #>
+            End SyncLock
+<# End If #>
+        End Sub
+<#
+            End If
+        End If
+    Next
+#>
+
+    End Class
+End Namespace
+

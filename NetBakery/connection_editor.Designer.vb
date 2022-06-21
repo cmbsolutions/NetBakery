@@ -40,7 +40,6 @@ Partial Class connection_editor
         Me.RequiredFieldValidator1 = New DevComponents.DotNetBar.Validator.RequiredFieldValidator("Required")
         Me.isUniqueValidator = New DevComponents.DotNetBar.Validator.CustomValidator()
         Me.RequiredFieldValidator3 = New DevComponents.DotNetBar.Validator.RequiredFieldValidator("Required")
-        Me.RequiredFieldValidator4 = New DevComponents.DotNetBar.Validator.RequiredFieldValidator("Required")
         Me.ErrorProvider1 = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.Highlighter1 = New DevComponents.DotNetBar.Validator.Highlighter()
         Me.txtHost = New DevComponents.DotNetBar.Controls.TextBoxX()
@@ -210,7 +209,6 @@ Partial Class connection_editor
         Me.txtPassword.Size = New System.Drawing.Size(261, 25)
         Me.txtPassword.TabIndex = 3
         Me.txtPassword.UseSystemPasswordChar = True
-        Me.SuperValidator1.SetValidator1(Me.txtPassword, Me.RequiredFieldValidator4)
         Me.txtPassword.WatermarkText = "Enter a password..."
         '
         'LabelX2
@@ -270,11 +268,6 @@ Partial Class connection_editor
         '
         Me.RequiredFieldValidator3.ErrorMessage = "Required"
         Me.RequiredFieldValidator3.HighlightColor = DevComponents.DotNetBar.Validator.eHighlightColor.Red
-        '
-        'RequiredFieldValidator4
-        '
-        Me.RequiredFieldValidator4.ErrorMessage = "Required"
-        Me.RequiredFieldValidator4.HighlightColor = DevComponents.DotNetBar.Validator.eHighlightColor.Red
         '
         'ErrorProvider1
         '
@@ -399,7 +392,6 @@ Partial Class connection_editor
     Friend WithEvents ErrorProvider1 As ErrorProvider
     Friend WithEvents btnCancel As DevComponents.DotNetBar.ButtonX
     Friend WithEvents btnOk As DevComponents.DotNetBar.ButtonX
-    Friend WithEvents RequiredFieldValidator4 As DevComponents.DotNetBar.Validator.RequiredFieldValidator
     Friend WithEvents RequiredFieldValidator2 As DevComponents.DotNetBar.Validator.RequiredFieldValidator
     Friend WithEvents RequiredFieldValidator3 As DevComponents.DotNetBar.Validator.RequiredFieldValidator
     Friend WithEvents Highlighter1 As DevComponents.DotNetBar.Validator.Highlighter

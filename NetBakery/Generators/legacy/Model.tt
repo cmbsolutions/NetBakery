@@ -1,0 +1,55 @@
+﻿<#@ template language="VB" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Netbakery.infoSchema" #>
+Imports System.Collections.Generic
+
+Namespace Models<#= if(_IsStoreCommand, ".StoreCommandSchemas", "") #>
+<# If _t.escapeName then #>
+    Partial Public Class [<#= _t.singleName #>]
+<# Else #>
+    Partial Public Class <#= _t.singleName #>
+<# End If #>
+<#  If _t.relations.Any() Then #>
+        Public Sub New()
+<#      For Each re in _t.relations.OrderBy(Function(c) c.toTable.name) #>
+            <#= re.alias #> = New List(Of <#= re.toTable.singleName #>)
+<#      Next #>
+        End Sub
+<#  End If #>
+
+<#  For each c in _t.columns #>
+<#      If c.isNullable And c.vbType <> "String" Then #>
+        Property <#= c.alias #>() as <#= c.vbType #>?
+<#      else #>
+        Property <#= c.alias #>() as <#= c.vbType #>
+<#      end if
+
+        If c.mysqlType = "enum" AndAlso c.vbType <> "String" Then
+            _i = 1
+ #>
+
+        Enum <#= c.vbType #>
+<#          For Each e in c.enums #>
+            <#= e #> = <#= _i #>
+<#              _i += 1 #>
+<#          Next #>
+        End Enum
+
+<#      End If
+    Next
+
+    For each fk in _t.foreignkeys.orderby(Function(c) c.propertyalias)
+#>
+        Public Property <#= fk.propertyAlias #>() as <#= fk.referencedtable.singlename #>
+<#  Next 
+
+    For Each re in  _t.relations.orderby(Function(c) c.totable.name)
+#>
+        Public Overridable Property <#= re.alias #>() As List(Of <#= re.totable.SingleName #>)
+<#  Next
+#>
+    End Class
+End Namespace

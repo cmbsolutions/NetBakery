@@ -25,8 +25,6 @@ Partial Class splash
         Me.components = New System.ComponentModel.Container()
         Me.ReflectionLabel1 = New DevComponents.DotNetBar.Controls.ReflectionLabel()
         Me.ReflectionImage1 = New DevComponents.DotNetBar.Controls.ReflectionImage()
-        Me.btnNewForm = New DevComponents.DotNetBar.ButtonX()
-        Me.btnOriginal = New DevComponents.DotNetBar.ButtonX()
         Me.StyleManager1 = New DevComponents.DotNetBar.StyleManager(Me.components)
         Me.StyleManagerAmbient1 = New DevComponents.DotNetBar.StyleManagerAmbient(Me.components)
         Me.ProgressBarX1 = New DevComponents.DotNetBar.Controls.ProgressBarX()
@@ -61,32 +59,6 @@ Partial Class splash
         Me.ReflectionImage1.Size = New System.Drawing.Size(256, 256)
         Me.ReflectionImage1.TabIndex = 0
         '
-        'btnNewForm
-        '
-        Me.btnNewForm.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton
-        Me.btnNewForm.AntiAlias = True
-        Me.btnNewForm.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
-        Me.btnNewForm.HotTrackingStyle = DevComponents.DotNetBar.eHotTrackingStyle.Color
-        Me.btnNewForm.Location = New System.Drawing.Point(189, 235)
-        Me.btnNewForm.Name = "btnNewForm"
-        Me.btnNewForm.Size = New System.Drawing.Size(157, 73)
-        Me.btnNewForm.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
-        Me.btnNewForm.TabIndex = 2
-        Me.btnNewForm.Text = "Load preview form"
-        '
-        'btnOriginal
-        '
-        Me.btnOriginal.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton
-        Me.btnOriginal.AntiAlias = True
-        Me.btnOriginal.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
-        Me.btnOriginal.HotTrackingStyle = DevComponents.DotNetBar.eHotTrackingStyle.Color
-        Me.btnOriginal.Location = New System.Drawing.Point(12, 235)
-        Me.btnOriginal.Name = "btnOriginal"
-        Me.btnOriginal.Size = New System.Drawing.Size(157, 73)
-        Me.btnOriginal.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
-        Me.btnOriginal.TabIndex = 0
-        Me.btnOriginal.Text = "Load original form"
-        '
         'StyleManager1
         '
         Me.StyleManager1.ManagerStyle = DevComponents.DotNetBar.eStyle.VisualStudio2012Dark
@@ -101,29 +73,29 @@ Partial Class splash
         Me.ProgressBarX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.ProgressBarX1.ChunkColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.ProgressBarX1.ChunkColor2 = System.Drawing.Color.Lime
-        Me.ProgressBarX1.Location = New System.Drawing.Point(12, 333)
+        Me.ProgressBarX1.Location = New System.Drawing.Point(12, 238)
         Me.ProgressBarX1.Name = "ProgressBarX1"
         Me.ProgressBarX1.Size = New System.Drawing.Size(334, 23)
         Me.ProgressBarX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.ProgressBarX1.TabIndex = 3
-        Me.ProgressBarX1.Text = "ProgressBarX1"
+        Me.ProgressBarX1.Text = "...message..."
+        Me.ProgressBarX1.TextVisible = True
         '
         'Timer1
         '
         Me.Timer1.Enabled = True
-        Me.Timer1.Interval = 400
+        Me.Timer1.Interval = 50
         '
         'LabelX1
         '
         '
         '
         '
-        Me.LabelX1.BackgroundStyle.BackgroundImage = Global.NetBakery.My.Resources.Resources.RibbonGeometry
         Me.LabelX1.BackgroundStyle.BackgroundImagePosition = DevComponents.DotNetBar.eStyleBackgroundImage.Tile
         Me.LabelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.LabelX1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.LabelX1.Font = New System.Drawing.Font("Segoe Script", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LabelX1.Location = New System.Drawing.Point(0, 380)
+        Me.LabelX1.Location = New System.Drawing.Point(0, 274)
         Me.LabelX1.Name = "LabelX1"
         Me.LabelX1.Size = New System.Drawing.Size(359, 23)
         Me.LabelX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
@@ -135,12 +107,10 @@ Partial Class splash
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(359, 403)
+        Me.ClientSize = New System.Drawing.Size(359, 297)
         Me.ControlBox = False
         Me.Controls.Add(Me.LabelX1)
         Me.Controls.Add(Me.ProgressBarX1)
-        Me.Controls.Add(Me.btnOriginal)
-        Me.Controls.Add(Me.btnNewForm)
         Me.Controls.Add(Me.ReflectionLabel1)
         Me.Controls.Add(Me.ReflectionImage1)
         Me.DoubleBuffered = True
@@ -163,8 +133,6 @@ Partial Class splash
 
     Friend WithEvents ReflectionImage1 As DevComponents.DotNetBar.Controls.ReflectionImage
     Friend WithEvents ReflectionLabel1 As DevComponents.DotNetBar.Controls.ReflectionLabel
-    Friend WithEvents btnNewForm As DevComponents.DotNetBar.ButtonX
-    Friend WithEvents btnOriginal As DevComponents.DotNetBar.ButtonX
     Friend WithEvents StyleManager1 As DevComponents.DotNetBar.StyleManager
     Friend WithEvents StyleManagerAmbient1 As DevComponents.DotNetBar.StyleManagerAmbient
     Friend WithEvents ProgressBarX1 As DevComponents.DotNetBar.Controls.ProgressBarX

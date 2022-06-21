@@ -2,7 +2,8 @@
 Imports System.Runtime.Serialization.Formatters.Binary
 Imports System.Security.Cryptography
 Imports System.Security
-
+Imports System.Xml.Serialization
+Imports System.Text.RegularExpressions
 
 Namespace infoSchema
     <Serializable>
@@ -93,7 +94,7 @@ Namespace infoSchema
                 If Not file.Directory.Exists Then file.Directory.Create()
 
                 Using data As New FileStream(file.FullName, FileMode.Create, FileAccess.Write, FileShare.None)
-                    formatter.Serialize(data, _internal)
+                    formatter.Serialize(data, _internal.Where(Function(c) Not c.fromNavicat).ToList)
                 End Using
 
                 formatter = Nothing
@@ -116,6 +117,36 @@ Namespace infoSchema
                 End If
             Catch ex As Exception
                 Throw
+            End Try
+        End Sub
+
+        Public Sub LoadFromNavicat()
+            Dim registryRoot As String = "Software\PremiumSoft\Navicat\Servers"
+
+            Try
+                Using mainReg = My.Computer.Registry.CurrentUser.OpenSubKey(registryRoot, False)
+                    Dim RegexObj As New Regex("^(DEV|TST|APP|PRD) - (\w+)$", RegexOptions.IgnoreCase)
+
+                    If mainReg IsNot Nothing Then
+                        For Each entry In mainReg.GetSubKeyNames
+                            If RegexObj.IsMatch(entry) Then
+                                Using subKey = mainReg.OpenSubKey(entry)
+                                    _internal.Add(New connection With {
+                                                  .fromNavicat = True,
+                                                  .host = subKey.GetValue("Host").ToString,
+                                                  .user = subKey.GetValue("UserName").ToString,
+                                                  .pass = subKey.GetValue("Pwd").ToString,
+                                                  .description = entry,
+                                                  .sslmode = eSslMode.Required
+                                                  })
+                                End Using
+                            End If
+                        Next
+                    End If
+
+                End Using
+            Catch ex As Exception
+                Throw ex
             End Try
         End Sub
 
@@ -160,19 +191,32 @@ Namespace infoSchema
         Property sslmode As eSslMode
         Property description As String
 
+        <XmlIgnore()>
+        Property fromNavicat As Boolean
+
         Public Sub setPass(ByVal p As String)
             Using security As New secure
                 pass = security.EncryptData(p)
             End Using
         End Sub
         Public Function decryptedPass() As String
-            Using security As New secure
-                Return security.DecryptData(pass)
-            End Using
+            If fromNavicat Then
+                Using navi As New CMBSolutions.NavicatEncrypt
+                    Return navi.Decrypt(pass)
+                End Using
+            Else
+                Using security As New secure
+                    Return security.DecryptData(pass)
+                End Using
+            End If
         End Function
         Public Overrides Function ToString() As String
-            Return String.Format("server={0};user id={1};password={2};allowuservariables=True;characterset=utf8;interactivesession=True;treattinyasboolean=False;compress=True;persistsecurityinfo=True;sslmode={3}", host, user, decryptedPass, sslmode.ToString)
+            Return $"server={host};user id={user};password={decryptedPass()};allowuservariables=True;characterset=utf8;interactivesession=True;treattinyasboolean=False;compress=True;persistsecurityinfo=True;sslmode={sslmode.ToString}"
         End Function
+
+        Public Sub Clone(ByRef [to] As connection)
+            [to] = DirectCast(Me.MemberwiseClone(), connection)
+        End Sub
     End Class
 
     <Serializable>

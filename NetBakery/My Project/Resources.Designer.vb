@@ -22,7 +22,7 @@ Namespace My.Resources
     '''<summary>
     '''  A strongly-typed resource class, for looking up localized strings, etc.
     '''</summary>
-    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0"),  _
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0"),  _
      Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
      Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
      Global.Microsoft.VisualBasic.HideModuleNameAttribute()>  _
@@ -72,11 +72,11 @@ Namespace My.Resources
         
         '''<summary>
         '''  Looks up a localized string similar to &lt;AdvTree&gt;
-        '''  &lt;Node Expanded=&quot;true&quot; Name=&quot;mapModels&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Models&quot; ImageIndex=&quot;1&quot; ImageExpandedIndex=&quot;0&quot;&gt;
-        '''    &lt;Node Expanded=&quot;true&quot; Name=&quot;mapMapping&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Mapping&quot; ImageIndex=&quot;1&quot; ImageExpandedIndex=&quot;0&quot;&gt;
+        '''  &lt;Node Expanded=&quot;true&quot; Name=&quot;mapModels&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Models&quot; ImageIndex=&quot;18&quot; ImageExpandedIndex=&quot;23&quot;&gt;
+        '''    &lt;Node Expanded=&quot;true&quot; Name=&quot;mapMapping&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Mapping&quot; ImageIndex=&quot;18&quot; ImageExpandedIndex=&quot;23&quot;&gt;
         '''    &lt;/Node&gt;
-        '''    &lt;Node Expanded=&quot;true&quot; Name=&quot;mapStoreCommands&quot; DragDropEnabled=&quot;false&quot; Text=&quot;StoreCommands&quot; ImageIndex=&quot;1&quot; ImageExpandedIndex=&quot;0&quot;&gt;
-        '''      &lt;Node Expanded=&quot;true&quot; Name=&quot;mapStoreCommandModels&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Models&quot; ImageIndex=&quot;1&quot; I [rest of string was truncated]&quot;;.
+        '''    &lt;Node Expanded=&quot;true&quot; Name=&quot;mapStoreCommands&quot; DragDropEnabled=&quot;false&quot; Text=&quot;StoreCommands&quot; ImageIndex=&quot;18&quot; ImageExpandedIndex=&quot;23&quot;&gt;
+        '''      &lt;Node Expanded=&quot;true&quot; Name=&quot;mapStoreCommandModels&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Models&quot; ImageIndex [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property defaultOutputExplorer() As String
             Get
@@ -97,6 +97,39 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property grid() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("grid", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property logo() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("logo", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to &lt;AdvTree&gt;
+        '''  &lt;Node Expanded=&quot;true&quot; Name=&quot;mapModels&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Models&quot; ImageIndex=&quot;18&quot; ImageExpandedIndex=&quot;23&quot;&gt;
+        '''    &lt;Node Expanded=&quot;true&quot; Name=&quot;mapMapping&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Mapping&quot; ImageIndex=&quot;18&quot; ImageExpandedIndex=&quot;23&quot; /&gt;
+        '''    &lt;Node Expanded=&quot;true&quot; Name=&quot;mapStoreCommands&quot; DragDropEnabled=&quot;false&quot; Text=&quot;StoreCommands&quot; ImageIndex=&quot;18&quot; ImageExpandedIndex=&quot;23&quot;&gt;
+        '''      &lt;Node Expanded=&quot;true&quot; Name=&quot;mapStoreCommandFunctions&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Functions&quot; ImageIndex=&quot;18&quot; [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property net5OutputExplorer() As String
+            Get
+                Return ResourceManager.GetString("net5OutputExplorer", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property netbakery() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("netbakery", resourceCulture)
@@ -105,11 +138,34 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to __autoload __class__ __compiler_halt_offset__ __construct __destruct __dir__ __file__ __function__ __halt_compiler __line__ __method__ __namespace__ __sleep __trait__ __wakeup _cookie _files _get _post abday_1 abday_2 abday_3 abday_4 abday_5 abday_6 abday_7 abmon_1 abmon_10 abmon_11 abmon_12 abmon_2 abmon_3 abmon_4 abmon_5 abmon_6 abmon_7 abmon_8 abmon_9 abs abstract acos acosh addcslashes addslashes af_inet af_inet6 af_unix al_bits al_buffer al_channels al_cone_inner_angle al_cone_outer_angle al_cone_outer [rest of string was truncated]&quot;;.
+        '''  Looks up a localized string similar to int float bool string true false null void iterable object abstract and array as break callable case catch class clone const continue declare default die do echo else elseif empty enddeclare endfor endforeach endif endswitch endwhile eval exit extends final finally fn for foreach function global goto if implements include include_once instanceof insteadof interface isset list match namespace new or print private protected public require require_once return static switch throw trait try unset use var while x [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property php_keywords() As String
             Get
                 Return ResourceManager.GetString("php_keywords", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to &lt;AdvTree&gt;
+        '''  &lt;Node Expanded=&quot;true&quot; Name=&quot;mapModels&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Table&quot; ImageIndex=&quot;18&quot; ImageExpandedIndex=&quot;23&quot;&gt;&lt;/Node&gt;
+        '''    &lt;Node Expanded=&quot;true&quot; Name=&quot;mapMapping&quot; DragDropEnabled=&quot;false&quot; Text=&quot;Entity&quot; ImageIndex=&quot;18&quot; ImageExpandedIndex=&quot;23&quot;&gt;
+        '''    &lt;/Node&gt;
+        '''&lt;/AdvTree&gt;.
+        '''</summary>
+        Friend ReadOnly Property phpOutputExplorer() As String
+            Get
+                Return ResourceManager.GetString("phpOutputExplorer", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property pngwing_com() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("pngwing.com", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
@@ -130,6 +186,61 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("RibbonGeometry", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to abs absolute access acos add add_months adddate admin after aggregate all allocate alter and any app_name are array as asc ascii asin assertion at atan atn2 audit authid authorization autonomous_transaction avg before begin benchmark between bfilename bigint bin binary binary_checksum binary_integer bit bit_count bit_and bit_or blob body boolean both breadth bulk by call cascade cascaded case cast catalog ceil ceiling char char_base character charindex chartorowid check checksum checksum_agg chr class clob  [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property sql_keywords() As String
+            Get
+                Return ResourceManager.GetString("sql_keywords", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to Imports Microsoft.EntityFrameworkCore
+        '''
+        '''Namespace Models.StoreCommands
+        '''    Public MustInherit Class StoreCommandsBase
+        '''        Friend Property context As DbContext
+        '''
+        '''        Public Sub New(ctx As DbContext)
+        '''            context = ctx
+        '''        End Sub
+        '''    End Class
+        '''End Namespace.
+        '''</summary>
+        Friend ReadOnly Property storecommandsbase() As String
+            Get
+                Return ResourceManager.GetString("storecommandsbase", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to https://www.cmbsolutions.nl.
+        '''</summary>
+        Friend ReadOnly Property updateLocationBaseURL() As String
+            Get
+                Return ResourceManager.GetString("updateLocationBaseURL", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to netbakery/v2/latest.php.
+        '''</summary>
+        Friend ReadOnly Property updateLocationResource() As String
+            Get
+                Return ResourceManager.GetString("updateLocationResource", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to addhandler addressof aggregate alias and andalso ansi as assembly async attribute auto await begin binary boolean by byref byte byval call case catch cbool cbyte cchar cdate cdbl cdec char cint class clng cobj compare const continue csbyte cshort csng cstr ctype cuint culng currency cushort custom date datetime decimal declare default delegate dim directcast distinct do double each else elseif end endif enum equals erase error event exit explicit finally for friend from function get gettype global gosub got [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property vb_keywords() As String
+            Get
+                Return ResourceManager.GetString("vb_keywords", resourceCulture)
             End Get
         End Property
     End Module

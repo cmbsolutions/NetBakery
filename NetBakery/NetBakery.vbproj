@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,7 +12,7 @@
     <AssemblyName>NetBakery</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <TargetFrameworkProfile />
@@ -30,33 +31,14 @@
     <PublisherName>CMB Solutions</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>index.htm</WebPage>
-    <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>0.9.279.%2a</ApplicationVersion>
+    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationVersion>0.9.217.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>NetBakery.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>NetBakery.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -86,7 +68,7 @@
     <ManifestKeyFile>NetBakery_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -97,53 +79,75 @@
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Original|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Original\</OutputPath>
+    <OutputPath>bin\x64\Debug\</OutputPath>
     <DocumentationFile>NetBakery.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DocumentationFile>NetBakery.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Original|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x64\Original\</OutputPath>
+    <DocumentationFile>NetBakery.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.2.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
-      <HintPath>..\packages\BouncyCastle.1.8.2\lib\BouncyCastle.Crypto.dll</HintPath>
+    <Reference Include="AutoUpdater.NET, Version=1.7.0.0, Culture=neutral, PublicKeyToken=501435c91b35f4bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autoupdater.NET.Official.1.7.0\lib\net45\AutoUpdater.NET.dll</HintPath>
     </Reference>
-    <Reference Include="CryptSharp, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CryptSharp.1.2.0.1\lib\net35\CryptSharp.dll</HintPath>
+    <Reference Include="CryptSharp, Version=1.3.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CryptSharp.1.3.0\lib\net462\CryptSharp.dll</HintPath>
     </Reference>
     <Reference Include="DevComponents.Charts.Design, Version=14.0.0.15, Culture=neutral, PublicKeyToken=2c9ff1fddc42653c, processorArchitecture=MSIL" />
     <Reference Include="DevComponents.DotNetBar.Charts, Version=14.0.0.15, Culture=neutral, PublicKeyToken=c39c3242a43eee2b" />
     <Reference Include="DevComponents.DotNetBar.Layout, Version=14.0.0.15, Culture=neutral, PublicKeyToken=c39c3242a43eee2b, processorArchitecture=MSIL" />
     <Reference Include="DevComponents.DotNetBar2, Version=14.0.0.15, Culture=neutral, PublicKeyToken=c39c3242a43eee2b, processorArchitecture=MSIL" />
+    <Reference Include="DevComponents.TreeGX, Version=14.0.0.15, Culture=neutral, PublicKeyToken=cfcbd7476b2389d1, processorArchitecture=MSIL" />
+    <Reference Include="DotNetZip, Version=1.16.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.16.0\lib\net40\DotNetZip.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Protobuf, Version=3.5.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Protobuf.3.5.1\lib\net45\Google.Protobuf.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MySql.Data, Version=6.10.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.6.10.7\lib\net452\MySql.Data.dll</HintPath>
+    <Reference Include="MySql.Data, Version=6.10.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.10.9\lib\net452\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data.Entity.EF6, Version=6.10.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\packages\MySql.Data.Entity.6.10.7\lib\net452\MySql.Data.Entity.EF6.dll</HintPath>
     </Reference>
-    <Reference Include="NavicatEncrypt, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NavicatEncrypt.1.1.0\lib\net461\NavicatEncrypt.dll</HintPath>
+    <Reference Include="NavicatEncrypt, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NavicatEncrypt.1.2.0\lib\net461\NavicatEncrypt.dll</HintPath>
     </Reference>
-    <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
-      <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="ScintillaNET, Version=3.6.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ScintillaNET\src\ScintillaNET\bin\Signed\ScintillaNET.dll</HintPath>
+      <HintPath>..\packages\jacobslusser.ScintillaNET.3.6.3\lib\net40\ScintillaNET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel" />
@@ -155,15 +159,21 @@
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -179,6 +189,8 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdvTreeModel.vb" />
+    <Compile Include="ApplicationEvents.vb" />
     <Compile Include="connection_editor.Designer.vb">
       <DependentUpon>connection_editor.vb</DependentUpon>
     </Compile>
@@ -192,57 +204,118 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="customTextTraceListener.vb" />
+    <Compile Include="Extensions.vb" />
     <Compile Include="formHelpers.vb" />
-    <Compile Include="Generator\Context.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Generator\generator.vb" />
-    <Compile Include="Generator\Map.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Map.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Generator\Model.vb">
+    <Compile Include="Generators\iGenerator.vb" />
+    <Compile Include="Generators\legacy\Model.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="Generator\StoreCommandModel.vb">
+    <Compile Include="Generators\legacy\StoreCommand.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreCommand.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\net5Templates.vb" />
+    <Compile Include="Generators\net5Generator.vb" />
+    <Compile Include="Generators\legacy_netGenerator.vb" />
+    <Compile Include="Generators\legacy\Context.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\legacy\Map.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Map.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\legacy\StoreCommandModel.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StoreCommandModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Generator\StoreCommands.vb">
+    <Compile Include="Generators\legacy\StoreCommands.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StoreCommands.tt</DependentUpon>
     </Compile>
-    <Compile Include="Generator\templateData.vb" />
+    <Compile Include="Generators\legacy_netTemplates.vb" />
+    <Compile Include="Generators\net5\Context.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\net5\Map.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Map.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\net5\Model.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\net5\StoreCommand.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreCommand.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\net5\StoreCommandModel.vb">
+      <DependentUpon>StoreCommandModel.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Generators\net5\StoreCommands.vb">
+      <DependentUpon>StoreCommands.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Generators\phpGenerator.vb" />
+    <Compile Include="Generators\phpTemplates.vb" />
+    <Compile Include="Generators\php\Context.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\php\Map.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Map.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\php\Model.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\php\StoreCommand.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreCommand.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\php\StoreCommandModel.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreCommandModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\php\StoreCommands.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreCommands.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\pluralizationService.vb" />
     <Compile Include="infoSchema\column.vb" />
     <Compile Include="infoSchema\connections.vb" />
+    <Compile Include="infoSchema\enums.vb" />
     <Compile Include="infoSchema\foreignKey.vb" />
+    <Compile Include="infoSchema\index.vb" />
     <Compile Include="infoSchema\inflector.vb" />
     <Compile Include="infoSchema\manager.vb" />
     <Compile Include="infoSchema\parameter.vb" />
     <Compile Include="infoSchema\relation.vb" />
     <Compile Include="infoSchema\routine.vb" />
     <Compile Include="infoSchema\table.vb" />
-    <Compile Include="main.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="main.Designer.vb">
-      <DependentUpon>main.vb</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="informationSchema.vb" />
-    <Compile Include="mainGUI.Designer.vb">
-      <DependentUpon>mainGUI.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mainGUI.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="mainGUI2.Designer.vb">
       <DependentUpon>mainGUI2.vb</DependentUpon>
     </Compile>
@@ -259,6 +332,7 @@
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -283,12 +357,14 @@
     <Compile Include="preferences.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Project.vb" />
     <Compile Include="splash.Designer.vb">
       <DependentUpon>splash.vb</DependentUpon>
     </Compile>
     <Compile Include="splash.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="updateHelper.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="connection_editor.resx">
@@ -296,12 +372,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="customDictionaryEdit.resx">
       <DependentUpon>customDictionaryEdit.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="main.resx">
-      <DependentUpon>main.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="mainGUI.resx">
-      <DependentUpon>mainGUI.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mainGUI2.resx">
       <DependentUpon>mainGUI2.vb</DependentUpon>
@@ -341,32 +411,111 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Generator\Context.tt">
+    <Content Include="Generators\legacy\Context.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <CustomToolNamespace>My.Templates</CustomToolNamespace>
+      <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
       <LastGenOutput>Context.vb</LastGenOutput>
+      <Parameters>&lt;%3fxml version="1.0" encoding="utf-16"%3f&gt;
+&lt;ArrayOfParameterStorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Parameters>
     </Content>
-    <Content Include="Generator\Map.tt">
+    <Content Include="Generators\legacy\Map.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <CustomToolNamespace>My.Templates</CustomToolNamespace>
+      <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
       <LastGenOutput>Map.vb</LastGenOutput>
     </Content>
-    <Content Include="Generator\Model.tt">
+    <Content Include="Generators\legacy\Model.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <CustomToolNamespace>My.Templates</CustomToolNamespace>
+      <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
       <LastGenOutput>Model.vb</LastGenOutput>
     </Content>
-    <Content Include="Generator\StoreCommandModel.tt">
+    <Content Include="Generators\legacy\StoreCommand.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <CustomToolNamespace>My.Templates</CustomToolNamespace>
+      <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
+      <LastGenOutput>StoreCommand.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\legacy\StoreCommandModel.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
       <LastGenOutput>StoreCommandModel.vb</LastGenOutput>
     </Content>
-    <Content Include="Generator\StoreCommands.tt">
+    <Content Include="Generators\legacy\StoreCommands.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <CustomToolNamespace>My.Templates</CustomToolNamespace>
+      <CustomToolNamespace>My.Templates.legacy_net</CustomToolNamespace>
+      <LastGenOutput>StoreCommands.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\net5\Context.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+      <LastGenOutput>Context.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\net5\Map.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+      <Parameters>&lt;%3fxml version="1.0" encoding="utf-16"%3f&gt;
+&lt;ArrayOfParameterStorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Parameters>
+      <LastGenOutput>Map.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\net5\Model.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+      <LastGenOutput>Model.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\net5\StoreCommand.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+      <Parameters>&lt;%3fxml version="1.0" encoding="utf-16"%3f&gt;
+&lt;ArrayOfParameterStorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Parameters>
+      <LastGenOutput>StoreCommand.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\net5\StoreCommandModel.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>StoreCommandModel.vb</LastGenOutput>
+      <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+    </Content>
+    <Content Include="Generators\net5\StoreCommands.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>StoreCommands.vb</LastGenOutput>
+      <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
+      <Parameters>&lt;%3fxml version="1.0" encoding="utf-16"%3f&gt;
+&lt;ArrayOfParameterStorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Parameters>
+    </Content>
+    <Content Include="Generators\php\Context.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.php</CustomToolNamespace>
+      <LastGenOutput>Context.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\php\Map.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.php</CustomToolNamespace>
+      <LastGenOutput>Map.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\php\Model.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.php</CustomToolNamespace>
+      <LastGenOutput>Model.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\php\StoreCommand.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.php</CustomToolNamespace>
+      <LastGenOutput>StoreCommand.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\php\StoreCommandModel.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.php</CustomToolNamespace>
+      <LastGenOutput>StoreCommandModel.vb</LastGenOutput>
+    </Content>
+    <Content Include="Generators\php\StoreCommands.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.php</CustomToolNamespace>
       <LastGenOutput>StoreCommands.vb</LastGenOutput>
     </Content>
     <Content Include="netbakery.png.ico" />
+    <Content Include="netbakery_v2_update.xml" />
+    <None Include="Resources\grid.png" />
+    <EmbeddedResource Include="Resources\sql_keywords.txt" />
+    <EmbeddedResource Include="Resources\vb_keywords.txt" />
+    <None Include="Resources\pngwing.com.png" />
+    <None Include="Resources\logo.png" />
     <None Include="Resources\folder_search.png" />
     <EmbeddedResource Include="Resources\php_keywords.txt" />
     <None Include="packages.config" />
@@ -383,12 +532,26 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FileVCS\FileVCS.vbproj">
+      <Project>{fd714691-44dd-42e1-889b-895234e7e40c}</Project>
+      <Name>FileVCS</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PreBuildEvent>cd $(ProjectDir)
 c:\windows\syswow64\WindowsPowerShell\v1.0\powershell.exe -command set-executionpolicy unrestricted -Scope CurrentUser
 c:\windows\syswow64\WindowsPowerShell\v1.0\powershell.exe ./incrementVersion.ps1</PreBuildEvent>
   </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
