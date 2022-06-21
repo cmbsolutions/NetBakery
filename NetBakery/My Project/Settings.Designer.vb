@@ -119,7 +119,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("1.0.486")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("2.0.0")>  _
         Public Property lastUpdate() As String
             Get
                 Return CType(Me("lastUpdate"),String)

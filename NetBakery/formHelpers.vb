@@ -59,4 +59,10 @@ Public Class FormHelpers
             dumpException(ex)
         End Try
     End Sub
+
+    Public Shared Sub Log(message As String)
+        If My.Settings.showDebug Then
+            Trace.WriteLine(message)
+        End If
+    End Sub
 End Class

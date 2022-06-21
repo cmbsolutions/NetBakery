@@ -114,6 +114,8 @@ Namespace infoSchema
                         _internal = CType(formatter.Deserialize(data), List(Of connection))
                     End Using
                     formatter = Nothing
+
+                    FormHelpers.Log($"Loaded {_internal.Count} connections")
                 End If
             Catch ex As Exception
                 Throw
@@ -142,6 +144,8 @@ Namespace infoSchema
                                 End Using
                             End If
                         Next
+
+                        FormHelpers.Log($"Added {_internal.LongCount(Function(c) c.fromNavicat)} connections from navicat")
                     End If
 
                 End Using
