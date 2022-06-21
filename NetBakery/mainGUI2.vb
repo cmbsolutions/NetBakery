@@ -28,8 +28,10 @@ Public Class mainGUI2
             _tracelistener = New customTextTraceListener(txtLog)
             Trace.Listeners.Add(_tracelistener)
 
+            FormHelpers.Log("Upgrading local settings")
             FormHelpers.upgradeMySettings()
 
+            FormHelpers.Log("Setting style and windowstate")
             dnbStyleManager.ManagerStyle = DirectCast([Enum].Parse(GetType(eStyle), My.Settings.gui_style), eStyle)
 
             If My.Settings.isMaximized Then
@@ -49,27 +51,35 @@ Public Class mainGUI2
             _dockFile = New IO.FileInfo(String.Format("{0}\{1}\{2}\layout.xml", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CMBSolutions", "NetBakery"))
 
             If _dockFile.Exists Then
+                FormHelpers.Log("Applying docking styles")
                 SuspendLayout()
                 dnbBarManager.LoadLayout(_dockFile.FullName)
                 ResumeLayout()
             Else
-                If Not _dockFile.Directory.Exists Then _dockFile.Directory.Create()
+                If Not _dockFile.Directory.Exists Then
+                    FormHelpers.Log("Create dockfile directory")
+                    _dockFile.Directory.Create()
+                End If
             End If
 
             _connectionsFile = New IO.FileInfo(String.Format("{0}\{1}\{2}\connections.bin", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CMBSolutions", "NetBakery"))
 
             If _connectionsFile.Exists Then
+                FormHelpers.Log("Loading connections.bin file")
                 _connections.LoadFromFile(_connectionsFile)
             Else
                 If Not _connectionsFile.Directory.Exists Then _connectionsFile.Directory.Create()
             End If
 
+            FormHelpers.Log("Loading navicat connections")
             _connections.LoadFromNavicat()
 
             cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
             cboConnecions.ComboBoxEx.Refresh()
             cboConnecions.Refresh()
+            FormHelpers.Log("Loaded connections")
 
+            FormHelpers.Log("Setting lexer styles")
             setVbStyle(scCodePreview)
             setVbStyle(scGeneratedModel)
             setVbStyle(scGeneratedMapping)
@@ -80,12 +90,14 @@ Public Class mainGUI2
 
             If My.Settings.openLastProject AndAlso My.Settings.lastProject <> "" Then
                 If IO.File.Exists(My.Settings.lastProject) Then
+                    FormHelpers.Log("Loading last project")
                     loadProject(My.Settings.lastProject)
                 End If
             End If
 
             enableOrDisableFields()
 
+            FormHelpers.Log("Updating menus")
             If My.Settings.recentProjects.Count > 0 Then
                 Dim id As Integer = 0
                 For Each itm In My.Settings.recentProjects
@@ -1360,6 +1372,7 @@ Public Class mainGUI2
             lexer.Styles(ScintillaNET.Style.Sql.Number).ForeColor = Color.FromArgb(255, 205, 34)
             lexer.Styles(ScintillaNET.Style.Sql.Number).Size = 10
             lexer.Styles(ScintillaNET.Style.Sql.Number).SizeF = 10.0F
+
             lexer.Styles(ScintillaNET.Style.Sql.Word).BackColor = Color.FromArgb(-14803426)
             lexer.Styles(ScintillaNET.Style.Sql.Word).Bold = True
             lexer.Styles(ScintillaNET.Style.Sql.Word).Font = "Consolas"
@@ -1367,19 +1380,35 @@ Public Class mainGUI2
             lexer.Styles(ScintillaNET.Style.Sql.Word).Size = 10
             lexer.Styles(ScintillaNET.Style.Sql.Word).SizeF = 10.0F
             lexer.Styles(ScintillaNET.Style.Sql.Word).Weight = 700
+
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).Bold = True
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).ForeColor = Color.FromArgb(147, 199, 99)
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).SizeF = 10.0F
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).Weight = 700
+
             lexer.Styles(ScintillaNET.Style.Sql.[String]).BackColor = Color.FromArgb(-14803426)
             lexer.Styles(ScintillaNET.Style.Sql.[String]).Font = "Consolas"
             lexer.Styles(ScintillaNET.Style.Sql.[String]).ForeColor = Color.FromArgb(236, 118, 0)
             lexer.Styles(ScintillaNET.Style.Sql.[String]).Size = 10
             lexer.Styles(ScintillaNET.Style.Sql.[String]).SizeF = 10.0F
+
+            lexer.Styles(ScintillaNET.Style.Sql.Character).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Character).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.Character).ForeColor = Color.FromArgb(236, 118, 0)
+            lexer.Styles(ScintillaNET.Style.Sql.Character).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.Character).SizeF = 10.0F
+
             lexer.Styles(ScintillaNET.Style.Sql.[Operator]).BackColor = Color.FromArgb(-14803426)
             lexer.Styles(ScintillaNET.Style.Sql.[Operator]).Font = "Consolas"
             lexer.Styles(ScintillaNET.Style.Sql.[Operator]).ForeColor = Color.FromArgb(232, 226, 183)
             lexer.Styles(ScintillaNET.Style.Sql.[Operator]).Size = 10
             lexer.Styles(ScintillaNET.Style.Sql.[Operator]).SizeF = 10.0F
+
             lexer.Styles(ScintillaNET.Style.Sql.Identifier).BackColor = Color.FromArgb(-14803426)
             lexer.Styles(ScintillaNET.Style.Sql.Identifier).ForeColor = Color.Gainsboro
-
 
             lexer.SetKeywords(0, My.Resources.sql_keywords)
 
