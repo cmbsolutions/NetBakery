@@ -15,5 +15,6 @@
         Property definition As String
         Property parents As New List(Of table)
         Property children As New List(Of table)
+        Property HasMissingFields As Boolean
     End Class
 End Namespace

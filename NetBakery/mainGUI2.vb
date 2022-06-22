@@ -337,6 +337,12 @@ Public Class mainGUI2
                 tmpNode.Cells.Add(tmpCell)
 
                 AddHandler tmpNode.NodeClick, AddressOf viewNodeHandler
+
+                If view.HasMissingFields Then
+                    tmpNode.Style = New ElementStyle(Color.Red)
+                    tmpNode.Tooltip = "There is something wrong with this view. The view selects fields/tables that are missing."
+                End If
+
                 viewNode.Nodes.Add(tmpNode)
             Next
 
@@ -344,11 +350,21 @@ Public Class mainGUI2
             For Each routine In _mngr.routines
                 ' Clone the templates
                 Dim tmpNode = itemNode.DeepCopy
+                Dim tmpCell = New AdvTree.Cell With {.Editable = False, .Text = "", .TextDisplayFormat = "", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter}
+
+                If routine.executiontime.TotalSeconds > 1 Then
+                    tmpCell.Text = routine.executiontime.TotalSeconds.ToString
+                    tmpNode.Style = New ElementStyle(Color.Gold)
+                End If
+
+
+
                 tmpNode.Text = routine.name
+                tmpNode.Cells.Add(tmpCell)
 
                 AddHandler tmpNode.NodeClick, AddressOf routineNodeHandler
 
-                If routine.returnsRecordset Then
+                If routine.returnsRecordset AndAlso tmpNode.Style Is Nothing Then
                     If routine.returnLayout IsNot Nothing AndAlso routine.returnLayout.columns.Count > 0 Then
                         tmpNode.Style = New ElementStyle(Color.LimeGreen)
                     Else

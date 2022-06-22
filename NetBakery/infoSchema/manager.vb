@@ -1,4 +1,4 @@
-﻿Imports System.Data.Entity.Infrastructure.Pluralization
+Imports System.Data.Entity.Infrastructure.Pluralization
 Imports MySql.Data.MySqlClient
 Imports System.Text.RegularExpressions
 
@@ -134,16 +134,16 @@ Namespace infoSchema
                 Using _dbCommand = New MySqlCommand
 
                     _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
-                    _dbCommand.CommandText = "SELECT T.TABLE_NAME, T.TABLE_TYPE, V.VIEW_DEFINITION FROM	`TABLES` AS T LEFT JOIN	VIEWS AS V ON T.TABLE_SCHEMA = V.TABLE_SCHEMA AND T.TABLE_NAME = V.TABLE_NAME WHERE	T.TABLE_SCHEMA = @database;"
+                    _dbCommand.CommandText = "SELECT T.TABLE_NAME, T.TABLE_TYPE, V.VIEW_DEFINITION FROM `TABLES` AS T LEFT JOIN VIEWS AS V ON T.TABLE_SCHEMA = V.TABLE_SCHEMA AND T.TABLE_NAME = V.TABLE_NAME WHERE T.TABLE_SCHEMA = @database;"
                     _dbCommand.Parameters.AddWithValue("database", _database)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         While rdr.Read
                             Dim t As table
-                            If rdr("TABLE_TYPE").ToString = "VIEW" Then
-                                t = New table With {.name = rdr("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr("TABLE_NAME").ToString), .pluralName = _p.Pluralize(rdr("TABLE_NAME").ToString), .isView = True, .hasExport = True}
+                            If rdr.GetString("TABLE_TYPE") = "VIEW" Then
+                                t = New table With {.name = rdr.GetString("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = _p.Pluralize(rdr.GetString("TABLE_NAME")), .isView = True, .hasExport = True}
                             Else
-                                t = New table With {.name = rdr("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr("TABLE_NAME").ToString), .pluralName = _p.Pluralize(rdr("TABLE_NAME").ToString), .hasExport = True}
+                                t = New table With {.name = rdr.GetString("TABLE_NAME"), .singleName = _p.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = _p.Pluralize(rdr.GetString("TABLE_NAME")), .hasExport = True}
                             End If
 
                             t.escapeName = _keywords IsNot Nothing AndAlso _keywords.Exists(Function(c) c = t.singleName)
@@ -152,11 +152,11 @@ Namespace infoSchema
 
                             Using _dbInfoCommand = New MySqlCommand
                                 _dbInfoCommand.Connection = dbConnection(_database)
-                                _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("TABLE_TYPE").ToString.Replace("BASE ", "")} {rdr("TABLE_NAME")}"
+                                _dbInfoCommand.CommandText = $"SHOW CREATE {rdr.GetString("TABLE_TYPE").Replace("BASE ", "")} {rdr("TABLE_NAME")}"
 
                                 Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
                                     While irdr.Read
-                                        t.definition = irdr($"Create {UcFirst(rdr("TABLE_TYPE").ToString.Replace("BASE ", ""))}").ToString
+                                        t.definition = irdr($"Create {UcFirst(rdr.GetString("TABLE_TYPE").Replace("BASE ", ""))}").ToString
                                     End While
                                 End Using
 
@@ -212,6 +212,8 @@ Namespace infoSchema
                                 t.columns.Add(c)
                             End While
                         End Using
+
+                        If t.isView AndAlso t.columns.Count = 0 Then t.HasMissingFields = True
                     End Using
                 Next
 
@@ -461,6 +463,7 @@ Namespace infoSchema
         Public Sub getRoutineLayout(ByRef _r As routine, paramValues As String(), ByRef fieldNames As List(Of String))
             Try
                 Using _dbxCommand = New MySqlCommand
+                    Dim startTime = Now
                     _dbxCommand.Connection = dbConnection(_database)
                     _dbxCommand.CommandTimeout = 3600
                     _dbxCommand.CommandType = CommandType.Text
@@ -487,13 +490,8 @@ Namespace infoSchema
                                         c.alias = AliasGenerator(c.name)
 
                                         c.ordinalPosition = CInt(row.ItemArray(d.Columns.IndexOf("ColumnOrdinal")))
-                                        'c.defaultValue = rdr("COLUMN_DEFAULT").ToString
                                         c.isNullable = CBool(row.ItemArray(d.Columns.IndexOf("AllowDBNull")))
                                         c.mysqlType = [Enum].GetName(GetType(MySqlDbType), row.ItemArray(d.Columns.IndexOf("ProviderType")))
-                                        'c.maximumLength = ToInt(rdr("CHARACTER_MAXIMUM_LENGTH"))
-                                        'c.numericPrecision = ToInt(rdr("NUMERIC_PRECISION"))
-                                        'c.numericScale = ToInt(rdr("NUMERIC_SCALE"))
-                                        'c.key = rdr("COLUMN_KEY").ToString
                                         c.vbType = getVbType(c.mysqlType)
                                         c.phpType = getPHPType(c.mysqlType)
                                         _r.returnLayout.columns.Add(c)
@@ -507,6 +505,9 @@ Namespace infoSchema
                                     _r.returnsRecordset = False
                                 End If
                             End Using
+
+                            Dim endTime = Now
+                            _r.executiontime = endTime.Subtract(startTime)
                         End Using
                     Catch mex As MySqlException
                         _r.returnLayout = Nothing
