@@ -43,12 +43,20 @@ Namespace Models<#= if(_IsStoreCommand, ".StoreCommandSchemas", "") #>
 
     For each fk in _t.foreignkeys.orderby(Function(c) c.propertyalias)
 #>
+<# If fk.referencedtable.escapeName then #>
+        Public Property <#= fk.propertyAlias #>() as [<#= fk.referencedtable.singlename #>]
+<# Else #>
         Public Property <#= fk.propertyAlias #>() as <#= fk.referencedtable.singlename #>
+<# End If #>
 <#  Next 
 
     For Each re in  _t.relations.orderby(Function(c) c.totable.name)
 #>
+<# If re.totable.escapeName then #>
+        Public Overridable Property <#= re.alias #>() As List(Of [<#= re.totable.SingleName #>])
+<# Else #>
         Public Overridable Property <#= re.alias #>() As List(Of <#= re.totable.SingleName #>)
+<# End If #>
 <#  Next
 #>
     End Class

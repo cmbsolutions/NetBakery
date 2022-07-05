@@ -30,7 +30,11 @@ Namespace Models.Mapping
 	End If
 #>
 	Public Partial Class <#= _t.singleName #>Map
+	<# If _t.escapeName then #>
+		Inherits EntityTypeConfiguration(Of [<#= _t.singleName #>])
+	<# Else #>
 		Inherits EntityTypeConfiguration(Of <#= _t.singleName #>)
+	<# End If #>
 		Sub New()
 			' Primary Key
 <#
@@ -87,11 +91,11 @@ Namespace Models.Mapping
 		
 		lineparts.Add(f.propertyAlias)
 		lineParts.Add(").WithMany(Function(t) t.")
-		If f.propertyAlias = f.referencedtable.singlename Then
+		If f.propertyAlias = f.referencedtable.singlename Then 'If(f.referencedtable.escapeName, "[" & f.referencedtable.singlename & "]", f.referencedtable.singlename).toString Then
 			lineParts.Add(f.table.PluralName)
 		else
 			lineParts.Add(f.table.singleName)
-			lineParts.Add(p.pluralize(f.propertyalias))
+			lineParts.Add(f.referencedtable.pluralname)
 		end if
 		lineParts.Add(").HasForeignKey(Function(d) d.")
 		lineParts.Add(f.columns.first.column.name)

@@ -287,8 +287,11 @@ Namespace infoSchema
                                 .column = col
                             })
 
-                            fk.propertyAlias = col.name.Replace("_id", "")
-
+                            If col.name.Replace("_id", "") <> col.name Then
+                                fk.propertyAlias = FixKeyword(col.name.Replace("_id", ""))
+                            Else
+                                fk.propertyAlias = $"{col.name}_"
+                            End If
                             Dim reftable = tables.FirstOrDefault(Function(c) c.name = rdr("REFERENCED_TABLE_NAME").ToString)
 
                             If fk.referencedTable Is Nothing Then
@@ -319,7 +322,7 @@ Namespace infoSchema
                                                     .toColumn = col,
                                                     .localColumn = refcol,
                                                     .isOptional = col.isNullable,
-                                                    .[alias] = table.singleName & _p.Pluralize(fk.propertyAlias)})
+                                                    .[alias] = table.singleName & reftable.pluralName}) '_p.Pluralize(fk.propertyAlias)})
                             End If
                         End While
                     End Using
@@ -334,9 +337,9 @@ Namespace infoSchema
                 For Each table In tables.Where(Function(c) c.foreignKeys.Count > 0)
                     For Each fk In table.foreignKeys
                         If table.foreignKeys.LongCount(Function(c) c.referencedTable.Equals(fk.referencedTable)) > 1 Then
-                            fk.propertyAlias = fk.columns.First.column.name.Replace("_id", "")
+                            fk.propertyAlias = FixKeyword(fk.columns.First.column.name.Replace("_id", ""))
                         Else
-                            fk.propertyAlias = fk.referencedTable.singleName
+                            fk.propertyAlias = FixKeyword(fk.referencedTable.singleName)
                         End If
                     Next
                 Next
@@ -654,6 +657,16 @@ Namespace infoSchema
                 Throw
             End Try
         End Function
+
+        Private Function FixKeyword(inData As String) As String
+            ' Then check keywords (depending on generatortype)
+            If _keywords.Exists(Function(k) k = inData) Then
+                Return $"[{inData}]"
+            Else
+                Return inData
+            End If
+        End Function
+
 #End Region
 
 #Region "IDisposable Support"

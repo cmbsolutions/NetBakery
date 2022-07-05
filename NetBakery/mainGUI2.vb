@@ -541,7 +541,9 @@ Public Class mainGUI2
             nodes.Add(n)
 
             For Each fk In t.foreignKeys
-                n.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, currentDepth + 1).ToArray)
+                If fk.referencedTable.name <> t.name Then
+                    n.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, currentDepth + 1).ToArray)
+                End If
             Next
 
 
@@ -1481,10 +1483,10 @@ Public Class mainGUI2
 
             'Create backup file
             If IO.File.Exists(_currentProject.projectfilename) Then
-                Dim backupFile As String = _currentProject.projectfilename.Replace(".nb2", $"_{Now:yyyyMMdd_HHmmss_fffff}.nbz")
+                Dim backupFile As String = _currentProject.projectfilename.Replace(".nb2", $"_backup.nbz")
                 Using zip As New Ionic.Zip.ZipFile(backupFile)
                     zip.CompressionLevel = Ionic.Zlib.CompressionLevel.BestCompression
-                    zip.AddFile(_currentProject.projectfilename, "")
+                    zip.AddFile(_currentProject.projectfilename, $"{Now:yyyyMMdd_HHmmss}")
                     zip.Save()
                 End Using
             End If

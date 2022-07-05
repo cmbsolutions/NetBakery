@@ -25,7 +25,7 @@ Namespace My.Templates.legacy_net
         Public Overridable Function TransformText() As String
             Me.Write("Imports System.Data.Entity"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Imports System.Data.Entity.Infrastructure"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Imports ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Context.tt",8)
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",8)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_name))
             
             #End ExternalSource
@@ -36,13 +36,13 @@ Namespace My.Templates.legacy_net
                     " System.Linq.Expressions"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Imports System.Data.Entity.Core.Metadata.Edm"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Public"& _ 
                     " Class ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Context.tt",21)
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",21)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_name))
             
             #End ExternalSource
             Me.Write("DataManager"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"Inherits Models.")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Context.tt",22)
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",22)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_name))
             
             #End ExternalSource
@@ -88,57 +88,85 @@ Namespace My.Templates.legacy_net
                     "ad.Sleep(CInt(My.Resources.retryTimeout))"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Continue For"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End If"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)& _ 
                     "End If"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Throw"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End Try"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Next"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Return 0"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"End Function"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End Class"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"Partial Public Class ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Context.tt",135)
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",135)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_name))
             
             #End ExternalSource
             Me.Write("DataContext"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Inherits DbContext"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Shared Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Database.SetInitializ"& _ 
                     "er(Of ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Context.tt",139)
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",139)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_name))
             
             #End ExternalSource
             Me.Write("DataContext)(Nothing)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Sub New(connection As DbConnection)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"MyB"& _ 
                     "ase.New(connection, True)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Context.tt",146)
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",146)
  For Each table In _tables 
+            
+            #End ExternalSource
+            
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",147)
+ If table.escapeName then 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Property ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Context.tt",147)
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",148)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(table.pluralName))
+            
+            #End ExternalSource
+            Me.Write("() As DbSet(Of [")
+            
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",148)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(table.singleName))
+            
+            #End ExternalSource
+            Me.Write("])"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",149)
+ Else 
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Property ")
+            
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",150)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.pluralName))
             
             #End ExternalSource
             Me.Write("() As DbSet(Of ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Context.tt",147)
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",150)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.singleName))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Context.tt",148)
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",151)
+ End If 
+            
+            #End ExternalSource
+            
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",152)
  Next 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Protected Overrides Sub OnModelCreating(modelBuilder As DbModelBuilder)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Context.tt",151)
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",155)
  For Each table In _tables 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"modelBuilder.Configurations.Add(New ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Context.tt",152)
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",156)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(table.singleName))
             
             #End ExternalSource
             Me.Write("Map())"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\Context.tt",153)
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\Generators\legacy\Context.tt",157)
  Next 
             
             #End ExternalSource

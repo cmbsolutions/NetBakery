@@ -144,7 +144,11 @@ Namespace Models
 		End Sub
 
 <# For Each table In _tables #>
+<# If table.escapeName then #>
+		Property <#= table.pluralName #>() As DbSet(Of [<#= table.singleName #>])
+<# Else #>
 		Property <#= table.pluralName #>() As DbSet(Of <#= table.singleName #>)
+<# End If #>
 <# Next #>
 
 		Protected Overrides Sub OnModelCreating(modelBuilder As DbModelBuilder)
