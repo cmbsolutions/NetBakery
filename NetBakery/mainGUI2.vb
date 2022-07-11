@@ -1558,7 +1558,7 @@ Public Class mainGUI2
             sbProcedureLocks.SetValueAndAnimate(_currentProject.generateProcedureLocks, eEventSource.Code)
 
             cboConnecions.Text = _currentProject.database.connection.description
-            _currentConnection = _currentProject.database.connection
+            _currentConnection = _connections.First(Function(c) c.description = cboConnecions.Text)
 
             btnConnect.RaiseClick(eEventSource.Code)
             'TODO: Create database vcs
