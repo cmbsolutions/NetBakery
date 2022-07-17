@@ -317,12 +317,25 @@ Namespace infoSchema
                                                     .[alias] = table.pluralName
                                                     })
                             Else
-                                reftable.relations.Add(New relation With {
+                                Dim alreadyExists = reftable.relations.FirstOrDefault(Function(c) c.alias = table.singleName & reftable.pluralName)
+                                If alreadyExists Is Nothing Then
+                                    reftable.relations.Add(New relation With {
                                                     .toTable = table,
                                                     .toColumn = col,
                                                     .localColumn = refcol,
                                                     .isOptional = col.isNullable,
                                                     .[alias] = table.singleName & reftable.pluralName}) '_p.Pluralize(fk.propertyAlias)})
+
+                                Else
+                                    alreadyExists.alias = $"{alreadyExists.toTable.singleName}{alreadyExists.toColumn.name.Replace("_id", "")}"
+                                    reftable.relations.Add(New relation With {
+                                                    .toTable = table,
+                                                    .toColumn = col,
+                                                    .localColumn = refcol,
+                                                    .isOptional = col.isNullable,
+                                                    .[alias] = $"{table.singleName}{col.name.Replace("_id", "")}"})
+
+                                End If
                             End If
                         End While
                     End Using
