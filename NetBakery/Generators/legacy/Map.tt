@@ -94,8 +94,10 @@ Namespace Models.Mapping
 		If f.propertyAlias = f.referencedtable.singlename Then 'If(f.referencedtable.escapeName, "[" & f.referencedtable.singlename & "]", f.referencedtable.singlename).toString Then
 			lineParts.Add(f.table.PluralName)
 		else
-			lineParts.Add(f.table.singleName)
-			lineParts.Add(f.referencedtable.pluralname)
+			Dim reftable = f.referencedtable.relations.FirstOrDefault(Function(c) c.toTable.name = f.table.name and c.toColumn.name = f.columns.first.column.name)
+			lineParts.Add(reftable.alias)
+			'lineParts.Add(f.table.singleName)
+			'lineParts.Add(f.referencedtable.pluralname)
 		end if
 		lineParts.Add(").HasForeignKey(Function(d) d.")
 		lineParts.Add(f.columns.first.column.name)

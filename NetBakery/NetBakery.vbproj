@@ -208,6 +208,11 @@
     <Compile Include="Extensions.vb" />
     <Compile Include="formHelpers.vb" />
     <Compile Include="Generators\iGenerator.vb" />
+    <Compile Include="Generators\legacy\Map.vb">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Map.tt</DependentUpon>
+    </Compile>
     <Compile Include="Generators\legacy\Model.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -225,11 +230,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Generators\legacy\Map.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Map.tt</DependentUpon>
     </Compile>
     <Compile Include="Generators\legacy\StoreCommandModel.vb">
       <AutoGen>True</AutoGen>
