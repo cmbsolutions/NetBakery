@@ -838,6 +838,7 @@ Public Class mainGUI2
 
                     If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpModel.Text) > 0 Then
                         tmpModel.ImageIndex += 3
+                        AddHandler tmpModel.NodeDoubleClick, AddressOf explorerModelNodeDiffHandler
                         If mModel.ImageIndex = 18 Then
                             mModel.ImageIndex += 3
                             mModel.ImageExpandedIndex += 3
@@ -853,6 +854,7 @@ Public Class mainGUI2
 
                     If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpMapping.Text) > 0 Then
                         tmpMapping.ImageIndex += 3
+                        AddHandler tmpMapping.NodeDoubleClick, AddressOf explorerMappingNodeDiffHandler
                         If mMapping.ImageIndex = 18 Then
                             mMapping.ImageIndex += 3
                             mMapping.ImageExpandedIndex += 3
@@ -897,6 +899,7 @@ Public Class mainGUI2
                     AddHandler tmpModel.NodeClick, AddressOf explorerModelNodeHandler
                     If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpModel.Text) > 0 Then
                         tmpModel.ImageIndex += 3
+                        AddHandler tmpModel.NodeDoubleClick, AddressOf explorerModelNodeDiffHandler
                         If mModel.ImageIndex = 18 Then
                             mModel.ImageIndex += 3
                             mModel.ImageExpandedIndex += 3
@@ -910,6 +913,7 @@ Public Class mainGUI2
                     AddHandler tmpMapping.NodeClick, AddressOf explorerMappingNodeHandler
                     If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpMapping.Text) > 0 Then
                         tmpMapping.ImageIndex += 3
+                        AddHandler tmpMapping.NodeDoubleClick, AddressOf explorerMappingNodeDiffHandler
                         If mMapping.ImageIndex = 18 Then
                             mMapping.ImageIndex += 3
                             mMapping.ImageExpandedIndex += 3
@@ -934,6 +938,7 @@ Public Class mainGUI2
                     AddHandler tmpNode.NodeClick, AddressOf explorerRoutineNodeHandler
                     If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
                         tmpNode.ImageIndex += 3
+                        AddHandler tmpNode.NodeDoubleClick, AddressOf explorerRoutineNodeDiffHandler
                     End If
 
                     If routine.isFunction Then
@@ -955,6 +960,7 @@ Public Class mainGUI2
                             AddHandler tmpNode.NodeClick, AddressOf explorerRoutineModelNodeHandler
                             If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
                                 tmpNode.ImageIndex += 3
+                                AddHandler tmpNode.NodeDoubleClick, AddressOf explorerRoutineModelNodeDiffHandler
                                 If mStoreCommandFunctionModels.ImageIndex = 23 Then mStoreCommandFunctionModels.ImageIndex += 3
                             End If
 
@@ -967,6 +973,7 @@ Public Class mainGUI2
                             AddHandler tmpNode.NodeClick, AddressOf explorerRoutineModelNodeHandler
                             If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
                                 tmpNode.ImageIndex += 3
+                                AddHandler tmpNode.NodeDoubleClick, AddressOf explorerRoutineModelNodeDiffHandler
                                 If mStoreCommandModels.ImageIndex = 23 Then mStoreCommandModels.ImageIndex += 3
                             End If
                             mStoreCommandModels.Nodes.Add(tmpNode)
@@ -982,6 +989,7 @@ Public Class mainGUI2
                 AddHandler tmpContext.NodeClick, AddressOf explorerContextNodeHandler
                 If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpContext.Text) > 0 Then
                     tmpContext.ImageIndex += 3
+                    AddHandler tmpContext.NodeDoubleClick, AddressOf explorerContextNodeDiffHandler
                 End If
                 mModel.Nodes.Add(tmpContext)
 
@@ -994,11 +1002,58 @@ Public Class mainGUI2
                     AddHandler tmpContext.NodeClick, AddressOf explorerStoreCommandsNodeHandler
                     If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpContext.Text) > 0 Then
                         tmpContext.ImageIndex += 3
+                        AddHandler tmpContext.NodeDoubleClick, AddressOf explorerStoreCommandsNodeDiffHandler
                     End If
                     mModel.Nodes.Add(tmpContext)
                 End If
             End If
             advtreeOutputExplorer.Refresh()
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub explorerStoreCommandsNodeDiffHandler(sender As Object, e As EventArgs)
+        Throw New NotImplementedException()
+    End Sub
+
+    Private Sub explorerContextNodeDiffHandler(sender As Object, e As EventArgs)
+        Throw New NotImplementedException()
+    End Sub
+
+    Private Sub explorerRoutineModelNodeDiffHandler(sender As Object, e As EventArgs)
+        Throw New NotImplementedException()
+    End Sub
+
+    Private Sub explorerRoutineNodeDiffHandler(sender As Object, e As EventArgs)
+        Throw New NotImplementedException()
+    End Sub
+
+    Private Sub explorerMappingNodeDiffHandler(sender As Object, e As EventArgs)
+        Throw New NotImplementedException()
+    End Sub
+
+    Private Sub explorerModelNodeDiffHandler(sender As Object, e As EventArgs)
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim t = _mngr.tables.FirstOrDefault(Function(c) c.name = node.TagString)
+            Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
+
+            If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
+                Dim newText = _mngr.generateModel(t)
+                Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
+
+                Dim frx As New FileVCS.Diff With {
+                    .originalFileContents = oldText,
+                    .newFileContents = newText
+                }
+
+                frx.Show()
+                frx.showDiff()
+            End If
+
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
