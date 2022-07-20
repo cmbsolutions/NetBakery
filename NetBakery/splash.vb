@@ -99,13 +99,14 @@ Public Class splash
                     'Else
                     '             dialogResult = MessageBox.Show($"There is new version {args.CurrentVersion} available. You are using version {args.InstalledVersion}. Do you want to update the application now?", "Update Available", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
                     '         End If
-
+                    args.InstallerArgs = "/VERYSILENT /SUPPRESSMSGBOXES /NOCANCEL /NORESTART /CLOSEAPPLICATIONS /FORCECLOSEAPPLICATIONS /RESTARTAPPLICATIONS"
                     ' Uncomment the following line if you want to show standard update dialog instead.
                     AutoUpdater.ShowUpdateForm(args)
                     'If dialogResult.Equals(DialogResult.Yes) OrElse dialogResult.Equals(DialogResult.OK) Then
                     Try
                         If AutoUpdater.DownloadUpdate(args) Then
-                            Application.Exit()
+                            ProgressBarX1.Text = "Installing new version..."
+                            'Application.Exit()
                         End If
                     Catch exception As Exception
                         FormHelpers.dumpException(exception)
