@@ -2,6 +2,9 @@
     Private Sub Diff_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Icon = My.Resources.git_diff_icon_175166
 
+        DiffViewer1.InsertedBackColor = Color.FromArgb(64, 34, 174, 12)
+        DiffViewer1.InsertedForeColor = Color.LightGreen
+
         DiffViewer1.OldTextHeader = "Old file on disk"
         DiffViewer1.NewTextHeader = "New file in memory"
     End Sub

@@ -23,11 +23,11 @@ Public Class Manager
         For Each f In IO.Directory.EnumerateFiles(location, "*.*", IO.SearchOption.AllDirectories)
             Dim filePath = IO.Path.GetDirectoryName(f).Replace(location, "")
 
-            If filePath.ToLower.in({"models", "storecommands", "model", "table", "mapping", "functions", "procedures"}) Then
+            If filePath.ToLower.in({"models", "storecommands", "model", "table", "mapping", "functions", "procedures", "entity"}) Then
                 CurrentFiles.Add(New Models.vcsObject With {
                                             .filename = IO.Path.GetFileName(f),
                                             .location = IO.Path.GetDirectoryName(f).Replace(location, ""),
-                                            .hash = Utils.GetFileHash(f)
+                                            .hash = Utils.GetHash(f)
                                             })
             End If
         Next
@@ -35,7 +35,7 @@ Public Class Manager
         CheckForChanged()
     End Sub
 
-    Friend Sub ScanAgain()
+    Public Sub ScanAgain()
         ScanForFiles(ScanPath)
     End Sub
 
@@ -73,8 +73,6 @@ Public Class Manager
 
         at.Node = pNode
 
-
-
         Dim seri As New XmlSerializer(GetType(Models.AdvTree), "")
         Dim buffer() As Byte
         Using ms As New IO.MemoryStream
@@ -99,7 +97,7 @@ Public Class Manager
 
                 Dim filePath = IO.Path.GetFileName(subPath)
 
-                If filePath.ToLower.in({"models", "storecommands", "model", "table", "mapping", "functions", "procedures"}) Then
+                If filePath.ToLower.in({"models", "storecommands", "model", "table", "mapping", "functions", "procedures", "entity"}) Then
                     nodes.Add(New Models.AdvTreeNode With {
                           .Expanded = True,
                           .Text = IO.Path.GetFileName(subPath),
@@ -119,7 +117,7 @@ Public Class Manager
                 })
             Next
         Catch ex As Exception
-
+            Trace.TraceError(ex.Message)
         End Try
 
         Return nodes

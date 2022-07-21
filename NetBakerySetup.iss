@@ -2,10 +2,11 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "NetBakery"
-#define MyAppVersion "2.0.713"
+#define MyAppVersion "2.0.720"
 #define MyAppPublisher "CMBSolutions"
 #define MyAppExeName "NetBakery.exe"
 #define MyAppInstallerName "netbakerysetup.latest"
+#define MyAppTarget "Release"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -37,8 +38,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "{#MyAppName}\bin\x64\Debug\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#MyAppName}\bin\x64\Debug\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MyAppName}\bin\x64\{#MyAppTarget}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppName}\bin\x64\{#MyAppTarget}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

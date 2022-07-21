@@ -163,7 +163,6 @@ Partial Class mainGUI2
         Me.btnRefreshOutputExplorer = New DevComponents.DotNetBar.ButtonItem()
         Me.btnSaveLayout = New DevComponents.DotNetBar.ButtonItem()
         Me.pFileExplorer = New DevComponents.DotNetBar.PanelDockContainer()
-        Me.ExplorerControl1 = New FileVCS.ExplorerControl()
         Me.DockContainerItem3 = New DevComponents.DotNetBar.DockContainerItem()
         Me.DockContainerItem4 = New DevComponents.DotNetBar.DockContainerItem()
         Me.DockSite8 = New DevComponents.DotNetBar.DockSite()
@@ -199,6 +198,7 @@ Partial Class mainGUI2
         Me.dbNodes = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.CloseDatabaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReloadDatabaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExplorerControl1 = New FileVCS.ExplorerControl()
         Me.DockSite4.SuspendLayout()
         CType(Me.barLogging, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.barLogging.SuspendLayout()
@@ -411,10 +411,10 @@ Partial Class mainGUI2
         Me.Bar4.CanHide = True
         Me.Bar4.CanUndock = False
         Me.Bar4.Controls.Add(Me.pdcObjectInfo)
-        Me.Bar4.Controls.Add(Me.pdcProjectSettings)
         Me.Bar4.Controls.Add(Me.pdcCodePreview)
         Me.Bar4.Controls.Add(Me.pdcERDiagram)
         Me.Bar4.Controls.Add(Me.PanelDockContainer4)
+        Me.Bar4.Controls.Add(Me.pdcProjectSettings)
         Me.Bar4.DockTabAlignment = DevComponents.DotNetBar.eTabStripAlignment.Top
         Me.Bar4.FadeEffect = True
         Me.Bar4.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -522,7 +522,7 @@ Partial Class mainGUI2
         DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
         DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvFields.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvFields.Dock = System.Windows.Forms.DockStyle.Fill
@@ -591,7 +591,7 @@ Partial Class mainGUI2
         DataGridViewCellStyle5.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         DataGridViewCellStyle5.ForeColor = System.Drawing.Color.White
         DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.Black
         DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvReferences.DefaultCellStyle = DataGridViewCellStyle5
         Me.dgvReferences.Dock = System.Windows.Forms.DockStyle.Fill
@@ -659,7 +659,7 @@ Partial Class mainGUI2
         DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         DataGridViewCellStyle8.ForeColor = System.Drawing.Color.White
         DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.Black
         DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvForeignKeys.DefaultCellStyle = DataGridViewCellStyle8
         Me.dgvForeignKeys.Dock = System.Windows.Forms.DockStyle.Fill
@@ -727,7 +727,7 @@ Partial Class mainGUI2
         DataGridViewCellStyle11.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         DataGridViewCellStyle11.ForeColor = System.Drawing.Color.White
         DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.Black
         DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvIndexes.DefaultCellStyle = DataGridViewCellStyle11
         Me.dgvIndexes.Dock = System.Windows.Forms.DockStyle.Fill
@@ -2284,17 +2284,6 @@ Partial Class mainGUI2
         Me.pFileExplorer.Style.GradientAngle = 90
         Me.pFileExplorer.TabIndex = 5
         '
-        'ExplorerControl1
-        '
-        Me.ExplorerControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ExplorerControl1.ExplorerManager = Nothing
-        Me.ExplorerControl1.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ExplorerControl1.Location = New System.Drawing.Point(0, 0)
-        Me.ExplorerControl1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.ExplorerControl1.Name = "ExplorerControl1"
-        Me.ExplorerControl1.Size = New System.Drawing.Size(311, 485)
-        Me.ExplorerControl1.TabIndex = 0
-        '
         'DockContainerItem3
         '
         Me.DockContainerItem3.Control = Me.PanelDockContainer3
@@ -2355,8 +2344,8 @@ Partial Class mainGUI2
         '
         'barMainMenu
         '
-        Me.barMainMenu.AccessibleDescription = "DotNetBar Bar (barMainMenu)"
-        Me.barMainMenu.AccessibleName = "DotNetBar Bar"
+        Me.barMainMenu.AccessibleDescription = "MainMenu (barMainMenu)"
+        Me.barMainMenu.AccessibleName = "MainMenu"
         Me.barMainMenu.AccessibleRole = System.Windows.Forms.AccessibleRole.MenuBar
         Me.barMainMenu.BarType = DevComponents.DotNetBar.eBarType.MenuBar
         Me.barMainMenu.CanAutoHide = False
@@ -2599,6 +2588,17 @@ Partial Class mainGUI2
         Me.ReloadDatabaseToolStripMenuItem.Name = "ReloadDatabaseToolStripMenuItem"
         Me.ReloadDatabaseToolStripMenuItem.Size = New System.Drawing.Size(135, 22)
         Me.ReloadDatabaseToolStripMenuItem.Text = "Reload database"
+        '
+        'ExplorerControl1
+        '
+        Me.ExplorerControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ExplorerControl1.ExplorerManager = Nothing
+        Me.ExplorerControl1.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ExplorerControl1.Location = New System.Drawing.Point(0, 0)
+        Me.ExplorerControl1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.ExplorerControl1.Name = "ExplorerControl1"
+        Me.ExplorerControl1.Size = New System.Drawing.Size(311, 485)
+        Me.ExplorerControl1.TabIndex = 0
         '
         'mainGUI2
         '

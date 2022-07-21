@@ -2,6 +2,7 @@ Imports System.Text
 Imports DevComponents
 Imports DevComponents.DotNetBar
 Imports Newtonsoft.Json
+Imports System.Security.Cryptography
 
 
 Public Class mainGUI2
@@ -815,6 +816,8 @@ Public Class mainGUI2
             End If
             advtreeOutputExplorer.Refresh()
 
+            CalculateHashesOfMemoryFiles()
+
             'TODO: Move this code to FileVCS.dll
             Dim tplModelAndMapping As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 13}
             Dim tplContextAndStoreCommands As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 8}
@@ -1105,13 +1108,15 @@ Public Class mainGUI2
                 IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}StoreCommands.vb", _mngr.generateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value))
             End If
 
-            WriteProject()
-            _FileManager.OriginalFiles = _FileManager.CurrentFiles
-            _currentProject.generatedoutputs = _FileManager.OriginalFiles
-
+            _FileManager.OriginalFiles = Nothing
             _FileManager.ScanForFiles(_currentProject.projectoutputlocation)
+            _FileManager.OriginalFiles = _FileManager.CurrentFiles
+
+            _currentProject.generatedoutputs = _FileManager.CurrentFiles
 
             ExplorerControl1.RefreshExplorer()
+
+            WriteProject()
 
             MessageBox.Show("Output generated")
         Catch ex As Exception
@@ -1709,6 +1714,8 @@ Public Class mainGUI2
                     .tables = _mngr.tables,
                     .routines = _mngr.routines
                 }
+
+
             End If
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -1814,5 +1821,90 @@ Public Class mainGUI2
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
+    End Sub
+
+    Private Sub CalculateHashesOfMemoryFiles()
+        Dim memoryFiles As New List(Of FileVCS.Models.vcsObject)
+
+        For Each t In _mngr.tables.Where(Function(c) c.hasExport)
+            Dim modelContent = _mngr.generateModel(t)
+            Dim mapContent = _mngr.generateMap(t)
+
+            memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{t.singleName}.vb",
+                            .location = "\Models\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, modelContent)
+                            })
+            memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{t.singleName}Map.vb",
+                            .location = "\Models\Mapping\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, mapContent)
+                            })
+        Next
+
+        For Each s In _mngr.routines.Where(Function(c) c.hasExport)
+            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net5" Then
+                If s.isFunction Then
+                    Dim scContent = _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value)
+                    Dim modelContent = _mngr.generateModel(s.returnLayout)
+
+                    memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{s.name}",
+                            .location = "\Models\StoreCommands\Functions\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, scContent)
+                            })
+                    memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{s.returnLayout.singleName}.vb",
+                            .location = "\Models\StoreCommands\Functions\Models\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, modelContent)
+                            })
+                Else
+                    Dim scContent = _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value)
+
+                    memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{s.name}",
+                            .location = "\Models\StoreCommands\Procedures\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, scContent)
+                            })
+
+                    If s.returnsRecordset Then
+                        Dim modelContent = _mngr.generateModel(s.returnLayout)
+                        memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{s.returnLayout.singleName}.vb",
+                            .location = "\Models\StoreCommands\Procedures\Models\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, modelContent)
+                            })
+                    End If
+                End If
+            Else
+                If s.returnsRecordset Then
+                    Dim modelContent = _mngr.generateModel(s.returnLayout, True)
+                    memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{s.returnLayout.singleName}.vb",
+                            .location = "\Models\StoreCommandSchemas\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, modelContent)
+                            })
+                End If
+            End If
+        Next
+
+        Dim contextContent = _mngr.generateContext($"{txtProjectName.Text}")
+        memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{txtProjectName.Text}DataContext.vb",
+                            .location = "\Models\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, contextContent)
+                            })
+
+        If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net" Then
+            Dim scContent = _mngr.generateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value)
+            memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{txtProjectName.Text}StoreCommands.vb",
+                            .location = "\Models\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, scContent)
+                            })
+        End If
+
+        _FileManager.OriginalFiles = memoryFiles
+        _FileManager.ScanAgain()
     End Sub
 End Class

@@ -34,11 +34,11 @@ Partial Class Diff
         Me.DiffViewer1.CollapseUnchangedSectionsToggleTitle = "_Collapse unchanged sections"
         Me.DiffViewer1.ContextLinesMenuItemsTitle = "_Lines for context"
         Me.DiffViewer1.DeletedBackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(216, Byte), Integer), CType(CType(32, Byte), Integer), CType(CType(32, Byte), Integer))
-        Me.DiffViewer1.DeletedForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.DiffViewer1.DeletedForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
         Me.DiffViewer1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DiffViewer1.Font = New System.Drawing.Font("Consolas", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.DiffViewer1.FontFamilyNames = "Segoe UI"
-        Me.DiffViewer1.FontSize = 13.0R
+        Me.DiffViewer1.FontFamilyNames = "Consolas"
+        Me.DiffViewer1.FontSize = 11.0R
         Me.DiffViewer1.FontStretch = System.Windows.FontStretch.FromOpenTypeStretch(5)
         Me.DiffViewer1.FontWeight = 400
         Me.DiffViewer1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer))
@@ -50,8 +50,8 @@ Partial Class Diff
         Me.DiffViewer1.IgnoreWhiteSpace = True
         Me.DiffViewer1.ImaginaryBackColor = System.Drawing.Color.FromArgb(CType(CType(24, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
         Me.DiffViewer1.InlineModeToggleTitle = "_Unified view"
-        Me.DiffViewer1.InsertedBackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.DiffViewer1.InsertedForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.DiffViewer1.InsertedBackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(124, Byte), Integer), CType(CType(37, Byte), Integer))
+        Me.DiffViewer1.InsertedForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(124, Byte), Integer), CType(CType(37, Byte), Integer))
         Me.DiffViewer1.IsFontItalic = False
         Me.DiffViewer1.IsSideBySide = True
         Me.DiffViewer1.LineNumberForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(160, Byte), Integer))
@@ -64,7 +64,7 @@ Partial Class Diff
         Me.DiffViewer1.OldText = Nothing
         Me.DiffViewer1.OldTextHeader = Nothing
         Me.DiffViewer1.SideBySideModeToggleTitle = "_Split view"
-        Me.DiffViewer1.Size = New System.Drawing.Size(933, 588)
+        Me.DiffViewer1.Size = New System.Drawing.Size(1271, 635)
         Me.DiffViewer1.SplitterBackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
         Me.DiffViewer1.SplitterBorderColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
         Me.DiffViewer1.SplitterBorderWidth = New System.Windows.Forms.Padding(0)
@@ -78,7 +78,7 @@ Partial Class Diff
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 17.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CaptionFont = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ClientSize = New System.Drawing.Size(933, 588)
+        Me.ClientSize = New System.Drawing.Size(1271, 635)
         Me.Controls.Add(Me.DiffViewer1)
         Me.DoubleBuffered = True
         Me.EnableGlass = False
