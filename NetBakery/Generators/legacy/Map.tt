@@ -1,0 +1,112 @@
+﻿<#@ template language="VB" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Netbakery.Models" #>
+Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Data.Entity.ModelConfiguration
+
+Namespace Models.Mapping
+<#
+	Dim keys as New List(Of String)
+
+	For Each c in _t.columns
+		If not _t.isView Then
+			If c.key = "PRI" then
+				keys.add(c.alias)
+			End If
+		Else
+			If c.name.EndsWith("_id") Then
+				keys.add(c.alias)
+			End If
+		End If
+	Next
+
+	If _t.isView And Not keys.Any() Then
+		For Each c in _t.columns
+			keys.add(c.alias)
+		Next
+	End If
+#>
+	Public Partial Class <#= _t.singleName #>Map
+	<# If _t.escapeName then #>
+		Inherits EntityTypeConfiguration(Of [<#= _t.singleName #>])
+	<# Else #>
+		Inherits EntityTypeConfiguration(Of <#= _t.singleName #>)
+	<# End If #>
+		Sub New()
+			' Primary Key
+<#
+	If keys.Any() Then
+		If keys.count() = 1 then #>
+			Me.HasKey(Function(t) t.<#= String.Join("", keys) #>)
+<#      else #>
+			Me.HasKey(Function(t) New With { t.<#= String.Join(", t.", keys) #>})
+<# 
+		End If
+	End If
+#>
+
+			' Properties
+<#
+	For Each c in _t.columns
+		Dim configLines as new list(of String)
+
+		if not c.isNullable then configLines.add(".IsRequired()")
+		if c.vbType = "String" AndAlso c.maximumLength > 0 AndAlso c.maximumLength <= 65535 then configLines.add($".HasMaxLength({c.maximumLength})")
+		if c.autoincrement then configLines.add(".HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity)")
+		if c.key = "PRI" and not c.autoincrement then configLines.add(".HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)")
+
+		if configLines.count() > 0 then
+#>
+			Me.[Property](Function(t) t.<#= c.alias #>)<#= String.Join("", configLines) #>
+<#
+		end if
+	Next
+#>
+			' Table & Column Mappings
+			Me.ToTable("<#= _t.name #>")
+<#
+	For Each c in _t.columns
+		If c.name <> c.alias Then
+#>
+			Me.[Property](Function(t) t.<#= c.alias #>).HasColumnName("<#= c.name #>")
+<#
+		End If
+	Next
+#>
+
+
+			' ForeignKeys
+<#
+	For Each f In _t.foreignKeys.orderby(Function(c) c.propertyalias)
+		dim lineParts As New List(of String)
+
+		if f.columns.first.column.isNullable Then
+			lineParts.Add("Me.HasOptional(Function(t) t.")
+		Else
+			lineParts.Add("Me.HasRequired(Function(t) t.")
+		End If
+		
+		lineparts.Add(f.propertyAlias)
+		lineParts.Add(").WithMany(Function(t) t.")
+		If f.propertyAlias = f.referencedtable.singlename Then 'If(f.referencedtable.escapeName, "[" & f.referencedtable.singlename & "]", f.referencedtable.singlename).toString Then
+			lineParts.Add(f.table.PluralName)
+		else
+			Dim reftable = f.referencedtable.relations.FirstOrDefault(Function(c) c.toTable.name = f.table.name and c.toColumn.name = f.columns.first.column.name)
+			lineParts.Add(reftable.alias)
+			'lineParts.Add(f.table.singleName)
+			'lineParts.Add(f.referencedtable.pluralname)
+		end if
+		lineParts.Add(").HasForeignKey(Function(d) d.")
+		lineParts.Add(f.columns.first.column.name)
+		lineParts.Add(")")
+#>
+			<#= String.Join("", lineParts) #>
+<#
+	Next
+#>
+		End Sub
+	End Class
+End Namespace

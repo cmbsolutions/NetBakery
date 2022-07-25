@@ -1,0 +1,58 @@
+﻿<#@ template language="VB" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Netbakery.infoSchema" #>
+Imports System.Collections.Generic
+
+Namespace Models
+<# If _t.escapeName then #>
+    Partial Public Class [<#= _t.singleName #>]
+<# Else #>
+    Partial Public Class <#= _t.singleName #>
+<# End If #>
+
+<#  If _t.relations.Any() Then #>
+        Public Sub New()
+<#      For Each re in _t.relations.OrderBy(Function(c) c.toTable.name) #>
+<#          If re.toTable.escapeName then #>
+            <#= re.alias #> = New HashSet(Of [<#= re.toTable.singleName #>])()
+<#          Else #>
+            <#= re.alias #> = New HashSet(Of <#= re.toTable.singleName #>)()
+<#          End If #>
+<#      Next #>
+        End Sub
+<#  End If #>
+
+<#  For each c in _t.columns #>
+<#      If c.isNullable And c.vbType <> "String" Then #>
+        Public Property <#= c.alias #>() as <#= c.vbType #>?
+<#      else #>
+        Public Property <#= c.alias #>() as <#= c.vbType #>
+<#      end if
+    Next
+#>
+        ' relational tables
+<#
+    For each fk in _t.foreignkeys.orderby(Function(c) c.propertyalias)
+#>
+<#      If fk.referencedtable.escapeName then #>
+        Public Property <#= fk.propertyAlias #>() as [<#= fk.referencedtable.singlename #>]
+<#      Else #>
+        Public Property <#= fk.propertyAlias #>() as <#= fk.referencedtable.singlename #>
+<#      End If #>
+<#  Next 
+
+    For Each re in  _t.relations.orderby(Function(c) c.totable.name)
+#>
+<# If re.toTable.escapeName then #>
+        Public Overridable Property <#= re.alias #>() As ICollection(Of [<#= re.totable.SingleName #>])
+<# Else #>
+        Public Overridable Property <#= re.alias #>() As ICollection(Of <#= re.totable.SingleName #>)
+<# End If #>
+<#  Next
+
+#>
+    End Class
+End Namespace

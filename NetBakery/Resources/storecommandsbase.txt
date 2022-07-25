@@ -1,0 +1,11 @@
+Imports Microsoft.EntityFrameworkCore
+
+Namespace Models.StoreCommands
+    Public MustInherit Class StoreCommandsBase
+        Friend Property context As DbContext
+
+        Public Sub New(ctx As DbContext)
+            context = ctx
+        End Sub
+    End Class
+End Namespace

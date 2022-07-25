@@ -5,7 +5,7 @@
         Property ordinalPosition As Integer
         Property maximumLength As Integer
         Property numericPrecision As Integer
-        Property vbType As Type
+        Property vbType As String
     End Class
 End Namespace
 

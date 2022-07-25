@@ -30,21 +30,21 @@ Public Class FormHelpers
 
     Public Shared Sub dumpException(ByRef _ex As Exception)
         Try
-            Debug.IndentSize = 4
-            Debug.Print(_ex.Message)
-            Debug.Indent()
+            Trace.IndentSize = 4
+            Trace.WriteLine(_ex.Message)
+            Trace.Indent()
 
             Dim st As StackTrace = New StackTrace(_ex, True)
             For Each sf As StackFrame In st.GetFrames
 
                 If sf.GetFileLineNumber > 0 OrElse sf.GetFileColumnNumber > 0 Then
-                    Debug.Print("Trace line:{0}, column:{1}, file:{2}, method:{3}", sf.GetFileLineNumber, sf.GetFileColumnNumber, sf.GetFileName, sf.GetMethod.Name)
+                    Trace.WriteLine($"Trace line:{sf.GetFileLineNumber}, column:{sf.GetFileColumnNumber}, file:{sf.GetFileName}, method:{sf.GetMethod.Name}")
                 End If
 
             Next
-            Debug.Unindent()
+            Trace.Unindent()
         Catch ex As Exception
-            Debug.Print("Can't process error")
+            Trace.WriteLine("Can't process error")
         End Try
     End Sub
 
@@ -58,5 +58,11 @@ Public Class FormHelpers
         Catch ex As Exception
             dumpException(ex)
         End Try
+    End Sub
+
+    Public Shared Sub Log(message As String)
+        If My.Settings.showDebug Then
+            Trace.WriteLine(message)
+        End If
     End Sub
 End Class

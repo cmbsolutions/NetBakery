@@ -15,7 +15,7 @@ Option Explicit On
 Namespace My
     
     <Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
-     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0"),  _
+     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.2.0.0"),  _
      Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
     Partial Friend NotInheritable Class MySettings
         Inherits Global.System.Configuration.ApplicationSettingsBase
@@ -57,8 +57,8 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("server={0};user id={1};password={2};database=information_schema;allowuservariable"& _ 
-            "s=True;characterset=utf8;interactivesession=True;treattinyasboolean=False;compre"& _ 
-            "ss=True;persistsecurityinfo=True;sslmode={3}")>  _
+            "s=True;characterset=utf8mb4;interactivesession=True;treattinyasboolean=False;com"& _ 
+            "press=True;persistsecurityinfo=True;sslmode={3}")>  _
         Public Property defaultConnectionString() As String
             Get
                 Return CType(Me("defaultConnectionString"),String)
@@ -66,106 +66,6 @@ Namespace My
             Set
                 Me("defaultConnectionString") = value
             End Set
-        End Property
-        
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("addhandler addressof andalso alias and ansi as assembly attribute auto begin bool"& _ 
-            "ean byref byte byval call case catch cbool cbyte cchar cdate cdec cdbl char cint"& _ 
-            " class clng cobj compare const continue cshort csng cstr ctype currency date dat"& _ 
-            "etime time decimal declare default delegate dim do double each else elseif end e"& _ 
-            "num erase error event exit explicit false finally for friend function get gettyp"& _ 
-            "e global gosub goto handles if implement implements imports in inherits integer "& _ 
-            "interface is let lib like load long loop lset me mid mod module mustinherit must"& _ 
-            "override mybase myclass namespace new next not nothing notinheritable notoverrid"& _ 
-            "able object on option optional or orelse overloads overridable overrides paramar"& _ 
-            "ray partial preserve private property protected public raiseevent readonly redim"& _ 
-            " rem removehandler rset resume return select set shadows shared short single sta"& _ 
-            "tic step stop string structure sub synclock then throw to true try type typeof u"& _ 
-            "nload unicode until variant wend when while with withevents writeonly xor using")>  _
-        Public ReadOnly Property keywords() As String
-            Get
-                Return CType(Me("keywords"),String)
-            End Get
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("<?xml version=""1.0"" encoding=""utf-16""?>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"<ArrayOfString xmlns:xsi=""http://www.w3."& _ 
-            "org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <s"& _ 
-            "tring>emailuse|emailuses</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>erroremailuse|erroremailuses</strin"& _ 
-            "g>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"</ArrayOfString>")>  _
-        Public Property customDictionary() As Global.System.Collections.Specialized.StringCollection
-            Get
-                Return CType(Me("customDictionary"),Global.System.Collections.Specialized.StringCollection)
-            End Get
-            Set
-                Me("customDictionary") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("abs absolute access acos add add_months adddate admin after aggregate all allocat"& _ 
-            "e alter and any app_name are array as asc ascii asin assertion at atan atn2 audi"& _ 
-            "t authid authorization autonomous_transaction avg before begin benchmark between"& _ 
-            " bfilename bigint bin binary binary_checksum binary_integer bit bit_count bit_an"& _ 
-            "d bit_or blob body boolean both breadth bulk by call cascade cascaded case cast "& _ 
-            "catalog ceil ceiling char char_base character charindex chartorowid check checks"& _ 
-            "um checksum_agg chr class clob close cluster coalesce col_length col_name collat"& _ 
-            "e collation collect column comment commit completion compress concat concat_ws c"& _ 
-            "onnect connection constant constraint constraints constructorcreate contains con"& _ 
-            "tainsable continue conv convert corr corresponding cos cot count count_big covar"& _ 
-            "_pop covar_samp create cross cube cume_dist current current_date current_path cu"& _ 
-            "rrent_role current_time current_timestamp current_user currval cursor cycle data"& _ 
-            " datalength databasepropertyex date date_add date_format date_sub dateadd datedi"& _ 
-            "ff datename datepart datetime day db_id db_name deallocate dec declare decimal d"& _ 
-            "ecode default deferrable deferred degrees delete dense_rank depth deref desc des"& _ 
-            "cribe descriptor destroy destructor deterministic diagnostics dictionary disconn"& _ 
-            "ect difference distinct do domain double drop dump dynamic each else elsif empth"& _ 
-            " encode encrypt end end-exec equals escape every except exception exclusive exec"& _ 
-            " execute exists exit exp export_set extends external extract false fetch first f"& _ 
-            "irst_value file float floor file_id file_name filegroup_id filegroup_name filegr"& _ 
-            "oupproperty fileproperty for forall foreign format formatmessage found freetextt"& _ 
-            "able from from_days fulltextcatalog fulltextservice function general get get_loc"& _ 
-            "k getdate getansinull getutcdate global go goto grant greatest group grouping ha"& _ 
-            "ving heap hex hextoraw host host_id host_name hour ident_incr ident_seed ident_c"& _ 
-            "urrent identified identity if ifnull ignore immediate in increment index index_c"& _ 
-            "ol indexproperty indicator initcap initial initialize initially inner inout inpu"& _ 
-            "t insert instr instrb int integer interface intersect interval into is is_member"& _ 
-            " is_srvrolemember is_null is_numeric isdate isnull isolation iterate java join k"& _ 
-            "ey lag language large last last_day last_value lateral lcase lead leading least "& _ 
-            "left len length lengthb less level like limit limited ln lpad local localtime lo"& _ 
-            "caltimestamp locator lock log log10 long loop lower ltrim make_ref map match max"& _ 
-            " maxextents mid min minus minute mlslabel mod mode modifies modify module month "& _ 
-            "months_between names national natural naturaln nchar nclob new new_time newid ne"& _ 
-            "xt next_day nextval no noaudit nocompress nocopy none not nowait null nullif num"& _ 
-            "ber number_base numeric nvl nvl2 object object_id object_name object_property oc"& _ 
-            "irowid oct of off offline old on online only opaque open operator operation opti"& _ 
-            "on or ord order ordinalityorganization others out outer output package pad param"& _ 
-            "eter parameters partial partition path pctfree percent_rank pi pls_integer posit"& _ 
-            "ive positiven postfix pow power pragma precision prefix preorder prepare preserv"& _ 
-            "e primary prior private privileges procedure public radians raise rand range ran"& _ 
-            "k ratio_to_export raw rawtohex read reads real record recursive ref references r"& _ 
-            "eferencing reftohex relative release release_lock rename repeat replace resource"& _ 
-            " restrict result return returns reverse revoke right rollback rollup round routi"& _ 
-            "ne row row_number rowid rowidtochar rowlabel rownum rows rowtype rpad rtrim save"& _ 
-            "point schema scroll scope search second section seddev_samp select separate sequ"& _ 
-            "ence session session_user set sets share sign sin sinh size smallint some sounde"& _ 
-            "x space specific specifictype sql sqlcode sqlerrm sqlexception sqlstate sqlwarni"& _ 
-            "ng sqrt start state statement static std stddev stdev_pop strcmp structure subda"& _ 
-            "te substr substrb substring substring_index subtype successful sum synonym sys_c"& _ 
-            "ontext sys_guid sysdate system_user table tan tanh temporary terminate than then"& _ 
-            " time timestamp timezone_abbr timezone_minute timezone_hour timezone_region tiny"& _ 
-            "int to to_char to_date to_days to_number to_single_byte trailing transaction tra"& _ 
-            "nslate translation treat trigger trim true trunc truncate type ucase uid under u"& _ 
-            "nion unique unknown unnest update upper usage use user userenv using validate va"& _ 
-            "lue values var_pop var_samp varbinary varchar varchar2 variable variance varying"& _ 
-            " view vsize when whenever where with without while with work write year zone")>  _
-        Public ReadOnly Property sql_keywords() As String
-            Get
-                Return CType(Me("sql_keywords"),String)
-            End Get
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
@@ -202,6 +102,142 @@ Namespace My
             End Get
             Set
                 Me("upgradeRequired") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property checkUpdates() As Boolean
+            Get
+                Return CType(Me("checkUpdates"),Boolean)
+            End Get
+            Set
+                Me("checkUpdates") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("2.0.0")>  _
+        Public Property lastUpdate() As String
+            Get
+                Return CType(Me("lastUpdate"),String)
+            End Get
+            Set
+                Me("lastUpdate") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1689, 633")>  _
+        Public Property windowSize() As Global.System.Drawing.Size
+            Get
+                Return CType(Me("windowSize"),Global.System.Drawing.Size)
+            End Get
+            Set
+                Me("windowSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property isMaximized() As Boolean
+            Get
+                Return CType(Me("isMaximized"),Boolean)
+            End Get
+            Set
+                Me("isMaximized") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("5")>  _
+        Public Property maxERDiagramDepth() As Integer
+            Get
+                Return CType(Me("maxERDiagramDepth"),Integer)
+            End Get
+            Set
+                Me("maxERDiagramDepth") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("<?xml version=""1.0"" encoding=""utf-16""?>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"<ArrayOfString xmlns:xsd=""http://www.w3."& _ 
+            "org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <s"& _ 
+            "tring>emailuse|emailuses</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>erroremailuse|erroremailuses</strin"& _ 
+            "g>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"</ArrayOfString>")>  _
+        Public Property customDictionary() As Global.System.Collections.Specialized.StringCollection
+            Get
+                Return CType(Me("customDictionary"),Global.System.Collections.Specialized.StringCollection)
+            End Get
+            Set
+                Me("customDictionary") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property openLastProject() As Boolean
+            Get
+                Return CType(Me("openLastProject"),Boolean)
+            End Get
+            Set
+                Me("openLastProject") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("<?xml version=""1.0"" encoding=""utf-16""?>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"<ArrayOfString xmlns:xsd=""http://www.w3."& _ 
+            "org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" />")>  _
+        Public Property recentProjects() As Global.System.Collections.Specialized.StringCollection
+            Get
+                Return CType(Me("recentProjects"),Global.System.Collections.Specialized.StringCollection)
+            End Get
+            Set
+                Me("recentProjects") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property lastProject() As String
+            Get
+                Return CType(Me("lastProject"),String)
+            End Get
+            Set
+                Me("lastProject") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property autoExecuteSP() As Boolean
+            Get
+                Return CType(Me("autoExecuteSP"),Boolean)
+            End Get
+            Set
+                Me("autoExecuteSP") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property showDebug() As Boolean
+            Get
+                Return CType(Me("showDebug"),Boolean)
+            End Get
+            Set
+                Me("showDebug") = value
             End Set
         End Property
     End Class

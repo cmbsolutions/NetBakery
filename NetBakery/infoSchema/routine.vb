@@ -9,5 +9,6 @@
         Property params As New List(Of parameter)
         Property hasExport As Boolean
         Property definition As String
+        Property executiontime As TimeSpan
     End Class
 End Namespace

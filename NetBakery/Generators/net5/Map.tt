@@ -1,0 +1,128 @@
+﻿<#@ template language="VB" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Netbakery.Models" #>
+Imports Microsoft.EntityFrameworkCore
+Imports Microsoft.EntityFrameworkCore.Metadata.Builders
+
+Namespace Models
+<#
+	Dim keys as New List(Of String)
+
+	For Each c in _t.columns
+		If not _t.isView Then
+			If c.key = "PRI" then
+				keys.add(c.alias)
+			End If
+		End If
+	Next
+#>
+	Public Partial Class <#= _t.singleName #>Map
+		Implements IEntityTypeConfiguration(Of <# If _t.escapeName then #>[<# End If #><#= _t.singleName #><# If _t.escapeName then #>]<# End If #>)
+
+		Public Sub Configure(builder As EntityTypeBuilder(Of <# If _t.escapeName then #>[<# End If #><#= _t.singleName #><# If _t.escapeName then #>]<# End If #>)) Implements IEntityTypeConfiguration(Of <# If _t.escapeName then #>[<# End If #><#= _t.singleName #><# If _t.escapeName then #>]<# End If #>).Configure
+			' Table in database
+			builder.ToTable("<#=_t.Name #>")
+
+			' Keys
+
+<#
+	If keys.count = 1 Then
+#>
+			builder.HasKey(Function(k) k.<#= keys.First() #>)
+<#
+	Elseif keys.count > 1 then
+		Dim keynames As new StringBuilder
+		For Each key in keys
+			keynames.append("k." & key & ",")
+		Next
+		keynames.remove(keynames.length -1, 1)
+#>
+			builder.HasKey(Function(k) New With {<#= keynames.tostring #>})
+<#
+	End If
+#>
+
+
+			' Indexes
+<#
+	For Each i In _t.indexes.orderby(Function(c) c.columns.first.column.name)
+		Dim columnnames As new StringBuilder
+
+		If i.columns.Count > 1 Then
+			for each c In i.columns
+				columnnames.Append("e." & c.Column.alias & ",")
+			next
+			columnnames.Remove(columnnames.Length -1, 1)
+#>
+			builder.HasIndex(Function(e) New With {<#= columnnames.ToString #>}, "<#= i.Name #>")<#= If(i.IsUnique, ".IsUnique()", "") #>
+<#
+		Else
+#>
+			builder.HasIndex(Function(e) e.<#= i.columns.first.column.alias #>, "<#= i.Name #>")<#= If(i.IsUnique, ".IsUnique()", "") #>
+<#
+		End If
+	Next
+#>
+			' Fields
+<#
+	For Each c in _t.columns
+		Dim configLines as new list(of String)
+
+		configLines.Add(String.Format(".HasColumnName(""{0}"")", c.name))
+		If c.vbType <> "String" orelse c.mysqlType = "enum" Then
+			configLines.Add(String.Format(".HasColumnType(""{0}"")", c.MySqlColumnType))
+		End If
+
+		If not c.isNullable and not c.autoincrement then
+			configLines.add(".IsRequired()")
+		End If
+		
+		If Not c.autoincrement And c.vbType <> "TimeSpan" And c.vbType <> "Date" then
+			If not c.defaultValue.contains("'") and c.defaultValue <> "NULL" then c.defaultValue = "'" & c.defaultvalue & "'"
+
+			If not c.isNullable then
+				If c.defaultValue <> "NULL" then configLines.Add(String.Format(".HasDefaultValueSql(""{0}"")", c.defaultValue))
+			else
+				configLines.Add(String.Format(".HasDefaultValueSql(""{0}"")", c.defaultValue))
+			end if
+		End If
+		if c.vbType = "String" AndAlso c.maximumLength > 0 AndAlso c.maximumLength <= 65535 andalso c.mysqlType <> "enum" then configLines.add(String.Format(".HasMaxLength({0})", c.maximumLength))
+		if c.autoincrement then configLines.add(".ValueGeneratedOnAdd()")
+
+		if configLines.count() > 0 then
+#>
+			builder.[Property](Function(e) e.<#= c.alias #>)<#= String.Join("", configLines) #>
+<#
+		end if
+	Next
+#>
+			' ForeignKeys
+<#
+	For Each f In _t.foreignKeys.orderby(Function(c) c.propertyalias)
+		dim lineParts As New List(of String)
+
+		lineParts.Add("builder.HasOne(Function(d) d.")
+		lineparts.Add(f.propertyAlias)
+		lineParts.Add(").WithMany(Function(p) p.")
+		If f.propertyAlias = f.referencedtable.singlename Then
+			lineParts.Add(f.table.PluralName)
+		else
+			lineParts.Add(f.table.singleName)
+			lineParts.Add(p.pluralize(f.propertyalias))
+		end if
+		lineParts.Add(").HasForeignKey(Function(d) d.")
+		lineParts.Add(f.columns.first.column.name)
+		lineParts.Add(").HasConstraintName(""")
+		lineParts.Add(f.name)
+		lineParts.Add(""")")
+#>
+			<#= String.Join("", lineParts) #>
+<#
+	Next
+#>
+		End Sub
+	End Class
+End Namespace

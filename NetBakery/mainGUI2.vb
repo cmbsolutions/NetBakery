@@ -1,5 +1,9 @@
+Imports System.Text
 Imports DevComponents
 Imports DevComponents.DotNetBar
+Imports Newtonsoft.Json
+Imports System.Security.Cryptography
+
 
 Public Class mainGUI2
     Private _mngr As New infoSchema.manager
@@ -10,52 +14,132 @@ Public Class mainGUI2
 
     Private _dockFile As IO.FileInfo
     Private _connectionsFile As IO.FileInfo
+    Private _setupFile As IO.FileInfo
 
+    Private _currentProject As Project
+    Private _loadingProject As Boolean = False
+    Private _TreeGXUnique As Dictionary(Of String, Tree.Node)
+    Private _FileManager As New FileVCS.Manager
+
+    Private _spRoutine As infoSchema.routine
+
+#Region "Start and close"
     Private Sub mainGUI2_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
             _tracelistener = New customTextTraceListener(txtLog)
             Trace.Listeners.Add(_tracelistener)
 
+            FormHelpers.Log("Upgrading local settings")
             FormHelpers.upgradeMySettings()
 
+            FormHelpers.Log("Setting style and windowstate")
             dnbStyleManager.ManagerStyle = DirectCast([Enum].Parse(GetType(eStyle), My.Settings.gui_style), eStyle)
+
+            If My.Settings.isMaximized Then
+                WindowState = FormWindowState.Maximized
+            Else
+                WindowState = FormWindowState.Normal
+                Size = My.Settings.windowSize
+            End If
+
+            maxDepth.Value = My.Settings.maxERDiagramDepth
 
             TitleText = FormHelpers.ApplicationTitle
             Text = TitleText
+            cboOutputType.SelectedIndex = 2
+            ExplorerControl1.ExplorerManager = _FileManager
 
             _dockFile = New IO.FileInfo(String.Format("{0}\{1}\{2}\layout.xml", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CMBSolutions", "NetBakery"))
 
             If _dockFile.Exists Then
+                FormHelpers.Log("Applying docking styles")
+                SuspendLayout()
                 dnbBarManager.LoadLayout(_dockFile.FullName)
+                ResumeLayout()
+            Else
+                If Not _dockFile.Directory.Exists Then
+                    FormHelpers.Log("Create dockfile directory")
+                    _dockFile.Directory.Create()
+                End If
             End If
 
             _connectionsFile = New IO.FileInfo(String.Format("{0}\{1}\{2}\connections.bin", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CMBSolutions", "NetBakery"))
 
             If _connectionsFile.Exists Then
+                FormHelpers.Log("Loading connections.bin file")
                 _connections.LoadFromFile(_connectionsFile)
+            Else
+                If Not _connectionsFile.Directory.Exists Then _connectionsFile.Directory.Create()
             End If
 
-            cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
-            cboConnecions.Refresh()
+            FormHelpers.Log("Loading navicat connections")
+            _connections.LoadFromNavicat()
 
+            cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
+            cboConnecions.ComboBoxEx.Refresh()
+            cboConnecions.Refresh()
+            FormHelpers.Log("Loaded connections")
+
+            FormHelpers.Log("Setting lexer styles")
             setVbStyle(scCodePreview)
             setVbStyle(scGeneratedModel)
             setVbStyle(scGeneratedMapping)
+            setSQLStyle(scRoutine)
+            setSQLStyle(scSPRoutine)
 
             dcProjectSettings.Selected = True
+
+            If My.Settings.openLastProject AndAlso My.Settings.lastProject <> "" Then
+                If IO.File.Exists(My.Settings.lastProject) Then
+                    FormHelpers.Log("Loading last project")
+                    loadProject(My.Settings.lastProject)
+                End If
+            End If
+
+            enableOrDisableFields()
+
+            FormHelpers.Log("Updating menus")
+            If My.Settings.recentProjects.Count > 0 Then
+                Dim id As Integer = 0
+                For Each itm In My.Settings.recentProjects
+                    If IO.File.Exists(itm) Then
+                        Dim but As New DevComponents.DotNetBar.ButtonItem($"recentItems{id}", itm)
+                        AddHandler but.Click, AddressOf recentProjectItemClickedHandler
+                        RecentProjects.SubItems.Add(but)
+                    End If
+                Next
+            End If
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
     End Sub
 
+    Private Sub recentProjectItemClickedHandler(sender As Object, e As EventArgs)
+        If IO.File.Exists(sender.ToString) Then
+            loadProject(sender.ToString)
+        End If
+    End Sub
+
     Private Sub mainGUI2_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Try
+            My.Settings.isMaximized = WindowState = FormWindowState.Maximized
+            My.Settings.windowSize = Size
+
+            If My.Settings.openLastProject AndAlso _currentProject IsNot Nothing Then
+                My.Settings.lastProject = _currentProject.projectfilename
+            End If
             My.Settings.Save()
 
             dnbBarManager.SaveLayout(_dockFile.FullName)
 
             saveConnections()
+
+            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
+                If MessageBox.Show("Project has changed. Save changes?", "Save changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    btnSaveProject.RaiseClick()
+                End If
+            End If
 
             For Each frm As Form In My.Application.OpenForms
                 If frm.Name <> Name Then
@@ -73,6 +157,7 @@ Public Class mainGUI2
             FormHelpers.dumpException(ex)
         End Try
     End Sub
+#End Region
 
 #Region "Main menu items"
     Private Sub btnFile_Close_Click(sender As Object, e As EventArgs) Handles btnFile_Close.Click
@@ -82,20 +167,37 @@ Public Class mainGUI2
             FormHelpers.dumpException(ex)
         End Try
     End Sub
+
+    Private Sub bERDiagram_Click(sender As Object, e As EventArgs) Handles bERDiagram.Click
+        dcERDiagram.Visible = Not dcERDiagram.Visible
+    End Sub
+
+    Private Sub bProjectSettings_Click(sender As Object, e As EventArgs) Handles bProjectSettings.Click
+        dcProjectSettings.Visible = Not dcProjectSettings.Visible
+    End Sub
+
+    Private Sub bObjectInfo_Click(sender As Object, e As EventArgs) Handles bObjectInfo.Click
+        dcObjectInfo.Visible = Not dcObjectInfo.Visible
+    End Sub
+
+    Private Sub bCodePreview_Click(sender As Object, e As EventArgs) Handles bCodePreview.Click
+        dcCodePreview.Visible = Not dcCodePreview.Visible
+    End Sub
 #End Region
 
 #Region "Databases and connections tab"
 
     Private Sub btnNewConnection_Click(sender As Object, e As EventArgs) Handles btnNewConnection.Click
-        Dim frx = New connection_editor
+        Using frx = New connection_editor
 
-        frx._conn = _connections
+            frx._conn = _connections
 
-        If frx.ShowDialog = DialogResult.OK Then
-            saveConnections()
-            cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
-            cboConnecions.Refresh()
-        End If
+            If frx.ShowDialog = DialogResult.OK Then
+                saveConnections()
+                cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
+                cboConnecions.Refresh()
+            End If
+        End Using
     End Sub
 
     Private Sub saveConnections()
@@ -117,6 +219,7 @@ Public Class mainGUI2
 
             If c IsNot Nothing Then
                 _currentConnection = c
+                btnConnect.Pulse(10)
             Else
                 _currentConnection = Nothing
             End If
@@ -132,16 +235,24 @@ Public Class mainGUI2
                 Exit Sub
             End If
 
-            Dim frx = New connection_editor
-
-            frx._conn = _connections
-            frx.loadConnection(cboConnecions.Text)
-
-            If frx.ShowDialog = DialogResult.OK Then
-                saveConnections()
-                cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
-                cboConnecions.Refresh()
+            If _currentConnection IsNot Nothing Then
+                If _currentConnection.fromNavicat Then
+                    MessageBoxEx.Show("You lack administrator rights to edit a navicat connection.", "No connection")
+                    Exit Sub
+                End If
             End If
+
+            Using frx = New connection_editor
+
+                frx._conn = _connections
+                frx.loadConnection(cboConnecions.Text)
+
+                If frx.ShowDialog = DialogResult.OK Then
+                    saveConnections()
+                    cboConnecions.ComboBoxEx.DataSource = (From c In _connections Select c.description).ToList
+                    cboConnecions.Refresh()
+                End If
+            End Using
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -149,6 +260,8 @@ Public Class mainGUI2
 
     Private Sub btnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
         Try
+            btnConnect.StopPulse()
+
             If _currentConnection Is Nothing Then
                 MessageBoxEx.Show("No connection selected")
                 Exit Sub
@@ -161,7 +274,7 @@ Public Class mainGUI2
                 advtreeDatabases.Nodes.Clear()
 
                 For Each db In _mngr.databases
-                    Dim node As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .Text = db}
+                    Dim node As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .Text = db, .Name = db, .ContextMenu = dbNodes}
 
                     AddHandler node.NodeDoubleClick, AddressOf databaseNodeHandler
                     advtreeDatabases.Nodes.Add(node)
@@ -172,6 +285,10 @@ Public Class mainGUI2
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
+    End Sub
+
+    Private Sub CloseDatabaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseDatabaseToolStripMenuItem.Click
+        advtreeDatabases.SelectedNode.Nodes.Clear()
     End Sub
 
     Private Sub toolbtnSettings_Click(sender As Object, e As EventArgs)
@@ -197,31 +314,64 @@ Public Class mainGUI2
             routineNode.Cells.Add(New AdvTree.Cell With {.Editable = False, .Text = "0", .TextDisplayFormat = "(0)", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter})
 
             ' Process all tables/views
-            For Each table In _mngr.tables
+            For Each table In _mngr.tables.Where(Function(c) c.isView = False)
                 ' Clone the templates
                 Dim tmpNode = itemNode.DeepCopy
                 Dim tmpCell = New AdvTree.Cell With {.Editable = False, .Text = "0", .TextDisplayFormat = "(0)", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter}
 
                 tmpCell.Text = table.columns.Count.ToString
-                tmpNode.Text = table.tableName
+                tmpNode.Text = table.name
                 tmpNode.Cells.Add(tmpCell)
 
                 AddHandler tmpNode.NodeClick, AddressOf tableNodeHandler
 
-                If table.isView Then
-                    viewNode.Nodes.Add(tmpNode)
-                Else
-                    tableNode.Nodes.Add(tmpNode)
+                tableNode.Nodes.Add(tmpNode)
+            Next
+
+            For Each view In _mngr.tables.Where(Function(c) c.isView = True)
+                ' Clone the templates
+                Dim tmpNode = itemNode.DeepCopy
+                Dim tmpCell = New AdvTree.Cell With {.Editable = False, .Text = "0", .TextDisplayFormat = "(0)", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter}
+
+                tmpCell.Text = view.columns.Count.ToString
+                tmpNode.Text = view.name
+                tmpNode.Cells.Add(tmpCell)
+
+                AddHandler tmpNode.NodeClick, AddressOf viewNodeHandler
+
+                If view.HasMissingFields Then
+                    tmpNode.Style = New ElementStyle(Color.Red)
+                    tmpNode.Tooltip = "There is something wrong with this view. The view selects fields/tables that are missing."
                 End If
+
+                viewNode.Nodes.Add(tmpNode)
             Next
 
             ' Process all routines
             For Each routine In _mngr.routines
                 ' Clone the templates
                 Dim tmpNode = itemNode.DeepCopy
+                Dim tmpCell = New AdvTree.Cell With {.Editable = False, .Text = "", .TextDisplayFormat = "", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter}
+
+                If routine.executiontime.TotalSeconds > 1 Then
+                    tmpCell.Text = routine.executiontime.TotalSeconds.ToString
+                    tmpNode.Style = New ElementStyle(Color.Gold)
+                End If
+
+
+
                 tmpNode.Text = routine.name
+                tmpNode.Cells.Add(tmpCell)
 
                 AddHandler tmpNode.NodeClick, AddressOf routineNodeHandler
+
+                If routine.returnsRecordset AndAlso tmpNode.Style Is Nothing Then
+                    If routine.returnLayout IsNot Nothing AndAlso routine.returnLayout.columns.Count > 0 Then
+                        tmpNode.Style = New ElementStyle(Color.LimeGreen)
+                    Else
+                        tmpNode.Style = New ElementStyle(Color.OrangeRed)
+                    End If
+                End If
 
                 routineNode.Nodes.Add(tmpNode)
             Next
@@ -251,15 +401,20 @@ Public Class mainGUI2
                 End If
             Next
 
-            _mngr.database = node.Text
+            _mngr.SetDatabase(node.Text)
+            Cursor = Cursors.WaitCursor
             _mngr.harvestObjects()
 
             populateTreeNode(node)
 
             node.Expand()
 
+            WriteProject()
         Catch ex As Exception
             FormHelpers.dumpException(ex)
+        Finally
+            Cursor = Cursors.Default
+
         End Try
     End Sub
 
@@ -270,25 +425,84 @@ Public Class mainGUI2
 
 
             If nodeEvent.Button = MouseButtons.Left Then
-                Dim tableFields = (From f In _mngr.tables Where f.isView = False AndAlso f.tableName = node.Text Select f).FirstOrDefault
+                Dim tableFields = (From f In _mngr.tables Where f.isView = False AndAlso f.name = node.Text Select f).FirstOrDefault
 
                 If tableFields IsNot Nothing Then
                     dgvFields.DataSource = tableFields.columns.ToArray
 
-                    Dim fks = (From fk In tableFields.foreignKeys Order By fk.ordinalPosition Select New With {
-                                                                      Key fk.constraintName,
-                                                                      fk.table.tableName,
-                                                                      fk.column.name,
-                                                                      fk.ordinalPosition,
-                                                                      fk.positionInUniqueConstraint,
-                                                                      .referenceTable = fk.referencedTable.tableName,
-                                                                      .referenceColumn = fk.referencedColumn.name})
+                    Dim fks = (From fk In tableFields.foreignKeys
+                               From col In fk.columns
+                               From refcol In fk.referencedColumns
+                               Select New With {
+                                            Key fk.name,
+                                            .Table = fk.table.name,
+                                            .Column = col.column.name,
+                                            .Position = col.fkPosition,
+                                            .RefTable = fk.referencedTable.name,
+                                            .RefColumn = refcol.column.name,
+                                            .Alias = fk.propertyAlias
+                                })
 
 
                     dgvForeignKeys.DataSource = fks.ToArray
-                End If
-                dgvFields.Refresh()
+
+                    scGeneratedModel.Text = _mngr.generateModel(tableFields)
+                    scGeneratedModel.Colorize(0, scGeneratedModel.Text.Length)
+
+                    scGeneratedMapping.Text = _mngr.generateMap(tableFields)
+                    scGeneratedMapping.Colorize(0, scGeneratedMapping.Text.Length)
+
+                    scRoutine.Text = tableFields.definition
+                    scRoutine.Colorize(0, scRoutine.Text.Length)
+
+                    Dim idxPrimary = (From idx In tableFields.indexes
+                                      From col In idx.columns
+                                      Where idx.Name = "PRIMARY"
+                                      Select New With {
+                                            Key idx.Name,
+                                            .Unique = idx.IsUnique,
+                                            .Nullable = idx.IsNullable,
+                                            .Column = col.column.name,
+                                            .Position = col.indexPosition
+                                })
+
+                    Dim idxs = (From idx In tableFields.indexes
+                                From col In idx.columns
+                                Where idx.Name <> "PRIMARY"
+                                Select New With {
+                                            Key idx.Name,
+                                            .Unique = idx.IsUnique,
+                                            .Nullable = idx.IsNullable,
+                                            .Column = col.column.name,
+                                            .Position = col.indexPosition
+                                })
+
+                    If idxPrimary IsNot Nothing Then
+                        Dim idxSet = idxs.Prepend(idxPrimary.First)
+                        dgvIndexes.DataSource = idxSet.ToArray
+                    Else
+                        dgvIndexes.DataSource = idxs.ToArray
+                    End If
+
+
+
+                    Dim refs = (From ref In tableFields.relations
+                                Select New With {
+                                    Key ref.alias,
+                                    .Table = ref.toTable.name,
+                                    .Column = ref.toColumn.name,
+                                    .LocalColumn = ref.localColumn.name
+                                })
+                        dgvReferences.DataSource = refs.ToArray
+
+                        LoadTreeGXTableClass(tableFields)
+
+                    End If
+
+                    dgvFields.Refresh()
                 dgvForeignKeys.Refresh()
+                dgvIndexes.Refresh()
+                dgvReferences.Refresh()
 
                 dcObjectInfo.Selected = True
                 TabControl1.SelectedPanel = TabControlPanel1
@@ -296,7 +510,216 @@ Public Class mainGUI2
             End If
 
 
-            _mngr.tables.First(Function(c) c.tableName = node.Text).hasExport = node.Checked
+            _mngr.tables.First(Function(c) c.name = node.Text).hasExport = node.Checked
+
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+#Region "TreeGX"
+    Private Sub LoadTreeGXTableClass(ByVal rootTable As infoSchema.table)
+        Try
+            _TreeGXUnique = New Dictionary(Of String, Tree.Node)
+            TreeGX1.BeginUpdate()
+            TreeGX1.Nodes.Clear()
+            TreeGX1.LayoutType = Tree.eNodeLayout.Map
+
+            Dim node As New Tree.Node With {
+                .Text = rootTable.name,
+                .Name = rootTable.name,
+                .Expanded = True
+            }
+
+            _TreeGXUnique.Add(rootTable.name, node)
+
+            TreeGX1.Nodes.Add(node)
+
+            For Each fk In rootTable.foreignKeys
+                node.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, 1).ToArray)
+            Next
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        Finally
+            TreeGX1.EndUpdate()
+        End Try
+        _TreeGXUnique.Clear()
+
+    End Sub
+
+    Private Function GetForeignKeyNodes(t As infoSchema.table, currentDepth As Integer) As List(Of Tree.Node)
+        Dim nodes As New List(Of Tree.Node)
+        If currentDepth > My.Settings.maxERDiagramDepth Then Return nodes
+        Try
+            Dim n As New Tree.Node With {
+                          .Text = t.name,
+                          .Name = t.name,
+                          .Expanded = True
+                }
+
+            nodes.Add(n)
+
+            For Each fk In t.foreignKeys
+                If fk.referencedTable.name <> t.name Then
+                    n.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, currentDepth + 1).ToArray)
+                End If
+            Next
+
+
+        Catch ex As Exception
+
+        End Try
+
+        Return nodes
+
+    End Function
+
+    Private Sub LoadTableChildren(parent As infoSchema.table, ByRef parentNode As DevComponents.Tree.Node, currentDepth As Integer)
+        Try
+            If currentDepth > My.Settings.maxERDiagramDepth Then Exit Sub
+
+            For Each child In parent.children
+                Dim node As Tree.Node = Nothing
+
+                If Not _TreeGXUnique.TryGetValue(child.name, node) Then
+                    node = New Tree.Node With {
+                        .Text = child.name,
+                        .Name = child.name,
+                        .Expanded = True
+                    }
+
+                    _TreeGXUnique.Add(child.name, node)
+
+                    If currentDepth = My.Settings.maxERDiagramDepth Then
+                        node.Style = ElementStyle4
+                    Else
+                        node.Style = ElementStyle3
+                    End If
+
+                    parentNode.Nodes.Add(node)
+                Else
+                    If Not node.Equals(parentNode) Then
+                        parentNode.Nodes.Add(node)
+                    End If
+                End If
+
+                LoadTableChildren(child, node, currentDepth + 1)
+            Next
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+            Trace.WriteLine($"parent:{parent.name}, node: {parentNode.Name}, depth: {currentDepth}")
+        End Try
+    End Sub
+
+    Private Sub maxDepth_ValueChanged(sender As Object, e As EventArgs) Handles maxDepth.ValueChanged
+        My.Settings.maxERDiagramDepth = CInt(maxDepth.Value)
+    End Sub
+
+    Private Sub sliderZoom_ValueChanged(sender As Object, e As EventArgs) Handles sliderZoom.ValueChanged
+        TreeGX1.Zoom = CSng(sliderZoom.Value / 100)
+        sliderZoom.Text = $"{sliderZoom.Value}%"
+    End Sub
+
+    Private Sub LoadTreeGXTableClasses()
+
+        _TreeGXUnique = New Dictionary(Of String, Tree.Node)
+
+        TreeGX1.BeginUpdate()
+        TreeGX1.Nodes.Clear()
+        TreeGX1.LayoutType = Tree.eNodeLayout.Map
+
+        Dim rootNode As New Tree.Node With {
+            .Name = _mngr.GetDatabase,
+            .Text = .Name,
+            .Expanded = True
+        }
+        TreeGX1.Nodes.Add(rootNode)
+
+        Try
+            For Each t In _mngr.tables.Where(Function(c) Not c.isView)
+                LoadTableUnique(t, rootNode)
+            Next
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        Finally
+            TreeGX1.EndUpdate()
+        End Try
+    End Sub
+
+    Private Sub LoadTableUnique(table As infoSchema.table, parentNode As DevComponents.Tree.Node)
+        Try
+            Dim node As Tree.Node = Nothing
+
+            If Not _TreeGXUnique.TryGetValue(table.name, node) Then
+                node = New Tree.Node With {
+                    .Text = table.name,
+                    .Name = table.name,
+                    .Expanded = True
+                    }
+                parentNode.Nodes.Add(node)
+                _TreeGXUnique.Add(table.name, node)
+
+            Else
+                'If Not node.Equals(parentNode) Then parentNode.Nodes.Add(node)
+                Dim pn = (From p As Tree.Node In parentNode.Nodes.OfType(Of Tree.Node) Where p.Name = table.name Select p).FirstOrDefault
+
+                If pn Is Nothing Then
+                    If Not node.Equals(parentNode) Then parentNode.Nodes.Add(node)
+                Else
+                    Dim ln As New Tree.LinkedNode With {
+                        .Node = node
+                    }
+                    parentNode.LinkedNodes.Add(ln)
+                End If
+            End If
+
+            For Each child In table.children.Where(Function(c) Not c.Equals(table))
+                LoadTableUnique(child, node)
+            Next
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+#End Region
+
+    Private Sub viewNodeHandler(sender As Object, e As EventArgs)
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            If nodeEvent.Button = MouseButtons.Left Then
+                Dim viewFields = (From f In _mngr.tables Where f.isView = True AndAlso f.name = node.Text Select f).FirstOrDefault
+
+                If viewFields IsNot Nothing Then
+                    dgvFields.DataSource = viewFields.columns.ToArray
+
+                    dgvForeignKeys.DataSource = Nothing
+                    dgvIndexes.DataSource = Nothing
+                    dgvReferences.DataSource = Nothing
+
+                    scGeneratedModel.Text = _mngr.generateModel(viewFields)
+                    scGeneratedModel.Colorize(0, scGeneratedModel.Text.Length)
+
+                    scGeneratedMapping.Text = _mngr.generateMap(viewFields)
+                    scGeneratedMapping.Colorize(0, scGeneratedMapping.Text.Length)
+
+                    scRoutine.Text = viewFields.definition
+                    scRoutine.Colorize(0, scRoutine.Text.Length)
+                End If
+
+                dgvFields.Refresh()
+                dgvForeignKeys.Refresh()
+                dgvIndexes.Refresh()
+                dgvReferences.Refresh()
+
+                dcObjectInfo.Selected = True
+                TabControl1.SelectedPanel = TabControlPanel1
+            End If
+
+
+            _mngr.tables.First(Function(c) c.name = node.Text).hasExport = node.Checked
 
 
         Catch ex As Exception
@@ -309,7 +732,50 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            _mngr.routines.First(Function(c) c.name = node.Text).hasExport = node.Checked
+            If nodeEvent.Button = MouseButtons.Left Then
+                Dim rout = _mngr.routines.FirstOrDefault(Function(c) c.name = node.Text)
+
+                If rout IsNot Nothing Then
+                    _spRoutine = rout
+                    Dim params = (From r In rout.params Order By r.ordinalPosition Select New With {.name = r.name, .value = ""})
+                    dgvInputParams.DataSource = params.ToArray
+
+                    scSPRoutine.Text = rout.definition
+                    scSPRoutine.Colorize(0, scRoutine.Text.Length)
+
+                    If rout.returnsRecordset Then
+                        dgvFields.DataSource = rout.returnLayout.columns.ToArray
+
+                        Dim fields = (From f In rout.returnLayout.columns Select f.name)
+                        lbReturnFields.DataSource = fields.ToArray
+
+
+                        dgvForeignKeys.DataSource = Nothing
+                        dgvIndexes.DataSource = Nothing
+                        dgvReferences.DataSource = Nothing
+
+                        scGeneratedModel.Text = _mngr.generateModel(rout.returnLayout)
+                        scGeneratedModel.Colorize(0, scGeneratedModel.Text.Length)
+                    Else
+                        dgvFields.DataSource = Nothing
+                        dgvForeignKeys.DataSource = Nothing
+                        dgvIndexes.DataSource = Nothing
+                        dgvReferences.DataSource = Nothing
+                        lbReturnFields.DataSource = Nothing
+                    End If
+
+                    scRoutine.Text = rout.definition
+                    scRoutine.Colorize(0, scRoutine.Text.Length)
+                End If
+                dgvFields.Refresh()
+                dgvForeignKeys.Refresh()
+                dgvIndexes.Refresh()
+                dgvReferences.Refresh()
+
+
+                dcSPRunner.Selected = True
+            End If
+
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -322,12 +788,26 @@ Public Class mainGUI2
 #Region "outputExplorer"
     Private Sub btnHomeOutputExplorer_Click(sender As Object, e As EventArgs) Handles btnHomeOutputExplorer.Click
         Try
-            Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
-                advtreeOutputExplorer.Nodes.Clear()
-                advtreeOutputExplorer.Load(ts)
-                advtreeOutputExplorer.Refresh()
-            End Using
-
+            If _currentProject IsNot Nothing Then
+                Select Case _currentProject.outputtype.ToLower
+                    Case "net5"
+                        Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
+                            advtreeOutputExplorer.Nodes.Clear()
+                            advtreeOutputExplorer.Load(ts)
+                        End Using
+                    Case "php"
+                        Using ts As New IO.StringReader(My.Resources.phpOutputExplorer)
+                            advtreeOutputExplorer.Nodes.Clear()
+                            advtreeOutputExplorer.Load(ts)
+                        End Using
+                    Case Else
+                        Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
+                            advtreeOutputExplorer.Nodes.Clear()
+                            advtreeOutputExplorer.Load(ts)
+                        End Using
+                End Select
+            End If
+            advtreeOutputExplorer.Refresh()
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -335,95 +815,411 @@ Public Class mainGUI2
 
     Private Sub btnRefreshOutputExplorer_Click(sender As Object, e As EventArgs) Handles btnRefreshOutputExplorer.Click
         Try
-            Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
-                advtreeOutputExplorer.Nodes.Clear()
-                advtreeOutputExplorer.Load(ts)
-            End Using
+            If _currentProject IsNot Nothing Then
+                Select Case _currentProject.outputtype.ToLower
+                    Case "net5"
+                        Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
+                            advtreeOutputExplorer.Nodes.Clear()
+                            advtreeOutputExplorer.Load(ts)
+                        End Using
+                    Case "php"
+                        Using ts As New IO.StringReader(My.Resources.phpOutputExplorer)
+                            advtreeOutputExplorer.Nodes.Clear()
+                            advtreeOutputExplorer.Load(ts)
+                        End Using
+                    Case Else
+                        Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
+                            advtreeOutputExplorer.Nodes.Clear()
+                            advtreeOutputExplorer.Load(ts)
+                        End Using
+                End Select
+            End If
+            advtreeOutputExplorer.Refresh()
 
-            Dim tplModelAndMapping As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 4}
-            Dim tplContextAndStoreCommands As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 5}
-            Dim tplFunctions As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 6}
-            Dim tplProcedures As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 7}
+            CalculateHashesOfMemoryFiles()
 
+            'TODO: Move this code to FileVCS.dll
+            Dim tplModelAndMapping As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 13}
+            Dim tplContextAndStoreCommands As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 8}
+            Dim tplFunctions As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 28}
+            Dim tplProcedures As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 33}
 
-            Dim mModel As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapModels", True).FirstOrDefault
-            Dim mMapping As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapMapping", True).FirstOrDefault
-            Dim mStoreCommands As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommands", True).FirstOrDefault
-            Dim mStoreCommandModels As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
+            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "php" Then
+                Dim mModel As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapModels", True).FirstOrDefault
+                Dim mMapping As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapMapping", True).FirstOrDefault
 
-            ' Tables and views
-            For Each table In _mngr.tables.Where(Function(t) t.hasExport)
-                Dim tmpModel As AdvTree.Node = tplModelAndMapping.DeepCopy
-                Dim tmpMapping As AdvTree.Node = tplModelAndMapping.DeepCopy
+                ' Tables and views
+                For Each table In _mngr.tables.Where(Function(t) t.hasExport)
+                    Dim tmpModel As AdvTree.Node = tplModelAndMapping.DeepCopy
+                    Dim tmpMapping As AdvTree.Node = tplModelAndMapping.DeepCopy
 
-                tmpModel.Name = "n" & table.tableName
-                tmpModel.TagString = table.tableName
+                    tmpModel.Name = "n" & table.name
+                    tmpModel.TagString = table.name
 
-                tmpModel.Text = String.Format("{0}.vb", table.singleName)
-                AddHandler tmpModel.NodeDoubleClick, AddressOf explorerModelNodeHandler
-                mModel.Nodes.Add(tmpModel)
+                    tmpModel.Text = $"{table.singleName}.php"
+                    AddHandler tmpModel.NodeClick, AddressOf explorerModelNodeHandler
 
-                tmpMapping.Name = "n" & table.tableName & "Mapping"
-                tmpMapping.TagString = table.tableName
-                tmpMapping.Text = String.Format("{0}Mapping.vb", table.singleName)
-                AddHandler tmpMapping.NodeDoubleClick, AddressOf explorerMappingNodeHandler
+                    If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpModel.Text) > 0 Then
+                        tmpModel.ImageIndex += 3
+                        AddHandler tmpModel.NodeDoubleClick, AddressOf explorerModelNodeDiffHandler
+                        If mModel.ImageIndex = 18 Then
+                            mModel.ImageIndex += 3
+                            mModel.ImageExpandedIndex += 3
+                        End If
+                    End If
 
-                mMapping.Nodes.Add(tmpMapping)
-            Next
+                    mModel.Nodes.Add(tmpModel)
 
-            ' Routines
-            For Each routine In _mngr.routines.Where(Function(r) r.hasExport)
-                Dim tmpNode As AdvTree.Node
+                    tmpMapping.Name = $"n{table.name}Table"
+                    tmpMapping.TagString = table.name
+                    tmpMapping.Text = $"{table.pluralName}Table.php"
+                    AddHandler tmpMapping.NodeClick, AddressOf explorerMappingNodeHandler
 
-                If routine.isFunction Then
-                    tmpNode = tplFunctions.DeepCopy
+                    If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpMapping.Text) > 0 Then
+                        tmpMapping.ImageIndex += 3
+                        AddHandler tmpMapping.NodeDoubleClick, AddressOf explorerMappingNodeDiffHandler
+                        If mMapping.ImageIndex = 18 Then
+                            mMapping.ImageIndex += 3
+                            mMapping.ImageExpandedIndex += 3
+                        End If
+                    End If
+
+                    mMapping.Nodes.Add(tmpMapping)
+                Next
+
+            Else
+                Dim mModel As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapModels", True).FirstOrDefault
+                Dim mMapping As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapMapping", True).FirstOrDefault
+                Dim mStoreCommands As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapStoreCommands", True).FirstOrDefault
+                Dim mStoreCommandFunctions As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandFunctions", True).FirstOrDefault
+                Dim mStoreCommandFunctionModels As AdvTree.Node
+
+                If mStoreCommandFunctions IsNot Nothing Then
+                    mStoreCommandFunctionModels = mStoreCommandFunctions.Nodes.Find("mapStoreCommandFunctionModels", True).FirstOrDefault
                 Else
-                    tmpNode = tplProcedures.DeepCopy
+                    mStoreCommandFunctionModels = mStoreCommands.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
                 End If
 
-                tmpNode.Name = String.Format("n{0}", routine.name)
-                tmpNode.TagString = routine.name
-                tmpNode.Text = String.Format("{0}.vb", routine.name)
-                AddHandler tmpNode.NodeDoubleClick, AddressOf explorerRoutineNodeHandler
+                Dim mStoreCommandsProcedures As AdvTree.Node = mStoreCommands.Nodes.Find("mapStoreCommandProcedures", True).FirstOrDefault
+                Dim mStoreCommandModels As AdvTree.Node
 
-                mStoreCommands.Nodes.Add(tmpNode)
+                If mStoreCommandsProcedures IsNot Nothing Then
+                    mStoreCommandModels = mStoreCommandsProcedures.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
+                Else
+                    mStoreCommandModels = mStoreCommands.Nodes.Find("mapStoreCommandModels", True).FirstOrDefault
+                End If
 
-                If routine.returnsRecordset Then
-                    tmpNode = tplModelAndMapping.DeepCopy
-                    tmpNode.Name = String.Format("n{0}Model", routine.name)
+
+                ' Tables and views
+                For Each table In _mngr.tables.Where(Function(t) t.hasExport)
+                    Dim tmpModel As AdvTree.Node = tplModelAndMapping.DeepCopy
+                    Dim tmpMapping As AdvTree.Node = tplModelAndMapping.DeepCopy
+
+                    tmpModel.Name = "n" & table.name
+                    tmpModel.TagString = table.name
+
+                    tmpModel.Text = $"{table.singleName}.vb"
+                    AddHandler tmpModel.NodeClick, AddressOf explorerModelNodeHandler
+                    If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpModel.Text) > 0 Then
+                        tmpModel.ImageIndex += 3
+                        AddHandler tmpModel.NodeDoubleClick, AddressOf explorerModelNodeDiffHandler
+                        If mModel.ImageIndex = 18 Then
+                            mModel.ImageIndex += 3
+                            mModel.ImageExpandedIndex += 3
+                        End If
+                    End If
+                    mModel.Nodes.Add(tmpModel)
+
+                    tmpMapping.Name = $"n{table.name}Map"
+                    tmpMapping.TagString = table.name
+                    tmpMapping.Text = $"{table.singleName}Map.vb"
+                    AddHandler tmpMapping.NodeClick, AddressOf explorerMappingNodeHandler
+                    If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpMapping.Text) > 0 Then
+                        tmpMapping.ImageIndex += 3
+                        AddHandler tmpMapping.NodeDoubleClick, AddressOf explorerMappingNodeDiffHandler
+                        If mMapping.ImageIndex = 18 Then
+                            mMapping.ImageIndex += 3
+                            mMapping.ImageExpandedIndex += 3
+                        End If
+                    End If
+                    mMapping.Nodes.Add(tmpMapping)
+                Next
+
+                ' Routines
+                For Each routine In _mngr.routines.Where(Function(r) r.hasExport)
+                    Dim tmpNode As AdvTree.Node
+
+                    If routine.isFunction Then
+                        tmpNode = tplFunctions.DeepCopy
+                    Else
+                        tmpNode = tplProcedures.DeepCopy
+                    End If
+
+                    tmpNode.Name = $"n{routine.name}"
                     tmpNode.TagString = routine.name
-                    tmpNode.Text = String.Format("{0}Model.vb", routine.name)
-                    AddHandler tmpNode.NodeDoubleClick, AddressOf explorerModelNodeHandler
+                    tmpNode.Text = $"{routine.name}.vb"
+                    AddHandler tmpNode.NodeClick, AddressOf explorerRoutineNodeHandler
+                    If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
+                        tmpNode.ImageIndex += 3
+                        AddHandler tmpNode.NodeDoubleClick, AddressOf explorerRoutineNodeDiffHandler
+                    End If
 
-                    mStoreCommandModels.Nodes.Add(tmpNode)
+                    If routine.isFunction Then
+                        If mStoreCommandFunctions IsNot Nothing Then
+                            mStoreCommandFunctions.Nodes.Add(tmpNode)
+                        End If
+                    Else
+                        If mStoreCommandsProcedures IsNot Nothing Then
+                            mStoreCommandsProcedures.Nodes.Add(tmpNode)
+                        End If
+                    End If
+
+                    If routine.returnsRecordset Then
+                        If routine.isFunction Then
+                            tmpNode = tplModelAndMapping.DeepCopy
+                            tmpNode.Name = routine.returnLayout.name
+                            tmpNode.TagString = routine.name
+                            tmpNode.Text = routine.returnLayout.name
+                            AddHandler tmpNode.NodeClick, AddressOf explorerRoutineModelNodeHandler
+                            If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
+                                tmpNode.ImageIndex += 3
+                                AddHandler tmpNode.NodeDoubleClick, AddressOf explorerRoutineModelNodeDiffHandler
+                                If mStoreCommandFunctionModels.ImageIndex = 23 Then mStoreCommandFunctionModels.ImageIndex += 3
+                            End If
+
+                            If mStoreCommandFunctionModels.Nodes.Find(tmpNode.Name, True).Length = 0 Then mStoreCommandFunctionModels.Nodes.Add(tmpNode)
+                        Else
+                            tmpNode = tplModelAndMapping.DeepCopy
+                            tmpNode.Name = $"n{routine.name}Model"
+                            tmpNode.TagString = routine.name
+                            tmpNode.Text = $"{routine.name}Model.vb"
+                            AddHandler tmpNode.NodeClick, AddressOf explorerRoutineModelNodeHandler
+                            If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpNode.Text) > 0 Then
+                                tmpNode.ImageIndex += 3
+                                AddHandler tmpNode.NodeDoubleClick, AddressOf explorerRoutineModelNodeDiffHandler
+                                If mStoreCommandModels.ImageIndex = 23 Then mStoreCommandModels.ImageIndex += 3
+                            End If
+                            mStoreCommandModels.Nodes.Add(tmpNode)
+                        End If
+                    End If
+                Next
+
+                ' Context
+                Dim tmpContext As AdvTree.Node = tplContextAndStoreCommands.DeepCopy
+
+                tmpContext.Name = "nContext"
+                tmpContext.Text = $"{txtProjectName.Text}DataContext.vb"
+                AddHandler tmpContext.NodeClick, AddressOf explorerContextNodeHandler
+                If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpContext.Text) > 0 Then
+                    tmpContext.ImageIndex += 3
+                    AddHandler tmpContext.NodeDoubleClick, AddressOf explorerContextNodeDiffHandler
                 End If
-            Next
+                mModel.Nodes.Add(tmpContext)
 
-            ' Context
-            Dim tmpContext As AdvTree.Node = tplContextAndStoreCommands.DeepCopy
+                If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net" Then
+                    ' StoreCommandsContext
+                    tmpContext = tplContextAndStoreCommands.DeepCopy
 
-            tmpContext.Name = "nContext"
-            tmpContext.Text = String.Format("{0}Context.vb", "<ProjectName>")
-            AddHandler tmpContext.NodeDoubleClick, AddressOf explorerContextNodeHandler
-            mModel.Nodes.Add(tmpContext)
-
-            ' StoreCommandsContext
-            tmpContext = tplContextAndStoreCommands.DeepCopy
-
-            tmpContext.Name = "nStoreCommandsContext"
-            tmpContext.Text = String.Format("{0}StoreCommandsContext.vb", "<ProjectName>")
-            AddHandler tmpContext.NodeDoubleClick, AddressOf explorerStoreCommandsNodeHandler
-            mModel.Nodes.Add(tmpContext)
-
+                    tmpContext.Name = "nStoreCommandsContext"
+                    tmpContext.Text = $"{txtProjectName.Text}StoreCommandsContext.vb"
+                    AddHandler tmpContext.NodeClick, AddressOf explorerStoreCommandsNodeHandler
+                    If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpContext.Text) > 0 Then
+                        tmpContext.ImageIndex += 3
+                        AddHandler tmpContext.NodeDoubleClick, AddressOf explorerStoreCommandsNodeDiffHandler
+                    End If
+                    mModel.Nodes.Add(tmpContext)
+                End If
+            End If
             advtreeOutputExplorer.Refresh()
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
     End Sub
 
+    Private Sub explorerStoreCommandsNodeDiffHandler(sender As Object, e As EventArgs)
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
+
+            If diskFile IsNot Nothing Then
+                Dim newText = _mngr.generateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value)
+                Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
+
+                LoadDiffView(oldText, newText)
+            End If
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub explorerContextNodeDiffHandler(sender As Object, e As EventArgs)
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
+
+            If diskFile IsNot Nothing Then
+                Dim newText = _mngr.generateContext(txtProjectName.Text)
+                Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
+
+                LoadDiffView(oldText, newText)
+            End If
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub explorerRoutineModelNodeDiffHandler(sender As Object, e As EventArgs)
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim t = _mngr.routines.FirstOrDefault(Function(c) c.name = node.TagString).returnLayout
+            Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
+
+            If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
+                Dim newText = _mngr.generateModel(t)
+                Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
+
+                LoadDiffView(oldText, newText)
+            End If
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub explorerRoutineNodeDiffHandler(sender As Object, e As EventArgs)
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim t = _mngr.routines.FirstOrDefault(Function(c) c.name = node.TagString)
+            Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
+
+            If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
+                Dim newText = _mngr.generateStoreCommand(t, $"{txtProjectName.Text}", sbProcedureLocks.Value)
+                Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
+
+                LoadDiffView(oldText, newText)
+            End If
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub explorerMappingNodeDiffHandler(sender As Object, e As EventArgs)
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim t = _mngr.tables.FirstOrDefault(Function(c) c.name = node.TagString)
+            Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
+
+            If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
+                Dim newText = _mngr.generateMap(t)
+                Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
+
+                LoadDiffView(oldText, newText)
+            End If
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub explorerModelNodeDiffHandler(sender As Object, e As EventArgs)
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim t = _mngr.tables.FirstOrDefault(Function(c) c.name = node.TagString)
+            Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
+
+            If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
+                Dim newText = _mngr.generateModel(t)
+                Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
+
+                LoadDiffView(oldText, newText)
+            End If
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub LoadDiffView(oldText As String, newText As String)
+        Dim frx As New FileVCS.Diff With {
+            .originalFileContents = oldText,
+            .newFileContents = newText
+        }
+
+        frx.Show()
+    End Sub
+
     Private Sub btnSaveLayout_Click(sender As Object, e As EventArgs) Handles btnSaveLayout.Click
         Try
-            advtreeOutputExplorer.Save("c:\test.xml")
+            If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models")
+            If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\Mapping") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\Mapping")
+
+            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net5" Then
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands")
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Functions") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Functions")
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\Models")
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures")
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\Models")
+
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\StoreCommandsBase.vb", My.Resources.storecommandsbase)
+            Else
+                If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommandSchemas") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommandSchemas")
+            End If
+
+            For Each t In _mngr.tables.Where(Function(c) c.hasExport)
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{t.singleName}.vb", _mngr.generateModel(t))
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\Mapping\{t.singleName}Map.vb", _mngr.generateMap(t))
+            Next
+
+            For Each s In _mngr.routines.Where(Function(c) c.hasExport)
+                If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net5" Then
+                    If s.isFunction Then
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\Models\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
+                    Else
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
+                        If s.returnsRecordset Then
+                            IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\Models\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
+                        End If
+                    End If
+                Else
+                    If s.returnsRecordset Then
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommandSchemas\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout, True))
+                    End If
+                End If
+            Next
+
+            IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}DataContext.vb", _mngr.generateContext($"{txtProjectName.Text}"))
+
+            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net" Then
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}StoreCommands.vb", _mngr.generateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value))
+            End If
+
+            _FileManager.OriginalFiles = Nothing
+            _FileManager.ScanForFiles(_currentProject.projectoutputlocation)
+            _FileManager.OriginalFiles = _FileManager.CurrentFiles
+
+            _currentProject.generatedoutputs = _FileManager.CurrentFiles
+
+            ExplorerControl1.RefreshExplorer()
+
+            WriteProject()
+
+            MessageBox.Show("Output generated")
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -434,7 +1230,13 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
+            Dim t = _mngr.tables.FirstOrDefault(Function(c) c.name = node.TagString)
 
+            If t IsNot Nothing Then
+                scCodePreview.Text = _mngr.generateModel(t)
+                scCodePreview.Colorize(0, scCodePreview.Text.Length)
+                dcCodePreview.Selected = True
+            End If
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -445,6 +1247,13 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
+            Dim t = _mngr.tables.FirstOrDefault(Function(c) c.name = node.TagString)
+
+            If t IsNot Nothing Then
+                scCodePreview.Text = _mngr.generateMap(t)
+                scCodePreview.Colorize(0, scCodePreview.Text.Length)
+                dcCodePreview.Selected = True
+            End If
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -455,16 +1264,44 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
+            Dim r = _mngr.routines.FirstOrDefault(Function(c) c.name = node.TagString)
+
+            If r IsNot Nothing Then
+                scCodePreview.Text = _mngr.generateStoreCommand(r, $"{txtProjectName.Text}Data", sbProcedureLocks.Value)
+                scCodePreview.Colorize(0, scCodePreview.Text.Length)
+                dcCodePreview.Selected = True
+            End If
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
     End Sub
+    Private Sub explorerRoutineModelNodeHandler(sender As Object, e As EventArgs)
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim r = _mngr.routines.FirstOrDefault(Function(c) c.name = node.TagString)
+
+            If r IsNot Nothing AndAlso r.returnLayout IsNot Nothing Then
+                scCodePreview.Text = _mngr.generateModel(r.returnLayout)
+                scCodePreview.Colorize(0, scCodePreview.Text.Length)
+                dcCodePreview.Selected = True
+            End If
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
     Private Sub explorerContextNodeHandler(sender As Object, e As EventArgs)
         Try
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
+            scCodePreview.Text = _mngr.generateContext(txtProjectName.Text)
+            scCodePreview.Colorize(0, scCodePreview.Text.Length)
+            dcCodePreview.Selected = True
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -475,6 +1312,9 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
+            scCodePreview.Text = _mngr.generateStoreCommands(txtProjectName.Text, sbProcedureLocks.Value)
+            scCodePreview.Colorize(0, scCodePreview.Text.Length)
+            dcCodePreview.Selected = True
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -494,7 +1334,7 @@ Public Class mainGUI2
 
                 Select Case advtreeDatabases.SelectedNode.Text
                     Case "Tables", "Views"
-                        _mngr.tables.First(Function(c) c.tableName = n.Text).hasExport = n.Checked
+                        _mngr.tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case "Routines"
                         _mngr.routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case Else
@@ -513,7 +1353,7 @@ Public Class mainGUI2
 
                 Select Case advtreeDatabases.SelectedNode.Text
                     Case "Tables", "Views"
-                        _mngr.tables.First(Function(c) c.tableName = n.Text).hasExport = n.Checked
+                        _mngr.tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case "Routines"
                         _mngr.routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case Else
@@ -532,7 +1372,7 @@ Public Class mainGUI2
 
                 Select Case advtreeDatabases.SelectedNode.Text
                     Case "Tables", "Views"
-                        _mngr.tables.First(Function(c) c.tableName = n.Text).hasExport = n.Checked
+                        _mngr.tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case "Routines"
                         _mngr.routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case Else
@@ -546,28 +1386,30 @@ Public Class mainGUI2
 #End Region
 
 #Region "Scintilla lexer styles"
+
+    Private Sub ResetLexer(lexer As ScintillaNET.Scintilla)
+        lexer.StyleClearAll()
+
+        lexer.HScrollBar = True
+        lexer.VScrollBar = True
+
+        lexer.Styles(ScintillaNET.Style.Default).BackColor = Color.FromArgb(30, 30, 30)
+        lexer.Styles(ScintillaNET.Style.Default).Font = "Consolas"
+        lexer.Styles(ScintillaNET.Style.Default).ForeColor = Color.FromArgb(220, 220, 220)
+        lexer.Styles(ScintillaNET.Style.Default).Size = 10
+
+        lexer.Styles(ScintillaNET.Style.LineNumber).BackColor = Color.FromArgb(30, 30, 30)
+        lexer.Styles(ScintillaNET.Style.LineNumber).ForeColor = Color.FromArgb(43, 145, 175)
+        lexer.Styles(ScintillaNET.Style.LineNumber).Font = lexer.Styles(ScintillaNET.Style.Default).Font
+        lexer.Styles(ScintillaNET.Style.LineNumber).Size = lexer.Styles(ScintillaNET.Style.Default).Size
+
+        lexer.Margins(0).Type = ScintillaNET.MarginType.Number
+        lexer.Margins(0).Width = 30
+    End Sub
     Private Sub setVbStyle(lexer As ScintillaNET.Scintilla)
         Try
 
-            lexer.StyleClearAll()
-
-            lexer.HScrollBar = False
-            lexer.VScrollBar = True
-
-            lexer.Styles(ScintillaNET.Style.Default).BackColor = Color.FromArgb(30, 30, 30)
-            lexer.Styles(ScintillaNET.Style.Default).Font = "Consolas"
-            lexer.Styles(ScintillaNET.Style.Default).ForeColor = Color.FromArgb(220, 220, 220)
-            lexer.Styles(ScintillaNET.Style.Default).Size = 10
-
-            'lexer.SetSelectionBackColor(True, Color.FromArgb(51, 153, 255))
-
-            lexer.Styles(ScintillaNET.Style.LineNumber).BackColor = Color.FromArgb(30, 30, 30)
-            lexer.Styles(ScintillaNET.Style.LineNumber).ForeColor = Color.FromArgb(43, 145, 175)
-            lexer.Styles(ScintillaNET.Style.LineNumber).Font = lexer.Styles(ScintillaNET.Style.Default).Font
-            lexer.Styles(ScintillaNET.Style.LineNumber).Size = lexer.Styles(ScintillaNET.Style.Default).Size
-
-            lexer.Margins(0).Type = ScintillaNET.MarginType.Number
-            lexer.Margins(0).Width = 30
+            ResetLexer(lexer)
 
             lexer.Lexer = ScintillaNET.Lexer.Vb
 
@@ -620,7 +1462,8 @@ Public Class mainGUI2
             lexer.Styles(ScintillaNET.Style.Vb.DocKeyword).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
             lexer.Styles(ScintillaNET.Style.Vb.DocKeyword).ForeColor = Color.FromArgb(-4862296)
 
-            lexer.SetKeywords(0, My.Settings.keywords)
+            lexer.SetKeywords(0, My.Resources.vb_keywords)
+
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -630,125 +1473,124 @@ Public Class mainGUI2
     Private Sub setPHPStyle(lexer As ScintillaNET.Scintilla)
         Try
 
-            lexer.StyleClearAll()
-
-            lexer.HScrollBar = False
-            lexer.VScrollBar = True
-
-            lexer.Styles(ScintillaNET.Style.Default).BackColor = Color.FromArgb(30, 30, 30)
-            lexer.Styles(ScintillaNET.Style.Default).Font = "Consolas"
-            lexer.Styles(ScintillaNET.Style.Default).ForeColor = Color.FromArgb(220, 220, 220)
-            lexer.Styles(ScintillaNET.Style.Default).Size = 10
-
-            'lexer.SetSelectionBackColor(True, Color.FromArgb(51, 153, 255))
-
-            lexer.Styles(ScintillaNET.Style.LineNumber).BackColor = Color.FromArgb(30, 30, 30)
-            lexer.Styles(ScintillaNET.Style.LineNumber).ForeColor = Color.FromArgb(43, 145, 175)
-            lexer.Styles(ScintillaNET.Style.LineNumber).Font = lexer.Styles(ScintillaNET.Style.Default).Font
-            lexer.Styles(ScintillaNET.Style.LineNumber).Size = lexer.Styles(ScintillaNET.Style.Default).Size
-
-            lexer.Margins(0).Type = ScintillaNET.MarginType.Number
-            lexer.Margins(0).Width = 30
+            ResetLexer(lexer)
 
             lexer.Lexer = ScintillaNET.Lexer.PhpScript
 
             lexer.CreateDocument()
 
-            lexer.Styles(ScintillaNET.Style.PhpScript.Default).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Default).ForeColor = lexer.Styles(ScintillaNET.Style.Default).ForeColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Comment).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Comment).ForeColor = Color.FromArgb(87, 166, 74)
+            lexer.Styles(ScintillaNET.Style.PhpScript.ComplexVariable).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.ComplexVariable).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.ComplexVariable).ForeColor = Color.FromArgb(-9990991)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Default).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Default).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.Default).ForeColor = Color.FromArgb(-2039068)
+            lexer.Styles(ScintillaNET.Style.PhpScript.HString).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.HString).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.HString).ForeColor = Color.FromArgb(-1280512)
+            lexer.Styles(ScintillaNET.Style.PhpScript.SimpleString).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.SimpleString).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.SimpleString).ForeColor = Color.FromArgb(-31735)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Word).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Word).Bold = True
+            lexer.Styles(ScintillaNET.Style.PhpScript.Word).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.Word).ForeColor = Color.FromArgb(-7092381)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Word).Hotspot = True
+            lexer.Styles(ScintillaNET.Style.PhpScript.Word).Weight = 700
+            lexer.Styles(ScintillaNET.Style.PhpScript.Number).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Number).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.Number).ForeColor = Color.FromArgb(-12957)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Variable).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Variable).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.Variable).ForeColor = Color.FromArgb(-9990991)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Comment).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Comment).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.Comment).ForeColor = Color.FromArgb(-10062725)
             lexer.Styles(ScintillaNET.Style.PhpScript.Comment).Italic = True
-            lexer.Styles(ScintillaNET.Style.PhpScript.Number).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Number).ForeColor = Color.FromArgb(181, 206, 168)
-            lexer.Styles(ScintillaNET.Style.PhpScript.ComplexVariable).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.ComplexVariable).ForeColor = Color.FromArgb(86, 156, 214)
-            lexer.Styles(ScintillaNET.Style.PhpScript.SimpleString).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.SimpleString).ForeColor = Color.FromArgb(255, 128, 0)
-            lexer.Styles(ScintillaNET.Style.PhpScript.Variable).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Variable).ForeColor = Color.Gainsboro
-            lexer.Styles(ScintillaNET.Style.PhpScript.Operator).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Operator).ForeColor = Color.FromArgb(-4934476)
-            lexer.Styles(ScintillaNET.Style.PhpScript.Word).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.Word).ForeColor = Color.Gainsboro
-            lexer.Styles(ScintillaNET.Style.PhpScript.HString).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.HString).ForeColor = Color.Green
-            lexer.Styles(ScintillaNET.Style.PhpScript.HStringVariable).ForeColor = Color.Navy
-            lexer.Styles(ScintillaNET.Style.PhpScript.HStringVariable).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.CommentLine).BackColor = lexer.Styles(ScintillaNET.Style.Default).BackColor
-            lexer.Styles(ScintillaNET.Style.PhpScript.CommentLine).ForeColor = Color.FromArgb(-11033014)
+            lexer.Styles(ScintillaNET.Style.PhpScript.CommentLine).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.CommentLine).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.CommentLine).ForeColor = Color.FromArgb(-10062725)
             lexer.Styles(ScintillaNET.Style.PhpScript.CommentLine).Italic = True
+            lexer.Styles(ScintillaNET.Style.PhpScript.HStringVariable).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.HStringVariable).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.HStringVariable).ForeColor = Color.FromArgb(-2910405)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Operator).BackColor = Color.FromArgb(-14077644)
+            lexer.Styles(ScintillaNET.Style.PhpScript.Operator).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.PhpScript.Operator).ForeColor = Color.FromArgb(-1514820)
 
-            Using s As New IO.StreamReader(My.Resources.ResourceManager.GetStream("php_keywords"), False)
-                lexer.SetKeywords(0, s.ReadToEnd())
-            End Using
+
+            lexer.SetKeywords(0, My.Resources.php_keywords)
+
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
     End Sub
 
-    Private Sub setSQLStyle(_lexer As ScintillaNET.Scintilla)
+    Private Sub setSQLStyle(lexer As ScintillaNET.Scintilla)
         Try
-            _lexer.Styles(ScintillaNET.Style.Default).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Default).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Default).ForeColor = Color.Gainsboro
-            _lexer.Styles(ScintillaNET.Style.Default).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Default).SizeF = 10.0F
+            ResetLexer(lexer)
 
-            _lexer.StyleClearAll()
+            lexer.Lexer = ScintillaNET.Lexer.Sql
 
-            _lexer.Styles(ScintillaNET.Style.LineNumber).BackColor = Color.FromArgb(83, 83, 83)
-            _lexer.Styles(ScintillaNET.Style.LineNumber).ForeColor = Color.Gainsboro
-            _lexer.Styles(ScintillaNET.Style.LineNumber).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.LineNumber).Size = 10
-            _lexer.Styles(ScintillaNET.Style.LineNumber).SizeF = 10.0F
+            lexer.CreateDocument()
 
+            lexer.Styles(ScintillaNET.Style.Sql.Default).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Default).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.Default).ForeColor = Color.Gainsboro
+            lexer.Styles(ScintillaNET.Style.Sql.Default).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.Default).SizeF = 10.0F
+            lexer.Styles(ScintillaNET.Style.Sql.Comment).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Comment).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.Comment).ForeColor = Color.FromArgb(102, 116, 123)
+            lexer.Styles(ScintillaNET.Style.Sql.Comment).Italic = True
+            lexer.Styles(ScintillaNET.Style.Sql.Comment).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.Comment).SizeF = 10.0F
+            lexer.Styles(ScintillaNET.Style.Sql.Number).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Number).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.Number).ForeColor = Color.FromArgb(255, 205, 34)
+            lexer.Styles(ScintillaNET.Style.Sql.Number).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.Number).SizeF = 10.0F
 
-            _lexer.Margins(0).Type = ScintillaNET.MarginType.Number
-            _lexer.Margins(0).Width = 30
+            lexer.Styles(ScintillaNET.Style.Sql.Word).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Word).Bold = True
+            lexer.Styles(ScintillaNET.Style.Sql.Word).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.Word).ForeColor = Color.FromArgb(147, 199, 99)
+            lexer.Styles(ScintillaNET.Style.Sql.Word).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.Word).SizeF = 10.0F
+            lexer.Styles(ScintillaNET.Style.Sql.Word).Weight = 700
 
-            _lexer.Lexer = ScintillaNET.Lexer.Sql
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).Bold = True
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).ForeColor = Color.FromArgb(147, 199, 99)
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).SizeF = 10.0F
+            lexer.Styles(ScintillaNET.Style.Sql.Word2).Weight = 700
 
-            _lexer.CreateDocument()
+            lexer.Styles(ScintillaNET.Style.Sql.[String]).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.[String]).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.[String]).ForeColor = Color.FromArgb(236, 118, 0)
+            lexer.Styles(ScintillaNET.Style.Sql.[String]).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.[String]).SizeF = 10.0F
 
-            _lexer.Styles(ScintillaNET.Style.Sql.Default).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.Default).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Sql.Default).ForeColor = Color.Gainsboro
-            _lexer.Styles(ScintillaNET.Style.Sql.Default).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Sql.Default).SizeF = 10.0F
-            _lexer.Styles(ScintillaNET.Style.Sql.Comment).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.Comment).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Sql.Comment).ForeColor = Color.FromArgb(102, 116, 123)
-            _lexer.Styles(ScintillaNET.Style.Sql.Comment).Italic = True
-            _lexer.Styles(ScintillaNET.Style.Sql.Comment).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Sql.Comment).SizeF = 10.0F
-            _lexer.Styles(ScintillaNET.Style.Sql.Number).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.Number).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Sql.Number).ForeColor = Color.FromArgb(255, 205, 34)
-            _lexer.Styles(ScintillaNET.Style.Sql.Number).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Sql.Number).SizeF = 10.0F
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).Bold = True
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).ForeColor = Color.FromArgb(147, 199, 99)
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).SizeF = 10.0F
-            _lexer.Styles(ScintillaNET.Style.Sql.Word).Weight = 700
-            _lexer.Styles(ScintillaNET.Style.Sql.[String]).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.[String]).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Sql.[String]).ForeColor = Color.FromArgb(236, 118, 0)
-            _lexer.Styles(ScintillaNET.Style.Sql.[String]).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Sql.[String]).SizeF = 10.0F
-            _lexer.Styles(ScintillaNET.Style.Sql.[Operator]).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.[Operator]).Font = "Consolas"
-            _lexer.Styles(ScintillaNET.Style.Sql.[Operator]).ForeColor = Color.FromArgb(232, 226, 183)
-            _lexer.Styles(ScintillaNET.Style.Sql.[Operator]).Size = 10
-            _lexer.Styles(ScintillaNET.Style.Sql.[Operator]).SizeF = 10.0F
-            _lexer.Styles(ScintillaNET.Style.Sql.Identifier).BackColor = Color.FromArgb(-14803426)
-            _lexer.Styles(ScintillaNET.Style.Sql.Identifier).ForeColor = Color.Gainsboro
+            lexer.Styles(ScintillaNET.Style.Sql.Character).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Character).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.Character).ForeColor = Color.FromArgb(236, 118, 0)
+            lexer.Styles(ScintillaNET.Style.Sql.Character).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.Character).SizeF = 10.0F
 
-            _lexer.SetKeywords(0, My.Settings.sql_keywords)
+            lexer.Styles(ScintillaNET.Style.Sql.[Operator]).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.[Operator]).Font = "Consolas"
+            lexer.Styles(ScintillaNET.Style.Sql.[Operator]).ForeColor = Color.FromArgb(232, 226, 183)
+            lexer.Styles(ScintillaNET.Style.Sql.[Operator]).Size = 10
+            lexer.Styles(ScintillaNET.Style.Sql.[Operator]).SizeF = 10.0F
+
+            lexer.Styles(ScintillaNET.Style.Sql.Identifier).BackColor = Color.FromArgb(-14803426)
+            lexer.Styles(ScintillaNET.Style.Sql.Identifier).ForeColor = Color.Gainsboro
+
+            lexer.SetKeywords(0, My.Resources.sql_keywords)
+
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -756,6 +1598,7 @@ Public Class mainGUI2
     End Sub
 #End Region
 
+#Region "Buttons"
     Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles btnSettings.Click
         Try
             Dim frx As New preferences
@@ -773,6 +1616,7 @@ Public Class mainGUI2
             FolderBrowserDialog1.Description = "Select project folder"
             If FolderBrowserDialog1.ShowDialog = DialogResult.OK Then
                 txtProjectFolder.Text = FolderBrowserDialog1.SelectedPath
+                WriteProject()
             End If
 
         Catch ex As Exception
@@ -786,10 +1630,382 @@ Public Class mainGUI2
             FolderBrowserDialog1.Description = "Select output folder"
             If FolderBrowserDialog1.ShowDialog = DialogResult.OK Then
                 txtOutputFolder.Text = FolderBrowserDialog1.SelectedPath
+                WriteProject()
             End If
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
+    End Sub
+
+    Private Sub btnSaveProject_Click(sender As Object, e As EventArgs) Handles btnSaveProject.Click
+        Try
+            If _currentProject.projectfilename = "" Then _currentProject.projectfilename = IO.Path.Combine(_currentProject.projectlocation, $"{_currentProject.projectname}.nb2")
+
+            'Create backup file
+            If IO.File.Exists(_currentProject.projectfilename) Then
+                Dim backupFile As String = _currentProject.projectfilename.Replace(".nb2", $"_backup.nbz")
+                Using zip As New Ionic.Zip.ZipFile(backupFile)
+                    zip.CompressionLevel = Ionic.Zlib.CompressionLevel.BestCompression
+                    zip.AddFile(_currentProject.projectfilename, $"{Now:yyyyMMdd_HHmmss}")
+                    zip.Save()
+                End Using
+            End If
+            Using fs As New IO.FileStream(_currentProject.projectfilename, IO.FileMode.Create, IO.FileAccess.Write, IO.FileShare.None)
+                Using sw As New IO.StreamWriter(fs, System.Text.Encoding.UTF8)
+
+                    sw.Write(JsonConvert.SerializeObject(_currentProject, Formatting.Indented, New JsonSerializerSettings With {
+                                                                                                    .ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                                                                                                    .PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                                                                                                    .MaxDepth = 128}))
+
+                    'Dim js As New JsonSerializer
+                    'js.Serialize(sw, _currentProject)
+                End Using
+            End Using
+            _currentProject.needsSave = False
+            _tracelistener.WriteLine("Project saved!")
+
+            If Not My.Settings.recentProjects.Contains(_currentProject.projectfilename) Then
+                My.Settings.recentProjects.Add(_currentProject.projectfilename)
+            End If
+
+            If My.Settings.recentProjects.Count > 10 Then
+                My.Settings.recentProjects.RemoveAt(0)
+            End If
+            My.Settings.Save()
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub btnOpenProject_Click(sender As Object, e As EventArgs) Handles btnOpenProject.Click
+        Try
+            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
+                If MessageBox.Show("Project has changed. Save changes?", "Save changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    btnSaveProject.RaiseClick()
+                End If
+            End If
+
+            _currentProject = New Project
+
+            If OpenFileDialog1.ShowDialog = DialogResult.OK Then
+                loadProject(OpenFileDialog1.FileName)
+            End If
+            enableOrDisableFields()
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub loadProject(f As String)
+        Try
+            _loadingProject = True
+            _currentProject = CType(JsonConvert.DeserializeObject(IO.File.ReadAllText(f), GetType(Project), New JsonSerializerSettings With {
+                                                                                                    .ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                                                                                                    .PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                                                                                                    .MaxDepth = 128}), Project)
+
+            _currentProject.projectfilename = f
+
+            txtProjectName.Text = _currentProject.projectname
+            txtProjectFolder.Text = _currentProject.projectlocation
+            txtOutputFolder.Text = _currentProject.projectoutputlocation
+            Dim itm = cboOutputType.Items().Cast(Of DevComponents.Editors.ComboItem).FirstOrDefault(Function(c) c.Value.ToString = _currentProject.outputtype)
+            cboOutputType.SelectedItem = itm
+            sbEnums.SetValueAndAnimate(_currentProject.useEnums, eEventSource.Code)
+            sbProcedureLocks.SetValueAndAnimate(_currentProject.generateProcedureLocks, eEventSource.Code)
+
+            cboConnecions.Text = _currentProject.database.connection.description
+            _currentConnection = _connections.First(Function(c) c.description = cboConnecions.Text)
+
+            btnConnect.RaiseClick(eEventSource.Code)
+            'TODO: Create database vcs
+            _mngr.setGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString)
+            _mngr.SetDatabase(_currentProject.database.databasename)
+            _mngr.tables = _currentProject.database.tables
+            _mngr.routines = _currentProject.database.routines
+
+            Dim selectedDB = advtreeDatabases.FindNodeByName(_currentProject.database.databasename)
+
+            If selectedDB IsNot Nothing Then
+                advtreeDatabases.SelectNode(selectedDB, AdvTree.eTreeAction.Code)
+                databaseNodeHandler(selectedDB, New AdvTree.AdvTreeNodeEventArgs(AdvTree.eTreeAction.Code, selectedDB))
+            End If
+
+            _FileManager = New FileVCS.Manager
+            ExplorerControl1.ExplorerManager = _FileManager
+            _FileManager.ScanForFiles(_currentProject.projectoutputlocation)
+            If _currentProject.generatedoutputs IsNot Nothing Then _FileManager.OriginalFiles = _currentProject.generatedoutputs
+            ExplorerControl1.ClearExplorer()
+            ExplorerControl1.RefreshExplorer()
+
+            _loadingProject = False
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub btnCloseProject_Click(sender As Object, e As EventArgs) Handles btnCloseProject.Click
+        Try
+            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
+                If MessageBox.Show("Project has changed. Save changes?", "Save changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    btnSaveProject.RaiseClick()
+                End If
+            End If
+
+            _currentProject = Nothing
+
+            advtreeOutputExplorer.Nodes.Clear()
+            advtreeDatabases.Nodes.Clear()
+            ExplorerControl1.ClearExplorer()
+
+            enableOrDisableFields()
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub btnNewProject_Click(sender As Object, e As EventArgs) Handles btnNewProject.Click
+        Try
+            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
+                If MessageBox.Show("Project has changed. Save changes?", "Save changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    btnSaveProject.RaiseClick()
+                End If
+            End If
+
+            If cboOutputType.SelectedItem Is Nothing Then cboOutputType.SelectedIndex = 2
+            _FileManager = New FileVCS.Manager
+            ExplorerControl1.ClearExplorer()
+
+            _currentProject = New Project
+            Dim x As Editors.ComboItem = CType(cboOutputType.SelectedItem, Editors.ComboItem)
+            _currentProject.outputtype = x.Value.ToString
+            _currentProject.useEnums = sbEnums.Value
+            _currentProject.generateProcedureLocks = sbProcedureLocks.Value
+
+            enableOrDisableFields()
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+#End Region
+
+    Private Sub WriteProject()
+        Try
+            If Not _loadingProject AndAlso _currentProject IsNot Nothing Then
+                _currentProject.needsSave = True
+                _currentProject.application_version = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
+                _currentProject.save_date = Now
+                _currentProject.projectname = txtProjectName.Text
+                _currentProject.projectlocation = txtProjectFolder.Text
+                _currentProject.projectoutputlocation = txtOutputFolder.Text
+
+                Dim x As Editors.ComboItem = CType(cboOutputType.SelectedItem, Editors.ComboItem)
+                _currentProject.outputtype = x.Value.ToString
+                _currentProject.useEnums = sbEnums.Value
+                _currentProject.generateProcedureLocks = sbProcedureLocks.Value
+
+                _currentProject.database = New databaseObjects With {
+                    .connection = _currentConnection,
+                    .databasename = _mngr.GetDatabase,
+                    .tables = _mngr.tables,
+                    .routines = _mngr.routines
+                }
+
+
+            End If
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub cboOutputType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboOutputType.SelectedIndexChanged
+        WriteProject()
+        Select Case CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString
+            Case "net5"
+                Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
+                    advtreeOutputExplorer.Nodes.Clear()
+                    advtreeOutputExplorer.Load(ts)
+                End Using
+                setVbStyle(scCodePreview)
+                setVbStyle(scGeneratedModel)
+                setVbStyle(scGeneratedMapping)
+            Case "php"
+                Using ts As New IO.StringReader(My.Resources.phpOutputExplorer)
+                    advtreeOutputExplorer.Nodes.Clear()
+                    advtreeOutputExplorer.Load(ts)
+                End Using
+                setPHPStyle(scCodePreview)
+                setPHPStyle(scGeneratedModel)
+                setPHPStyle(scGeneratedMapping)
+            Case Else
+                Using ts As New IO.StringReader(My.Resources.defaultOutputExplorer)
+                    advtreeOutputExplorer.Nodes.Clear()
+                    advtreeOutputExplorer.Load(ts)
+                End Using
+                setVbStyle(scCodePreview)
+                setVbStyle(scGeneratedModel)
+                setVbStyle(scGeneratedMapping)
+        End Select
+
+        If _mngr IsNot Nothing Then _mngr.setGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString.ToLower)
+    End Sub
+
+    Private Sub enableOrDisableFields()
+        Try
+            Dim enabled As Boolean = False
+
+            If _currentProject IsNot Nothing Then enabled = True
+
+            dcProjectSettings.Enabled = enabled
+            'dcObjectInfo.Enabled = enabled
+            dcCodePreview.Enabled = enabled
+            dcERDiagram.Enabled = enabled
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub GenerateERDiagramToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GenerateERDiagramToolStripMenuItem.Click
+        LoadTreeGXTableClasses()
+    End Sub
+
+    Private Sub sbEnums_ValueChanged(sender As Object, e As EventArgs) Handles sbEnums.ValueChanged
+
+        If DirectCast(e, Events.EventSourceArgs).Source <> eEventSource.Code Then WriteProject()
+    End Sub
+
+    Private Sub sbProcedureLocks_ValueChanged(sender As Object, e As EventArgs) Handles sbProcedureLocks.ValueChanged
+        If DirectCast(e, Events.EventSourceArgs).Source <> eEventSource.Code Then WriteProject()
+    End Sub
+
+    Private Sub ReloadDatabaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReloadDatabaseToolStripMenuItem.Click
+        advtreeDatabases.SelectedNode.Nodes.Clear()
+        databaseNodeHandler(advtreeDatabases.SelectedNode, New EventArgs)
+    End Sub
+
+    Private Sub ExplorerControl1_ShowFileContentsEvent(fileName As String) Handles ExplorerControl1.ShowFileContentsEvent
+        scCodePreview.Text = IO.File.ReadAllText(fileName)
+        scCodePreview.Colorize(0, scCodePreview.Text.Length)
+        dcCodePreview.Selected = True
+    End Sub
+
+    Private Sub ButtonItem2_Click(sender As Object, e As EventArgs) Handles ButtonItem2.Click
+        IO.File.WriteAllText("d:\test\tables.json", JsonConvert.SerializeObject(_mngr.tables, Formatting.Indented, New JsonSerializerSettings With {
+                                                                                                    .ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                                                                                                    .PreserveReferencesHandling = PreserveReferencesHandling.Objects}))
+    End Sub
+
+    Private Sub bSPexecute_Click(sender As Object, e As EventArgs) Handles bSPexecute.Click
+        Try
+            If _spRoutine IsNot Nothing Then
+                Dim par As New List(Of String)
+
+                For Each row As DataGridViewRow In dgvInputParams.Rows
+                    par.Add(row.Cells.Item(1).Value.ToString)
+                Next
+
+                Dim flds As New List(Of String)
+
+                _mngr.getRoutineLayout(_spRoutine, par.ToArray, flds)
+
+                If flds.Count > 0 Then
+                    lbReturnFields.DataSource = flds.ToArray
+                Else
+                    MessageBox.Show("The layout for the stored procedure cannot be determined. If you are sure that it should return a layout, try it again with other parameter values.")
+                End If
+            End If
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub CalculateHashesOfMemoryFiles()
+        Dim memoryFiles As New List(Of FileVCS.Models.vcsObject)
+
+        For Each t In _mngr.tables.Where(Function(c) c.hasExport)
+            Dim modelContent = _mngr.generateModel(t)
+            Dim mapContent = _mngr.generateMap(t)
+
+            memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{t.singleName}.vb",
+                            .location = "\Models\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, modelContent)
+                            })
+            memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{t.singleName}Map.vb",
+                            .location = "\Models\Mapping\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, mapContent)
+                            })
+        Next
+
+        For Each s In _mngr.routines.Where(Function(c) c.hasExport)
+            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net5" Then
+                If s.isFunction Then
+                    Dim scContent = _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value)
+                    Dim modelContent = _mngr.generateModel(s.returnLayout)
+
+                    memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{s.name}",
+                            .location = "\Models\StoreCommands\Functions\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, scContent)
+                            })
+                    memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{s.returnLayout.singleName}.vb",
+                            .location = "\Models\StoreCommands\Functions\Models\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, modelContent)
+                            })
+                Else
+                    Dim scContent = _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value)
+
+                    memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{s.name}",
+                            .location = "\Models\StoreCommands\Procedures\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, scContent)
+                            })
+
+                    If s.returnsRecordset Then
+                        Dim modelContent = _mngr.generateModel(s.returnLayout)
+                        memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{s.returnLayout.singleName}.vb",
+                            .location = "\Models\StoreCommands\Procedures\Models\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, modelContent)
+                            })
+                    End If
+                End If
+            Else
+                If s.returnsRecordset Then
+                    Dim modelContent = _mngr.generateModel(s.returnLayout, True)
+                    memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{s.returnLayout.singleName}.vb",
+                            .location = "\Models\StoreCommandSchemas\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, modelContent)
+                            })
+                End If
+            End If
+        Next
+
+        Dim contextContent = _mngr.generateContext($"{txtProjectName.Text}")
+        memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{txtProjectName.Text}DataContext.vb",
+                            .location = "\Models\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, contextContent)
+                            })
+
+        If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net" Then
+            Dim scContent = _mngr.generateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value)
+            memoryFiles.Add(New FileVCS.Models.vcsObject With {
+                            .filename = $"{txtProjectName.Text}StoreCommands.vb",
+                            .location = "\Models\",
+                            .hash = FileVCS.Utils.GetHash(SHA384.Create, scContent)
+                            })
+        End If
+
+        _FileManager.OriginalFiles = memoryFiles
+        _FileManager.ScanAgain()
     End Sub
 End Class
