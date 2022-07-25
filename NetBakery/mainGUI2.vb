@@ -455,8 +455,20 @@ Public Class mainGUI2
                     scRoutine.Text = tableFields.definition
                     scRoutine.Colorize(0, scRoutine.Text.Length)
 
+                    Dim idxPrimary = (From idx In tableFields.indexes
+                                      From col In idx.columns
+                                      Where idx.Name = "PRIMARY"
+                                      Select New With {
+                                            Key idx.Name,
+                                            .Unique = idx.IsUnique,
+                                            .Nullable = idx.IsNullable,
+                                            .Column = col.column.name,
+                                            .Position = col.indexPosition
+                                })
+
                     Dim idxs = (From idx In tableFields.indexes
                                 From col In idx.columns
+                                Where idx.Name <> "PRIMARY"
                                 Select New With {
                                             Key idx.Name,
                                             .Unique = idx.IsUnique,
@@ -464,7 +476,15 @@ Public Class mainGUI2
                                             .Column = col.column.name,
                                             .Position = col.indexPosition
                                 })
-                    dgvIndexes.DataSource = idxs.ToArray
+
+                    If idxPrimary IsNot Nothing Then
+                        Dim idxSet = idxs.Prepend(idxPrimary.First)
+                        dgvIndexes.DataSource = idxSet.ToArray
+                    Else
+                        dgvIndexes.DataSource = idxs.ToArray
+                    End If
+
+
 
                     Dim refs = (From ref In tableFields.relations
                                 Select New With {
@@ -473,13 +493,13 @@ Public Class mainGUI2
                                     .Column = ref.toColumn.name,
                                     .LocalColumn = ref.localColumn.name
                                 })
-                    dgvReferences.DataSource = refs.ToArray
+                        dgvReferences.DataSource = refs.ToArray
 
-                    LoadTreeGXTableClass(tableFields)
+                        LoadTreeGXTableClass(tableFields)
 
-                End If
+                    End If
 
-                dgvFields.Refresh()
+                    dgvFields.Refresh()
                 dgvForeignKeys.Refresh()
                 dgvIndexes.Refresh()
                 dgvReferences.Refresh()
@@ -988,7 +1008,7 @@ Public Class mainGUI2
                 Dim tmpContext As AdvTree.Node = tplContextAndStoreCommands.DeepCopy
 
                 tmpContext.Name = "nContext"
-                tmpContext.Text = $"{txtProjectName.Text}Context.vb"
+                tmpContext.Text = $"{txtProjectName.Text}DataContext.vb"
                 AddHandler tmpContext.NodeClick, AddressOf explorerContextNodeHandler
                 If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpContext.Text) > 0 Then
                     tmpContext.ImageIndex += 3
@@ -1017,23 +1037,101 @@ Public Class mainGUI2
     End Sub
 
     Private Sub explorerStoreCommandsNodeDiffHandler(sender As Object, e As EventArgs)
-        Throw New NotImplementedException()
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
+
+            If diskFile IsNot Nothing Then
+                Dim newText = _mngr.generateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value)
+                Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
+
+                LoadDiffView(oldText, newText)
+            End If
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
     End Sub
 
     Private Sub explorerContextNodeDiffHandler(sender As Object, e As EventArgs)
-        Throw New NotImplementedException()
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
+
+            If diskFile IsNot Nothing Then
+                Dim newText = _mngr.generateContext(txtProjectName.Text)
+                Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
+
+                LoadDiffView(oldText, newText)
+            End If
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
     End Sub
 
     Private Sub explorerRoutineModelNodeDiffHandler(sender As Object, e As EventArgs)
-        Throw New NotImplementedException()
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim t = _mngr.routines.FirstOrDefault(Function(c) c.name = node.TagString).returnLayout
+            Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
+
+            If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
+                Dim newText = _mngr.generateModel(t)
+                Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
+
+                LoadDiffView(oldText, newText)
+            End If
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
     End Sub
 
     Private Sub explorerRoutineNodeDiffHandler(sender As Object, e As EventArgs)
-        Throw New NotImplementedException()
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim t = _mngr.routines.FirstOrDefault(Function(c) c.name = node.TagString)
+            Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
+
+            If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
+                Dim newText = _mngr.generateStoreCommand(t, $"{txtProjectName.Text}", sbProcedureLocks.Value)
+                Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
+
+                LoadDiffView(oldText, newText)
+            End If
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
     End Sub
 
     Private Sub explorerMappingNodeDiffHandler(sender As Object, e As EventArgs)
-        Throw New NotImplementedException()
+        Try
+            Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
+            Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
+
+            Dim t = _mngr.tables.FirstOrDefault(Function(c) c.name = node.TagString)
+            Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
+
+            If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
+                Dim newText = _mngr.generateMap(t)
+                Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
+
+                LoadDiffView(oldText, newText)
+            End If
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
     End Sub
 
     Private Sub explorerModelNodeDiffHandler(sender As Object, e As EventArgs)
@@ -1048,18 +1146,21 @@ Public Class mainGUI2
                 Dim newText = _mngr.generateModel(t)
                 Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
 
-                Dim frx As New FileVCS.Diff With {
-                    .originalFileContents = oldText,
-                    .newFileContents = newText
-                }
-
-                frx.Show()
-                frx.showDiff()
+                LoadDiffView(oldText, newText)
             End If
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
+    End Sub
+
+    Private Sub LoadDiffView(oldText As String, newText As String)
+        Dim frx As New FileVCS.Diff With {
+            .originalFileContents = oldText,
+            .newFileContents = newText
+        }
+
+        frx.Show()
     End Sub
 
     Private Sub btnSaveLayout_Click(sender As Object, e As EventArgs) Handles btnSaveLayout.Click
