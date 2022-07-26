@@ -1,7 +1,8 @@
-﻿Imports DiffPlex.WindowsForms.Controls
+﻿Imports System.ComponentModel
+Imports DiffPlex.WindowsForms.Controls
 
 Public Class Diff
-    Private diffView As DiffViewer
+    Private diffView As DiffViewer = Nothing
     Public Property originalFileContents As String
     Public Property newFileContents As String
 
@@ -33,5 +34,9 @@ Public Class Diff
 
     Private Sub bOtherActions_Click(sender As Object, e As EventArgs) Handles bOtherActions.Click
         diffView.OpenViewModeContextMenu()
+    End Sub
+
+    Private Sub Diff_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        If diffView IsNot Nothing Then diffView.Dispose()
     End Sub
 End Class
