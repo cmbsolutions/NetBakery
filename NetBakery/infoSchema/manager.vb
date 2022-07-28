@@ -605,6 +605,9 @@ Namespace infoSchema
 
         End Function
         Private Function getVbType(mysqlType As String) As String
+            If mysqlType Is Nothing Then
+                Return "Integer"
+            End If
             Select Case mysqlType.ToLower
                 Case "tinyint", "mediumint", "integer", "int", "smallint", "int16", "int24", "int32", "uint16", "uint24", "uint32"
                     Return "Integer"
@@ -628,6 +631,9 @@ Namespace infoSchema
         End Function
 
         Private Function getPHPType(mysqlType As String) As String
+            If mysqlType Is Nothing Then
+                Return "int"
+            End If
             Select Case mysqlType.ToLower
                 Case "tinyint", "mediumint", "integer", "int", "smallint", "int16", "int24", "int32", "uint16", "uint24", "uint32"
                     Return "int"
