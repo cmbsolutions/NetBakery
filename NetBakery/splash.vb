@@ -51,7 +51,7 @@ Public Class splash
             ProgressBarX1.Text = "Checking for updates..."
 
             If My.Settings.checkUpdates Then
-                AutoUpdater.Start("https://netbakery.cmbsolutions.nl/v2/netbakery_v2_update.xml")
+                AutoUpdater.Start("https://netbakery.cmbsolutions.nl/v2/netbakery_update.php")
 
 
 
