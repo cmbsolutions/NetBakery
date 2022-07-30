@@ -1,17 +1,14 @@
 name: MSBuild
 
 on:
-  push:
-    branches: [ "develop" ]
   pull_request:
     branches: [ "main" ]
 
 env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: ./NetBakery.sln
-
-permissions:
-  contents: read
+  INNO_SETUP: ./packages/Tools.InnoSetup.5.6.1/tools/ISCC.exe
+  INSTALLER_FILE_PATH: ./NetBakerySetup.iss
 
 jobs:
   build:
@@ -19,7 +16,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        build_configuration: [Debug, Release]
+        build_configuration: [Release]
         build_platform: [x64]
         
     steps:
@@ -37,3 +34,13 @@ jobs:
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{matrix.build_configuration}} /p:platform="${{ matrix.build_platform }}" ${{env.SOLUTION_FILE_PATH}}
+    
+    - name: Create Installer
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: ${{env.INNO_SETUP}} ${{env.INSTALLER_FILE_PATH}}
+
+    - name: Archive artifacts for x64
+      uses: actions/upload-artifact@v3
+      with:
+          name: netbakerysetup.latest
+          path: ./installer/netbakerysetup.latest.exe
