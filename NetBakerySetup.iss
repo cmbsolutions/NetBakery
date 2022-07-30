@@ -4,7 +4,7 @@
 #define MyAppExeName "NetBakery.exe"
 #define MyAppInstallerName "netbakerysetup.latest"
 #define MyAppTarget "Release"
-#define MyAppVersion RemoveFileExt(GetVersionNumbersString(MyAppName +'\bin\x64\' + MyAppTarget + '\' + MyAppExeName))
+#define MyAppVersion RemoveFileExt(GetVersionNumbersString(MyAppName + '\bin\x64\' + MyAppTarget + '\' + MyAppExeName))
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
