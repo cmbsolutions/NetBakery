@@ -45,7 +45,6 @@ jobs:
           path: .\installer\netbakerysetup.latest.exe
 
     - name: Upload to server
-      working-directory: ${{env.GITHUB_WORKSPACE}}
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
         server: ${{secrets.FTP_HOST}}
