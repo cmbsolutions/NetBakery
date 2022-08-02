@@ -7,7 +7,7 @@ $msgPrefix="   |   "
 #and the script can be run via PowerShell or ISE without having to constantly build via VS
 $defaultProjectRoot="./My Project"
 
-write-output "$msgPrefix Beginning incrementVersion.ps1"
+write-output "$msgPrefix Beginning incrementBuildVersion.ps1"
 
 function AssignVersionValue([string]$oldValue, [string]$newValue) {
     if ($newValue -eq $null -or $newValue -eq "") {
@@ -63,7 +63,7 @@ function SetAssemblyFileVersion([string]$pathToFile, [string]$majorVer, [string]
                 $newVersion = "$newVersion.$v3"
             }
 
-            write-host "$msgPrefix Setting Version to $newVersion"
+            write-host "$msgPrefix Setting BuildVersion to $newVersion"
             $_.Replace($origVersion, $newVersion)
         }  else {
             $_
@@ -82,9 +82,9 @@ $assemblyInfoPath = "$PathToProjectRoot\AssemblyInfo.vb"
 
 # the values here can be whatever your heart desires
 $major=$null # $null indicates that whatever value is currently in the file should be used as-is
-$minor="increment" # special token to increment whatever value it finds in that field
-$build=$null
+$minor=$null 
+$build="increment" # special token to increment whatever value it finds in that field
 
 SetAssemblyFileVersion $assemblyInfoPath $major $minor $build
 
-write-output "$msgPrefix Ending incrementVersion.ps1"
+write-output "$msgPrefix Ending incrementBuildVersion.ps1"
