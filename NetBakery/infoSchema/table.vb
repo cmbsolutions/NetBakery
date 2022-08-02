@@ -2,6 +2,8 @@
 
     <Serializable>
     Public Class table
+        Inherits infoSchemaObject
+
         Property name As String
         Property singleName As String
         Property pluralName As String
@@ -12,9 +14,6 @@
         Property foreignKeys As New List(Of foreignKey)
         Property relations As New List(Of relation)
         Property hasExport As Boolean
-        Property definition As String
-        Property parents As New List(Of table)
-        Property children As New List(Of table)
         Property HasMissingFields As Boolean
     End Class
 End Namespace

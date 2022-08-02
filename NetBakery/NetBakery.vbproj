@@ -320,24 +320,18 @@
     <Compile Include="infoSchema\foreignKey.vb" />
     <Compile Include="infoSchema\index.vb" />
     <Compile Include="infoSchema\inflector.vb" />
+    <Compile Include="infoSchema\infoSchemaObject.vb" />
     <Compile Include="infoSchema\manager.vb" />
     <Compile Include="infoSchema\parameter.vb" />
     <Compile Include="infoSchema\relation.vb" />
     <Compile Include="infoSchema\routine.vb" />
     <Compile Include="infoSchema\table.vb" />
-    <Compile Include="informationSchema.vb" />
     <Compile Include="mainGUI2.Designer.vb">
       <DependentUpon>mainGUI2.vb</DependentUpon>
     </Compile>
     <Compile Include="mainGUI2.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Models\Column.vb" />
-    <Compile Include="Models\foreignKey.vb" />
-    <Compile Include="Models\Parameter.vb" />
-    <Compile Include="Models\relation.vb" />
-    <Compile Include="Models\Routine.vb" />
-    <Compile Include="Models\Table.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

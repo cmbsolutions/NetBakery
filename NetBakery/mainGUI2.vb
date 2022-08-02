@@ -202,12 +202,7 @@ Public Class mainGUI2
 
     Private Sub saveConnections()
         Try
-
-            '            Dim connectionsFile As New IO.FileInfo(String.Format("{0}\{1}\{2}\connections.bin", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CMBSolutions", "NetBakery"))
-
             _connections.SaveToFile(_connectionsFile)
-
-            'connectionsFile = Nothing
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -219,7 +214,19 @@ Public Class mainGUI2
 
             If c IsNot Nothing Then
                 _currentConnection = c
-                btnConnect.Pulse(10)
+                btnConnect.SymbolColor = Color.Lime
+                Task.Run(Sub()
+                             btnConnect.Invoke(New Action(Sub()
+                                                              btnConnect.Pulse(5)
+                                                          End Sub))
+                             While btnConnect.IsPulsing
+                                 Threading.Thread.Sleep(250)
+                             End While
+                             btnConnect.Invoke(New Action(Sub()
+                                                              btnConnect.SymbolColor = Color.FromKnownColor(KnownColor.Highlight)
+                                                          End Sub))
+                         End Sub)
+
             Else
                 _currentConnection = Nothing
             End If
@@ -353,12 +360,10 @@ Public Class mainGUI2
                 Dim tmpNode = itemNode.DeepCopy
                 Dim tmpCell = New AdvTree.Cell With {.Editable = False, .Text = "", .TextDisplayFormat = "", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter}
 
-                If routine.executiontime.TotalSeconds > 1 Then
+                If routine.executiontime.TotalSeconds > 0 Then
                     tmpCell.Text = routine.executiontime.TotalSeconds.ToString
                     tmpNode.Style = New ElementStyle(Color.Gold)
                 End If
-
-
 
                 tmpNode.Text = routine.name
                 tmpNode.Cells.Add(tmpCell)
@@ -576,42 +581,6 @@ Public Class mainGUI2
 
     End Function
 
-    Private Sub LoadTableChildren(parent As infoSchema.table, ByRef parentNode As DevComponents.Tree.Node, currentDepth As Integer)
-        Try
-            If currentDepth > My.Settings.maxERDiagramDepth Then Exit Sub
-
-            For Each child In parent.children
-                Dim node As Tree.Node = Nothing
-
-                If Not _TreeGXUnique.TryGetValue(child.name, node) Then
-                    node = New Tree.Node With {
-                        .Text = child.name,
-                        .Name = child.name,
-                        .Expanded = True
-                    }
-
-                    _TreeGXUnique.Add(child.name, node)
-
-                    If currentDepth = My.Settings.maxERDiagramDepth Then
-                        node.Style = ElementStyle4
-                    Else
-                        node.Style = ElementStyle3
-                    End If
-
-                    parentNode.Nodes.Add(node)
-                Else
-                    If Not node.Equals(parentNode) Then
-                        parentNode.Nodes.Add(node)
-                    End If
-                End If
-
-                LoadTableChildren(child, node, currentDepth + 1)
-            Next
-        Catch ex As Exception
-            FormHelpers.dumpException(ex)
-            Trace.WriteLine($"parent:{parent.name}, node: {parentNode.Name}, depth: {currentDepth}")
-        End Try
-    End Sub
 
     Private Sub maxDepth_ValueChanged(sender As Object, e As EventArgs) Handles maxDepth.ValueChanged
         My.Settings.maxERDiagramDepth = CInt(maxDepth.Value)
@@ -675,8 +644,8 @@ Public Class mainGUI2
                 End If
             End If
 
-            For Each child In table.children.Where(Function(c) Not c.Equals(table))
-                LoadTableUnique(child, node)
+            For Each fk In table.foreignKeys
+                node.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, 1).ToArray)
             Next
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -763,9 +732,6 @@ Public Class mainGUI2
                         dgvReferences.DataSource = Nothing
                         lbReturnFields.DataSource = Nothing
                     End If
-
-                    scRoutine.Text = rout.definition
-                    scRoutine.Colorize(0, scRoutine.Text.Length)
                 End If
                 dgvFields.Refresh()
                 dgvForeignKeys.Refresh()
