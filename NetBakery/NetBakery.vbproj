@@ -320,24 +320,18 @@
     <Compile Include="infoSchema\foreignKey.vb" />
     <Compile Include="infoSchema\index.vb" />
     <Compile Include="infoSchema\inflector.vb" />
+    <Compile Include="infoSchema\infoSchemaObject.vb" />
     <Compile Include="infoSchema\manager.vb" />
     <Compile Include="infoSchema\parameter.vb" />
     <Compile Include="infoSchema\relation.vb" />
     <Compile Include="infoSchema\routine.vb" />
     <Compile Include="infoSchema\table.vb" />
-    <Compile Include="informationSchema.vb" />
     <Compile Include="mainGUI2.Designer.vb">
       <DependentUpon>mainGUI2.vb</DependentUpon>
     </Compile>
     <Compile Include="mainGUI2.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Models\Column.vb" />
-    <Compile Include="Models\foreignKey.vb" />
-    <Compile Include="Models\Parameter.vb" />
-    <Compile Include="Models\relation.vb" />
-    <Compile Include="Models\Routine.vb" />
-    <Compile Include="Models\Table.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -403,6 +397,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="incrementBuildVersion.ps1" />
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
@@ -533,7 +528,12 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PreBuildEvent>cd $(ProjectDir)
+c:\windows\syswow64\WindowsPowerShell\v1.0\powershell.exe -command set-executionpolicy unrestricted -Scope CurrentUser
+c:\windows\syswow64\WindowsPowerShell\v1.0\powershell.exe ./incrementBuildVersion.ps1</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PreBuildEvent>cd $(ProjectDir)
 c:\windows\syswow64\WindowsPowerShell\v1.0\powershell.exe -command set-executionpolicy unrestricted -Scope CurrentUser
 c:\windows\syswow64\WindowsPowerShell\v1.0\powershell.exe ./incrementVersion.ps1</PreBuildEvent>

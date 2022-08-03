@@ -91,8 +91,16 @@ Partial Class splash
         '
         '
         '
+        Me.LabelX1.BackgroundStyle.BackColor2SchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemPressedBackground
+        Me.LabelX1.BackgroundStyle.BackColorGradientAngle = 90
+        Me.LabelX1.BackgroundStyle.BackColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.MenuBarBackground
         Me.LabelX1.BackgroundStyle.BackgroundImagePosition = DevComponents.DotNetBar.eStyleBackgroundImage.Tile
         Me.LabelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX1.BackgroundStyle.Font = New System.Drawing.Font("Segoe Script", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelX1.BackgroundStyle.TextColor = System.Drawing.SystemColors.ControlDark
+        Me.LabelX1.BackgroundStyle.TextShadowColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.MenuBarBackground
+        Me.LabelX1.BackgroundStyle.TextShadowOffset = New System.Drawing.Point(2, 2)
+        Me.LabelX1.BackgroundStyle.TextTrimming = DevComponents.DotNetBar.eStyleTextTrimming.None
         Me.LabelX1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.LabelX1.Font = New System.Drawing.Font("Segoe Script", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LabelX1.Location = New System.Drawing.Point(0, 274)
@@ -100,7 +108,7 @@ Partial Class splash
         Me.LabelX1.Size = New System.Drawing.Size(359, 23)
         Me.LabelX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.LabelX1.TabIndex = 4
-        Me.LabelX1.Text = ".netBakery made by CMB Solutions"
+        Me.LabelX1.Text = ".netBakery by CMB Solutions"
         Me.LabelX1.TextAlignment = System.Drawing.StringAlignment.Center
         '
         'splash

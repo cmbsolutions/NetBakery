@@ -15,6 +15,10 @@ Namespace infoSchema
         Private Property _p As New PluralizationService
         Private Property _keywords As New List(Of String)
         Private Property _database As String = ""
+
+        Private dbTables As List(Of table)
+        Private dbRoutines As List(Of routine)
+
         Public Property databases As List(Of String)
         Public Property tables As List(Of table)
         Public Property routines As List(Of routine)
@@ -115,7 +119,7 @@ Namespace infoSchema
             Try
                 Using _dbCommand = New MySqlCommand
 
-                    _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
+                    _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT SCHEMA_NAME FROM SCHEMATA WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys') ORDER BY SCHEMA_NAME"
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
@@ -133,7 +137,7 @@ Namespace infoSchema
             Try
                 Using _dbCommand = New MySqlCommand
 
-                    _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
+                    _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT T.TABLE_NAME, T.TABLE_TYPE, V.VIEW_DEFINITION FROM `TABLES` AS T LEFT JOIN VIEWS AS V ON T.TABLE_SCHEMA = V.TABLE_SCHEMA AND T.TABLE_NAME = V.TABLE_NAME WHERE T.TABLE_SCHEMA = @database;"
                     _dbCommand.Parameters.AddWithValue("database", _database)
 
@@ -151,12 +155,13 @@ Namespace infoSchema
                             tables.Add(t)
 
                             Using _dbInfoCommand = New MySqlCommand
-                                _dbInfoCommand.Connection = dbConnection(_database)
+                                _dbInfoCommand.Connection = dbConnection("definition", _database)
                                 _dbInfoCommand.CommandText = $"SHOW CREATE {rdr.GetString("TABLE_TYPE").Replace("BASE ", "")} {rdr("TABLE_NAME")}"
 
                                 Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
                                     While irdr.Read
                                         t.definition = irdr($"Create {UcFirst(rdr.GetString("TABLE_TYPE").Replace("BASE ", ""))}").ToString
+                                        t.hash = FileVCS.Utils.Gethash(input:=t.definition)
                                     End While
                                 End Using
 
@@ -176,7 +181,7 @@ Namespace infoSchema
                     t.columns = New List(Of column)
 
                     Using _dbCommand = New MySqlCommand
-                        _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
+                        _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
                         _dbCommand.CommandText = "SELECT COLUMN_NAME,ORDINAL_POSITION,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,COLUMN_TYPE,COLUMN_KEY,EXTRA FROM COLUMNS WHERE TABLE_SCHEMA = @database AND TABLE_NAME = @table ORDER BY ORDINAL_POSITION ASC"
                         _dbCommand.Parameters.AddWithValue("database", _database)
                         _dbCommand.Parameters.AddWithValue("table", t.name)
@@ -225,7 +230,7 @@ Namespace infoSchema
         Private Sub getIndexes()
             Try
                 Using _dbCommand = New MySqlCommand
-                    _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
+                    _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT TABLE_NAME, NON_UNIQUE, NULLABLE, INDEX_NAME, COLUMN_NAME, SEQ_IN_INDEX FROM STATISTICS WHERE TABLE_SCHEMA=@database ORDER BY TABLE_NAME, INDEX_NAME, SEQ_IN_INDEX"
                     _dbCommand.Parameters.AddWithValue("database", _database)
 
@@ -262,7 +267,7 @@ Namespace infoSchema
         Private Sub getForeignKeys()
             Try
                 Using _dbCommand = New MySqlCommand
-                    _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
+                    _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT CONSTRAINT_NAME, TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM KEY_COLUMN_USAGE WHERE CONSTRAINT_SCHEMA = @database AND REFERENCED_TABLE_NAME is not null ORDER BY TABLE_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT"
                     _dbCommand.Parameters.AddWithValue("database", _database)
 
@@ -305,9 +310,6 @@ Namespace infoSchema
                                 .column = refcol
                             })
 
-                            'table.parents.Add(reftable)
-                            'reftable.children.Add(table)
-
                             If fk.propertyAlias = reftable.singleName Then
                                 reftable.relations.Add(New relation With {
                                                     .toTable = table,
@@ -324,7 +326,7 @@ Namespace infoSchema
                                                     .toColumn = col,
                                                     .localColumn = refcol,
                                                     .isOptional = col.isNullable,
-                                                    .[alias] = table.singleName & reftable.pluralName}) '_p.Pluralize(fk.propertyAlias)})
+                                                    .[alias] = table.singleName & reftable.pluralName})
 
                                 Else
                                     alreadyExists.alias = $"{alreadyExists.toTable.singleName}{alreadyExists.toColumn.name.Replace("_id", "")}"
@@ -380,7 +382,7 @@ Namespace infoSchema
             Try
                 Using _dbCommand = New MySqlCommand
 
-                    _dbCommand.Connection = dbConnection("INFORMATION_SCHEMA")
+                    _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "Select r.ROUTINE_TYPE, r.ROUTINE_NAME, r.ROUTINE_DEFINITION, p.ORDINAL_POSITION, p.PARAMETER_NAME, p.DATA_TYPE, p.CHARACTER_MAXIMUM_LENGTH, p.NUMERIC_PRECISION FROM ROUTINES As r LEFT JOIN PARAMETERS As p On r.ROUTINE_SCHEMA = p.SPECIFIC_SCHEMA And r.ROUTINE_NAME = p.SPECIFIC_NAME WHERE r.ROUTINE_SCHEMA = @database ORDER BY r.ROUTINE_TYPE, p.SPECIFIC_NAME, p.ORDINAL_POSITION"
                     _dbCommand.Parameters.AddWithValue("database", _database)
 
@@ -449,18 +451,21 @@ Namespace infoSchema
                                 rt.params.Add(p)
                             End If
 
-                            Using _dbInfoCommand = New MySqlCommand
-                                _dbInfoCommand.Connection = dbConnection(_database)
-                                _dbInfoCommand.CommandTimeout = 3600
-                                _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("ROUTINE_TYPE")} {rdr("ROUTINE_NAME")}"
+                            If rt.definition = "" Then
+                                Using _dbInfoCommand = New MySqlCommand
+                                    _dbInfoCommand.Connection = dbConnection("definition", _database)
+                                    _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("ROUTINE_TYPE")} {rdr("ROUTINE_NAME")}"
+                                    _dbInfoCommand.CommandType = CommandType.Text
 
-                                Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
-                                    While irdr.Read
-                                        rt.definition = irdr($"Create {UcFirst(rdr("ROUTINE_TYPE").ToString)}").ToString
-                                    End While
+                                    Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
+                                        While irdr.Read
+                                            rt.definition = irdr($"Create {UcFirst(rdr("ROUTINE_TYPE").ToString)}").ToString
+                                            rt.hash = FileVCS.Utils.Gethash(input:=rt.definition)
+                                        End While
+                                    End Using
+
                                 End Using
-
-                            End Using
+                            End If
                         End While
 
                         If rt IsNot Nothing Then
@@ -480,7 +485,7 @@ Namespace infoSchema
             Try
                 Using _dbxCommand = New MySqlCommand
                     Dim startTime = Now
-                    _dbxCommand.Connection = dbConnection(_database)
+                    _dbxCommand.Connection = dbConnection("definition", _database)
                     _dbxCommand.CommandTimeout = 3600
                     _dbxCommand.CommandType = CommandType.Text
                     _dbxCommand.CommandText = $"CALL {_r.name}({String.Join(",", (From r In _r.params Order By r.ordinalPosition Select "@" & r.name))})"
@@ -559,14 +564,14 @@ Namespace infoSchema
             End Try
         End Function
 
-        Private Function dbConnection(databasename As String) As MySqlConnection
+        Private Function dbConnection(connectionName As String, databasename As String) As MySqlConnection
             Try
                 If _dbConnections Is Nothing Then
                     _dbConnections = New Dictionary(Of String, MySqlConnection)
                 End If
 
-                If _dbConnections.ContainsKey(databasename) Then
-                    Return _dbConnections.First(Function(c) c.Key = databasename).Value
+                If _dbConnections.ContainsKey(connectionName) Then
+                    Return _dbConnections.First(Function(c) c.Key = connectionName).Value
                 Else
                     Dim con = New MySqlConnection(connection.ToString)
                     Try
@@ -577,7 +582,7 @@ Namespace infoSchema
                         con.Open()
                     End Try
 
-                    _dbConnections.Add(databasename, con)
+                    _dbConnections.Add(connectionName, con)
                     con.ChangeDatabase(databasename)
                     Return con
                 End If

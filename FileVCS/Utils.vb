@@ -2,6 +2,17 @@
 Imports System.Text
 
 Public Class Utils
+    Public Shared Function Gethash(Optional filename As String = Nothing, Optional input As String = Nothing) As String
+        If filename IsNot Nothing AndAlso filename <> "" Then
+            Return GetHash(filename)
+        End If
+        If input IsNot Nothing AndAlso input <> "" Then
+            Return GetHash(SHA384.Create, input)
+        End If
+
+        Return ""
+    End Function
+
     Public Shared Function GetHash(filename As String) As String
         If Not IO.File.Exists(filename) Then Return ""
 
