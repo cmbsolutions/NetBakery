@@ -498,13 +498,13 @@ Public Class mainGUI2
                                     .Column = ref.toColumn.name,
                                     .LocalColumn = ref.localColumn.name
                                 })
-                        dgvReferences.DataSource = refs.ToArray
+                    dgvReferences.DataSource = refs.ToArray
 
-                        LoadTreeGXTableClass(tableFields)
+                    LoadTreeGXTableClass(tableFields)
 
-                    End If
+                End If
 
-                    dgvFields.Refresh()
+                dgvFields.Refresh()
                 dgvForeignKeys.Refresh()
                 dgvIndexes.Refresh()
                 dgvReferences.Refresh()
@@ -1973,5 +1973,46 @@ Public Class mainGUI2
 
         _FileManager.OriginalFiles = memoryFiles
         _FileManager.ScanAgain()
+    End Sub
+
+    Private ZoomingTreeGX As Boolean = False
+    Private DoZoom As Boolean = False
+
+    Private Sub TreeGX1_MouseEnter(sender As Object, e As EventArgs) Handles TreeGX1.MouseEnter
+        ZoomingTreeGX = True
+        DoZoom = False
+    End Sub
+
+    Private Sub TreeGX1_MouseLeave(sender As Object, e As EventArgs) Handles TreeGX1.MouseLeave
+        ZoomingTreeGX = False
+        DoZoom = False
+        TreeGX1.HorizontalScroll.Enabled = True
+        TreeGX1.VerticalScroll.Enabled = True
+        TreeGX1.AutoScroll = True
+    End Sub
+
+    Private Sub TreeGX1_MouseWheel(sender As Object, e As MouseEventArgs) Handles TreeGX1.MouseWheel
+
+        If ZoomingTreeGX AndAlso DoZoom Then
+            TreeGX1.HorizontalScroll.Enabled = False
+            TreeGX1.VerticalScroll.Enabled = False
+            TreeGX1.AutoScroll = False
+        End If
+
+        If ZoomingTreeGX AndAlso DoZoom Then
+            If e.Delta <> 0 Then
+                If sliderZoom.Value + CInt(e.Delta / 10) <= sliderZoom.Maximum OrElse sliderZoom.Value + CInt(e.Delta / 10) >= sliderZoom.Minimum Then
+                    sliderZoom.Value += CInt(e.Delta / 10)
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub mainGUI2_KeyDown(sender As Object, e As KeyEventArgs) Handles TreeGX1.KeyDown
+        DoZoom = False
+        If e.Alt AndAlso ZoomingTreeGX Then
+            DoZoom = True
+            e.SuppressKeyPress = True
+        End If
     End Sub
 End Class
