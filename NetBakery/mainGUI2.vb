@@ -23,6 +23,13 @@ Public Class mainGUI2
 
     Private _spRoutine As infoSchema.routine
 
+    Private Enum ErMode
+        NONE
+        [SELECT]
+        MOVE
+    End Enum
+    Private _currentErMode As ErMode = ErMode.SELECT
+
 #Region "Start and close"
     Private Sub mainGUI2_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
@@ -42,7 +49,7 @@ Public Class mainGUI2
                 Size = My.Settings.windowSize
             End If
 
-            maxDepth.Value = My.Settings.maxERDiagramDepth
+            MaxDepthControl.Value = My.Settings.maxERDiagramDepth
 
             TitleText = FormHelpers.ApplicationTitle
             Text = TitleText
@@ -582,13 +589,13 @@ Public Class mainGUI2
     End Function
 
 
-    Private Sub maxDepth_ValueChanged(sender As Object, e As EventArgs) Handles maxDepth.ValueChanged
-        My.Settings.maxERDiagramDepth = CInt(maxDepth.Value)
+    Private Sub maxDepth_ValueChanged(sender As Object, e As EventArgs) Handles MaxDepthControl.ValueChanged
+        My.Settings.maxERDiagramDepth = CInt(MaxDepthControl.Value)
     End Sub
 
-    Private Sub sliderZoom_ValueChanged(sender As Object, e As EventArgs) Handles sliderZoom.ValueChanged
-        TreeGX1.Zoom = CSng(sliderZoom.Value / 100)
-        sliderZoom.Text = $"{sliderZoom.Value}%"
+    Private Sub sliderZoom_ValueChanged(sender As Object, e As EventArgs) Handles zoomSlider.ValueChanged
+        TreeGX1.Zoom = CSng(zoomSlider.Value / 100)
+        zoomSlider.Text = $"{zoomSlider.Value}%"
     End Sub
 
     Private Sub LoadTreeGXTableClasses()
@@ -1976,43 +1983,69 @@ Public Class mainGUI2
     End Sub
 
     Private ZoomingTreeGX As Boolean = False
-    Private DoZoom As Boolean = False
-
-    Private Sub TreeGX1_MouseEnter(sender As Object, e As EventArgs) Handles TreeGX1.MouseEnter
-        ZoomingTreeGX = True
-        DoZoom = False
-    End Sub
-
-    Private Sub TreeGX1_MouseLeave(sender As Object, e As EventArgs) Handles TreeGX1.MouseLeave
-        ZoomingTreeGX = False
-        DoZoom = False
-        TreeGX1.HorizontalScroll.Enabled = True
-        TreeGX1.VerticalScroll.Enabled = True
-        TreeGX1.AutoScroll = True
-    End Sub
 
     Private Sub TreeGX1_MouseWheel(sender As Object, e As MouseEventArgs) Handles TreeGX1.MouseWheel
-
-        If ZoomingTreeGX AndAlso DoZoom Then
-            TreeGX1.HorizontalScroll.Enabled = False
-            TreeGX1.VerticalScroll.Enabled = False
-            TreeGX1.AutoScroll = False
-        End If
-
-        If ZoomingTreeGX AndAlso DoZoom Then
+        If ZoomingTreeGX Then
             If e.Delta <> 0 Then
-                If sliderZoom.Value + CInt(e.Delta / 10) <= sliderZoom.Maximum OrElse sliderZoom.Value + CInt(e.Delta / 10) >= sliderZoom.Minimum Then
-                    sliderZoom.Value += CInt(e.Delta / 10)
-                End If
+                zoomSlider.Value = Math.Max(Math.Min(zoomSlider.Value + CInt(e.Delta / 10), zoomSlider.Maximum), zoomSlider.Minimum)
             End If
         End If
     End Sub
 
-    Private Sub mainGUI2_KeyDown(sender As Object, e As KeyEventArgs) Handles TreeGX1.KeyDown
-        DoZoom = False
-        If e.Alt AndAlso ZoomingTreeGX Then
-            DoZoom = True
-            e.SuppressKeyPress = True
+    Private Sub TreeGX1_KeyDown(sender As Object, e As KeyEventArgs) Handles TreeGX1.KeyDown
+        ZoomingTreeGX = e.Control
+        TreeGX1.HorizontalScroll.Enabled = Not ZoomingTreeGX
+        TreeGX1.VerticalScroll.Enabled = Not ZoomingTreeGX
+        TreeGX1.AutoScroll = Not ZoomingTreeGX
+    End Sub
+    Private Sub TreeGX1_KeyUp(sender As Object, e As KeyEventArgs) Handles TreeGX1.KeyUp
+        ZoomingTreeGX = e.Control
+        TreeGX1.HorizontalScroll.Enabled = Not ZoomingTreeGX
+        TreeGX1.VerticalScroll.Enabled = Not ZoomingTreeGX
+        TreeGX1.AutoScroll = Not ZoomingTreeGX
+    End Sub
+
+    Private Sub bERSelectMode_Click(sender As Object, e As EventArgs) Handles bERSelectMode.Click
+        _currentErMode = ErMode.SELECT
+
+        bERSelectMode.Checked = True
+        bERMoveMode.Checked = False
+    End Sub
+
+    Private Sub bERMoveMode_Click(sender As Object, e As EventArgs) Handles bERMoveMode.Click
+        _currentErMode = ErMode.MOVE
+
+        bERSelectMode.Checked = False
+        bERMoveMode.Checked = True
+    End Sub
+
+    Private Sub TreeGX1_MouseEnter(sender As Object, e As EventArgs) Handles TreeGX1.MouseEnter
+        If _currentErMode = ErMode.MOVE Then Cursor = Cursors.Hand
+    End Sub
+
+    Private Sub TreeGX1_MouseLeave(sender As Object, e As EventArgs) Handles TreeGX1.MouseLeave
+        Cursor = Cursors.Default
+    End Sub
+
+    Private _panEr As Boolean
+    Private erx, ery As Integer
+
+    Private Sub TreeGX1_MouseDown(sender As Object, e As MouseEventArgs) Handles TreeGX1.MouseDown
+        If e.Button = MouseButtons.Left AndAlso _currentErMode = ErMode.MOVE Then
+            _panEr = True
+            erx = e.X
+            ery = e.Y
         End If
+    End Sub
+
+    Private Sub TreeGX1_MouseMove(sender As Object, e As MouseEventArgs) Handles TreeGX1.MouseMove
+        If e.Button = MouseButtons.Left AndAlso _currentErMode = ErMode.MOVE AndAlso _panEr Then
+            TreeGX1.VerticalScroll.Value = Math.Max(Math.Min(TreeGX1.VerticalScroll.Value + ery - e.Y, TreeGX1.VerticalScroll.Maximum), TreeGX1.VerticalScroll.Minimum)
+            TreeGX1.HorizontalScroll.Value = Math.Max(Math.Min(TreeGX1.HorizontalScroll.Value + erx - e.X, TreeGX1.HorizontalScroll.Maximum), TreeGX1.HorizontalScroll.Minimum)
+        End If
+    End Sub
+
+    Private Sub TreeGX1_MouseUp(sender As Object, e As MouseEventArgs) Handles TreeGX1.MouseUp
+        _panEr = False
     End Sub
 End Class

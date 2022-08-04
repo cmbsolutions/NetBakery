@@ -59,11 +59,15 @@ Partial Class mainGUI2
         Me.NodeConnector5 = New DevComponents.Tree.NodeConnector()
         Me.ElementStyle4 = New DevComponents.Tree.ElementStyle()
         Me.PanelEx1 = New DevComponents.DotNetBar.PanelEx()
-        Me.LabelX10 = New DevComponents.DotNetBar.LabelX()
-        Me.maxDepth = New DevComponents.Editors.DoubleInput()
-        Me.LabelX9 = New DevComponents.DotNetBar.LabelX()
-        Me.LabelX8 = New DevComponents.DotNetBar.LabelX()
-        Me.sliderZoom = New DevComponents.DotNetBar.Controls.Slider()
+        Me.Bar5 = New DevComponents.DotNetBar.Bar()
+        Me.MaxDepthControl = New DevComponents.Editors.IntegerInput()
+        Me.ilErDiagram = New System.Windows.Forms.ImageList(Me.components)
+        Me.bERSelectMode = New DevComponents.DotNetBar.ButtonItem()
+        Me.bERMoveMode = New DevComponents.DotNetBar.ButtonItem()
+        Me.LabelItem2 = New DevComponents.DotNetBar.LabelItem()
+        Me.ControlContainerItem1 = New DevComponents.DotNetBar.ControlContainerItem()
+        Me.LabelItem3 = New DevComponents.DotNetBar.LabelItem()
+        Me.zoomSlider = New DevComponents.DotNetBar.SliderItem()
         Me.pdcProjectSettings = New DevComponents.DotNetBar.PanelDockContainer()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.txtOutputFolder = New DevComponents.DotNetBar.Controls.TextBoxX()
@@ -199,6 +203,16 @@ Partial Class mainGUI2
         Me.dbNodes = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.CloseDatabaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReloadDatabaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ComboItem4 = New DevComponents.Editors.ComboItem()
+        Me.ComboItem5 = New DevComponents.Editors.ComboItem()
+        Me.ComboItem6 = New DevComponents.Editors.ComboItem()
+        Me.ComboItem7 = New DevComponents.Editors.ComboItem()
+        Me.ComboItem8 = New DevComponents.Editors.ComboItem()
+        Me.ComboItem9 = New DevComponents.Editors.ComboItem()
+        Me.ComboItem10 = New DevComponents.Editors.ComboItem()
+        Me.ComboItem11 = New DevComponents.Editors.ComboItem()
+        Me.ComboItem12 = New DevComponents.Editors.ComboItem()
+        Me.ComboItem13 = New DevComponents.Editors.ComboItem()
         Me.DockSite4.SuspendLayout()
         CType(Me.barLogging, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.barLogging.SuspendLayout()
@@ -209,7 +223,9 @@ Partial Class mainGUI2
         Me.pdcERDiagram.SuspendLayout()
         CType(Me.TreeGX1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.PanelEx1.SuspendLayout()
-        CType(Me.maxDepth, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Bar5, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Bar5.SuspendLayout()
+        CType(Me.MaxDepthControl, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pdcProjectSettings.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.pdcObjectInfo.SuspendLayout()
@@ -560,11 +576,7 @@ Partial Class mainGUI2
         '
         Me.PanelEx1.CanvasColor = System.Drawing.SystemColors.Control
         Me.PanelEx1.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
-        Me.PanelEx1.Controls.Add(Me.LabelX10)
-        Me.PanelEx1.Controls.Add(Me.maxDepth)
-        Me.PanelEx1.Controls.Add(Me.LabelX9)
-        Me.PanelEx1.Controls.Add(Me.LabelX8)
-        Me.PanelEx1.Controls.Add(Me.sliderZoom)
+        Me.PanelEx1.Controls.Add(Me.Bar5)
         Me.PanelEx1.DisabledBackColor = System.Drawing.Color.Empty
         Me.PanelEx1.Dock = System.Windows.Forms.DockStyle.Top
         Me.PanelEx1.Location = New System.Drawing.Point(0, 0)
@@ -578,84 +590,119 @@ Partial Class mainGUI2
         Me.PanelEx1.Style.GradientAngle = 90
         Me.PanelEx1.TabIndex = 1
         '
-        'LabelX10
+        'Bar5
+        '
+        Me.Bar5.AntiAlias = True
+        Me.Bar5.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.Bar5.CanAutoHide = False
+        Me.Bar5.CanCustomize = False
+        Me.Bar5.CanMaximizeFloating = False
+        Me.Bar5.CanUndock = False
+        Me.Bar5.Controls.Add(Me.MaxDepthControl)
+        Me.Bar5.Dock = System.Windows.Forms.DockStyle.Right
+        Me.Bar5.DockSide = DevComponents.DotNetBar.eDockSide.Top
+        Me.Bar5.DoubleClickBehavior = DevComponents.DotNetBar.eDoubleClickBarBehavior.None
+        Me.Bar5.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.Bar5.Images = Me.ilErDiagram
+        Me.Bar5.IsMaximized = False
+        Me.Bar5.Items.AddRange(New DevComponents.DotNetBar.BaseItem() {Me.bERSelectMode, Me.bERMoveMode, Me.LabelItem2, Me.ControlContainerItem1, Me.LabelItem3, Me.zoomSlider})
+        Me.Bar5.Location = New System.Drawing.Point(649, 0)
+        Me.Bar5.Name = "Bar5"
+        Me.Bar5.Size = New System.Drawing.Size(430, 27)
+        Me.Bar5.Stretch = True
+        Me.Bar5.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.Bar5.TabIndex = 5
+        Me.Bar5.TabStop = False
+        Me.Bar5.Text = "Bar5"
+        Me.Bar5.ThemeAware = True
+        '
+        'MaxDepthControl
         '
         '
         '
         '
-        Me.LabelX10.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.LabelX10.Dock = System.Windows.Forms.DockStyle.Right
-        Me.LabelX10.Location = New System.Drawing.Point(718, 0)
-        Me.LabelX10.Name = "LabelX10"
-        Me.LabelX10.Size = New System.Drawing.Size(48, 29)
-        Me.LabelX10.TabIndex = 4
-        Me.LabelX10.Text = "Depth:"
+        Me.MaxDepthControl.BackgroundStyle.Class = "DateTimeInputBackground"
+        Me.MaxDepthControl.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.MaxDepthControl.ButtonFreeText.Shortcut = DevComponents.DotNetBar.eShortcut.F2
+        Me.MaxDepthControl.DataBindings.Add(New System.Windows.Forms.Binding("Value", Global.NetBakery.My.MySettings.Default, "maxERDiagramDepth", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+        Me.MaxDepthControl.Location = New System.Drawing.Point(102, 2)
+        Me.MaxDepthControl.MaxValue = 10
+        Me.MaxDepthControl.MinValue = 1
+        Me.MaxDepthControl.Name = "MaxDepthControl"
+        Me.MaxDepthControl.ShowUpDown = True
+        Me.MaxDepthControl.Size = New System.Drawing.Size(53, 23)
+        Me.MaxDepthControl.TabIndex = 0
+        Me.MaxDepthControl.Value = Global.NetBakery.My.MySettings.Default.maxERDiagramDepth
         '
-        'maxDepth
+        'ilErDiagram
         '
-        Me.maxDepth.AllowEmptyState = False
+        Me.ilErDiagram.ImageStream = CType(resources.GetObject("ilErDiagram.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.ilErDiagram.TransparentColor = System.Drawing.Color.Transparent
+        Me.ilErDiagram.Images.SetKeyName(0, "tool_smudge.png")
+        Me.ilErDiagram.Images.SetKeyName(1, "tool_smudge.png")
+        Me.ilErDiagram.Images.SetKeyName(2, "tool_smudge.png")
+        Me.ilErDiagram.Images.SetKeyName(3, "select.png")
+        Me.ilErDiagram.Images.SetKeyName(4, "select.png")
+        Me.ilErDiagram.Images.SetKeyName(5, "select.png")
         '
+        'bERSelectMode
         '
+        Me.bERSelectMode.Checked = True
+        Me.bERSelectMode.DisabledImageIndex = 5
+        Me.bERSelectMode.EnableImageAnimation = True
+        Me.bERSelectMode.HoverImageIndex = 4
+        Me.bERSelectMode.ImageFixedSize = New System.Drawing.Size(16, 16)
+        Me.bERSelectMode.ImageIndex = 3
+        Me.bERSelectMode.ImageListSizeSelection = DevComponents.DotNetBar.eButtonImageListSelection.[Default]
+        Me.bERSelectMode.Name = "bERSelectMode"
+        Me.bERSelectMode.PressedImageIndex = 4
+        Me.bERSelectMode.ThemeAware = True
         '
-        Me.maxDepth.BackgroundStyle.Class = "DateTimeInputBackground"
-        Me.maxDepth.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.maxDepth.ButtonFreeText.Shortcut = DevComponents.DotNetBar.eShortcut.F2
-        Me.maxDepth.DisplayFormat = "0"
-        Me.maxDepth.Dock = System.Windows.Forms.DockStyle.Right
-        Me.maxDepth.Increment = 1.0R
-        Me.maxDepth.InputMouseWheelEnabled = False
-        Me.maxDepth.Location = New System.Drawing.Point(766, 0)
-        Me.maxDepth.MaxValue = 10.0R
-        Me.maxDepth.MinValue = 1.0R
-        Me.maxDepth.MouseWheelValueChangeEnabled = False
-        Me.maxDepth.Name = "maxDepth"
-        Me.maxDepth.ShowUpDown = True
-        Me.maxDepth.Size = New System.Drawing.Size(50, 25)
-        Me.maxDepth.TabIndex = 2
-        Me.maxDepth.Value = 5.0R
+        'bERMoveMode
         '
-        'LabelX9
+        Me.bERMoveMode.DisabledImageIndex = 2
+        Me.bERMoveMode.HoverImageIndex = 1
+        Me.bERMoveMode.ImageFixedSize = New System.Drawing.Size(16, 16)
+        Me.bERMoveMode.ImageIndex = 0
+        Me.bERMoveMode.ImageListSizeSelection = DevComponents.DotNetBar.eButtonImageListSelection.[Default]
+        Me.bERMoveMode.Name = "bERMoveMode"
+        Me.bERMoveMode.PressedImageIndex = 1
+        Me.bERMoveMode.ThemeAware = True
         '
+        'LabelItem2
         '
+        Me.LabelItem2.BeginGroup = True
+        Me.LabelItem2.Name = "LabelItem2"
+        Me.LabelItem2.PaddingLeft = 10
+        Me.LabelItem2.Text = "Depth:"
+        Me.LabelItem2.ThemeAware = True
         '
+        'ControlContainerItem1
         '
-        Me.LabelX9.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.LabelX9.Dock = System.Windows.Forms.DockStyle.Right
-        Me.LabelX9.Location = New System.Drawing.Point(816, 0)
-        Me.LabelX9.Name = "LabelX9"
-        Me.LabelX9.Size = New System.Drawing.Size(39, 29)
-        Me.LabelX9.TabIndex = 3
+        Me.ControlContainerItem1.AllowItemResize = False
+        Me.ControlContainerItem1.Control = Me.MaxDepthControl
+        Me.ControlContainerItem1.MenuVisibility = DevComponents.DotNetBar.eMenuVisibility.VisibleAlways
+        Me.ControlContainerItem1.Name = "ControlContainerItem1"
+        Me.ControlContainerItem1.ThemeAware = True
         '
-        'LabelX8
+        'LabelItem3
         '
+        Me.LabelItem3.BeginGroup = True
+        Me.LabelItem3.Name = "LabelItem3"
+        Me.LabelItem3.PaddingLeft = 10
+        Me.LabelItem3.Text = "Zoom:"
+        Me.LabelItem3.ThemeAware = True
         '
+        'zoomSlider
         '
-        '
-        Me.LabelX8.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.LabelX8.Dock = System.Windows.Forms.DockStyle.Right
-        Me.LabelX8.Location = New System.Drawing.Point(855, 0)
-        Me.LabelX8.Name = "LabelX8"
-        Me.LabelX8.Size = New System.Drawing.Size(45, 29)
-        Me.LabelX8.TabIndex = 0
-        Me.LabelX8.Text = "Zoom: "
-        '
-        'sliderZoom
-        '
-        '
-        '
-        '
-        Me.sliderZoom.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.sliderZoom.Dock = System.Windows.Forms.DockStyle.Right
-        Me.sliderZoom.Location = New System.Drawing.Point(900, 0)
-        Me.sliderZoom.Maximum = 400
-        Me.sliderZoom.Minimum = 30
-        Me.sliderZoom.Name = "sliderZoom"
-        Me.sliderZoom.Size = New System.Drawing.Size(179, 29)
-        Me.sliderZoom.Step = 10
-        Me.sliderZoom.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
-        Me.sliderZoom.TabIndex = 1
-        Me.sliderZoom.Text = "100%"
-        Me.sliderZoom.Value = 100
+        Me.zoomSlider.BeginGroup = True
+        Me.zoomSlider.Maximum = 400
+        Me.zoomSlider.Minimum = 30
+        Me.zoomSlider.Name = "zoomSlider"
+        Me.zoomSlider.Step = 10
+        Me.zoomSlider.Text = "100%"
+        Me.zoomSlider.ThemeAware = True
+        Me.zoomSlider.Value = 100
         '
         'pdcProjectSettings
         '
@@ -2601,6 +2648,76 @@ Partial Class mainGUI2
         Me.ReloadDatabaseToolStripMenuItem.Size = New System.Drawing.Size(135, 22)
         Me.ReloadDatabaseToolStripMenuItem.Text = "Reload database"
         '
+        'ComboItem4
+        '
+        Me.ComboItem4.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.ComboItem4.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.ComboItem4.Text = "1"
+        Me.ComboItem4.Value = "1"
+        '
+        'ComboItem5
+        '
+        Me.ComboItem5.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.ComboItem5.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.ComboItem5.Text = "2"
+        Me.ComboItem5.Value = "2"
+        '
+        'ComboItem6
+        '
+        Me.ComboItem6.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.ComboItem6.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.ComboItem6.Text = "3"
+        Me.ComboItem6.Value = "3"
+        '
+        'ComboItem7
+        '
+        Me.ComboItem7.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.ComboItem7.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.ComboItem7.Text = "4"
+        Me.ComboItem7.Value = "4"
+        '
+        'ComboItem8
+        '
+        Me.ComboItem8.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.ComboItem8.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.ComboItem8.Text = "5"
+        Me.ComboItem8.Value = "5"
+        '
+        'ComboItem9
+        '
+        Me.ComboItem9.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.ComboItem9.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.ComboItem9.Text = "6"
+        Me.ComboItem9.Value = "6"
+        '
+        'ComboItem10
+        '
+        Me.ComboItem10.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.ComboItem10.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.ComboItem10.Text = "7"
+        Me.ComboItem10.Value = "7"
+        '
+        'ComboItem11
+        '
+        Me.ComboItem11.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.ComboItem11.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.ComboItem11.Text = "8"
+        Me.ComboItem11.Value = "8"
+        '
+        'ComboItem12
+        '
+        Me.ComboItem12.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.ComboItem12.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.ComboItem12.Text = "9"
+        Me.ComboItem12.Value = "9"
+        '
+        'ComboItem13
+        '
+        Me.ComboItem13.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.ComboItem13.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.ComboItem13.Text = "10"
+        Me.ComboItem13.Value = "10"
+        '
         'mainGUI2
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 17.0!)
@@ -2635,7 +2752,9 @@ Partial Class mainGUI2
         Me.pdcERDiagram.ResumeLayout(False)
         CType(Me.TreeGX1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.PanelEx1.ResumeLayout(False)
-        CType(Me.maxDepth, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Bar5, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Bar5.ResumeLayout(False)
+        CType(Me.MaxDepthControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pdcProjectSettings.ResumeLayout(False)
         Me.pdcProjectSettings.PerformLayout()
         Me.TableLayoutPanel2.ResumeLayout(False)
@@ -2822,12 +2941,7 @@ Partial Class mainGUI2
     Friend WithEvents bERDiagram As DevComponents.DotNetBar.ButtonItem
     Friend WithEvents ButtonItem1 As DevComponents.DotNetBar.ButtonItem
     Friend WithEvents PanelEx1 As DevComponents.DotNetBar.PanelEx
-    Friend WithEvents LabelX8 As DevComponents.DotNetBar.LabelX
-    Friend WithEvents sliderZoom As DevComponents.DotNetBar.Controls.Slider
     Friend WithEvents ElementStyle4 As DevComponents.Tree.ElementStyle
-    Friend WithEvents LabelX10 As DevComponents.DotNetBar.LabelX
-    Friend WithEvents maxDepth As DevComponents.Editors.DoubleInput
-    Friend WithEvents LabelX9 As DevComponents.DotNetBar.LabelX
     Friend WithEvents NodeConnector6 As DevComponents.Tree.NodeConnector
     Friend WithEvents NodeConnector5 As DevComponents.Tree.NodeConnector
     Friend WithEvents GenerateERDiagramToolStripMenuItem As ToolStripMenuItem
@@ -2853,4 +2967,23 @@ Partial Class mainGUI2
     Friend WithEvents cParamName As DataGridViewTextBoxColumn
     Friend WithEvents cParamValue As DataGridViewTextBoxColumn
     Friend WithEvents RecentProjects As DevComponents.DotNetBar.ButtonItem
+    Friend WithEvents Bar5 As DevComponents.DotNetBar.Bar
+    Friend WithEvents MaxDepthControl As DevComponents.Editors.IntegerInput
+    Friend WithEvents ilErDiagram As ImageList
+    Friend WithEvents bERSelectMode As DevComponents.DotNetBar.ButtonItem
+    Friend WithEvents bERMoveMode As DevComponents.DotNetBar.ButtonItem
+    Friend WithEvents LabelItem2 As DevComponents.DotNetBar.LabelItem
+    Friend WithEvents ControlContainerItem1 As DevComponents.DotNetBar.ControlContainerItem
+    Friend WithEvents LabelItem3 As DevComponents.DotNetBar.LabelItem
+    Friend WithEvents zoomSlider As DevComponents.DotNetBar.SliderItem
+    Friend WithEvents ComboItem4 As DevComponents.Editors.ComboItem
+    Friend WithEvents ComboItem5 As DevComponents.Editors.ComboItem
+    Friend WithEvents ComboItem6 As DevComponents.Editors.ComboItem
+    Friend WithEvents ComboItem7 As DevComponents.Editors.ComboItem
+    Friend WithEvents ComboItem8 As DevComponents.Editors.ComboItem
+    Friend WithEvents ComboItem9 As DevComponents.Editors.ComboItem
+    Friend WithEvents ComboItem10 As DevComponents.Editors.ComboItem
+    Friend WithEvents ComboItem11 As DevComponents.Editors.ComboItem
+    Friend WithEvents ComboItem12 As DevComponents.Editors.ComboItem
+    Friend WithEvents ComboItem13 As DevComponents.Editors.ComboItem
 End Class
