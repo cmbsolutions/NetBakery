@@ -475,6 +475,7 @@ Partial Class mainGUI2
         '
         Me.TreeGX1.BackgroundStyle.BackgroundImage = Global.NetBakery.My.Resources.Resources.grid
         Me.TreeGX1.BackgroundStyle.BackgroundImagePosition = DevComponents.Tree.eStyleBackgroundImage.Tile
+        Me.TreeGX1.ColorSchemeStyle = DevComponents.Tree.eColorSchemeStyle.VS2005
         Me.TreeGX1.CommandBackColorGradientAngle = 90
         Me.TreeGX1.CommandMouseOverBackColor2SchemePart = DevComponents.Tree.eColorSchemePart.ItemHotBackground2
         Me.TreeGX1.CommandMouseOverBackColorGradientAngle = 90

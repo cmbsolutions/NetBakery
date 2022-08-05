@@ -2020,7 +2020,7 @@ Public Class mainGUI2
     End Sub
 
     Private Sub TreeGX1_MouseEnter(sender As Object, e As EventArgs) Handles TreeGX1.MouseEnter
-        If _currentErMode = ErMode.MOVE Then Cursor = Cursors.Hand
+        If _currentErMode = ErMode.MOVE Then Cursor = New Cursor(My.Resources.grab.Handle)
     End Sub
 
     Private Sub TreeGX1_MouseLeave(sender As Object, e As EventArgs) Handles TreeGX1.MouseLeave
@@ -2028,24 +2028,27 @@ Public Class mainGUI2
     End Sub
 
     Private _panEr As Boolean
-    Private erx, ery As Integer
+    Private _panStart As Point
 
     Private Sub TreeGX1_MouseDown(sender As Object, e As MouseEventArgs) Handles TreeGX1.MouseDown
         If e.Button = MouseButtons.Left AndAlso _currentErMode = ErMode.MOVE Then
             _panEr = True
-            erx = e.X
-            ery = e.Y
+            _panStart = New Point(e.X, e.Y)
+            Cursor = New Cursor(My.Resources.grabbing.Handle)
         End If
     End Sub
 
     Private Sub TreeGX1_MouseMove(sender As Object, e As MouseEventArgs) Handles TreeGX1.MouseMove
         If e.Button = MouseButtons.Left AndAlso _currentErMode = ErMode.MOVE AndAlso _panEr Then
-            TreeGX1.VerticalScroll.Value = Math.Max(Math.Min(TreeGX1.VerticalScroll.Value + ery - e.Y, TreeGX1.VerticalScroll.Maximum), TreeGX1.VerticalScroll.Minimum)
-            TreeGX1.HorizontalScroll.Value = Math.Max(Math.Min(TreeGX1.HorizontalScroll.Value + erx - e.X, TreeGX1.HorizontalScroll.Maximum), TreeGX1.HorizontalScroll.Minimum)
+            TreeGX1.AutoScrollPosition = New Point((_panStart.X - e.X) - TreeGX1.AutoScrollPosition.X, (_panStart.Y - e.Y) - TreeGX1.AutoScrollPosition.Y)
+
+            'TreeGX1.VerticalScroll.Value = Math.Max(Math.Min(TreeGX1.VerticalScroll.Value + ery - e.Y, TreeGX1.VerticalScroll.Maximum), TreeGX1.VerticalScroll.Minimum)
+            'TreeGX1.HorizontalScroll.Value = Math.Max(Math.Min(TreeGX1.HorizontalScroll.Value + erx - e.X, TreeGX1.HorizontalScroll.Maximum), TreeGX1.HorizontalScroll.Minimum)
         End If
     End Sub
 
     Private Sub TreeGX1_MouseUp(sender As Object, e As MouseEventArgs) Handles TreeGX1.MouseUp
         _panEr = False
+        If _currentErMode = ErMode.MOVE Then Cursor = New Cursor(My.Resources.grab.Handle)
     End Sub
 End Class
