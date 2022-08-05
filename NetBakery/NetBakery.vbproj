@@ -533,7 +533,7 @@
 c:\windows\syswow64\WindowsPowerShell\v1.0\powershell.exe -command set-executionpolicy unrestricted -Scope CurrentUser
 c:\windows\syswow64\WindowsPowerShell\v1.0\powershell.exe ./incrementBuildVersion.ps1</PreBuildEvent>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NewRelease|x64'">
     <PreBuildEvent>cd $(ProjectDir)
 c:\windows\syswow64\WindowsPowerShell\v1.0\powershell.exe -command set-executionpolicy unrestricted -Scope CurrentUser
 c:\windows\syswow64\WindowsPowerShell\v1.0\powershell.exe ./incrementVersion.ps1</PreBuildEvent>

@@ -460,6 +460,12 @@ Namespace infoSchema
                                     Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
                                         While irdr.Read
                                             rt.definition = irdr($"Create {UcFirst(rdr("ROUTINE_TYPE").ToString)}").ToString
+
+                                            If rt.definition = "" Then ' definer is not current user or lacking rights. Use less complete definition
+                                                rt.definition = $"#### You are not the definer and/or are lacking the rights to see this ####"
+                                            Else
+                                                rt.definition = Regex.Replace(rt.definition, "definer=[^ ]* (?=procedure|function|sql|view)", "", RegexOptions.IgnoreCase)
+                                            End If
                                             rt.hash = FileVCS.Utils.Gethash(input:=rt.definition)
                                         End While
                                     End Using

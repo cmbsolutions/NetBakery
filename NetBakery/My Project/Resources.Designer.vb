@@ -95,6 +95,26 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        '''</summary>
+        Friend ReadOnly Property grab() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("grab", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        '''</summary>
+        Friend ReadOnly Property grabbing() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("grabbing", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property grid() As System.Drawing.Bitmap
@@ -190,7 +210,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to abs absolute access acos add add_months adddate admin after aggregate all allocate alter and any app_name are array as asc ascii asin assertion at atan atn2 audit authid authorization autonomous_transaction avg before begin benchmark between bfilename bigint bin binary binary_checksum binary_integer bit bit_count bit_and bit_or blob body boolean both breadth bulk by call cascade cascaded case cast catalog ceil ceiling char char_base character charindex chartorowid check checksum checksum_agg chr class clob  [rest of string was truncated]&quot;;.
+        '''  Looks up a localized string similar to != &amp;&amp; &lt;&lt; &lt;= &lt;=&gt; &lt;&gt; &gt;= &gt;&gt; abs absolute access accessible account acos action add add_months adddate admin after against aggregate algorithm all allocate alter always analyze and any app_name are array as asc ascii asensitive asin assertion at atan atn2 atomic audit authid authorization authors auto auto_increment autoextend_size autonomous_transaction avg avg_row_length backup before begin benchmark between bfilename bigint bin binary binary_checksum binary_integer binlog bit bit_and bit_count bit_or blob bl [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property sql_keywords() As String
             Get
