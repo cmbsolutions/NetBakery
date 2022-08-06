@@ -140,53 +140,117 @@ Public Class Viewer
                 playpenObjects.ForEach(Sub(c) c.yOffset = 0)
 
                 For Each d In DbLinkPairs
-                    Dim gp As New GraphicsPath
-                    If d.startLeft And d.endLeft Then
-                        Dim xmin = Math.Min(d.fromCtrl.Ctrl.Left, d.toCtrl.Ctrl.Left)
+                    DrawConnection(graphics, Pen, New PointF(d.fCtrlMidX, d.fCtrlMidY), New PointF(d.tCtrlMidX, d.tCtrlMidY))
+                    'Dim gp As New GraphicsPath
+                    'If d.startLeft And d.endLeft Then
+                    '    Dim xmin = Math.Min(d.fromCtrl.Ctrl.Left, d.toCtrl.Ctrl.Left)
 
-                        gp.AddLine(New Point(d.fromCtrl.Ctrl.Left, d.fCtrlMidY), New Point(xmin - 10, d.fCtrlMidY))
-                        gp.AddLine(gp.GetLastPoint, New Point(xmin - 10, d.tCtrlMidY))
-                        gp.AddLine(gp.GetLastPoint, New Point(d.toCtrl.Ctrl.Left, d.tCtrlMidY))
-                    End If
+                    '    gp.AddLine(New Point(d.fromCtrl.Ctrl.Left, d.fCtrlMidY), New Point(xmin - 10, d.fCtrlMidY))
+                    '    gp.AddLine(gp.GetLastPoint, New Point(xmin - 10, d.tCtrlMidY))
+                    '    gp.AddLine(gp.GetLastPoint, New Point(d.toCtrl.Ctrl.Left, d.tCtrlMidY))
+                    'End If
 
-                    If Not d.startLeft And Not d.endLeft Then
-                        Dim xmax = Math.Max(d.fromCtrl.Ctrl.Right, d.toCtrl.Ctrl.Right)
+                    'If Not d.startLeft And Not d.endLeft Then
+                    '    Dim xmax = Math.Max(d.fromCtrl.Ctrl.Right, d.toCtrl.Ctrl.Right)
 
-                        gp.AddLine(New Point(d.fromCtrl.Ctrl.Right, d.fCtrlMidY), New Point(xmax + 10, d.fCtrlMidY))
-                        gp.AddLine(gp.GetLastPoint, New Point(xmax + 10, d.tCtrlMidY))
-                        gp.AddLine(gp.GetLastPoint, New Point(d.toCtrl.Ctrl.Right, d.tCtrlMidY))
-                    End If
+                    '    gp.AddLine(New Point(d.fromCtrl.Ctrl.Right, d.fCtrlMidY), New Point(xmax + 10, d.fCtrlMidY))
+                    '    gp.AddLine(gp.GetLastPoint, New Point(xmax + 10, d.tCtrlMidY))
+                    '    gp.AddLine(gp.GetLastPoint, New Point(d.toCtrl.Ctrl.Right, d.tCtrlMidY))
+                    'End If
 
-                    If d.startLeft And Not d.endLeft Then
-                        Dim xdist = CInt(Math.Abs(d.fromCtrl.Ctrl.Left - d.toCtrl.Ctrl.Right) / 2)
+                    'If d.startLeft And Not d.endLeft Then
+                    '    Dim xdist = CInt(Math.Abs(d.fromCtrl.Ctrl.Left - d.toCtrl.Ctrl.Right) / 2)
 
-                        gp.AddLine(New Point(d.fromCtrl.Ctrl.Left, d.fCtrlMidY), New Point(d.fromCtrl.Ctrl.Left - xdist, d.fCtrlMidY))
-                        gp.AddLine(gp.GetLastPoint, New Point(d.fromCtrl.Ctrl.Left - xdist, d.tCtrlMidY))
-                        gp.AddLine(gp.GetLastPoint, New Point(d.toCtrl.Ctrl.Right, d.tCtrlMidY))
-                    End If
+                    '    gp.AddLine(New Point(d.fromCtrl.Ctrl.Left, d.fCtrlMidY), New Point(d.fromCtrl.Ctrl.Left - xdist, d.fCtrlMidY))
+                    '    gp.AddLine(gp.GetLastPoint, New Point(d.fromCtrl.Ctrl.Left - xdist, d.tCtrlMidY))
+                    '    gp.AddLine(gp.GetLastPoint, New Point(d.toCtrl.Ctrl.Right, d.tCtrlMidY))
+                    'End If
 
-                    If Not d.startLeft And d.endLeft Then
-                        Dim xdist = CInt(Math.Abs(d.fromCtrl.Ctrl.Right - d.toCtrl.Ctrl.Left) / 2)
+                    'If Not d.startLeft And d.endLeft Then
+                    '    Dim xdist = CInt(Math.Abs(d.fromCtrl.Ctrl.Right - d.toCtrl.Ctrl.Left) / 2)
 
-                        gp.AddLine(New Point(d.fromCtrl.Ctrl.Right, d.fCtrlMidY), New Point(d.fromCtrl.Ctrl.Right + xdist, d.fCtrlMidY))
-                        gp.AddLine(gp.GetLastPoint, New Point(d.fromCtrl.Ctrl.Right + xdist, d.tCtrlMidY))
-                        gp.AddLine(gp.GetLastPoint, New Point(d.toCtrl.Ctrl.Left, d.tCtrlMidY))
-                    End If
+                    '    gp.AddLine(New Point(d.fromCtrl.Ctrl.Right, d.fCtrlMidY), New Point(d.fromCtrl.Ctrl.Right + xdist, d.fCtrlMidY))
+                    '    gp.AddLine(gp.GetLastPoint, New Point(d.fromCtrl.Ctrl.Right + xdist, d.tCtrlMidY))
+                    '    gp.AddLine(gp.GetLastPoint, New Point(d.toCtrl.Ctrl.Left, d.tCtrlMidY))
+                    'End If
 
-                    If d.fromCtrl.HasFocus Or d.toCtrl.HasFocus Then
-                        graphics.DrawPath(focusPen, gp)
-                    Else
-                        graphics.DrawPath(Pen, gp)
-                    End If
+                    'If d.fromCtrl.HasFocus Or d.toCtrl.HasFocus Then
+                    '    graphics.DrawPath(focusPen, gp)
+                    'Else
+                    '    graphics.DrawPath(Pen, gp)
+                    'End If
 
-                    d.fromCtrl.yOffset += 6
-                    d.toCtrl.yOffset += 6
+                    'd.fromCtrl.yOffset += 6
+                    'd.toCtrl.yOffset += 6
                 Next
             End If
         Catch ex As Exception
             Debug.WriteLine(ex.Message)
         End Try
     End Sub
+
+    Public Sub DrawConnection(ByVal g As Graphics, ByVal pen As Pen, ByVal output As PointF, ByVal input As PointF)
+        g.InterpolationMode = InterpolationMode.HighQualityBilinear
+        g.SmoothingMode = SmoothingMode.HighQuality
+
+        If input = output Then
+            Return
+        End If
+        Const interpolation As Integer = 48
+
+        Dim points(interpolation - 1) As PointF
+        For i As Integer = 0 To interpolation - 1
+            Dim amount As Single = i / CSng(interpolation - 1)
+
+            Dim lx = Lerp(output.X, input.X, amount)
+            Dim d = Math.Min(Math.Abs(input.X - output.X), 100)
+            Dim a = New PointF(CSng(xScale(amount, 0, 1, output.X, output.X + d)), output.Y)
+            Dim b = New PointF(CSng(xScale(amount, 0, 1, input.X - d, input.X)), input.Y)
+
+            Dim bas = Sat(xScale(amount, 0.1, 0.9, 0, 1))
+            Dim cos = Math.Cos(bas * Math.PI)
+            If cos < 0 Then
+                cos = -Math.Pow(-cos, 0.2)
+            Else
+                cos = Math.Pow(cos, 0.2)
+            End If
+            amount = CSng(cos) * -0.5F + 0.5F
+
+            Dim f = Lerp(a, b, amount)
+            points(i) = f
+        Next i
+
+        g.DrawLines(pen, points)
+    End Sub
+
+    Public Function Sat(ByVal x As Double) As Double
+        If x < 0 Then
+            Return 0
+        End If
+        If x > 1 Then
+            Return 1
+        End If
+        Return x
+    End Function
+
+
+    Public Function xScale(ByVal x As Double, ByVal a As Double, ByVal b As Double, ByVal c As Double, ByVal d As Double) As Double
+        Dim s As Double = (x - a) / (b - a)
+        Return s * (d - c) + c
+    End Function
+
+    Public Function Lerp(ByVal a As Single, ByVal b As Single, ByVal amount As Single) As Single
+        Return a * (1.0F - amount) + b * amount
+    End Function
+
+    Public Function Lerp(ByVal a As PointF, ByVal b As PointF, ByVal amount As Single) As PointF
+        Dim result As New PointF()
+
+        result.X = a.X * (1.0F - amount) + b.X * amount
+        result.Y = a.Y * (1.0F - amount) + b.Y * amount
+
+        Return result
+    End Function
 
     Private Sub Viewer_Load(sender As Object, e As EventArgs) Handles Me.Load
         SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
@@ -223,7 +287,7 @@ Public Class DbLinkPair
 
     ReadOnly Property fCtrlMidX As Integer
         Get
-            Return fromCtrl.ctrl.Left + CInt(fromCtrl.ctrl.Width / 2)
+            Return fromCtrl.Ctrl.Right 'fromCtrl.ctrl.Left + CInt(fromCtrl.ctrl.Width / 2)
         End Get
     End Property
     ReadOnly Property fCtrlMidY As Integer
@@ -233,7 +297,7 @@ Public Class DbLinkPair
     End Property
     ReadOnly Property tCtrlMidX As Integer
         Get
-            Return toCtrl.ctrl.Left + CInt(toCtrl.ctrl.Width / 2)
+            Return toCtrl.Ctrl.Left '+ CInt(toCtrl.ctrl.Width / 2)
         End Get
     End Property
     ReadOnly Property tCtrlMidY As Integer
