@@ -151,6 +151,7 @@ Namespace infoSchema
                             End If
 
                             t.escapeName = _keywords IsNot Nothing AndAlso _keywords.Exists(Function(c) c = t.singleName)
+                            t.NoAutoNumber = True
 
                             tables.Add(t)
 
@@ -201,7 +202,10 @@ Namespace infoSchema
                                 c.numericScale = ToInt(rdr("NUMERIC_SCALE"))
                                 c.key = rdr("COLUMN_KEY").ToString
                                 If Not t.isView Then
-                                    c.autoIncrement = If(rdr("EXTRA").ToString = "auto_increment", True, False)
+                                    If rdr("EXTRA").ToString = "auto_increment" Then
+                                        c.autoIncrement = True
+                                        t.NoAutoNumber = False
+                                    End If
                                 End If
                                 c.vbType = getVbType(rdr("DATA_TYPE").ToString)
                                 c.MySqlColumnType = rdr("COLUMN_TYPE").ToString
