@@ -15,5 +15,6 @@
         Property relations As New List(Of relation)
         Property hasExport As Boolean
         Property HasMissingFields As Boolean
+        Property NoAutoNumber As Boolean
     End Class
 End Namespace

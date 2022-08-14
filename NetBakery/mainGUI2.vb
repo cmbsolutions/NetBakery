@@ -339,6 +339,11 @@ Public Class mainGUI2
 
                 AddHandler tmpNode.NodeClick, AddressOf tableNodeHandler
 
+                If table.NoAutoNumber Then
+                    tmpNode.Style = New ElementStyle(Color.Yellow)
+                    tmpNode.Tooltip = "There is no autoincrment field defined in this table."
+                End If
+
                 tableNode.Nodes.Add(tmpNode)
             Next
 
@@ -632,7 +637,8 @@ Public Class mainGUI2
                 node = New Tree.Node With {
                     .Text = table.name,
                     .Name = table.name,
-                    .Expanded = True
+                    .Expanded = True,
+                    .Style = ElementStyle5
                     }
                 parentNode.Nodes.Add(node)
                 _TreeGXUnique.Add(table.name, node)
@@ -2050,5 +2056,17 @@ Public Class mainGUI2
     Private Sub TreeGX1_MouseUp(sender As Object, e As MouseEventArgs) Handles TreeGX1.MouseUp
         _panEr = False
         If _currentErMode = ErMode.MOVE Then Cursor = New Cursor(My.Resources.grab.Handle)
+    End Sub
+
+    Private Sub bDiagramOrMap_Click(sender As Object, e As EventArgs) Handles bDiagramOrMap.Click
+        If TreeGX1.LayoutType = Tree.eNodeLayout.Diagram Then
+            TreeGX1.LayoutType = Tree.eNodeLayout.Map
+        Else
+            TreeGX1.LayoutType = Tree.eNodeLayout.Diagram
+        End If
+    End Sub
+
+    Private Sub ErLayout_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ErLayout.SelectedIndexChanged
+        TreeGX1.DiagramLayoutFlow = CType([Enum].Parse(GetType(Tree.eDiagramFlow), ErLayout.Text), Tree.eDiagramFlow)
     End Sub
 End Class
