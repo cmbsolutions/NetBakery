@@ -16,5 +16,6 @@
         Property hasExport As Boolean
         Property HasMissingFields As Boolean
         Property NoAutoNumber As Boolean
+        Property executiontime As TimeSpan
     End Class
 End Namespace

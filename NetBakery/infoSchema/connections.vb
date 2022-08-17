@@ -215,7 +215,7 @@ Namespace infoSchema
             End If
         End Function
         Public Overrides Function ToString() As String
-            Return $"server={host};user id={user};password={decryptedPass()};allowuservariables=True;characterset=utf8;interactivesession=True;treattinyasboolean=False;compress=True;persistsecurityinfo=True;sslmode={sslmode.ToString}"
+            Return $"server={host};user id={user};password={decryptedPass()};allowuservariables=True;characterset=utf8;interactivesession=True;treattinyasboolean=False;compress=True;persistsecurityinfo=True;sslmode={sslmode}"
         End Function
 
         Public Sub Clone(ByRef [to] As connection)
@@ -225,6 +225,7 @@ Namespace infoSchema
 
     <Serializable>
     Public Enum eSslMode
+        None
         Prefered
         Required
     End Enum
