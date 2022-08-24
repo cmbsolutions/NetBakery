@@ -16,8 +16,8 @@ Namespace infoSchema
         Private Property _keywords As New List(Of String)
         Private Property _database As String = ""
 
-        Private dbTables As List(Of table)
-        Private dbRoutines As List(Of routine)
+        Public Property projectTables As List(Of table)
+        Public Property projectRoutines As List(Of routine)
 
         Public Property databases As List(Of String)
         Public Property tables As List(Of table)
@@ -220,6 +220,15 @@ Namespace infoSchema
                                     If rdr("EXTRA").ToString = "auto_increment" Then
                                         c.autoIncrement = True
                                         t.NoAutoNumber = False
+                                    End If
+                                Else
+                                    Dim pt = projectTables.FirstOrDefault(Function(x) x.name = t.name)
+                                    If pt IsNot Nothing Then
+                                        Dim ct = pt.columns.FirstOrDefault(Function(y) y.name = c.name)
+
+                                        If ct IsNot Nothing Then
+                                            c.IsUserSelectedKey = ct.IsUserSelectedKey
+                                        End If
                                     End If
                                 End If
                                 c.vbType = getVbType(rdr("DATA_TYPE").ToString)

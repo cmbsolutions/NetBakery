@@ -467,6 +467,10 @@ Public Class mainGUI2
                 If tableFields IsNot Nothing Then
                     dgvFields.DataSource = tableFields.columns.ToArray
 
+                    For Each column As DataGridViewColumn In dgvFields.Columns
+                        column.ReadOnly = True
+                    Next
+
                     Dim fks = (From fk In tableFields.foreignKeys
                                From col In fk.columns
                                From refcol In fk.referencedColumns
@@ -696,6 +700,12 @@ Public Class mainGUI2
 
                 If viewFields IsNot Nothing Then
                     dgvFields.DataSource = viewFields.columns.ToArray
+
+                    For Each column As DataGridViewColumn In dgvFields.Columns
+                        column.ReadOnly = True
+                    Next
+                    Dim last = dgvFields.Columns.GetLastColumn(DataGridViewElementStates.ReadOnly, DataGridViewElementStates.None)
+                    last.ReadOnly = False
 
                     dgvForeignKeys.DataSource = Nothing
                     dgvIndexes.DataSource = Nothing
@@ -1724,8 +1734,8 @@ Public Class mainGUI2
             'TODO: Create database vcs
             _mngr.setGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString)
             _mngr.SetDatabase(_currentProject.database.databasename)
-            _mngr.tables = _currentProject.database.tables
-            _mngr.routines = _currentProject.database.routines
+            _mngr.projectTables = _currentProject.database.tables
+            _mngr.projectRoutines = _currentProject.database.routines
 
             Dim selectedDB = advtreeDatabases.FindNodeByName(_currentProject.database.databasename)
 
@@ -2092,5 +2102,12 @@ Public Class mainGUI2
 
     Private Sub ErLayout_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ErLayout.SelectedIndexChanged
         TreeGX1.DiagramLayoutFlow = CType([Enum].Parse(GetType(Tree.eDiagramFlow), ErLayout.Text), Tree.eDiagramFlow)
+    End Sub
+
+    Private Sub dgvFields_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvFields.CellValueChanged
+    End Sub
+
+    Private Sub dgvFields_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvFields.CellContentClick
+
     End Sub
 End Class
