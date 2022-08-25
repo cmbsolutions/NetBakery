@@ -96,17 +96,6 @@ Partial Class mainGUI2
         Me.sbProcedureLocks = New DevComponents.DotNetBar.Controls.SwitchButton()
         Me.pdcCodePreview = New DevComponents.DotNetBar.PanelDockContainer()
         Me.scCodePreview = New ScintillaNET.Scintilla()
-        Me.PanelDockContainer4 = New DevComponents.DotNetBar.PanelDockContainer()
-        Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
-        Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-        Me.dgvInputParams = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.cParamName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cParamValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bSPexecute = New DevComponents.DotNetBar.ButtonX()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.lbReturnFields = New System.Windows.Forms.ListBox()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.scSPRoutine = New ScintillaNET.Scintilla()
         Me.pdcERDiagram = New DevComponents.DotNetBar.PanelDockContainer()
         Me.TreeGX1 = New DevComponents.Tree.TreeGX()
         Me.NodeConnector6 = New DevComponents.Tree.NodeConnector()
@@ -132,6 +121,17 @@ Partial Class mainGUI2
         Me.ControlContainerItem1 = New DevComponents.DotNetBar.ControlContainerItem()
         Me.LabelItem3 = New DevComponents.DotNetBar.LabelItem()
         Me.zoomSlider = New DevComponents.DotNetBar.SliderItem()
+        Me.PanelDockContainer4 = New DevComponents.DotNetBar.PanelDockContainer()
+        Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.dgvInputParams = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.cParamName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cParamValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bSPexecute = New DevComponents.DotNetBar.ButtonX()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.lbReturnFields = New System.Windows.Forms.ListBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.scSPRoutine = New ScintillaNET.Scintilla()
         Me.dcProjectSettings = New DevComponents.DotNetBar.DockContainerItem()
         Me.dcObjectInfo = New DevComponents.DotNetBar.DockContainerItem()
         Me.dcCodePreview = New DevComponents.DotNetBar.DockContainerItem()
@@ -249,6 +249,12 @@ Partial Class mainGUI2
         Me.pdcProjectSettings.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.pdcCodePreview.SuspendLayout()
+        Me.pdcERDiagram.SuspendLayout()
+        CType(Me.TreeGX1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.PanelEx1.SuspendLayout()
+        CType(Me.Bar5, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Bar5.SuspendLayout()
+        CType(Me.MaxDepthControl, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.PanelDockContainer4.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -259,12 +265,6 @@ Partial Class mainGUI2
         Me.SplitContainer2.Panel2.SuspendLayout()
         Me.SplitContainer2.SuspendLayout()
         CType(Me.dgvInputParams, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.pdcERDiagram.SuspendLayout()
-        CType(Me.TreeGX1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.PanelEx1.SuspendLayout()
-        CType(Me.Bar5, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.Bar5.SuspendLayout()
-        CType(Me.MaxDepthControl, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DockSite1.SuspendLayout()
         CType(Me.BarDatabases, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.BarDatabases.SuspendLayout()
@@ -514,7 +514,7 @@ Partial Class mainGUI2
         Me.TabControlPanel1.Margin = New System.Windows.Forms.Padding(3, 5, 3, 5)
         Me.TabControlPanel1.Name = "TabControlPanel1"
         Me.TabControlPanel1.Padding = New System.Windows.Forms.Padding(1)
-        Me.TabControlPanel1.Size = New System.Drawing.Size(1079, 476)
+        Me.TabControlPanel1.Size = New System.Drawing.Size(1079, 478)
         Me.TabControlPanel1.Style.BackColor1.Color = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.TabControlPanel1.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine
         Me.TabControlPanel1.Style.BorderColor.Color = System.Drawing.Color.FromArgb(CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(91, Byte), Integer))
@@ -562,7 +562,7 @@ Partial Class mainGUI2
         DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White
         DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvFields.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
-        Me.dgvFields.Size = New System.Drawing.Size(1077, 474)
+        Me.dgvFields.Size = New System.Drawing.Size(1077, 476)
         Me.dgvFields.TabIndex = 0
         '
         'TabItem1
@@ -583,7 +583,7 @@ Partial Class mainGUI2
         Me.TabControlPanel3.Margin = New System.Windows.Forms.Padding(3, 5, 3, 5)
         Me.TabControlPanel3.Name = "TabControlPanel3"
         Me.TabControlPanel3.Padding = New System.Windows.Forms.Padding(1)
-        Me.TabControlPanel3.Size = New System.Drawing.Size(1079, 476)
+        Me.TabControlPanel3.Size = New System.Drawing.Size(1079, 478)
         Me.TabControlPanel3.Style.BackColor1.Color = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.TabControlPanel3.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine
         Me.TabControlPanel3.Style.BorderColor.Color = System.Drawing.Color.FromArgb(CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(91, Byte), Integer))
@@ -608,7 +608,7 @@ Partial Class mainGUI2
         'CollapsibleSplitContainer1.Panel2
         '
         Me.CollapsibleSplitContainer1.Panel2.Controls.Add(Me.TableLayoutPanel4)
-        Me.CollapsibleSplitContainer1.Size = New System.Drawing.Size(1077, 474)
+        Me.CollapsibleSplitContainer1.Size = New System.Drawing.Size(1077, 476)
         Me.CollapsibleSplitContainer1.SplitterDistance = 512
         Me.CollapsibleSplitContainer1.SplitterWidth = 20
         Me.CollapsibleSplitContainer1.TabIndex = 3
@@ -625,7 +625,7 @@ Partial Class mainGUI2
         Me.TableLayoutPanel3.RowCount = 2
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel3.Size = New System.Drawing.Size(512, 474)
+        Me.TableLayoutPanel3.Size = New System.Drawing.Size(512, 476)
         Me.TableLayoutPanel3.TabIndex = 2
         '
         'scGeneratedModel
@@ -674,7 +674,7 @@ Partial Class mainGUI2
         Me.TableLayoutPanel4.RowCount = 2
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel4.Size = New System.Drawing.Size(545, 474)
+        Me.TableLayoutPanel4.Size = New System.Drawing.Size(545, 476)
         Me.TableLayoutPanel4.TabIndex = 3
         '
         'LabelX6
@@ -728,7 +728,7 @@ Partial Class mainGUI2
         Me.TabControlPanel2.Margin = New System.Windows.Forms.Padding(3, 5, 3, 5)
         Me.TabControlPanel2.Name = "TabControlPanel2"
         Me.TabControlPanel2.Padding = New System.Windows.Forms.Padding(1)
-        Me.TabControlPanel2.Size = New System.Drawing.Size(1079, 476)
+        Me.TabControlPanel2.Size = New System.Drawing.Size(1079, 478)
         Me.TabControlPanel2.Style.BackColor1.Color = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.TabControlPanel2.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine
         Me.TabControlPanel2.Style.BorderColor.Color = System.Drawing.Color.FromArgb(CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(91, Byte), Integer))
@@ -777,7 +777,7 @@ Partial Class mainGUI2
         DataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.White
         DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvForeignKeys.RowHeadersDefaultCellStyle = DataGridViewCellStyle6
-        Me.dgvForeignKeys.Size = New System.Drawing.Size(1077, 474)
+        Me.dgvForeignKeys.Size = New System.Drawing.Size(1077, 476)
         Me.dgvForeignKeys.TabIndex = 1
         '
         'TabItem2
@@ -796,7 +796,7 @@ Partial Class mainGUI2
         Me.TabControlPanel5.Location = New System.Drawing.Point(0, 0)
         Me.TabControlPanel5.Name = "TabControlPanel5"
         Me.TabControlPanel5.Padding = New System.Windows.Forms.Padding(1)
-        Me.TabControlPanel5.Size = New System.Drawing.Size(1079, 476)
+        Me.TabControlPanel5.Size = New System.Drawing.Size(1079, 478)
         Me.TabControlPanel5.Style.BackColor1.Color = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.TabControlPanel5.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine
         Me.TabControlPanel5.Style.BorderColor.Color = System.Drawing.Color.FromArgb(CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(91, Byte), Integer))
@@ -845,7 +845,7 @@ Partial Class mainGUI2
         DataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.White
         DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvReferences.RowHeadersDefaultCellStyle = DataGridViewCellStyle9
-        Me.dgvReferences.Size = New System.Drawing.Size(1077, 474)
+        Me.dgvReferences.Size = New System.Drawing.Size(1077, 476)
         Me.dgvReferences.TabIndex = 2
         '
         'TabItem6
@@ -863,7 +863,7 @@ Partial Class mainGUI2
         Me.TabControlPanel6.Location = New System.Drawing.Point(0, 0)
         Me.TabControlPanel6.Name = "TabControlPanel6"
         Me.TabControlPanel6.Padding = New System.Windows.Forms.Padding(1)
-        Me.TabControlPanel6.Size = New System.Drawing.Size(1079, 476)
+        Me.TabControlPanel6.Size = New System.Drawing.Size(1079, 478)
         Me.TabControlPanel6.Style.BackColor1.Color = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.TabControlPanel6.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine
         Me.TabControlPanel6.Style.BorderColor.Color = System.Drawing.Color.FromArgb(CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(91, Byte), Integer))
@@ -884,7 +884,7 @@ Partial Class mainGUI2
         Me.scRoutine.Margin = New System.Windows.Forms.Padding(0)
         Me.scRoutine.Name = "scRoutine"
         Me.scRoutine.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.scRoutine.Size = New System.Drawing.Size(1077, 474)
+        Me.scRoutine.Size = New System.Drawing.Size(1077, 476)
         Me.scRoutine.TabIndex = 2
         Me.scRoutine.UseTabs = True
         '
@@ -903,7 +903,7 @@ Partial Class mainGUI2
         Me.TabControlPanel4.Location = New System.Drawing.Point(0, 0)
         Me.TabControlPanel4.Name = "TabControlPanel4"
         Me.TabControlPanel4.Padding = New System.Windows.Forms.Padding(1)
-        Me.TabControlPanel4.Size = New System.Drawing.Size(1079, 476)
+        Me.TabControlPanel4.Size = New System.Drawing.Size(1079, 478)
         Me.TabControlPanel4.Style.BackColor1.Color = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.TabControlPanel4.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine
         Me.TabControlPanel4.Style.BorderColor.Color = System.Drawing.Color.FromArgb(CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(91, Byte), Integer))
@@ -952,7 +952,7 @@ Partial Class mainGUI2
         DataGridViewCellStyle12.SelectionForeColor = System.Drawing.Color.White
         DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvIndexes.RowHeadersDefaultCellStyle = DataGridViewCellStyle12
-        Me.dgvIndexes.Size = New System.Drawing.Size(1077, 474)
+        Me.dgvIndexes.Size = New System.Drawing.Size(1077, 476)
         Me.dgvIndexes.TabIndex = 2
         '
         'TabItem4
@@ -1317,182 +1317,6 @@ Partial Class mainGUI2
         Me.scCodePreview.TabIndex = 0
         Me.scCodePreview.UseTabs = True
         '
-        'PanelDockContainer4
-        '
-        Me.PanelDockContainer4.CanvasColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.PanelDockContainer4.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
-        Me.PanelDockContainer4.Controls.Add(Me.SplitContainer1)
-        Me.PanelDockContainer4.DisabledBackColor = System.Drawing.Color.Empty
-        Me.PanelDockContainer4.Location = New System.Drawing.Point(3, 28)
-        Me.PanelDockContainer4.Name = "PanelDockContainer4"
-        Me.PanelDockContainer4.Size = New System.Drawing.Size(1079, 505)
-        Me.PanelDockContainer4.Style.Alignment = System.Drawing.StringAlignment.Center
-        Me.PanelDockContainer4.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground
-        Me.PanelDockContainer4.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
-        Me.PanelDockContainer4.Style.GradientAngle = 90
-        Me.PanelDockContainer4.TabIndex = 29
-        '
-        'SplitContainer1
-        '
-        Me.SplitContainer1.BackColor = System.Drawing.Color.Transparent
-        Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 0)
-        Me.SplitContainer1.Name = "SplitContainer1"
-        '
-        'SplitContainer1.Panel1
-        '
-        Me.SplitContainer1.Panel1.Controls.Add(Me.SplitContainer2)
-        '
-        'SplitContainer1.Panel2
-        '
-        Me.SplitContainer1.Panel2.Controls.Add(Me.scSPRoutine)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1079, 505)
-        Me.SplitContainer1.SplitterDistance = 358
-        Me.SplitContainer1.TabIndex = 0
-        '
-        'SplitContainer2
-        '
-        Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitContainer2.Location = New System.Drawing.Point(0, 0)
-        Me.SplitContainer2.Name = "SplitContainer2"
-        Me.SplitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal
-        '
-        'SplitContainer2.Panel1
-        '
-        Me.SplitContainer2.Panel1.Controls.Add(Me.dgvInputParams)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.bSPexecute)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.Label1)
-        '
-        'SplitContainer2.Panel2
-        '
-        Me.SplitContainer2.Panel2.Controls.Add(Me.lbReturnFields)
-        Me.SplitContainer2.Panel2.Controls.Add(Me.Label2)
-        Me.SplitContainer2.Size = New System.Drawing.Size(358, 505)
-        Me.SplitContainer2.SplitterDistance = 257
-        Me.SplitContainer2.SplitterWidth = 5
-        Me.SplitContainer2.TabIndex = 0
-        '
-        'dgvInputParams
-        '
-        Me.dgvInputParams.AllowUserToAddRows = False
-        Me.dgvInputParams.AllowUserToDeleteRows = False
-        Me.dgvInputParams.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle13.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle13.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvInputParams.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle13
-        Me.dgvInputParams.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvInputParams.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cParamName, Me.cParamValue})
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
-        DataGridViewCellStyle14.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle14.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvInputParams.DefaultCellStyle = DataGridViewCellStyle14
-        Me.dgvInputParams.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.dgvInputParams.EnableHeadersVisualStyles = False
-        Me.dgvInputParams.GridColor = System.Drawing.Color.FromArgb(CType(CType(123, Byte), Integer), CType(CType(123, Byte), Integer), CType(CType(132, Byte), Integer))
-        Me.dgvInputParams.Location = New System.Drawing.Point(0, 15)
-        Me.dgvInputParams.MultiSelect = False
-        Me.dgvInputParams.Name = "dgvInputParams"
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle15.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle15.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvInputParams.RowHeadersDefaultCellStyle = DataGridViewCellStyle15
-        Me.dgvInputParams.RowHeadersVisible = False
-        Me.dgvInputParams.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.dgvInputParams.Size = New System.Drawing.Size(358, 216)
-        Me.dgvInputParams.TabIndex = 1
-        '
-        'cParamName
-        '
-        Me.cParamName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.cParamName.DataPropertyName = "name"
-        Me.cParamName.HeaderText = "Name"
-        Me.cParamName.Name = "cParamName"
-        Me.cParamName.ReadOnly = True
-        Me.cParamName.Width = 68
-        '
-        'cParamValue
-        '
-        Me.cParamValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.cParamValue.DataPropertyName = "value"
-        Me.cParamValue.HeaderText = "Value"
-        Me.cParamValue.Name = "cParamValue"
-        '
-        'bSPexecute
-        '
-        Me.bSPexecute.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton
-        Me.bSPexecute.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
-        Me.bSPexecute.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.bSPexecute.Location = New System.Drawing.Point(0, 231)
-        Me.bSPexecute.Name = "bSPexecute"
-        Me.bSPexecute.Size = New System.Drawing.Size(358, 26)
-        Me.bSPexecute.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
-        Me.bSPexecute.TabIndex = 2
-        Me.bSPexecute.Text = "Execute"
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(0, 0)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(71, 15)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Parameters"
-        '
-        'lbReturnFields
-        '
-        Me.lbReturnFields.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.lbReturnFields.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lbReturnFields.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lbReturnFields.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lbReturnFields.FormattingEnabled = True
-        Me.lbReturnFields.ItemHeight = 17
-        Me.lbReturnFields.Location = New System.Drawing.Point(0, 15)
-        Me.lbReturnFields.Name = "lbReturnFields"
-        Me.lbReturnFields.Size = New System.Drawing.Size(358, 228)
-        Me.lbReturnFields.TabIndex = 1
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.Label2.Location = New System.Drawing.Point(0, 0)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(79, 15)
-        Me.Label2.TabIndex = 0
-        Me.Label2.Text = "Return fields"
-        '
-        'scSPRoutine
-        '
-        Me.scSPRoutine.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.scSPRoutine.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.scSPRoutine.FontQuality = ScintillaNET.FontQuality.AntiAliased
-        Me.scSPRoutine.IndentationGuides = ScintillaNET.IndentView.LookBoth
-        Me.scSPRoutine.Lexer = ScintillaNET.Lexer.Vb
-        Me.scSPRoutine.Location = New System.Drawing.Point(0, 0)
-        Me.scSPRoutine.Margin = New System.Windows.Forms.Padding(0)
-        Me.scSPRoutine.Name = "scSPRoutine"
-        Me.scSPRoutine.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.scSPRoutine.Size = New System.Drawing.Size(717, 505)
-        Me.scSPRoutine.TabIndex = 3
-        Me.scSPRoutine.UseTabs = True
-        '
         'pdcERDiagram
         '
         Me.pdcERDiagram.CanvasColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
@@ -1816,6 +1640,182 @@ Partial Class mainGUI2
         Me.zoomSlider.Text = "100%"
         Me.zoomSlider.ThemeAware = True
         Me.zoomSlider.Value = 100
+        '
+        'PanelDockContainer4
+        '
+        Me.PanelDockContainer4.CanvasColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.PanelDockContainer4.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.PanelDockContainer4.Controls.Add(Me.SplitContainer1)
+        Me.PanelDockContainer4.DisabledBackColor = System.Drawing.Color.Empty
+        Me.PanelDockContainer4.Location = New System.Drawing.Point(3, 28)
+        Me.PanelDockContainer4.Name = "PanelDockContainer4"
+        Me.PanelDockContainer4.Size = New System.Drawing.Size(1079, 505)
+        Me.PanelDockContainer4.Style.Alignment = System.Drawing.StringAlignment.Center
+        Me.PanelDockContainer4.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground
+        Me.PanelDockContainer4.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
+        Me.PanelDockContainer4.Style.GradientAngle = 90
+        Me.PanelDockContainer4.TabIndex = 29
+        '
+        'SplitContainer1
+        '
+        Me.SplitContainer1.BackColor = System.Drawing.Color.Transparent
+        Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer1.Location = New System.Drawing.Point(0, 0)
+        Me.SplitContainer1.Name = "SplitContainer1"
+        '
+        'SplitContainer1.Panel1
+        '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.SplitContainer2)
+        '
+        'SplitContainer1.Panel2
+        '
+        Me.SplitContainer1.Panel2.Controls.Add(Me.scSPRoutine)
+        Me.SplitContainer1.Size = New System.Drawing.Size(1079, 505)
+        Me.SplitContainer1.SplitterDistance = 358
+        Me.SplitContainer1.TabIndex = 0
+        '
+        'SplitContainer2
+        '
+        Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer2.Location = New System.Drawing.Point(0, 0)
+        Me.SplitContainer2.Name = "SplitContainer2"
+        Me.SplitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal
+        '
+        'SplitContainer2.Panel1
+        '
+        Me.SplitContainer2.Panel1.Controls.Add(Me.dgvInputParams)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.bSPexecute)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.Label1)
+        '
+        'SplitContainer2.Panel2
+        '
+        Me.SplitContainer2.Panel2.Controls.Add(Me.lbReturnFields)
+        Me.SplitContainer2.Panel2.Controls.Add(Me.Label2)
+        Me.SplitContainer2.Size = New System.Drawing.Size(358, 505)
+        Me.SplitContainer2.SplitterDistance = 257
+        Me.SplitContainer2.SplitterWidth = 5
+        Me.SplitContainer2.TabIndex = 0
+        '
+        'dgvInputParams
+        '
+        Me.dgvInputParams.AllowUserToAddRows = False
+        Me.dgvInputParams.AllowUserToDeleteRows = False
+        Me.dgvInputParams.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle13.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle13.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvInputParams.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle13
+        Me.dgvInputParams.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvInputParams.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cParamName, Me.cParamValue})
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        DataGridViewCellStyle14.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle14.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvInputParams.DefaultCellStyle = DataGridViewCellStyle14
+        Me.dgvInputParams.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dgvInputParams.EnableHeadersVisualStyles = False
+        Me.dgvInputParams.GridColor = System.Drawing.Color.FromArgb(CType(CType(123, Byte), Integer), CType(CType(123, Byte), Integer), CType(CType(132, Byte), Integer))
+        Me.dgvInputParams.Location = New System.Drawing.Point(0, 15)
+        Me.dgvInputParams.MultiSelect = False
+        Me.dgvInputParams.Name = "dgvInputParams"
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle15.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle15.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvInputParams.RowHeadersDefaultCellStyle = DataGridViewCellStyle15
+        Me.dgvInputParams.RowHeadersVisible = False
+        Me.dgvInputParams.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
+        Me.dgvInputParams.Size = New System.Drawing.Size(358, 216)
+        Me.dgvInputParams.TabIndex = 1
+        '
+        'cParamName
+        '
+        Me.cParamName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.cParamName.DataPropertyName = "name"
+        Me.cParamName.HeaderText = "Name"
+        Me.cParamName.Name = "cParamName"
+        Me.cParamName.ReadOnly = True
+        Me.cParamName.Width = 68
+        '
+        'cParamValue
+        '
+        Me.cParamValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.cParamValue.DataPropertyName = "value"
+        Me.cParamValue.HeaderText = "Value"
+        Me.cParamValue.Name = "cParamValue"
+        '
+        'bSPexecute
+        '
+        Me.bSPexecute.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton
+        Me.bSPexecute.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
+        Me.bSPexecute.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.bSPexecute.Location = New System.Drawing.Point(0, 231)
+        Me.bSPexecute.Name = "bSPexecute"
+        Me.bSPexecute.Size = New System.Drawing.Size(358, 26)
+        Me.bSPexecute.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.bSPexecute.TabIndex = 2
+        Me.bSPexecute.Text = "Execute"
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(0, 0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(71, 15)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "Parameters"
+        '
+        'lbReturnFields
+        '
+        Me.lbReturnFields.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.lbReturnFields.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.lbReturnFields.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.lbReturnFields.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.lbReturnFields.FormattingEnabled = True
+        Me.lbReturnFields.ItemHeight = 17
+        Me.lbReturnFields.Location = New System.Drawing.Point(0, 15)
+        Me.lbReturnFields.Name = "lbReturnFields"
+        Me.lbReturnFields.Size = New System.Drawing.Size(358, 228)
+        Me.lbReturnFields.TabIndex = 1
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.Label2.Location = New System.Drawing.Point(0, 0)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(79, 15)
+        Me.Label2.TabIndex = 0
+        Me.Label2.Text = "Return fields"
+        '
+        'scSPRoutine
+        '
+        Me.scSPRoutine.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.scSPRoutine.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.scSPRoutine.FontQuality = ScintillaNET.FontQuality.AntiAliased
+        Me.scSPRoutine.IndentationGuides = ScintillaNET.IndentView.LookBoth
+        Me.scSPRoutine.Lexer = ScintillaNET.Lexer.Vb
+        Me.scSPRoutine.Location = New System.Drawing.Point(0, 0)
+        Me.scSPRoutine.Margin = New System.Windows.Forms.Padding(0)
+        Me.scSPRoutine.Name = "scSPRoutine"
+        Me.scSPRoutine.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.scSPRoutine.Size = New System.Drawing.Size(717, 505)
+        Me.scSPRoutine.TabIndex = 3
+        Me.scSPRoutine.UseTabs = True
         '
         'dcProjectSettings
         '
@@ -2847,6 +2847,12 @@ Partial Class mainGUI2
         Me.pdcProjectSettings.PerformLayout()
         Me.TableLayoutPanel2.ResumeLayout(False)
         Me.pdcCodePreview.ResumeLayout(False)
+        Me.pdcERDiagram.ResumeLayout(False)
+        CType(Me.TreeGX1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.PanelEx1.ResumeLayout(False)
+        CType(Me.Bar5, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Bar5.ResumeLayout(False)
+        CType(Me.MaxDepthControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.PanelDockContainer4.ResumeLayout(False)
         Me.SplitContainer1.Panel1.ResumeLayout(False)
         Me.SplitContainer1.Panel2.ResumeLayout(False)
@@ -2859,12 +2865,6 @@ Partial Class mainGUI2
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.ResumeLayout(False)
         CType(Me.dgvInputParams, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.pdcERDiagram.ResumeLayout(False)
-        CType(Me.TreeGX1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.PanelEx1.ResumeLayout(False)
-        CType(Me.Bar5, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.Bar5.ResumeLayout(False)
-        CType(Me.MaxDepthControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.DockSite1.ResumeLayout(False)
         CType(Me.BarDatabases, System.ComponentModel.ISupportInitialize).EndInit()
         Me.BarDatabases.ResumeLayout(False)
