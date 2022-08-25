@@ -223,12 +223,26 @@ Public Class mainGUI2
                 _currentConnection = c
                 btnConnect.SymbolColor = Color.Lime
                 Task.Run(Sub()
-                             btnConnect.Invoke(New Action(Sub()
-                                                              btnConnect.Pulse(5)
-                                                          End Sub))
-                             While btnConnect.IsPulsing
-                                 Threading.Thread.Sleep(250)
-                             End While
+                             'btnConnect.Invoke(New Action(Sub()
+                             '                                 btnConnect.Pulse(5)
+                             '                             End Sub))
+                             'While btnConnect.IsPulsing
+                             For y As Integer = 0 To 2
+                                 For i As Integer = 0 To 250 Step 10
+                                     Dim g = i
+                                     btnConnect.Invoke(New Action(Sub()
+                                                                      btnConnect.SymbolColor = Color.FromArgb(0, g, 0)
+                                                                  End Sub))
+                                     Threading.Thread.Sleep(25)
+                                 Next
+                                 For i As Integer = 250 To 0 Step -10
+                                     Dim g = i
+                                     btnConnect.Invoke(New Action(Sub()
+                                                                      btnConnect.SymbolColor = Color.FromArgb(0, g, 0)
+                                                                  End Sub))
+                                     Threading.Thread.Sleep(25)
+                                 Next
+                             Next
                              btnConnect.Invoke(New Action(Sub()
                                                               btnConnect.SymbolColor = Color.FromKnownColor(KnownColor.Highlight)
                                                           End Sub))
@@ -350,9 +364,15 @@ Public Class mainGUI2
             For Each view In _mngr.tables.Where(Function(c) c.isView = True)
                 ' Clone the templates
                 Dim tmpNode = itemNode.DeepCopy
-                Dim tmpCell = New AdvTree.Cell With {.Editable = False, .Text = "0", .TextDisplayFormat = "(0)", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter}
+                Dim tmpCell = New AdvTree.Cell With {.Editable = False, .Text = "", .TextDisplayFormat = "", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter}
 
-                tmpCell.Text = view.columns.Count.ToString
+                If view.executiontime.TotalSeconds > 0 Then
+                    tmpCell.Text = view.executiontime.TotalSeconds.ToString
+                    tmpNode.Style = New ElementStyle(Color.Gold)
+                Else
+                    tmpCell.Text = view.columns.Count.ToString
+                End If
+
                 tmpNode.Text = view.name
                 tmpNode.Cells.Add(tmpCell)
 
@@ -446,6 +466,10 @@ Public Class mainGUI2
 
                 If tableFields IsNot Nothing Then
                     dgvFields.DataSource = tableFields.columns.ToArray
+
+                    For Each column As DataGridViewColumn In dgvFields.Columns
+                        column.ReadOnly = True
+                    Next
 
                     Dim fks = (From fk In tableFields.foreignKeys
                                From col In fk.columns
@@ -676,6 +700,12 @@ Public Class mainGUI2
 
                 If viewFields IsNot Nothing Then
                     dgvFields.DataSource = viewFields.columns.ToArray
+
+                    For Each column As DataGridViewColumn In dgvFields.Columns
+                        column.ReadOnly = True
+                    Next
+                    Dim last = dgvFields.Columns.GetLastColumn(DataGridViewElementStates.ReadOnly, DataGridViewElementStates.None)
+                    last.ReadOnly = False
 
                     dgvForeignKeys.DataSource = Nothing
                     dgvIndexes.DataSource = Nothing
@@ -1704,8 +1734,8 @@ Public Class mainGUI2
             'TODO: Create database vcs
             _mngr.setGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString)
             _mngr.SetDatabase(_currentProject.database.databasename)
-            _mngr.tables = _currentProject.database.tables
-            _mngr.routines = _currentProject.database.routines
+            _mngr.projectTables = _currentProject.database.tables
+            _mngr.projectRoutines = _currentProject.database.routines
 
             Dim selectedDB = advtreeDatabases.FindNodeByName(_currentProject.database.databasename)
 
@@ -2048,6 +2078,10 @@ Public Class mainGUI2
         If e.Button = MouseButtons.Left AndAlso _currentErMode = ErMode.MOVE AndAlso _panEr Then
             TreeGX1.AutoScrollPosition = New Point((_panStart.X - e.X) - TreeGX1.AutoScrollPosition.X, (_panStart.Y - e.Y) - TreeGX1.AutoScrollPosition.Y)
 
+            If Math.Abs(_panStart.X - e.X) > 5 OrElse Math.Abs(_panStart.Y - e.Y) > 5 Then
+                _panStart = New Point(e.X, e.Y)
+                TreeGX1.RecalcLayout()
+            End If
             'TreeGX1.VerticalScroll.Value = Math.Max(Math.Min(TreeGX1.VerticalScroll.Value + ery - e.Y, TreeGX1.VerticalScroll.Maximum), TreeGX1.VerticalScroll.Minimum)
             'TreeGX1.HorizontalScroll.Value = Math.Max(Math.Min(TreeGX1.HorizontalScroll.Value + erx - e.X, TreeGX1.HorizontalScroll.Maximum), TreeGX1.HorizontalScroll.Minimum)
         End If
@@ -2068,5 +2102,12 @@ Public Class mainGUI2
 
     Private Sub ErLayout_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ErLayout.SelectedIndexChanged
         TreeGX1.DiagramLayoutFlow = CType([Enum].Parse(GetType(Tree.eDiagramFlow), ErLayout.Text), Tree.eDiagramFlow)
+    End Sub
+
+    Private Sub dgvFields_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvFields.CellValueChanged
+    End Sub
+
+    Private Sub dgvFields_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvFields.CellContentClick
+
     End Sub
 End Class

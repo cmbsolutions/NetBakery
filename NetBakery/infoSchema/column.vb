@@ -15,5 +15,6 @@
         Property key As String
         Property autoIncrement As Boolean
         Property enums As New List(Of String)
+        Property IsUserSelectedKey As Boolean
     End Class
 End Namespace

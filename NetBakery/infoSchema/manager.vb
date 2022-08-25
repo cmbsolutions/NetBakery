@@ -16,8 +16,8 @@ Namespace infoSchema
         Private Property _keywords As New List(Of String)
         Private Property _database As String = ""
 
-        Private dbTables As List(Of table)
-        Private dbRoutines As List(Of routine)
+        Public Property projectTables As List(Of table)
+        Public Property projectRoutines As List(Of routine)
 
         Public Property databases As List(Of String)
         Public Property tables As List(Of table)
@@ -159,13 +159,28 @@ Namespace infoSchema
                                 _dbInfoCommand.Connection = dbConnection("definition", _database)
                                 _dbInfoCommand.CommandText = $"SHOW CREATE {rdr.GetString("TABLE_TYPE").Replace("BASE ", "")} {rdr("TABLE_NAME")}"
 
-                                Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
-                                    While irdr.Read
-                                        t.definition = irdr($"Create {UcFirst(rdr.GetString("TABLE_TYPE").Replace("BASE ", ""))}").ToString
-                                        t.hash = FileVCS.Utils.Gethash(input:=t.definition)
-                                    End While
-                                End Using
+                                Try
+                                    Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
+                                        While irdr.Read
+                                            t.definition = irdr($"Create {UcFirst(rdr.GetString("TABLE_TYPE").Replace("BASE ", ""))}").ToString
+                                            t.hash = FileVCS.Utils.Gethash(input:=t.definition)
+                                        End While
+                                    End Using
+                                Catch rex As Exception
+                                    Trace.WriteLine(rex.Message)
+                                End Try
 
+                                If t.isView Then
+                                    Dim starttime = Now
+                                    _dbInfoCommand.CommandText = $"SELECT * FROM {t.name};"
+                                    Try
+                                        Dim cnt = _dbInfoCommand.ExecuteNonQuery
+                                    Catch mex As exception
+
+                                    End Try
+                                    Dim endtime = Now
+                                    t.executiontime = endtime.Subtract(starttime)
+                                End If
                             End Using
                         End While
                     End Using
@@ -205,6 +220,15 @@ Namespace infoSchema
                                     If rdr("EXTRA").ToString = "auto_increment" Then
                                         c.autoIncrement = True
                                         t.NoAutoNumber = False
+                                    End If
+                                Else
+                                    Dim pt = projectTables.FirstOrDefault(Function(x) x.name = t.name)
+                                    If pt IsNot Nothing Then
+                                        Dim ct = pt.columns.FirstOrDefault(Function(y) y.name = c.name)
+
+                                        If ct IsNot Nothing Then
+                                            c.IsUserSelectedKey = ct.IsUserSelectedKey
+                                        End If
                                     End If
                                 End If
                                 c.vbType = getVbType(rdr("DATA_TYPE").ToString)
@@ -579,23 +603,28 @@ Namespace infoSchema
                 If _dbConnections Is Nothing Then
                     _dbConnections = New Dictionary(Of String, MySqlConnection)
                 End If
+                Dim con As MySqlConnection
 
                 If _dbConnections.ContainsKey(connectionName) Then
-                    Return _dbConnections.First(Function(c) c.Key = connectionName).Value
+                    con = _dbConnections.First(Function(c) c.Key = connectionName).Value
                 Else
-                    Dim con = New MySqlConnection(connection.ToString)
-                    Try
-                        con.Open()
-                    Catch msex As MySqlException
-                        connection.sslmode = eSslMode.Prefered
-                        con = New MySqlConnection(connection.ToString)
-                        con.Open()
-                    End Try
+                    con = New MySqlConnection(connection.ToString)
 
                     _dbConnections.Add(connectionName, con)
-                    con.ChangeDatabase(databasename)
-                    Return con
                 End If
+
+                If con.State = ConnectionState.Closed Or con.State = ConnectionState.Broken Then
+                    Try
+                        con.Open()
+                    Catch msex As Exception
+                        connection.sslmode = eSslMode.None
+                        con.ConnectionString = connection.ToString
+                        con.Open()
+                    End Try
+                    con.ChangeDatabase(databasename)
+                End If
+                Return con
+
             Catch ex As Exception
                 Throw
             End Try
