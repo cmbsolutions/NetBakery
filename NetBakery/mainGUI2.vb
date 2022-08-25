@@ -22,6 +22,8 @@ Public Class mainGUI2
     Private _FileManager As New FileVCS.Manager
 
     Private _spRoutine As infoSchema.routine
+    Private dgvFieldsBindingSource As BindingSource
+    Private SelectedObject As Object
 
     Private Enum ErMode
         NONE
@@ -460,12 +462,15 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-
             If nodeEvent.Button = MouseButtons.Left Then
                 Dim tableFields = (From f In _mngr.tables Where f.isView = False AndAlso f.name = node.Text Select f).FirstOrDefault
 
                 If tableFields IsNot Nothing Then
-                    dgvFields.DataSource = tableFields.columns.ToArray
+                    SelectedObject = tableFields
+                    dgvFieldsBindingSource = New BindingSource With {
+                        .DataSource = tableFields.columns
+                    }
+                    dgvFields.DataSource = dgvFieldsBindingSource
 
                     For Each column As DataGridViewColumn In dgvFields.Columns
                         column.ReadOnly = True
@@ -559,137 +564,6 @@ Public Class mainGUI2
         End Try
     End Sub
 
-#Region "TreeGX"
-    Private Sub LoadTreeGXTableClass(ByVal rootTable As infoSchema.table)
-        Try
-            _TreeGXUnique = New Dictionary(Of String, Tree.Node)
-            TreeGX1.BeginUpdate()
-            TreeGX1.Nodes.Clear()
-            TreeGX1.LayoutType = Tree.eNodeLayout.Map
-
-            Dim node As New Tree.Node With {
-                .Text = rootTable.name,
-                .Name = rootTable.name,
-                .Expanded = True
-            }
-
-            _TreeGXUnique.Add(rootTable.name, node)
-
-            TreeGX1.Nodes.Add(node)
-
-            For Each fk In rootTable.foreignKeys
-                node.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, 1).ToArray)
-            Next
-
-        Catch ex As Exception
-            FormHelpers.dumpException(ex)
-        Finally
-            TreeGX1.EndUpdate()
-        End Try
-        _TreeGXUnique.Clear()
-
-    End Sub
-
-    Private Function GetForeignKeyNodes(t As infoSchema.table, currentDepth As Integer) As List(Of Tree.Node)
-        Dim nodes As New List(Of Tree.Node)
-        If currentDepth > My.Settings.maxERDiagramDepth Then Return nodes
-        Try
-            Dim n As New Tree.Node With {
-                          .Text = t.name,
-                          .Name = t.name,
-                          .Expanded = True
-                }
-
-            nodes.Add(n)
-
-            For Each fk In t.foreignKeys
-                If fk.referencedTable.name <> t.name Then
-                    n.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, currentDepth + 1).ToArray)
-                End If
-            Next
-
-
-        Catch ex As Exception
-
-        End Try
-
-        Return nodes
-
-    End Function
-
-
-    Private Sub maxDepth_ValueChanged(sender As Object, e As EventArgs) Handles MaxDepthControl.ValueChanged
-        My.Settings.maxERDiagramDepth = CInt(MaxDepthControl.Value)
-    End Sub
-
-    Private Sub sliderZoom_ValueChanged(sender As Object, e As EventArgs) Handles zoomSlider.ValueChanged
-        TreeGX1.Zoom = CSng(zoomSlider.Value / 100)
-        zoomSlider.Text = $"{zoomSlider.Value}%"
-    End Sub
-
-    Private Sub LoadTreeGXTableClasses()
-
-        _TreeGXUnique = New Dictionary(Of String, Tree.Node)
-
-        TreeGX1.BeginUpdate()
-        TreeGX1.Nodes.Clear()
-        TreeGX1.LayoutType = Tree.eNodeLayout.Map
-
-        Dim rootNode As New Tree.Node With {
-            .Name = _mngr.GetDatabase,
-            .Text = .Name,
-            .Expanded = True
-        }
-        TreeGX1.Nodes.Add(rootNode)
-
-        Try
-            For Each t In _mngr.tables.Where(Function(c) Not c.isView)
-                LoadTableUnique(t, rootNode)
-            Next
-        Catch ex As Exception
-            FormHelpers.dumpException(ex)
-        Finally
-            TreeGX1.EndUpdate()
-        End Try
-    End Sub
-
-    Private Sub LoadTableUnique(table As infoSchema.table, parentNode As DevComponents.Tree.Node)
-        Try
-            Dim node As Tree.Node = Nothing
-
-            If Not _TreeGXUnique.TryGetValue(table.name, node) Then
-                node = New Tree.Node With {
-                    .Text = table.name,
-                    .Name = table.name,
-                    .Expanded = True,
-                    .Style = ElementStyle5
-                    }
-                parentNode.Nodes.Add(node)
-                _TreeGXUnique.Add(table.name, node)
-
-            Else
-                'If Not node.Equals(parentNode) Then parentNode.Nodes.Add(node)
-                Dim pn = (From p As Tree.Node In parentNode.Nodes.OfType(Of Tree.Node) Where p.Name = table.name Select p).FirstOrDefault
-
-                If pn Is Nothing Then
-                    If Not node.Equals(parentNode) Then parentNode.Nodes.Add(node)
-                Else
-                    Dim ln As New Tree.LinkedNode With {
-                        .Node = node
-                    }
-                    parentNode.LinkedNodes.Add(ln)
-                End If
-            End If
-
-            For Each fk In table.foreignKeys
-                node.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, 1).ToArray)
-            Next
-        Catch ex As Exception
-            FormHelpers.dumpException(ex)
-        End Try
-    End Sub
-#End Region
-
     Private Sub viewNodeHandler(sender As Object, e As EventArgs)
         Try
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
@@ -699,13 +573,17 @@ Public Class mainGUI2
                 Dim viewFields = (From f In _mngr.tables Where f.isView = True AndAlso f.name = node.Text Select f).FirstOrDefault
 
                 If viewFields IsNot Nothing Then
-                    dgvFields.DataSource = viewFields.columns.ToArray
+                    SelectedObject = viewFields
+
+                    dgvFieldsBindingSource = New BindingSource With {
+                        .DataSource = viewFields.columns
+                    }
+                    dgvFields.DataSource = dgvFieldsBindingSource
 
                     For Each column As DataGridViewColumn In dgvFields.Columns
                         column.ReadOnly = True
                     Next
-                    Dim last = dgvFields.Columns.GetLastColumn(DataGridViewElementStates.ReadOnly, DataGridViewElementStates.None)
-                    last.ReadOnly = False
+                    dgvFields.Columns.Item(dgvFields.ColumnCount - 1).ReadOnly = False
 
                     dgvForeignKeys.DataSource = Nothing
                     dgvIndexes.DataSource = Nothing
@@ -748,6 +626,7 @@ Public Class mainGUI2
                 Dim rout = _mngr.routines.FirstOrDefault(Function(c) c.name = node.Text)
 
                 If rout IsNot Nothing Then
+                    SelectedObject = rout
                     _spRoutine = rout
                     Dim params = (From r In rout.params Order By r.ordinalPosition Select New With {.name = r.name, .value = ""})
                     dgvInputParams.DataSource = params.ToArray
@@ -756,11 +635,17 @@ Public Class mainGUI2
                     scSPRoutine.Colorize(0, scRoutine.Text.Length)
 
                     If rout.returnsRecordset Then
-                        dgvFields.DataSource = rout.returnLayout.columns.ToArray
+                        dgvFieldsBindingSource = New BindingSource With {
+                            .DataSource = rout.returnLayout.columns
+                        }
+                        dgvFields.DataSource = dgvFieldsBindingSource
+
+                        For Each column As DataGridViewColumn In dgvFields.Columns
+                            column.ReadOnly = True
+                        Next
 
                         Dim fields = (From f In rout.returnLayout.columns Select f.name)
                         lbReturnFields.DataSource = fields.ToArray
-
 
                         dgvForeignKeys.DataSource = Nothing
                         dgvIndexes.DataSource = Nothing
@@ -1221,6 +1106,9 @@ Public Class mainGUI2
             _FileManager.OriginalFiles = Nothing
             _FileManager.ScanForFiles(_currentProject.projectoutputlocation)
             _FileManager.OriginalFiles = _FileManager.CurrentFiles
+
+            _currentProject.database.tables = _mngr.tables
+            _currentProject.database.routines = _mngr.routines
 
             _currentProject.generatedoutputs = _FileManager.CurrentFiles
 
@@ -1768,6 +1656,10 @@ Public Class mainGUI2
 
             _currentProject = Nothing
 
+            txtProjectName.Text = ""
+            txtProjectFolder.Text = ""
+            txtOutputFolder.Text = ""
+
             advtreeOutputExplorer.Nodes.Clear()
             advtreeDatabases.Nodes.Clear()
             ExplorerControl1.ClearExplorer()
@@ -1791,6 +1683,9 @@ Public Class mainGUI2
             ExplorerControl1.ClearExplorer()
 
             _currentProject = New Project
+            txtProjectName.Text = ""
+            txtProjectFolder.Text = ""
+            txtOutputFolder.Text = ""
             Dim x As Editors.ComboItem = CType(cboOutputType.SelectedItem, Editors.ComboItem)
             _currentProject.outputtype = x.Value.ToString
             _currentProject.useEnums = sbEnums.Value
@@ -2018,7 +1913,137 @@ Public Class mainGUI2
         _FileManager.ScanAgain()
     End Sub
 
+#Region "TreeGX"
+
     Private ZoomingTreeGX As Boolean = False
+
+    Private Sub LoadTreeGXTableClass(ByVal rootTable As infoSchema.table)
+        Try
+            _TreeGXUnique = New Dictionary(Of String, Tree.Node)
+            TreeGX1.BeginUpdate()
+            TreeGX1.Nodes.Clear()
+            TreeGX1.LayoutType = Tree.eNodeLayout.Map
+
+            Dim node As New Tree.Node With {
+                .Text = rootTable.name,
+                .Name = rootTable.name,
+                .Expanded = True
+            }
+
+            _TreeGXUnique.Add(rootTable.name, node)
+
+            TreeGX1.Nodes.Add(node)
+
+            For Each fk In rootTable.foreignKeys
+                node.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, 1).ToArray)
+            Next
+
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        Finally
+            TreeGX1.EndUpdate()
+        End Try
+        _TreeGXUnique.Clear()
+
+    End Sub
+
+    Private Function GetForeignKeyNodes(t As infoSchema.table, currentDepth As Integer) As List(Of Tree.Node)
+        Dim nodes As New List(Of Tree.Node)
+        If currentDepth > My.Settings.maxERDiagramDepth Then Return nodes
+        Try
+            Dim n As New Tree.Node With {
+                          .Text = t.name,
+                          .Name = t.name,
+                          .Expanded = True
+                }
+
+            nodes.Add(n)
+
+            For Each fk In t.foreignKeys
+                If fk.referencedTable.name <> t.name Then
+                    n.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, currentDepth + 1).ToArray)
+                End If
+            Next
+
+
+        Catch ex As Exception
+
+        End Try
+
+        Return nodes
+
+    End Function
+
+    Private Sub maxDepth_ValueChanged(sender As Object, e As EventArgs) Handles MaxDepthControl.ValueChanged
+        My.Settings.maxERDiagramDepth = CInt(MaxDepthControl.Value)
+    End Sub
+
+    Private Sub sliderZoom_ValueChanged(sender As Object, e As EventArgs) Handles zoomSlider.ValueChanged
+        TreeGX1.Zoom = CSng(zoomSlider.Value / 100)
+        zoomSlider.Text = $"{zoomSlider.Value}%"
+    End Sub
+
+    Private Sub LoadTreeGXTableClasses()
+
+        _TreeGXUnique = New Dictionary(Of String, Tree.Node)
+
+        TreeGX1.BeginUpdate()
+        TreeGX1.Nodes.Clear()
+        TreeGX1.LayoutType = Tree.eNodeLayout.Map
+
+        Dim rootNode As New Tree.Node With {
+            .Name = _mngr.GetDatabase,
+            .Text = .Name,
+            .Expanded = True
+        }
+        TreeGX1.Nodes.Add(rootNode)
+
+        Try
+            For Each t In _mngr.tables.Where(Function(c) Not c.isView)
+                LoadTableUnique(t, rootNode)
+            Next
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        Finally
+            TreeGX1.EndUpdate()
+        End Try
+    End Sub
+
+    Private Sub LoadTableUnique(table As infoSchema.table, parentNode As DevComponents.Tree.Node)
+        Try
+            Dim node As Tree.Node = Nothing
+
+            If Not _TreeGXUnique.TryGetValue(table.name, node) Then
+                node = New Tree.Node With {
+                    .Text = table.name,
+                    .Name = table.name,
+                    .Expanded = True,
+                    .Style = ElementStyle5
+                    }
+                parentNode.Nodes.Add(node)
+                _TreeGXUnique.Add(table.name, node)
+
+            Else
+                'If Not node.Equals(parentNode) Then parentNode.Nodes.Add(node)
+                Dim pn = (From p As Tree.Node In parentNode.Nodes.OfType(Of Tree.Node) Where p.Name = table.name Select p).FirstOrDefault
+
+                If pn Is Nothing Then
+                    If Not node.Equals(parentNode) Then parentNode.Nodes.Add(node)
+                Else
+                    Dim ln As New Tree.LinkedNode With {
+                        .Node = node
+                    }
+                    parentNode.LinkedNodes.Add(ln)
+                End If
+            End If
+
+            For Each fk In table.foreignKeys
+                node.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, 1).ToArray)
+            Next
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
 
     Private Sub TreeGX1_MouseWheel(sender As Object, e As MouseEventArgs) Handles TreeGX1.MouseWheel
         If ZoomingTreeGX Then
@@ -2104,10 +2129,19 @@ Public Class mainGUI2
         TreeGX1.DiagramLayoutFlow = CType([Enum].Parse(GetType(Tree.eDiagramFlow), ErLayout.Text), Tree.eDiagramFlow)
     End Sub
 
+#End Region
+
     Private Sub dgvFields_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvFields.CellValueChanged
-    End Sub
+        'If Not dgvFields.Columns.Item(e.ColumnIndex).ReadOnly Then
+        '    If SelectedObject IsNot Nothing Then
+        '        Dim view = TryCast(SelectedObject, infoSchema.table)
 
-    Private Sub dgvFields_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvFields.CellContentClick
+        '        If view IsNot Nothing Then
+        '            Dim cname = dgvFields.Rows.Item(e.RowIndex).Cells.Item(0).Value.ToString
 
+        '            _mngr.tables.First(Function(c) c.name = view.name).columns.First(Function(c) c.name = cname).IsUserSelectedKey = CBool(dgvFields.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value)
+        '        End If
+        '    End If
+        'End If
     End Sub
 End Class
