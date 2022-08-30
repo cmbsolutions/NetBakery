@@ -121,79 +121,6 @@
   <data name="RibbonGeometry" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RibbonGeometry.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="phpOutputExplorer" xml:space="preserve">
-    <value>&lt;AdvTree&gt;
-  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Table" ImageIndex="18" ImageExpandedIndex="23"&gt;&lt;/Node&gt;
-    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Entity" ImageIndex="18" ImageExpandedIndex="23"&gt;
-    &lt;/Node&gt;
-&lt;/AdvTree&gt;</value>
-  </data>
-  <data name="pngwing.com" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\pngwing.com.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="connections" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\connections.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="sql_keywords" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sql_keywords.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="vb_keywords" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\vb_keywords.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="netbakery" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\netbakery.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="php_keywords" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\php_keywords.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="folder_search" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\folder_search.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="defaultOutputExplorer" xml:space="preserve">
-    <value>&lt;AdvTree&gt;
-  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23"&gt;
-    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Mapping" ImageIndex="18" ImageExpandedIndex="23"&gt;
-    &lt;/Node&gt;
-    &lt;Node Expanded="true" Name="mapStoreCommands" DragDropEnabled="false" Text="StoreCommands" ImageIndex="18" ImageExpandedIndex="23"&gt;
-      &lt;Node Expanded="true" Name="mapStoreCommandModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23" /&gt;
-    &lt;/Node&gt;
-  &lt;/Node&gt;
-&lt;/AdvTree&gt;</value>
-    <comment>Default output explorer nodes. Is used to revert to init state</comment>
-  </data>
-  <data name="updateLocationBaseURL" xml:space="preserve">
-    <value>https://www.cmbsolutions.nl</value>
-  </data>
-  <data name="net5OutputExplorer" xml:space="preserve">
-    <value>&lt;AdvTree&gt;
-  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23"&gt;
-    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Mapping" ImageIndex="18" ImageExpandedIndex="23" /&gt;
-    &lt;Node Expanded="true" Name="mapStoreCommands" DragDropEnabled="false" Text="StoreCommands" ImageIndex="18" ImageExpandedIndex="23"&gt;
-      &lt;Node Expanded="true" Name="mapStoreCommandFunctions" DragDropEnabled="false" Text="Functions" ImageIndex="18" ImageExpandedIndex="23"&gt;
-		&lt;Node Expanded="true" Name="mapStoreCommandFunctionModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23" /&gt;
-	  &lt;/Node&gt;
-      &lt;Node Expanded="true" Name="mapStoreCommandProcedures" DragDropEnabled="false" Text="Procedures" ImageIndex="18" ImageExpandedIndex="23"&gt;
-		&lt;Node Expanded="true" Name="mapStoreCommandModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23" /&gt;
-	  &lt;/Node&gt;
-    &lt;/Node&gt;
-  &lt;/Node&gt;
-&lt;/AdvTree&gt;</value>
-  </data>
-  <data name="grid" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\grid.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="updateLocationResource" xml:space="preserve">
-    <value>netbakery/v2/latest.php</value>
-  </data>
-  <data name="storecommandsbase" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\storecommandsbase.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="grab" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1888,6 +1815,37 @@
         AMADAACAAwAAgAMAAIADAAD4BwAA+B8AAPg/AAD4PwAA/j8AAP4/AAA=
 </value>
   </data>
+  <data name="updateLocationResource" xml:space="preserve">
+    <value>netbakery/v2/latest.php</value>
+  </data>
+  <data name="updateLocationBaseURL" xml:space="preserve">
+    <value>https://www.cmbsolutions.nl</value>
+  </data>
+  <data name="phpOutputExplorer" xml:space="preserve">
+    <value>&lt;AdvTree&gt;
+  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Table" ImageIndex="18" ImageExpandedIndex="23"&gt;&lt;/Node&gt;
+    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Entity" ImageIndex="18" ImageExpandedIndex="23"&gt;
+    &lt;/Node&gt;
+&lt;/AdvTree&gt;</value>
+  </data>
+  <data name="pngwing.com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pngwing.com.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="connections" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\connections.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sql_keywords" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sql_keywords.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="vb_keywords" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\vb_keywords.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="netbakery" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\netbakery.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="grabbing" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAYAAAAAAAEAIACQBgAAZgAAAICAAAABACAAKAgBAPYGAABAQAAAAQAgAChCAAAeDwEAMDAAAAEA
@@ -3581,5 +3539,50 @@
         HP8+Pj5E39/fEAAAAAAAAAAAAAAAAAAAAAAAAAAA+AMAAPADAADwAQAA4AEAAMABAACAAQAAgAEAAIAB
         AACAAQAAgAEAAIABAADgAQAA8AEAAPADAADwDwAA/B8AAA==
 </value>
+  </data>
+  <data name="refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="php_keywords" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\php_keywords.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="folder_search" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder_search.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="grid" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\grid.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="defaultOutputExplorer" xml:space="preserve">
+    <value>&lt;AdvTree&gt;
+  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23"&gt;
+    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Mapping" ImageIndex="18" ImageExpandedIndex="23"&gt;
+    &lt;/Node&gt;
+    &lt;Node Expanded="true" Name="mapStoreCommands" DragDropEnabled="false" Text="StoreCommands" ImageIndex="18" ImageExpandedIndex="23"&gt;
+      &lt;Node Expanded="true" Name="mapStoreCommandModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23" /&gt;
+    &lt;/Node&gt;
+  &lt;/Node&gt;
+&lt;/AdvTree&gt;</value>
+    <comment>Default output explorer nodes. Is used to revert to init state</comment>
+  </data>
+  <data name="storecommandsbase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\storecommandsbase.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="net5OutputExplorer" xml:space="preserve">
+    <value>&lt;AdvTree&gt;
+  &lt;Node Expanded="true" Name="mapModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23"&gt;
+    &lt;Node Expanded="true" Name="mapMapping" DragDropEnabled="false" Text="Mapping" ImageIndex="18" ImageExpandedIndex="23" /&gt;
+    &lt;Node Expanded="true" Name="mapStoreCommands" DragDropEnabled="false" Text="StoreCommands" ImageIndex="18" ImageExpandedIndex="23"&gt;
+      &lt;Node Expanded="true" Name="mapStoreCommandFunctions" DragDropEnabled="false" Text="Functions" ImageIndex="18" ImageExpandedIndex="23"&gt;
+		&lt;Node Expanded="true" Name="mapStoreCommandFunctionModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23" /&gt;
+	  &lt;/Node&gt;
+      &lt;Node Expanded="true" Name="mapStoreCommandProcedures" DragDropEnabled="false" Text="Procedures" ImageIndex="18" ImageExpandedIndex="23"&gt;
+		&lt;Node Expanded="true" Name="mapStoreCommandModels" DragDropEnabled="false" Text="Models" ImageIndex="18" ImageExpandedIndex="23" /&gt;
+	  &lt;/Node&gt;
+    &lt;/Node&gt;
+  &lt;/Node&gt;
+&lt;/AdvTree&gt;</value>
+  </data>
+  <data name="info" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\info.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

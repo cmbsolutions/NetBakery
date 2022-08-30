@@ -84,7 +84,6 @@ Partial Class splash
         'Timer1
         '
         Me.Timer1.Enabled = True
-        Me.Timer1.Interval = 50
         '
         'LabelX1
         '

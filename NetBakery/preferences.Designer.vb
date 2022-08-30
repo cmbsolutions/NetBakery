@@ -35,6 +35,9 @@ Partial Class preferences
         Me.LabelX5 = New DevComponents.DotNetBar.LabelX()
         Me.sbDebug = New DevComponents.DotNetBar.Controls.SwitchButton()
         Me.LabelX6 = New DevComponents.DotNetBar.LabelX()
+        Me.sbRoutineLayouts = New DevComponents.DotNetBar.Controls.SwitchButton()
+        Me.LabelX7 = New DevComponents.DotNetBar.LabelX()
+        Me.SuperTooltip1 = New DevComponents.DotNetBar.SuperTooltip()
         CType(Me.erdepth, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -46,7 +49,7 @@ Partial Class preferences
         Me.btnCancel.CausesValidation = False
         Me.btnCancel.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
         Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnCancel.Location = New System.Drawing.Point(316, 250)
+        Me.btnCancel.Location = New System.Drawing.Point(316, 333)
         Me.btnCancel.Margin = New System.Windows.Forms.Padding(0)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(73, 25)
@@ -63,7 +66,7 @@ Partial Class preferences
         Me.btnOk.AntiAlias = True
         Me.btnOk.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
         Me.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.btnOk.Location = New System.Drawing.Point(235, 250)
+        Me.btnOk.Location = New System.Drawing.Point(235, 333)
         Me.btnOk.Margin = New System.Windows.Forms.Padding(0)
         Me.btnOk.Name = "btnOk"
         Me.btnOk.Size = New System.Drawing.Size(72, 25)
@@ -268,7 +271,7 @@ Partial Class preferences
         Me.sbDebug.TabIndex = 25
         Me.sbDebug.Value = Global.NetBakery.My.MySettings.Default.showDebug
         Me.sbDebug.ValueFalse = "False"
-        Me.sbDebug.ValueObject = "True"
+        Me.sbDebug.ValueObject = "False"
         Me.sbDebug.ValueTrue = "True"
         '
         'LabelX6
@@ -284,13 +287,58 @@ Partial Class preferences
         Me.LabelX6.Text = "Show debug information"
         Me.LabelX6.WordWrap = True
         '
+        'sbRoutineLayouts
+        '
+        '
+        '
+        '
+        Me.sbRoutineLayouts.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.sbRoutineLayouts.DataBindings.Add(New System.Windows.Forms.Binding("Value", Global.NetBakery.My.MySettings.Default, "mergeRoutineLayouts", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+        Me.sbRoutineLayouts.Location = New System.Drawing.Point(294, 238)
+        Me.sbRoutineLayouts.Name = "sbRoutineLayouts"
+        Me.sbRoutineLayouts.OffBackColor = System.Drawing.Color.Maroon
+        Me.sbRoutineLayouts.OffText = "No"
+        Me.sbRoutineLayouts.OnBackColor = System.Drawing.Color.DarkGreen
+        Me.sbRoutineLayouts.OnText = "Yes"
+        Me.sbRoutineLayouts.Size = New System.Drawing.Size(66, 22)
+        Me.sbRoutineLayouts.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.SuperTooltip1.SetSuperTooltip(Me.sbRoutineLayouts, New DevComponents.DotNetBar.SuperTooltipInfo("Share routine layouts", "", "Set this to ""yes"" to use one layout for routines that have the same output struct" &
+            "ure.", Global.NetBakery.My.Resources.Resources.info, Nothing, DevComponents.DotNetBar.eTooltipColor.System))
+        Me.sbRoutineLayouts.SwitchClickTogglesValue = True
+        Me.sbRoutineLayouts.TabIndex = 27
+        Me.sbRoutineLayouts.Value = Global.NetBakery.My.MySettings.Default.mergeRoutineLayouts
+        Me.sbRoutineLayouts.ValueFalse = "False"
+        Me.sbRoutineLayouts.ValueObject = "True"
+        Me.sbRoutineLayouts.ValueTrue = "True"
+        '
+        'LabelX7
+        '
+        '
+        '
+        '
+        Me.LabelX7.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX7.Location = New System.Drawing.Point(12, 234)
+        Me.LabelX7.Name = "LabelX7"
+        Me.LabelX7.Size = New System.Drawing.Size(138, 26)
+        Me.LabelX7.TabIndex = 26
+        Me.LabelX7.Text = "Share routine layouts"
+        Me.LabelX7.WordWrap = True
+        '
+        'SuperTooltip1
+        '
+        Me.SuperTooltip1.DefaultTooltipSettings = New DevComponents.DotNetBar.SuperTooltipInfo("", "", "", Nothing, Nothing, DevComponents.DotNetBar.eTooltipColor.System)
+        Me.SuperTooltip1.DelayTooltipHideDuration = 100
+        Me.SuperTooltip1.TooltipDuration = 10
+        '
         'preferences
         '
         Me.AcceptButton = Me.btnOk
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnCancel
-        Me.ClientSize = New System.Drawing.Size(398, 284)
+        Me.ClientSize = New System.Drawing.Size(398, 367)
+        Me.Controls.Add(Me.sbRoutineLayouts)
+        Me.Controls.Add(Me.LabelX7)
         Me.Controls.Add(Me.sbDebug)
         Me.Controls.Add(Me.LabelX6)
         Me.Controls.Add(Me.btnCancel)
@@ -340,4 +388,7 @@ Partial Class preferences
     Friend WithEvents btnOk As DevComponents.DotNetBar.ButtonX
     Friend WithEvents sbDebug As DevComponents.DotNetBar.Controls.SwitchButton
     Friend WithEvents LabelX6 As DevComponents.DotNetBar.LabelX
+    Friend WithEvents sbRoutineLayouts As DevComponents.DotNetBar.Controls.SwitchButton
+    Friend WithEvents LabelX7 As DevComponents.DotNetBar.LabelX
+    Friend WithEvents SuperTooltip1 As DevComponents.DotNetBar.SuperTooltip
 End Class
