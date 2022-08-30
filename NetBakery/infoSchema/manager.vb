@@ -510,6 +510,29 @@ Namespace infoSchema
                         End If
                     End Using
                 End Using
+
+                If My.Settings.mergeRoutineLayouts Then
+                    Dim matched As New List(Of String)
+                    ' Check for routines with same returnlayouts, those will be merged to one layout
+                    For Each r1 In routines.Where(Function(c) c.returnsRecordset AndAlso Not c.isFunction)
+                        If matched.Contains(r1.name) Then Continue For
+
+                        For Each r2 In routines.Where(Function(c) c.returnsRecordset AndAlso Not c.isFunction AndAlso Not c.name = r1.name)
+                            Dim sameLayout As Boolean = True
+                            For Each c1 In r1.returnLayout.columns
+                                If Not r2.returnLayout.columns.Item(r1.returnLayout.columns.IndexOf(c1)).Equals(c1) Then
+                                    sameLayout = False
+                                    Exit For
+                                End If
+                            Next
+
+                            If sameLayout Then
+                                matched.Add(r2.name)
+                                r2.returnLayout = r1.returnLayout
+                            End If
+                        Next
+                    Next
+                End If
             Catch ex As Exception
                 Throw
             End Try

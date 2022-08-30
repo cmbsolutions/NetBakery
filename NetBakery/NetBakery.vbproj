@@ -506,6 +506,7 @@
     </Content>
     <Content Include="netbakery.png.ico" />
     <Content Include="netbakery_v2_update.xml" />
+    <None Include="Resources\info.png" />
     <Content Include="Resources\storecommandsbase.txt" />
     <None Include="Resources\grid.png" />
     <EmbeddedResource Include="Resources\sql_keywords.txt" />
