@@ -170,12 +170,12 @@ Namespace infoSchema
                                     Trace.WriteLine(rex.Message)
                                 End Try
 
-                                If t.isView Then
+                                If t.isView AndAlso My.Settings.timeViews Then
                                     Dim starttime = Now
                                     _dbInfoCommand.CommandText = $"SELECT * FROM {t.name};"
                                     Try
                                         Dim cnt = _dbInfoCommand.ExecuteNonQuery
-                                    Catch mex As exception
+                                    Catch mex As Exception
 
                                     End Try
                                     Dim endtime = Now
