@@ -38,6 +38,8 @@ Partial Class preferences
         Me.sbRoutineLayouts = New DevComponents.DotNetBar.Controls.SwitchButton()
         Me.LabelX7 = New DevComponents.DotNetBar.LabelX()
         Me.SuperTooltip1 = New DevComponents.DotNetBar.SuperTooltip()
+        Me.sbTimeViews = New DevComponents.DotNetBar.Controls.SwitchButton()
+        Me.LabelX8 = New DevComponents.DotNetBar.LabelX()
         CType(Me.erdepth, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -331,6 +333,44 @@ Partial Class preferences
         Me.SuperTooltip1.DelayTooltipHideDuration = 100
         Me.SuperTooltip1.TooltipDuration = 10
         '
+        'sbTimeViews
+        '
+        '
+        '
+        '
+        Me.sbTimeViews.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.sbTimeViews.DataBindings.Add(New System.Windows.Forms.Binding("Value", Global.NetBakery.My.MySettings.Default, "timeViews", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+        Me.sbTimeViews.Location = New System.Drawing.Point(294, 266)
+        Me.sbTimeViews.Name = "sbTimeViews"
+        Me.sbTimeViews.OffBackColor = System.Drawing.Color.Maroon
+        Me.sbTimeViews.OffText = "No"
+        Me.sbTimeViews.OnBackColor = System.Drawing.Color.DarkGreen
+        Me.sbTimeViews.OnText = "Yes"
+        Me.sbTimeViews.Size = New System.Drawing.Size(66, 22)
+        Me.sbTimeViews.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.SuperTooltip1.SetSuperTooltip(Me.sbTimeViews, New DevComponents.DotNetBar.SuperTooltipInfo("Share routine layouts", "", "Set this to ""yes"" to use one layout for routines that have the same output struct" &
+            "ure." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Warning: Review the generated output, because it can result in duplicate" &
+            " classes!!!", Global.NetBakery.My.Resources.Resources.info, Nothing, DevComponents.DotNetBar.eTooltipColor.System))
+        Me.sbTimeViews.SwitchClickTogglesValue = True
+        Me.sbTimeViews.TabIndex = 29
+        Me.sbTimeViews.Value = Global.NetBakery.My.MySettings.Default.timeViews
+        Me.sbTimeViews.ValueFalse = "False"
+        Me.sbTimeViews.ValueObject = "True"
+        Me.sbTimeViews.ValueTrue = "True"
+        '
+        'LabelX8
+        '
+        '
+        '
+        '
+        Me.LabelX8.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX8.Location = New System.Drawing.Point(12, 262)
+        Me.LabelX8.Name = "LabelX8"
+        Me.LabelX8.Size = New System.Drawing.Size(167, 26)
+        Me.LabelX8.TabIndex = 28
+        Me.LabelX8.Text = "Measure loadingtime of views"
+        Me.LabelX8.WordWrap = True
+        '
         'preferences
         '
         Me.AcceptButton = Me.btnOk
@@ -338,6 +378,8 @@ Partial Class preferences
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnCancel
         Me.ClientSize = New System.Drawing.Size(398, 367)
+        Me.Controls.Add(Me.sbTimeViews)
+        Me.Controls.Add(Me.LabelX8)
         Me.Controls.Add(Me.sbRoutineLayouts)
         Me.Controls.Add(Me.LabelX7)
         Me.Controls.Add(Me.sbDebug)
@@ -392,4 +434,6 @@ Partial Class preferences
     Friend WithEvents sbRoutineLayouts As DevComponents.DotNetBar.Controls.SwitchButton
     Friend WithEvents LabelX7 As DevComponents.DotNetBar.LabelX
     Friend WithEvents SuperTooltip1 As DevComponents.DotNetBar.SuperTooltip
+    Friend WithEvents sbTimeViews As DevComponents.DotNetBar.Controls.SwitchButton
+    Friend WithEvents LabelX8 As DevComponents.DotNetBar.LabelX
 End Class
