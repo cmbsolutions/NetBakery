@@ -7,6 +7,9 @@ Imports System.Collections.Generic
 
 Namespace Models.StoreCommandSchemas
     Public Partial Class <#= _procedure.returnLayout.singleName #>
+    <# If _procedure.UseBaseLayout then #>
+        Inherits <#= _procedure.BaseLayoutName #>
+    <# End If #>
 <#  For each c in _procedure.returnLayout.columns #>
 <#      If c.isNullable And c.vbType <> "String" Then #>
         Public Property <#= c.alias #>() as <#= c.vbType #>?

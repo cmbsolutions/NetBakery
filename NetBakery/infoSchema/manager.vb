@@ -513,7 +513,7 @@ Namespace infoSchema
 
                 If My.Settings.mergeRoutineLayouts Then
                     Dim matched As New List(Of String)
-                    ' Check for routines with same returnlayouts, those will be merged to one layout
+                    ' Check for routines with same returnlayouts, those will be merged to a base layout
                     For Each r1 In routines.Where(Function(c) c.returnsRecordset AndAlso Not c.isFunction)
                         If matched.Contains(r1.name) Then Continue For
 

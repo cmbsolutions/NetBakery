@@ -11,5 +11,7 @@
         Property params As New List(Of parameter)
         Property hasExport As Boolean
         Property executiontime As TimeSpan
+        Property UseBaseLayout As Boolean
+        Property BaseLayoutName As String
     End Class
 End Namespace

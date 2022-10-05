@@ -2144,4 +2144,8 @@ Public Class mainGUI2
         '    End If
         'End If
     End Sub
+
+    Private Sub txtProjectName_ButtonCustomClick(sender As Object, e As EventArgs) Handles txtProjectName.ButtonCustomClick
+
+    End Sub
 End Class

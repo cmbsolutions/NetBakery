@@ -303,12 +303,13 @@ Partial Class preferences
         Me.sbRoutineLayouts.Size = New System.Drawing.Size(66, 22)
         Me.sbRoutineLayouts.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.SuperTooltip1.SetSuperTooltip(Me.sbRoutineLayouts, New DevComponents.DotNetBar.SuperTooltipInfo("Share routine layouts", "", "Set this to ""yes"" to use one layout for routines that have the same output struct" &
-            "ure.", Global.NetBakery.My.Resources.Resources.info, Nothing, DevComponents.DotNetBar.eTooltipColor.System))
+            "ure." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Warning: Review the generated output, because it can result in duplicate" &
+            " classes!!!", Global.NetBakery.My.Resources.Resources.info, Nothing, DevComponents.DotNetBar.eTooltipColor.System))
         Me.sbRoutineLayouts.SwitchClickTogglesValue = True
         Me.sbRoutineLayouts.TabIndex = 27
         Me.sbRoutineLayouts.Value = Global.NetBakery.My.MySettings.Default.mergeRoutineLayouts
         Me.sbRoutineLayouts.ValueFalse = "False"
-        Me.sbRoutineLayouts.ValueObject = "True"
+        Me.sbRoutineLayouts.ValueObject = "False"
         Me.sbRoutineLayouts.ValueTrue = "True"
         '
         'LabelX7
