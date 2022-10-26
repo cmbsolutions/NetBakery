@@ -95,6 +95,8 @@ Public Class mainGUI2
             setVbStyle(scGeneratedMapping)
             setSQLStyle(scRoutine)
             setSQLStyle(scSPRoutine)
+            setVbStyle(scCodeBuilder)
+            setVbStyle(scCodeBuilderOutput)
 
             dcProjectSettings.Selected = True
 
@@ -2147,5 +2149,43 @@ Public Class mainGUI2
 
     Private Sub txtProjectName_ButtonCustomClick(sender As Object, e As EventArgs) Handles txtProjectName.ButtonCustomClick
 
+    End Sub
+
+    Private Sub lbiGetSftpConnectionData_Click(sender As Object, e As EventArgs) Handles lbiGetSftpConnectionData.Click
+        Dim page = New My.Templates.CodeBuilder.GetSftpConnectionData
+        Dim pageContent = page.TransformText()
+        scCodeBuilder.Text = pageContent
+        scCodeBuilder.Colorize(0, scCodeBuilder.Text.Length)
+
+        tlpCodeBuilderProps.Controls.Clear()
+        Dim ir As Integer = 0
+
+        For Each kv In page.InputParams
+            Dim lbl As New Label With {
+                .Text = kv.Name
+            }
+            tlpCodeBuilderProps.Controls.Add(lbl, 0, ir)
+
+            Dim txb As New TextBox With {
+                .Text = kv.Value,
+                .Name = kv.Name
+            }
+
+            AddHandler txb.TextChanged, AddressOf CodeBuilderParamChanged
+
+            tlpCodeBuilderProps.Controls.Add(txb, 1, ir)
+            ir += 1
+        Next
+    End Sub
+
+    Private Sub CodeBuilderParamChanged(sender As Object, e As EventArgs)
+        Dim txb = DirectCast(sender, TextBox)
+
+        Dim page = New My.Templates.CodeBuilder.GetSftpConnectionData
+        page.InputParams.FirstOrDefault(Function(c) c.Name = txb.Name).Value = txb.Text
+
+        Dim pageContent = page.TransformText()
+        scCodeBuilder.Text = pageContent
+        scCodeBuilder.Colorize(0, scCodeBuilder.Text.Length)
     End Sub
 End Class

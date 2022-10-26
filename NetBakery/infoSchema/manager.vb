@@ -16,8 +16,8 @@ Namespace infoSchema
         Private Property _keywords As New List(Of String)
         Private Property _database As String = ""
 
-        Public Property projectTables As List(Of table)
-        Public Property projectRoutines As List(Of routine)
+        Public Property projectTables As New List(Of table)
+        Public Property projectRoutines As New List(Of routine)
 
         Public Property databases As List(Of String)
         Public Property tables As List(Of table)
