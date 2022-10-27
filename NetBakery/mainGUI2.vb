@@ -3,7 +3,9 @@ Imports DevComponents
 Imports DevComponents.DotNetBar
 Imports Newtonsoft.Json
 Imports System.Security.Cryptography
-
+Imports NetBakery.infoSchema
+Imports System.Reflection
+Imports System.Windows.Documents
 
 Public Class mainGUI2
     Private _mngr As New infoSchema.manager
@@ -121,6 +123,7 @@ Public Class mainGUI2
                 Next
             End If
 
+            LoadCodeBuilders()
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -2151,16 +2154,51 @@ Public Class mainGUI2
 
     End Sub
 
-    Private Sub lbiGetSftpConnectionData_Click(sender As Object, e As EventArgs) Handles lbiGetSftpConnectionData.Click
-        Dim page = New My.Templates.CodeBuilder.GetSftpConnectionData
-        Dim pageContent = page.TransformText()
-        scCodeBuilder.Text = pageContent
+#Region "CodeBuilder"
+    Private currentCodeBuilder As iCodeBuilderTemplate = Nothing
+
+    Private Sub LoadCodeBuilders()
+        Try
+            For Each builder In Assembly.GetExecutingAssembly.GetTypes.Where(Function(t) t.Namespace = "NetBakery.My.Templates.CodeBuilder").ToList
+                If Not builder.Name.EndsWith("Base") AndAlso builder.Name <> "_Closure$__" AndAlso builder.Name <> "ToStringInstanceHelper" Then
+                    lCodeBuilderTemplates.Items.Add(New ListBoxItem With {
+                                                    .Name = builder.Name,
+                                                    .Text = builder.Name,
+                                                    .ThemeAware = True,
+                                                    .Tag = $"NetBakery.My.Templates.CodeBuilder.{builder.Name}"
+                                                    })
+                End If
+            Next
+        Catch ex As Exception
+            FormHelpers.dumpException(ex)
+        End Try
+    End Sub
+
+    Private Sub CodeBuilderParamChanged(sender As Object, e As EventArgs)
+        Dim txb = DirectCast(sender, TextBox)
+
+        If currentCodeBuilder IsNot Nothing Then
+            currentCodeBuilder.InputParams.FirstOrDefault(Function(c) c.Name = txb.Name).Value = txb.Text
+            currentCodeBuilder.ResetText()
+            Dim PageContent = currentCodeBuilder.BuildText()
+            scCodeBuilder.Text = pageContent
+            scCodeBuilder.Colorize(0, scCodeBuilder.Text.Length)
+        End If
+    End Sub
+
+    Private Sub lCodeBuilderTemplates_ItemClick(sender As Object, e As EventArgs) Handles lCodeBuilderTemplates.ItemClick
+        Dim tpl = DirectCast(sender, ListBoxItem)
+
+        currentCodeBuilder = CType(Activator.CreateInstance(Type.GetType(tpl.Tag.ToString)), iCodeBuilderTemplate)
+        Dim content = currentCodeBuilder.BuildText
+
+        scCodeBuilder.Text = content
         scCodeBuilder.Colorize(0, scCodeBuilder.Text.Length)
 
         tlpCodeBuilderProps.Controls.Clear()
         Dim ir As Integer = 0
 
-        For Each kv In page.InputParams
+        For Each kv In currentCodeBuilder.InputParams
             Dim lbl As New Label With {
                 .Text = kv.Name
             }
@@ -2177,15 +2215,5 @@ Public Class mainGUI2
             ir += 1
         Next
     End Sub
-
-    Private Sub CodeBuilderParamChanged(sender As Object, e As EventArgs)
-        Dim txb = DirectCast(sender, TextBox)
-
-        Dim page = New My.Templates.CodeBuilder.GetSftpConnectionData
-        page.InputParams.FirstOrDefault(Function(c) c.Name = txb.Name).Value = txb.Text
-
-        Dim pageContent = page.TransformText()
-        scCodeBuilder.Text = pageContent
-        scCodeBuilder.Colorize(0, scCodeBuilder.Text.Length)
-    End Sub
+#End Region
 End Class

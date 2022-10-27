@@ -11,5 +11,13 @@
                                                   New InputParam With {.Name = "SettingDefaultName", .Value = "sftp_id"}
                                                   })
         End Sub
+
+        Public Function BuildText() As String Implements iCodeBuilderTemplate.BuildText
+            Return MyClass.TransformText()
+        End Function
+
+        Public Sub ResetText() Implements iCodeBuilderTemplate.ResetText
+            MyClass.GenerationEnvironment.Clear()
+        End Sub
     End Class
 End Namespace
