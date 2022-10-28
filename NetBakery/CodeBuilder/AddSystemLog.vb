@@ -12,28 +12,44 @@ Imports System
 '    the code is regenerated.
 '</auto-generated>
 '------------------------------------------------------------------------------
-Namespace My.Templates.CodeBuilder
+Namespace My.Templates.CodeBuilders
     '''<summary>
     '''Class to produce the template output
     '''</summary>
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")>  _
-    Partial Public Class GetSftpConnectionData
-        Inherits GetSftpConnectionDataBase
+    Partial Public Class AddSystemLog
+        Inherits AddSystemLogBase
         '''<summary>
         '''Create the template output
         '''</summary>
         Public Overridable Function TransformText() As String
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Dim sftp_id as Integer = cint(db.storecommands.qfuncGetSystemValueByName(1, """)
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"db.SystemLogs.Add(New DM.SystemLog with {"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&".created = Now,"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&".state = "& _ 
+                    """ACTIVE"","&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&".emaillist_id = ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\CodeBuilderTemplates\GetSftpConnectionData.tt",7)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(InputParams.First(Function(c) c.Name = "SettingDefaultName").Value))
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\CodeBuilder\AddSystemLog.tt",10)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(CBParameters.First(Function(c) c.Name = "EmaillistID").Value))
             
             #End ExternalSource
-            Me.Write(""", new object))"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Dim sftpConnectionData as AVCDEData.Models.Ftpconnection"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Usin"& _ 
-                    "g dbsftp as new AVCDEDataManager(Algemeen.GetDatabaseConnectionString(""4dms"", ""4"& _ 
-                    "dmscde"", _env), _env)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"sftpConnectionData = dbsftp.ftpconnections.firstordefaul"& _ 
-                    "t(function(c) c.ftpconnection_id=sftp_id and c.state=""ACTIVE"")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"If sftpConnec"& _ 
-                    "tionData is nothing then"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"'TODO: Add systemlogging"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&"End If"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End Using")
+            Me.Write(","&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&".systemlogcondition = """)
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\CodeBuilder\AddSystemLog.tt",11)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(CBParameters.First(Function(c) c.Name = "Condition").Value))
+            
+            #End ExternalSource
+            Me.Write(""","&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&".systemlogconditiondt = Now,"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\CodeBuilder\AddSystemLog.tt",13)
+ If CBParameters.First(Function(c) c.Name = "LinkFile").Value = "True" then 
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&".file_id = file.file_id,"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\CodeBuilder\AddSystemLog.tt",15)
+ End If 
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&".message = $""Enter a message here. Reference variables between curlybrackets"& _ 
+                    "."""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"})"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"db.SaveChanges()")
             Return Me.GenerationEnvironment.ToString
         End Function
     End Class
@@ -42,7 +58,7 @@ Namespace My.Templates.CodeBuilder
     '''Base class for this transformation
     '''</summary>
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")>  _
-    Public Class GetSftpConnectionDataBase
+    Public Class AddSystemLogBase
         #Region "Fields"
         Private generationEnvironmentField As Global.System.Text.StringBuilder
         Private errorsField As Global.System.CodeDom.Compiler.CompilerErrorCollection

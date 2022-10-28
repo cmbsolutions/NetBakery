@@ -7,6 +7,7 @@ Imports NetBakery.infoSchema
 Imports System.Reflection
 Imports System.Windows.Documents
 
+
 Public Class mainGUI2
     Private _mngr As New infoSchema.manager
     Private _currentConnection As infoSchema.connection
@@ -2155,18 +2156,22 @@ Public Class mainGUI2
     End Sub
 
 #Region "CodeBuilder"
-    Private currentCodeBuilder As iCodeBuilderTemplate = Nothing
+    Private currentCodeBuilder As iCBTemplate = Nothing
 
     Private Sub LoadCodeBuilders()
         Try
-            For Each builder In Assembly.GetExecutingAssembly.GetTypes.Where(Function(t) t.Namespace = "NetBakery.My.Templates.CodeBuilder").ToList
+            For Each builder In Assembly.GetExecutingAssembly.GetTypes.Where(Function(t) t.Namespace = "NetBakery.My.Templates.CodeBuilders").ToList
                 If Not builder.Name.EndsWith("Base") AndAlso builder.Name <> "_Closure$__" AndAlso builder.Name <> "ToStringInstanceHelper" Then
-                    lCodeBuilderTemplates.Items.Add(New ListBoxItem With {
-                                                    .Name = builder.Name,
-                                                    .Text = builder.Name,
-                                                    .ThemeAware = True,
-                                                    .Tag = $"NetBakery.My.Templates.CodeBuilder.{builder.Name}"
-                                                    })
+                    Dim lbi As New ListBoxItem With {
+                        .Name = builder.Name,
+                        .Text = builder.Name,
+                        .BackColors = {Color.Cyan, Color.DarkBlue},
+                        .Tag = $"NetBakery.My.Templates.CodeBuilders.{builder.Name}",
+                        .ThemeAware = True,
+                        .TextColor = Color.WhiteSmoke
+                    }
+
+                    lCodeBuilderTemplates.Items.Add(lbi)
                 End If
             Next
         Catch ex As Exception
@@ -2178,10 +2183,22 @@ Public Class mainGUI2
         Dim txb = DirectCast(sender, TextBox)
 
         If currentCodeBuilder IsNot Nothing Then
-            currentCodeBuilder.InputParams.FirstOrDefault(Function(c) c.Name = txb.Name).Value = txb.Text
+            currentCodeBuilder.CBParameters.FirstOrDefault(Function(c) c.Name = txb.Name).Value = txb.Text
             currentCodeBuilder.ResetText()
             Dim PageContent = currentCodeBuilder.BuildText()
-            scCodeBuilder.Text = pageContent
+            scCodeBuilder.Text = PageContent
+            scCodeBuilder.Colorize(0, scCodeBuilder.Text.Length)
+        End If
+    End Sub
+
+    Private Sub CodeBuilderParamBooleanChanged(sender As Object, e As EventArgs)
+        Dim cbb = DirectCast(sender, CheckBox)
+
+        If currentCodeBuilder IsNot Nothing Then
+            currentCodeBuilder.CBParameters.FirstOrDefault(Function(c) c.Name = cbb.Name).Value = cbb.Checked.ToString
+            currentCodeBuilder.ResetText()
+            Dim PageContent = currentCodeBuilder.BuildText()
+            scCodeBuilder.Text = PageContent
             scCodeBuilder.Colorize(0, scCodeBuilder.Text.Length)
         End If
     End Sub
@@ -2189,7 +2206,7 @@ Public Class mainGUI2
     Private Sub lCodeBuilderTemplates_ItemClick(sender As Object, e As EventArgs) Handles lCodeBuilderTemplates.ItemClick
         Dim tpl = DirectCast(sender, ListBoxItem)
 
-        currentCodeBuilder = CType(Activator.CreateInstance(Type.GetType(tpl.Tag.ToString)), iCodeBuilderTemplate)
+        currentCodeBuilder = CType(Activator.CreateInstance(Type.GetType(tpl.Tag.ToString)), iCBTemplate)
         Dim content = currentCodeBuilder.BuildText
 
         scCodeBuilder.Text = content
@@ -2198,22 +2215,35 @@ Public Class mainGUI2
         tlpCodeBuilderProps.Controls.Clear()
         Dim ir As Integer = 0
 
-        For Each kv In currentCodeBuilder.InputParams
+        For Each kv In currentCodeBuilder.CBParameters
             Dim lbl As New Label With {
                 .Text = kv.Name
             }
             tlpCodeBuilderProps.Controls.Add(lbl, 0, ir)
 
-            Dim txb As New TextBox With {
-                .Text = kv.Value,
-                .Name = kv.Name
-            }
+            If Not kv.IsBoolean Then
+                Dim txb As New TextBox With {
+                    .Text = kv.Value,
+                    .Name = kv.Name
+                }
+                AddHandler txb.TextChanged, AddressOf CodeBuilderParamChanged
+                tlpCodeBuilderProps.Controls.Add(txb, 1, ir)
+            Else
+                Dim cbb As New CheckBox With {
+                    .Checked = CBool(kv.Value),
+                    .Name = kv.Name
+                }
+                AddHandler cbb.CheckedChanged, AddressOf CodeBuilderParamBooleanChanged
+                tlpCodeBuilderProps.Controls.Add(cbb, 1, ir)
+            End If
 
-            AddHandler txb.TextChanged, AddressOf CodeBuilderParamChanged
-
-            tlpCodeBuilderProps.Controls.Add(txb, 1, ir)
             ir += 1
         Next
+    End Sub
+
+    Private Sub bCBTAdd_Click(sender As Object, e As EventArgs) Handles bCBTAdd.Click
+        scCodeBuilderOutput.InsertText(scCodeBuilderOutput.CurrentPosition, scCodeBuilder.Text)
+        scCodeBuilderOutput.Colorize(0, scCodeBuilderOutput.Text.Length)
     End Sub
 #End Region
 End Class
