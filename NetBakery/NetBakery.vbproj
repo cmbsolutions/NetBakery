@@ -198,13 +198,20 @@
   <ItemGroup>
     <Compile Include="AdvTreeModel.vb" />
     <Compile Include="ApplicationEvents.vb" />
-    <Compile Include="CodeBuilderTemplates\GetSftpConnectionData.vb">
+    <Compile Include="CodeBuilder\AddSystemLog.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>GetSftpConnectionData.tt</DependentUpon>
+      <DependentUpon>AddSystemLog.tt</DependentUpon>
     </Compile>
-    <Compile Include="CodeBuilderTemplates\iCodeBuilderTemplate.vb" />
-    <Compile Include="CodeBuilderTemplates\GetSftpConnectionDataTemplate.vb" />
+    <Compile Include="CodeBuilder\AddSystemLogBuilder.vb" />
+    <Compile Include="CodeBuilder\CBParameter.vb" />
+    <Compile Include="CodeBuilder\GetSFTPConnectionData.vb">
+      <DependentUpon>GetSFTPConnectionData.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CodeBuilder\GetSFTPConnectionDataBuilder.vb" />
+    <Compile Include="CodeBuilder\iCBTemplate.vb" />
     <Compile Include="connection_editor.Designer.vb">
       <DependentUpon>connection_editor.vb</DependentUpon>
     </Compile>
@@ -418,10 +425,15 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CodeBuilderTemplates\GetSftpConnectionData.tt">
+    <Content Include="CodeBuilder\AddSystemLog.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <CustomToolNamespace>My.Templates.CodeBuilder</CustomToolNamespace>
-      <LastGenOutput>GetSftpConnectionData.vb</LastGenOutput>
+      <CustomToolNamespace>My.Templates.CodeBuilders</CustomToolNamespace>
+      <LastGenOutput>AddSystemLog.vb</LastGenOutput>
+    </Content>
+    <Content Include="CodeBuilder\GetSFTPConnectionData.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>GetSFTPConnectionData.vb</LastGenOutput>
+      <CustomToolNamespace>My.Templates.CodeBuilders</CustomToolNamespace>
     </Content>
     <Content Include="Generators\legacy\Context.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
