@@ -4,13 +4,17 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-Dim sftp_id as Integer = cInt(db.storecommands.qfuncGetSystemValueByName(1, "<#= CBParameters.First(Function(c) c.Name = "SettingDefaultName").Value #>", new object))
+Dim sftp_id = CInt(db.StoreCommands.qfuncGetSystemValueByName(1, "<#= CBParameters.First(Function(c) c.Name = "SettingDefaultName").Value #>", New Object))
+Dim sftpAccount As AVData.Models.ftpconnection = Nothing
 
-Dim sftpConnectionData as AVCDEData.Models.Ftpconnection
-Using dbsftp as new AVCDEDataManager(Algemeen.GetDatabaseConnectionString("<#= CBParameters.First(Function(c) c.Name = "AccountName").Value #>", "<#= CBParameters.First(Function(c) c.Name = "DatabaseName").Value #>", _env), _env)
-	sftpConnectionData = dbsftp.ftpconnections.firstordefault(function(c) c.ftpconnection_id=sftp_id and c.state="ACTIVE")
+Using dbav = New AVData.AVDataManager(Algemeen.GetDatabaseConnectionString("<#= CBParameters.First(Function(c) c.Name = "AccountName").Value #>", "<#= CBParameters.First(Function(c) c.Name = "DatabaseName").Value #>", _env), _env)
+    sftpAccount = dbav.ftpconnections.AsNoTracking.FirstOrDefault(Function(c) c.ftp_connection_id = sftp_id And c.state="ACTIVE")
 
-	If sftpConnectionData is nothing then
-		'TODO: Add systemlogging
-	End If
+    If sftpAccount Is Nothing Then
+        'TODO: Add systemlogging
+        
+        
+        RaiseEvent AVMessage(Me, New AVEventArgs("Geen FTP gegevens gevonden", AVLogType.Crash))
+        Exit Sub
+    End If
 End Using
