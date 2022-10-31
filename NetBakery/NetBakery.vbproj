@@ -212,6 +212,12 @@
     </Compile>
     <Compile Include="CodeBuilder\GetSFTPConnectionDataBuilder.vb" />
     <Compile Include="CodeBuilder\iCBTemplate.vb" />
+    <Compile Include="CodeBuilder\PGPDecrypt.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PGPDecrypt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CodeBuilder\PGPDecryptBuilder.vb" />
     <Compile Include="connection_editor.Designer.vb">
       <DependentUpon>connection_editor.vb</DependentUpon>
     </Compile>
@@ -434,6 +440,11 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>GetSFTPConnectionData.vb</LastGenOutput>
       <CustomToolNamespace>My.Templates.CodeBuilders</CustomToolNamespace>
+    </Content>
+    <Content Include="CodeBuilder\PGPDecrypt.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>My.Templates.CodeBuilders</CustomToolNamespace>
+      <LastGenOutput>PGPDecrypt.vb</LastGenOutput>
     </Content>
     <Content Include="Generators\legacy\Context.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>

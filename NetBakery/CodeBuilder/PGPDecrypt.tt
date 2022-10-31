@@ -1,0 +1,32 @@
+﻿<#@ template language="VB" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+Dim pgp_client_key = New IO.FileInfo(db.StoreCommands.qfuncGetSystemValueByName(1, "<#= CBParameters.First(Function(c) c.Name = "PGPClientKey").Value #>", New Object))
+Dim pgp_private_key = New IO.FileInfo(db.StoreCommands.qfuncGetSystemValueByName(1, "<#= CBParameters.First(Function(c) c.Name = "PGPPrivateKey").Value #>", New Object))
+Dim pgp_passphrase = db.StoreCommands.qfuncGetSystemValueByName(1, "<#= CBParameters.First(Function(c) c.Name = "PGPPassphrase").Value #>", New Object)
+Dim pgp_enabled = CBool(db.StoreCommands.qfuncGetSystemValueByName(1, "<#= CBParameters.First(Function(c) c.Name = "PGPEnabled").Value #>", New Object))
+
+Using navi As New CMBSolutions.NavicatEncrypt
+    pgp_passphrase = navi.Decrypt(pgp_passphrase)
+End Using
+
+Dim pgp_keys As New PgpCore.EncryptionKeys(pgp_client_key, pgp_private_key, pgp_passphrase)
+
+Dim encryptedFile As New FileInfo($"") 'TODO: encrypted file input
+Dim decryptedFile As New FileInfo($"") 'TODO: decrypted file output
+Try
+    Using fstream As New FileStream(encryptedFile.FullName, FileMode.Open)
+        Using foutStream As New FileStream(decryptedFile.FullName, FileMode.Create)
+            Using pgp As New PgpCore.PGP(pgp_keys)
+                pgp.DecryptStreamAndVerify(fstream, foutStream)
+            End Using
+        End Using
+    End Using
+Catch dex As Exception
+    'TODO: Systemlogging
+    'TODO: discard decrypted file
+    'TODO: move file on sftp
+End Try

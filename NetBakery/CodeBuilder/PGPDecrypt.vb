@@ -17,36 +17,51 @@ Namespace My.Templates.CodeBuilders
     '''Class to produce the template output
     '''</summary>
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")>  _
-    Partial Public Class GetSFTPConnectionData
-        Inherits GetSFTPConnectionDataBase
+    Partial Public Class PGPDecrypt
+        Inherits PGPDecryptBase
         '''<summary>
         '''Create the template output
         '''</summary>
         Public Overridable Function TransformText() As String
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Dim sftp_id = CInt(db.StoreCommands.qfuncGetSystemValueByName(1, """)
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Dim pgp_client_key = New IO.FileInfo(db.StoreCommands.qfuncGetSystemValueByName"& _ 
+                    "(1, """)
             
-            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\CodeBuilder\GetSFTPConnectionData.tt",7)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(CBParameters.First(Function(c) c.Name = "SettingDefaultName").Value))
-            
-            #End ExternalSource
-            Me.Write(""", New Object))"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Dim sftpAccount As AVData.Models.ftpconnection = Nothing"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Usin"& _ 
-                    "g dbav = New AVData.AVDataManager(Algemeen.GetDatabaseConnectionString(""")
-            
-            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\CodeBuilder\GetSFTPConnectionData.tt",10)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(CBParameters.First(Function(c) c.Name = "AccountName").Value))
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\CodeBuilder\PGPDecrypt.tt",7)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(CBParameters.First(Function(c) c.Name = "PGPClientKey").Value))
             
             #End ExternalSource
-            Me.Write(""", """)
+            Me.Write(""", New Object))"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Dim pgp_private_key = New IO.FileInfo(db.StoreCommands.qfuncGetS"& _ 
+                    "ystemValueByName(1, """)
             
-            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\CodeBuilder\GetSFTPConnectionData.tt",10)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(CBParameters.First(Function(c) c.Name = "DatabaseName").Value))
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\CodeBuilder\PGPDecrypt.tt",8)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(CBParameters.First(Function(c) c.Name = "PGPPrivateKey").Value))
             
             #End ExternalSource
-            Me.Write(""", _env), _env)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    sftpAccount = dbav.ftpconnections.AsNoTracking.FirstOrDefaul"& _ 
-                    "t(Function(c) c.ftp_connection_id = sftp_id And c.state=""ACTIVE"")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    If sftp"& _ 
-                    "Account Is Nothing Then"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        'TODO: Add systemlogging"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        "&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        "&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&" "& _ 
-                    "       RaiseEvent AVMessage(Me, New AVEventArgs(""Geen FTP gegevens gevonden"", AV"& _ 
-                    "LogType.Crash))"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        Exit Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    End If"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End Using"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(""", New Object))"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Dim pgp_passphrase = db.StoreCommands.qfuncGetSystemValueByName("& _ 
+                    "1, """)
+            
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\CodeBuilder\PGPDecrypt.tt",9)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(CBParameters.First(Function(c) c.Name = "PGPPassphrase").Value))
+            
+            #End ExternalSource
+            Me.Write(""", New Object)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Dim pgp_enabled = CBool(db.StoreCommands.qfuncGetSystemValueByNam"& _ 
+                    "e(1, """)
+            
+            #ExternalSource("D:\LocalRepos\dnt\netbakery\NetBakery\CodeBuilder\PGPDecrypt.tt",10)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(CBParameters.First(Function(c) c.Name = "PGPEnabled").Value))
+            
+            #End ExternalSource
+            Me.Write(""", New Object))"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Using navi As New CMBSolutions.NavicatEncrypt"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    pgp_passphr"& _ 
+                    "ase = navi.Decrypt(pgp_passphrase)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End Using"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Dim pgp_keys As New PgpCore.Enc"& _ 
+                    "ryptionKeys(pgp_client_key, pgp_private_key, pgp_passphrase)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Dim encryptedFil"& _ 
+                    "e As New FileInfo($"""") 'TODO: encrypted file input"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Dim decryptedFile As New Fil"& _ 
+                    "eInfo($"""") 'TODO: decrypted file output"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Try"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    Using fstream As New FileStrea"& _ 
+                    "m(encryptedFile.FullName, FileMode.Open)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        Using foutStream As New FileSt"& _ 
+                    "ream(decryptedFile.FullName, FileMode.Create)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            Using pgp As New PgpC"& _ 
+                    "ore.PGP(pgp_keys)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"                pgp.DecryptStreamAndVerify(fstream, foutStrea"& _ 
+                    "m)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"            End Using"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        End Using"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    End Using"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Catch dex As Except"& _ 
+                    "ion"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    'TODO: Systemlogging"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    'TODO: discard decrypted file"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    'TODO: mov"& _ 
+                    "e file on sftp"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End Try")
             Return Me.GenerationEnvironment.ToString
         End Function
     End Class
@@ -55,7 +70,7 @@ Namespace My.Templates.CodeBuilders
     '''Base class for this transformation
     '''</summary>
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")>  _
-    Public Class GetSFTPConnectionDataBase
+    Public Class PGPDecryptBase
         #Region "Fields"
         Private generationEnvironmentField As Global.System.Text.StringBuilder
         Private errorsField As Global.System.CodeDom.Compiler.CompilerErrorCollection
