@@ -12,10 +12,14 @@ Namespace Models<#= If(_IsStoreCommand, ".StoreCommandSchemas", "") #>
 <# Else #>
     Partial Public Class <#= _t.singleName #>
 <# End If #>
-<#  If _t.relations.Any() Then #>
+<# If _t.relations.Any() Then #>
         Public Sub New()
 <#      For Each re in _t.relations.OrderBy(Function(c) c.toTable.name) #>
+<#          If re.toTable.escapeName Then #>
+            <#= re.alias #> = New List(Of [<#= re.toTable.singleName #>])
+<#          Else #>
             <#= re.alias #> = New List(Of <#= re.toTable.singleName #>)
+<#          End If #>
 <#      Next #>
         End Sub
 <#  End If #>
