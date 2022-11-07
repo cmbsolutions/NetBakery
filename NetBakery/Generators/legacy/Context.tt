@@ -132,6 +132,15 @@ Public Class <#= _name #>DataManager
 End Class
 
 Namespace Models
+	Public Class <#= _name #>DataContextConfiguration
+		Inherits DbConfiguration
+
+		Public Sub New()
+			SetExecutionStrategy(MySqlProviderInvariantName.ProviderName, Function() New MySqlExecutionStrategy)
+		End Sub
+	End Class
+
+	<DbConfigurationType(GetType(<#= _name #>DataContextConfiguration))>
 	Partial Public Class <#= _name #>DataContext
 		Inherits DbContext
 

@@ -133,6 +133,7 @@ Public Class mainGUI2
     Private Sub recentProjectItemClickedHandler(sender As Object, e As EventArgs)
         If IO.File.Exists(sender.ToString) Then
             loadProject(sender.ToString)
+            enableOrDisableFields()
         End If
     End Sub
 
