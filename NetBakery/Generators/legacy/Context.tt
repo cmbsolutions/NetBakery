@@ -140,7 +140,7 @@ Namespace Models
 		End Sub
 	End Class
 
-	<DbConfigurationType(GetType(<#= _name #>DataContextConfiguration))>
+	'<DbConfigurationType(GetType(<#= _name #>DataContextConfiguration))>
 	Partial Public Class <#= _name #>DataContext
 		Inherits DbContext
 
