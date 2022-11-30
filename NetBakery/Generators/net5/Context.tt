@@ -4,12 +4,12 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 Imports Microsoft.EntityFrameworkCore
-Imports CDENet.Common
+Imports CDENet.Contracts
 
 Public Class <#= _name #>DataManager
 	Inherits Models.<#= _name #>DataContext
 
-		Public Sub New(ConnectionString As String, sEnv As Enumerations.SentiaEnvironmentEnum)
+		Public Sub New(ConnectionString As String, sEnv As Enumerations.DeploymentEnvironmentEnum)
 			MyBase.New(New DbContextOptionsBuilder(Of Models.<#= _name #>DataContext)().UseMySQL(ConnectionString, Function(opts) opts.CommandTimeout(120)).Options)
 		End Sub
 End Class
