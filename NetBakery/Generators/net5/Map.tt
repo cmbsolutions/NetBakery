@@ -106,14 +106,14 @@ Namespace Models
 
 		lineParts.Add("builder.HasOne(Function(d) d.")
 		lineparts.Add(f.propertyAlias)
-		lineParts.Add(").WithMany(Function(p) p.")
+		lineParts.Add(").WithMany(""")
 		If f.propertyAlias = f.referencedtable.singlename Then
 			lineParts.Add(f.table.PluralName)
 		else
 			lineParts.Add(f.table.singleName)
 			lineParts.Add(p.pluralize(f.propertyalias))
 		end if
-		lineParts.Add(").HasForeignKey(Function(d) d.")
+		lineParts.Add(""").HasForeignKey(Function(d) d.")
 		lineParts.Add(f.columns.first.column.name)
 		lineParts.Add(").HasConstraintName(""")
 		lineParts.Add(f.name)
