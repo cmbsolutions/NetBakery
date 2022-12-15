@@ -6,9 +6,7 @@
 Imports System.Data.Entity
 Imports System.Data.Entity.Infrastructure
 Imports <#= _name #>Data.Models.Mapping
-Imports MySql.Data.Entity
-Imports System.Data
-Imports System.Data.Entity.Core.Objects
+Imports MySql.Data.EntityFramework
 Imports System.Data.Common
 Imports System.Reflection
 Imports System.Runtime.InteropServices
