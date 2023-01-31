@@ -549,6 +549,7 @@ Partial Class mainGUI2
         '
         Me.lCodeBuilderTemplates.BackgroundStyle.Class = "ListBoxAdv"
         Me.lCodeBuilderTemplates.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.lCodeBuilderTemplates.CheckStateMember = Nothing
         Me.lCodeBuilderTemplates.ContainerControlProcessDialogKey = True
         Me.lCodeBuilderTemplates.Dock = System.Windows.Forms.DockStyle.Fill
         Me.lCodeBuilderTemplates.DragDropSupport = True
