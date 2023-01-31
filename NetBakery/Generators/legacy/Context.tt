@@ -89,24 +89,39 @@ Public Class <#= _name #>DataManager
 			Throw
 		End Try
 	End Sub
+	
+	Public ReadOnly Property LatestValidationErrors As String
 
 	Public Overrides Function SaveChanges() As Integer
 		For i As Integer = 0 To CInt(My.Resources.retryCount)
 			Try
+				_LatestValidationErrors = ""
 				Return MyBase.SaveChanges
 				Exit For
+			Catch vex As DbEntityValidationException
+				Dim sb As New StringBuilder
+				For Each validationErrors In vex.EntityValidationErrors
+					For Each validationError In validationErrors.ValidationErrors
+						sb.AppendLine($"Entity: {validationErrors.Entry.Entity}, Property: {validationError.PropertyName}, Error: {validationError.ErrorMessage}")
+					Next
+				Next
+				_LatestValidationErrors = sb.ToString
+				sb.Clear()
+				sb = Nothing
 			Catch ex As EntityException
 				' No host connection
 				If ex.HResult = -2146233087 Then
-					If i < CInt(My.Resources.retryCount) Then ' Retry 
-						Thread.Sleep(CInt(My.Resources.retryTimeout))
+					If i < CInt(My.Resources.retryCount) Then
+						Dim timeout As Integer = CInt(My.Resources.retryTimeout)
+						Thread.Sleep(If(timeout > 0, timeout, 5000))
 						Continue For
 					End If
 				End If
 				'deadlock
-				If ex.GetInnerExceptionText.Contains("Deadlock") Then
+				If IsDeadlock(ex) Then
 					If i < CInt(My.Resources.retryCount) Then ' Retry 
-						Thread.Sleep(CInt(My.Resources.retryTimeout))
+						Dim timeout As Integer = CInt(My.Resources.retryTimeout)
+						Thread.Sleep(If(timeout > 0, timeout, 5000))
 						Continue For
 					End If
 				End If
@@ -114,9 +129,10 @@ Public Class <#= _name #>DataManager
 				Throw
 			Catch ex As Exception
 				'deadlock
-				If ex.GetInnerExceptionText.Contains("Deadlock") Then
+				If IsDeadlock(ex) Then
 					If i < CInt(My.Resources.retryCount) Then ' Retry 
-						Thread.Sleep(CInt(My.Resources.retryTimeout))
+						Dim timeout As Integer = CInt(My.Resources.retryTimeout)
+						Thread.Sleep(If(timeout > 0, timeout, 5000))
 						Continue For
 					End If
 				End If
@@ -126,6 +142,18 @@ Public Class <#= _name #>DataManager
 		Next
 
 		Return 0
+	End Function
+	
+	Private Function IsDeadlock(ex As Exception) As Boolean
+		If ex.Message.ToLower.Contains("deadlock") Then
+			Return True
+		Else
+			If ex.InnerException IsNot Nothing Then
+				Return IsDeadlock(ex.InnerException)
+			Else
+				Return False
+			End If
+		End If
 	End Function
 End Class
 
