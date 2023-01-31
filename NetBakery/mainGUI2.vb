@@ -2166,7 +2166,7 @@ Public Class mainGUI2
                     Dim lbi As New ListBoxItem With {
                         .Name = builder.Name,
                         .Text = builder.Name,
-                        .BackColors = {Color.Cyan, Color.DarkBlue},
+                        .BackColors = {Color.SlateBlue, Color.DarkSlateGray},
                         .Tag = $"NetBakery.My.Templates.CodeBuilders.{builder.Name}",
                         .ThemeAware = True,
                         .TextColor = Color.WhiteSmoke
