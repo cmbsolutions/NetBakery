@@ -15,6 +15,8 @@ Imports System.Data.Entity.Core
 Imports AutomatischeVerwerking.AVPluginInterface
 Imports System.Linq.Expressions
 Imports System.Data.Entity.Core.Metadata.Edm
+Imports System.Data.Entity.Validation
+Imports System.Text
 
 Public Class <#= _name #>DataManager
 	Inherits Models.<#= _name #>DataContext
