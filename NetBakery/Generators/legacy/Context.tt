@@ -98,7 +98,7 @@ Public Class <#= _name #>DataManager
 		For i As Integer = 0 To CInt(My.Resources.retryCount)
 			Try
 				_LatestValidationErrors = ""
-				Return MyBase.SaveChanges
+				Return MyBase.SaveChanges + 1
 				Exit For
 			Catch vex As DbEntityValidationException
 				Dim sb As New StringBuilder
