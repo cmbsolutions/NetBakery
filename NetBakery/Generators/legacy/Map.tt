@@ -86,7 +86,7 @@ Namespace Models.Mapping
 
 			' ForeignKeys
 <#
-	For Each f In _t.foreignKeys.orderby(Function(c) c.propertyalias)
+	For Each f In _t.foreignKeys.where(function(c) c.referencedtable.hasExport).orderby(Function(c) c.propertyalias)
 		dim lineParts As New List(of String)
 
 		if f.columns.first.column.isNullable Then
@@ -97,6 +97,7 @@ Namespace Models.Mapping
 		
 		lineparts.Add(f.propertyAlias)
 		lineParts.Add(").WithMany(Function(t) t.")
+
 		If f.propertyAlias = f.referencedtable.singlename Then 'If(f.referencedtable.escapeName, "[" & f.referencedtable.singlename & "]", f.referencedtable.singlename).toString Then
 			lineParts.Add(f.table.PluralName)
 		else
@@ -105,6 +106,7 @@ Namespace Models.Mapping
 			'lineParts.Add(f.table.singleName)
 			'lineParts.Add(f.referencedtable.pluralname)
 		end if
+
 		lineParts.Add(").HasForeignKey(Function(d) d.")
 		lineParts.Add(f.columns.first.column.name)
 		lineParts.Add(")")
