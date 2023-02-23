@@ -677,6 +677,7 @@ Public Class mainGUI2
                 dcSPRunner.Selected = True
             End If
 
+            _mngr.routines.First(Function(c) c.name = node.Text).hasExport = node.Checked
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)

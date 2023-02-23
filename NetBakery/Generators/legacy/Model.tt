@@ -14,7 +14,7 @@ Namespace Models<#= If(_IsStoreCommand, ".StoreCommandSchemas", "") #>
 <# End If #>
 <# If _t.relations.Any() Then #>
         Public Sub New()
-<#      For Each re in _t.relations.OrderBy(Function(c) c.toTable.name) #>
+<#      For Each re in _t.relations.Where(function(c) c.toTable.HasExport).OrderBy(Function(c) c.toTable.name) #>
 <#          If re.toTable.escapeName Then #>
             <#= re.alias #> = New List(Of [<#= re.toTable.singleName #>])
 <#          Else #>
@@ -45,7 +45,7 @@ Namespace Models<#= If(_IsStoreCommand, ".StoreCommandSchemas", "") #>
 <#      End If
     Next
 
-    For each fk in _t.foreignkeys.orderby(Function(c) c.propertyalias)
+    For each fk in _t.foreignkeys.where(function(c) c.referencedtable.hasExport).orderby(Function(c) c.propertyalias)
 #>
 <# If fk.referencedtable.escapeName then #>
         Public Property <#= fk.propertyAlias #>() as [<#= fk.referencedtable.singlename #>]
@@ -54,7 +54,7 @@ Namespace Models<#= If(_IsStoreCommand, ".StoreCommandSchemas", "") #>
 <# End If #>
 <#  Next 
 
-    For Each re in  _t.relations.orderby(Function(c) c.totable.name)
+    For Each re in  _t.relations.Where(function(c) c.toTable.HasExport).orderby(Function(c) c.totable.name)
 #>
 <# If re.totable.escapeName then #>
         Public Overridable Property <#= re.alias #>() As List(Of [<#= re.totable.SingleName #>])

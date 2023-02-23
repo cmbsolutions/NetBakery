@@ -65,7 +65,7 @@ Namespace infoSchema
 
         Public Function generateContext(name As String) As String
             Try
-                Return _generator.generateContext(tables, name, False, routines)
+                Return _generator.generateContext(tables.Where(Function(c) c.hasExport).ToList, name, False, routines.Where(Function(c) c.hasExport).ToList)
             Catch ex As Exception
                 Throw
             End Try
