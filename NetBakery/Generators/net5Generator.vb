@@ -25,7 +25,7 @@ Public Class net5Generator
 
     Public Function generateContext(_t As List(Of table), name As String, recovery As Boolean, routines As List(Of infoSchema.routine)) As String Implements iGenerator.generateContext
         Try
-            Dim page = New My.Templates.net5.Context(_t, name, routines.Where(Function(c) c.returnsRecordset).ToList)
+            Dim page = New My.Templates.net5.Context(_t, name, routines.Where(Function(c) c.hasExport).ToList)
             Dim pageContent = page.TransformText
 
             Return pageContent
