@@ -560,7 +560,10 @@ Namespace infoSchema
 
                             Using d As DataTable = rdr.GetSchemaTable
                                 If d IsNot Nothing Then
-                                    If _r.returnLayout Is Nothing Then _r.returnLayout = New table
+                                    If _r.returnLayout Is Nothing Then
+                                        _r.returnLayout = New table With {.name = _r.name, .singleName = _p.Singularize(_r.name), .pluralName = _p.Pluralize(_r.name)}
+                                    End If
+                                    _r.returnsRecordset = True
                                     For Each row As DataRow In d.Rows
                                         Dim c As New column
 
