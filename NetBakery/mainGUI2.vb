@@ -1815,6 +1815,12 @@ Public Class mainGUI2
     Private Sub bSPexecute_Click(sender As Object, e As EventArgs) Handles bSPexecute.Click
         Try
             If _spRoutine IsNot Nothing Then
+
+                If _spRoutine.isFunction Then
+                    MessageBox.Show("It is not nessesary to execute Stored Functions to get the layout.")
+                    Exit Sub
+                End If
+
                 Dim par As New List(Of String)
 
                 For Each row As DataGridViewRow In dgvInputParams.Rows
