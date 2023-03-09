@@ -9,8 +9,12 @@ Imports CDENet.Contracts
 Public Class <#= _name #>DataManager
 	Inherits Models.<#= _name #>DataContext
 
-		Public Sub New(ConnectionString As String, sEnv As Enumerations.DeploymentEnvironmentEnum)
+		Public Sub New(ConnectionString As String)
 			MyBase.New(New DbContextOptionsBuilder(Of Models.<#= _name #>DataContext)().UseMySQL(ConnectionString, Function(opts) opts.CommandTimeout(120)).Options)
+		End Sub
+		
+		Public Sub New(ConnectionString As String, timeOut As Integer)
+			MyBase.New(New DbContextOptionsBuilder(Of Models.<#= _name #>DataContext)().UseMySQL(ConnectionString, Function(opts) opts.CommandTimeout(timeOut)).Options)
 		End Sub
 End Class
 
