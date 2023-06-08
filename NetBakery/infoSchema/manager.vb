@@ -736,10 +736,16 @@ Namespace infoSchema
                     inc += 1
                 End While
 
+                ' Then check if first char is a number
+                If IsNumeric(ali.First) Then
+                    ali = $"x{ali}"
+                End If
+
                 ' Then check keywords (depending on generatortype)
                 If _keywords.Exists(Function(k) k = ali) Then
                     ali = $"[{ali}]"
                 End If
+
 
                 Return ali
             Catch ex As Exception
