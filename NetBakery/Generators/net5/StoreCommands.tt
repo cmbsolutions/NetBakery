@@ -80,7 +80,7 @@ Namespace Models
 <# If _withLock Then #>
             SyncLock sharedLock
 <# End If #>
-            <#= If(_withLock, " ","") #>Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("<#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
+            <#= If(_withLock, " ","") #>Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("CALL <#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
 <# If _withLock Then #>
             End SyncLock
 <# End If #>
@@ -92,7 +92,7 @@ Namespace Models
 <# If _withLock Then #>
             SyncLock sharedLock
 <# End If #>
-            <#= If(_withLock, " ","") #>DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
+            <#= If(_withLock, " ","") #>DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("CALL <#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
 <# If _withLock Then #>
             End SyncLock
 <# End If #>
@@ -106,7 +106,7 @@ Namespace Models
 <# If _withLock Then #>
             SyncLock sharedLock
 <# End If #>
-            <#= If(_withLock, " ","") #>Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("<#= f.name #>()")
+            <#= If(_withLock, " ","") #>Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("CALL <#= f.name #>()")
 <# If _withLock Then #>
             End SyncLock
 <# End If #>
@@ -118,7 +118,7 @@ Namespace Models
 <# If _withLock Then #>
             SyncLock sharedLock
 <# End If #>
-            <#= If(_withLock, " ","") #>DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= f.name #>()")
+            <#= If(_withLock, " ","") #>DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("CALL <#= f.name #>()")
 <# If _withLock Then #>
             End SyncLock
 <# End If #>

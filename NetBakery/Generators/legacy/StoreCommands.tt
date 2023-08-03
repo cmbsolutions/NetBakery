@@ -83,10 +83,10 @@ Namespace Models
         Public Overridable Function <#= f.name #>(<#= String.Join(", ", p1) #><#= If(_withLock, ", sharedLock As Object","") #>) As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)
 <# If _withLock Then #>
             SyncLock sharedLock
-                Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("<#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
+                Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("CALL <#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
             End SyncLock
 <# Else #>
-            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("<#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
+            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("CALL <#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
 <# End If #>
         End Function
 <#
@@ -95,10 +95,10 @@ Namespace Models
         Public Overridable Sub <#= f.name #>(<#= String.Join(", ", p1) #><#= If(_withLock, ", sharedLock As Object","") #>)
 <# If _withLock Then #>
             SyncLock sharedLock
-                DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
+                DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("CALL <#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
             End SyncLock
 <# Else #>
-            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
+            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("CALL <#= f.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
 <# End If #>
         End Sub
 <#          
@@ -109,10 +109,10 @@ Namespace Models
         Public Overridable Function <#= f.name #>(<#= If(_withLock, "sharedLock As Object","") #>) As Core.Objects.ObjectResult(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)
 <# If _withLock Then #>
             SyncLock sharedLock
-                Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("<#= f.name #>()")
+                Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("CALL <#= f.name #>()")
             End SyncLock
 <# Else #>
-            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("<#= f.name #>()")
+            Return DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreQuery(Of Models.StoreCommandSchemas.<#= f.returnLayout.singleName #>)("CALL <#= f.name #>()")
 <# End If #>
         End Function
 <#
@@ -121,10 +121,10 @@ Namespace Models
         Public Overridable Sub <#= f.name #>(<#= If(_withLock, "sharedLock As Object","") #>)
 <# If _withLock Then #>
             SyncLock sharedLock
-                DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= f.name #>()")
+                DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("CALL <#= f.name #>()")
             End SyncLock
 <# Else #>
-            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("<#= f.name #>()")
+            DirectCast(_context, IObjectContextAdapter).ObjectContext.ExecuteStoreCommand("CALL <#= f.name #>()")
 <# End If #>
         End Sub
 <#

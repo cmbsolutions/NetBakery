@@ -84,10 +84,10 @@ Namespace Models.StoreCommands.Procedures
         Public Overridable Sub Execute(<#= String.Join(", ", p1) #><#= If(_withLock, ", sharedLock As Object", "") #>)
 <# If _withLock Then #>
             SyncLock sharedLock
-                context.Database.ExecuteSqlRaw("<#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
+                context.Database.ExecuteSqlRaw("CALL <#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
             End SyncLock
 <# Else #>
-            context.Database.ExecuteSqlRaw("<#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
+            context.Database.ExecuteSqlRaw("CALL <#= _routine.name #>(<#= String.Join(",", p2) #>)", <#= String.Join(",", p3) #>)
 <# End If #>
         End Sub
 <#          
@@ -148,10 +148,10 @@ Namespace Models.StoreCommands.Procedures
         Public Overridable Sub Execute(<#= If(_withLock, "sharedLock As Object", "") #>)
 <# If _withLock Then #>
             SyncLock sharedLock
-                context.Database.ExecuteSqlRaw("<#= _routine.name #>()")
+                context.Database.ExecuteSqlRaw("CALL <#= _routine.name #>()")
             End SyncLock
 <# Else #>
-            context.Database.ExecuteSqlRaw("<#= _routine.name #>()")
+            context.Database.ExecuteSqlRaw("CALL <#= _routine.name #>()")
 <# End If #>
         End Sub
 <#
