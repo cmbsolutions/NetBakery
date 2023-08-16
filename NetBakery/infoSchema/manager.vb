@@ -746,6 +746,8 @@ Namespace infoSchema
                     ali = $"[{ali}]"
                 End If
 
+                ' replace spaces with _
+                ali = ali.Replace(" ", "_")
 
                 Return ali
             Catch ex As Exception
