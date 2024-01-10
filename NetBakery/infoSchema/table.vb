@@ -17,5 +17,6 @@
         Property HasMissingFields As Boolean
         Property NoAutoNumber As Boolean
         Property executiontime As TimeSpan
+        Property collation As String
     End Class
 End Namespace

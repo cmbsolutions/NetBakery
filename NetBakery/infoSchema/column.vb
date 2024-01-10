@@ -18,6 +18,8 @@ Namespace infoSchema
         Property autoIncrement As Boolean
         Property enums As New List(Of String)
         Property IsUserSelectedKey As Boolean
+        Property character_set_name As String
+        Property collation_name As String
 
         Public Overrides Function Equals(obj As Object) As Boolean
             Try
