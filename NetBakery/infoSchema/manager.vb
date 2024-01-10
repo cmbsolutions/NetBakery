@@ -138,7 +138,7 @@ Namespace infoSchema
                 Using _dbCommand = New MySqlCommand
 
                     _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
-                    _dbCommand.CommandText = "SELECT T.TABLE_NAME, T.TABLE_TYPE, V.VIEW_DEFINITION FROM `TABLES` AS T LEFT JOIN VIEWS AS V ON T.TABLE_SCHEMA = V.TABLE_SCHEMA AND T.TABLE_NAME = V.TABLE_NAME WHERE T.TABLE_SCHEMA = @database;"
+                    _dbCommand.CommandText = "SELECT T.TABLE_NAME, T.TABLE_TYPE, V.VIEW_DEFINITION, T.TABLE_COLLATION FROM `TABLES` AS T LEFT JOIN VIEWS AS V ON T.TABLE_SCHEMA = V.TABLE_SCHEMA AND T.TABLE_NAME = V.TABLE_NAME WHERE T.TABLE_SCHEMA = @database;"
                     _dbCommand.Parameters.AddWithValue("database", _database)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
@@ -147,7 +147,7 @@ Namespace infoSchema
                             If rdr.GetString("TABLE_TYPE") = "VIEW" Then
                                 t = New table With {.name = rdr.GetString("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = _p.Pluralize(rdr.GetString("TABLE_NAME")), .isView = True, .hasExport = True}
                             Else
-                                t = New table With {.name = rdr.GetString("TABLE_NAME"), .singleName = _p.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = _p.Pluralize(rdr.GetString("TABLE_NAME")), .hasExport = True}
+                                t = New table With {.name = rdr.GetString("TABLE_NAME"), .singleName = _p.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = _p.Pluralize(rdr.GetString("TABLE_NAME")), .hasExport = True, .collation = rdr.GetString("TABLE_COLLATION")}
                             End If
 
                             t.escapeName = _keywords IsNot Nothing AndAlso _keywords.Exists(Function(c) c = t.singleName)
@@ -198,7 +198,7 @@ Namespace infoSchema
 
                     Using _dbCommand = New MySqlCommand
                         _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
-                        _dbCommand.CommandText = "SELECT COLUMN_NAME,ORDINAL_POSITION,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,COLUMN_TYPE,COLUMN_KEY,EXTRA FROM COLUMNS WHERE TABLE_SCHEMA = @database AND TABLE_NAME = @table ORDER BY ORDINAL_POSITION ASC"
+                        _dbCommand.CommandText = "SELECT COLUMN_NAME,ORDINAL_POSITION,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,COLUMN_TYPE,COLUMN_KEY,EXTRA,CHARACTER_SET_NAME,COLLATION_NAME FROM COLUMNS WHERE TABLE_SCHEMA = @database AND TABLE_NAME = @table ORDER BY ORDINAL_POSITION ASC"
                         _dbCommand.Parameters.AddWithValue("database", _database)
                         _dbCommand.Parameters.AddWithValue("table", t.name)
                         'Debug.WriteLine(t.tableName)
@@ -241,6 +241,9 @@ Namespace infoSchema
                                     c.enums = New List(Of String)
                                     c.enums.AddRange(tmpData.Replace("'", "").Split(","c))
                                 End If
+
+                                c.character_set_name = rdr("CHARACTER_SET_NAME").ToString
+                                c.collation_name = rdr("COLLATION_NAME").ToString
 
                                 t.columns.Add(c)
                             End While

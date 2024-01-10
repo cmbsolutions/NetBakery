@@ -64,7 +64,7 @@ Public Class <#= _name #>DataManager
 
 					If IsNullable Then
 						Dim val As Object = info.GetValue(EntityResult, Nothing)
-						If Not val Is Nothing Then row(info.Name) = Convert.ChangeType(val, Nullable.GetUnderlyingType(info.PropertyType))
+						If val IsNot Nothing Then row(info.Name) = Convert.ChangeType(val, Nullable.GetUnderlyingType(info.PropertyType))
 					Else
 						row(info.Name) = info.GetValue(EntityResult, Nothing)
 					End If
@@ -84,7 +84,7 @@ Public Class <#= _name #>DataManager
 	Public Sub SetFieldValueByName(_entity As Object, _fieldname As String, _value As Object)
 		Try
 			Dim info As PropertyInfo = _entity.GetType().GetProperties().Where(Function(c) c.Name = _fieldname).FirstOrDefault
-			If Not info Is Nothing AndAlso info.CanRead AndAlso info.CanWrite Then
+			If info IsNot Nothing AndAlso info.CanRead AndAlso info.CanWrite Then
 				info.SetValue(_entity, _value)
 			End If
 		Catch ex As Exception
