@@ -328,13 +328,25 @@ Namespace infoSchema
                             Else
                                 fk.propertyAlias = $"{col.name}_"
                             End If
-                            Dim reftable = tables.FirstOrDefault(Function(c) c.name = rdr("REFERENCED_TABLE_NAME").ToString)
+
+                            Dim reftable As table = Nothing
+                            Try
+                                reftable = tables.First(Function(c) c.name = rdr("REFERENCED_TABLE_NAME").ToString)
+                            Catch rex As Exception
+                                Throw New Exception($"Foreign key error on {table.name} to {rdr("REFERENCED_TABLE_NAME")}, are you missing the table?", rex)
+                            End Try
 
                             If fk.referencedTable Is Nothing Then
                                 fk.referencedTable = reftable
                             End If
 
-                            Dim refcol = reftable.columns.FirstOrDefault(Function(c) c.name = rdr("REFERENCED_COLUMN_NAME").ToString)
+                            Dim refcol As column = Nothing
+
+                            Try
+                                refcol = reftable.columns.FirstOrDefault(Function(c) c.name = rdr("REFERENCED_COLUMN_NAME").ToString)
+                            Catch rex As Exception
+                                Throw New Exception($"Foreign key error on {table.name} to {rdr("REFERENCED_TABLE_NAME")} and column {rdr("REFERENCED_COLUMN_NAME")}, are you missing the table?", rex)
+                            End Try
 
                             fk.referencedColumns.Add(New fkColumn With {
                                 .fkPosition = ToInt(rdr("ORDINAL_POSITION")),
@@ -636,6 +648,8 @@ Namespace infoSchema
 
                 If _dbConnections.ContainsKey(connectionName) Then
                     con = _dbConnections.First(Function(c) c.Key = connectionName).Value
+
+                    con.ChangeDatabase(databasename)
                 Else
                     con = New MySqlConnection(connection.ToString)
 
