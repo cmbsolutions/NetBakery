@@ -9,7 +9,7 @@ Public Class connection_editor
 
     Public Sub loadConnection(_name As String)
         Try
-            TitleText = "Edit connection"
+            TitleText = "Edit Connection"
 
             _currentConnection = _conn.Where(Function(c) c.description = _name).First
 
@@ -116,7 +116,7 @@ Public Class connection_editor
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         Try
             If _currentConnection IsNot Nothing Then
-                If MessageBoxEx.Show("Are you sure you want to delete this connection?", "Delete connection", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = DialogResult.Yes Then
+                If MessageBoxEx.Show("Are you sure you want to delete this Connection?", "Delete Connection", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = DialogResult.Yes Then
                     SuperValidator1.Enabled = False
                     _conn.Remove(_currentConnection)
 

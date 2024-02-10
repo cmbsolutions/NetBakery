@@ -13,266 +13,75 @@ Imports System
 '    the code is regenerated.
 '</auto-generated>
 '------------------------------------------------------------------------------
-Namespace My.Templates.net5
+Namespace My.Templates
     '''<summary>
     '''Class to produce the template output
     '''</summary>
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")>  _
-    Partial Public Class Model
-        Inherits ModelBase
+    Partial Public Class AlterCollations
+        Inherits AlterCollationsBase
         '''<summary>
         '''Create the template output
         '''</summary>
         Public Overridable Function TransformText() As String
-            Me.Write("Imports System.Collections.Generic"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",10)
- If _t.escapeName then 
-            
-            #End ExternalSource
-            Me.Write("    Partial Public Class [")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",11)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Conversions\AlterCollations.tt",9)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("SET FOREIGN_KEY_CHECKS=0;))
             
             #End ExternalSource
-            Me.Write("]"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",12)
- Else 
-            
-            #End ExternalSource
-            Me.Write("    Partial Public Class ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",13)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Conversions\AlterCollations.tt",11)
+ For each t in _t 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",14)
- End If 
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Conversions\AlterCollations.tt",13)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("ALTER TABLE `" & t.name & "` CHARACTER SET = utf8mb4, COLLATE = utf8mb4_unicode_ci;"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Conversions\AlterCollations.tt",15)
+ For each c in t.columns.where(function(x) x.collation_name <> "").toList 
+            
+            #End ExternalSource
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Conversions\AlterCollations.tt",16)
+		If t.indexes.Where(Function(a) a.columns.LongCount(Function(b) b.column.name = c.name) > 0) Then 
+            
+            #End ExternalSource
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Conversions\AlterCollations.tt",17)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("ALTER TABLE `" & t.name & "` MODIFY COLUMN `" & c.name & "` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'NULL';"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Conversions\AlterCollations.tt",19)
+		Else
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",16)
-  If _t.relations.Any() Then 
-            
-            #End ExternalSource
-            Me.Write("        Public Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",18)
-      For Each re in _t.relations.OrderBy(Function(c) c.toTable.name) 
-            
-            #End ExternalSource
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",19)
-          If re.toTable.escapeName then 
-            
-            #End ExternalSource
-            Me.Write("            ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",20)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.alias))
-            
-            #End ExternalSource
-            Me.Write(" = New HashSet(Of [")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",20)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.toTable.singleName))
-            
-            #End ExternalSource
-            Me.Write("])()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",21)
-          Else 
-            
-            #End ExternalSource
-            Me.Write("            ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",22)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.alias))
-            
-            #End ExternalSource
-            Me.Write(" = New HashSet(Of ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",22)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.toTable.singleName))
-            
-            #End ExternalSource
-            Me.Write(")()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",23)
-          End If 
-            
-            #End ExternalSource
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",24)
-      Next 
-            
-            #End ExternalSource
-            Me.Write("        End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",26)
-  End If 
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Conversions\AlterCollations.tt",21)
+		End If 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",28)
-  For each c in _t.columns 
-            
-            #End ExternalSource
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",29)
-      If c.isNullable And c.vbType <> "String" Then 
-            
-            #End ExternalSource
-            Me.Write("        Public Property ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",30)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
-            
-            #End ExternalSource
-            Me.Write("() as ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",30)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.vbType))
-            
-            #End ExternalSource
-            Me.Write("?"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",31)
-      else 
-            
-            #End ExternalSource
-            Me.Write("        Public Property ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",32)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
-            
-            #End ExternalSource
-            Me.Write("() as ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",32)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.vbType))
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Conversions\AlterCollations.tt",23)
+ Next 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",33)
-      end if
-    Next
-
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Conversions\AlterCollations.tt",25)
+ Next 
             
             #End ExternalSource
-            Me.Write("        ' relational Tables"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",37)
-
-    For each fk in _t.foreignkeys.orderby(Function(c) c.propertyalias)
-
-            
-            #End ExternalSource
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",40)
-      If fk.referencedtable.escapeName then 
-            
-            #End ExternalSource
-            Me.Write("        Public Property ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",41)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.propertyAlias))
-            
-            #End ExternalSource
-            Me.Write("() as [")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",41)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedtable.singlename))
-            
-            #End ExternalSource
-            Me.Write("]"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",42)
-      Else 
-            
-            #End ExternalSource
-            Me.Write("        Public Property ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",43)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.propertyAlias))
-            
-            #End ExternalSource
-            Me.Write("() as ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",43)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedtable.singlename))
-            
-            #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",44)
-      End If 
-            
-            #End ExternalSource
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",45)
-  Next 
-
-    For Each re in  _t.relations.orderby(Function(c) c.totable.name)
-
-            
-            #End ExternalSource
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",49)
- If re.toTable.escapeName then 
-            
-            #End ExternalSource
-            Me.Write("        Public Overridable Property ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",50)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.alias))
-            
-            #End ExternalSource
-            Me.Write("() As ICollection(Of [")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",50)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.totable.SingleName))
-            
-            #End ExternalSource
-            Me.Write("])"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",51)
- Else 
-            
-            #End ExternalSource
-            Me.Write("        Public Overridable Property ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",52)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.alias))
-            
-            #End ExternalSource
-            Me.Write("() As ICollection(Of ")
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",52)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(re.totable.SingleName))
-            
-            #End ExternalSource
-            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",53)
- End If 
-            
-            #End ExternalSource
-            
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\net5\Model.tt",54)
-  Next
-
-
-            
-            #End ExternalSource
-            Me.Write("    End Class"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End Namespace")
             Return Me.GenerationEnvironment.ToString
         End Function
     End Class
@@ -281,7 +90,7 @@ Namespace My.Templates.net5
     '''Base class for this transformation
     '''</summary>
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")>  _
-    Public Class ModelBase
+    Public Class AlterCollationsBase
         #Region "Fields"
         Private generationEnvironmentField As Global.System.Text.StringBuilder
         Private errorsField As Global.System.CodeDom.Compiler.CompilerErrorCollection
@@ -294,7 +103,7 @@ Namespace My.Templates.net5
         '''<summary>
         '''The string builder that generation-time code is using to assemble generated output
         '''</summary>
-        Protected Property GenerationEnvironment() As System.Text.StringBuilder
+        Public Property GenerationEnvironment() As System.Text.StringBuilder
             Get
                 If (Me.generationEnvironmentField Is Nothing) Then
                     Me.generationEnvironmentField = New Global.System.Text.StringBuilder()

@@ -1,4 +1,3 @@
-Imports System.Text
 Imports DevComponents
 Imports DevComponents.DotNetBar
 Imports Newtonsoft.Json
@@ -9,7 +8,7 @@ Imports System.Windows.Documents
 
 
 Public Class mainGUI2
-    Private _mngr As New infoSchema.manager
+    Private _mngr As New infoSchema.Manager
     Private _currentConnection As infoSchema.connection
     Private _connections As New infoSchema.connections
 
@@ -268,13 +267,13 @@ Public Class mainGUI2
     Private Sub btnEditConnection_Click(sender As Object, e As EventArgs) Handles btnEditConnection.Click
         Try
             If cboConnecions.Text = "" Then
-                MessageBoxEx.Show("Select a connection to edit", "No connection")
+                MessageBoxEx.Show("Select a Connection to edit", "No Connection")
                 Exit Sub
             End If
 
             If _currentConnection IsNot Nothing Then
                 If _currentConnection.fromNavicat Then
-                    MessageBoxEx.Show("You lack administrator rights to edit a navicat connection.", "No connection")
+                    MessageBoxEx.Show("You lack administrator rights to edit a navicat Connection.", "No Connection")
                     Exit Sub
                 End If
             End If
@@ -300,17 +299,17 @@ Public Class mainGUI2
             btnConnect.StopPulse()
 
             If _currentConnection Is Nothing Then
-                MessageBoxEx.Show("No connection selected")
+                MessageBoxEx.Show("No Connection selected")
                 Exit Sub
             End If
 
             _mngr.initSchema()
-            _mngr.connection = _currentConnection
+            _mngr.Connection = _currentConnection
 
             If _mngr.TryConnect() Then
                 advtreeDatabases.Nodes.Clear()
 
-                For Each db In _mngr.databases
+                For Each db In _mngr.Databases
                     Dim node As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .Text = db, .Name = db, .ContextMenu = dbNodes}
 
                     AddHandler node.NodeDoubleClick, AddressOf databaseNodeHandler
@@ -350,8 +349,8 @@ Public Class mainGUI2
             viewNode.Cells.Add(New AdvTree.Cell With {.Editable = False, .Text = "0", .TextDisplayFormat = "(0)", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter})
             routineNode.Cells.Add(New AdvTree.Cell With {.Editable = False, .Text = "0", .TextDisplayFormat = "(0)", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter})
 
-            ' Process all tables/views
-            For Each table In _mngr.tables.Where(Function(c) c.isView = False)
+            ' Process all Tables/views
+            For Each table In _mngr.Tables.Where(Function(c) c.isView = False)
                 ' Clone the templates
                 Dim tmpNode = itemNode.DeepCopy
                 Dim tmpCell = New AdvTree.Cell With {.Editable = False, .Text = "0", .TextDisplayFormat = "(0)", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter}
@@ -370,7 +369,7 @@ Public Class mainGUI2
                 tableNode.Nodes.Add(tmpNode)
             Next
 
-            For Each view In _mngr.tables.Where(Function(c) c.isView = True)
+            For Each view In _mngr.Tables.Where(Function(c) c.isView = True)
                 ' Clone the templates
                 Dim tmpNode = itemNode.DeepCopy
                 Dim tmpCell = New AdvTree.Cell With {.Editable = False, .Text = "", .TextDisplayFormat = "", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter}
@@ -389,13 +388,13 @@ Public Class mainGUI2
 
                 If view.HasMissingFields Then
                     tmpNode.Style = New ElementStyle(Color.Red)
-                    tmpNode.Tooltip = "There is something wrong with this view. The view selects fields/tables that are missing."
+                    tmpNode.Tooltip = "There is something wrong with this view. The view selects fields/Tables that are missing."
                 End If
 
                 viewNode.Nodes.Add(tmpNode)
             Next
 
-            ' Process all routines
+            ' Process all Routines
             For Each routine In _mngr.routines
                 ' Clone the templates
                 Dim tmpNode = itemNode.DeepCopy
@@ -470,7 +469,7 @@ Public Class mainGUI2
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
             If nodeEvent.Button = MouseButtons.Left Then
-                Dim tableFields = (From f In _mngr.tables Where f.isView = False AndAlso f.name = node.Text Select f).FirstOrDefault
+                Dim tableFields = (From f In _mngr.Tables Where f.isView = False AndAlso f.name = node.Text Select f).FirstOrDefault
 
                 If tableFields IsNot Nothing Then
                     SelectedObject = tableFields
@@ -563,7 +562,7 @@ Public Class mainGUI2
             End If
 
 
-            _mngr.tables.First(Function(c) c.name = node.Text).hasExport = node.Checked
+            _mngr.Tables.First(Function(c) c.name = node.Text).hasExport = node.Checked
 
 
         Catch ex As Exception
@@ -577,7 +576,7 @@ Public Class mainGUI2
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
             If nodeEvent.Button = MouseButtons.Left Then
-                Dim viewFields = (From f In _mngr.tables Where f.isView = True AndAlso f.name = node.Text Select f).FirstOrDefault
+                Dim viewFields = (From f In _mngr.Tables Where f.isView = True AndAlso f.name = node.Text Select f).FirstOrDefault
 
                 If viewFields IsNot Nothing Then
                     SelectedObject = viewFields
@@ -616,7 +615,7 @@ Public Class mainGUI2
             End If
 
 
-            _mngr.tables.First(Function(c) c.name = node.Text).hasExport = node.Checked
+            _mngr.Tables.First(Function(c) c.name = node.Text).hasExport = node.Checked
 
 
         Catch ex As Exception
@@ -751,7 +750,7 @@ Public Class mainGUI2
                 Dim mMapping As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapMapping", True).FirstOrDefault
 
                 ' Tables and views
-                For Each table In _mngr.tables.Where(Function(t) t.hasExport)
+                For Each table In _mngr.Tables.Where(Function(t) t.hasExport)
                     Dim tmpModel As AdvTree.Node = tplModelAndMapping.DeepCopy
                     Dim tmpMapping As AdvTree.Node = tplModelAndMapping.DeepCopy
 
@@ -813,7 +812,7 @@ Public Class mainGUI2
 
 
                 ' Tables and views
-                For Each table In _mngr.tables.Where(Function(t) t.hasExport)
+                For Each table In _mngr.Tables.Where(Function(t) t.hasExport)
                     Dim tmpModel As AdvTree.Node = tplModelAndMapping.DeepCopy
                     Dim tmpMapping As AdvTree.Node = tplModelAndMapping.DeepCopy
 
@@ -1021,7 +1020,7 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            Dim t = _mngr.tables.FirstOrDefault(Function(c) c.name = node.TagString)
+            Dim t = _mngr.Tables.FirstOrDefault(Function(c) c.name = node.TagString)
             Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
 
             If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
@@ -1041,7 +1040,7 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            Dim t = _mngr.tables.FirstOrDefault(Function(c) c.name = node.TagString)
+            Dim t = _mngr.Tables.FirstOrDefault(Function(c) c.name = node.TagString)
             Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
 
             If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
@@ -1082,7 +1081,7 @@ Public Class mainGUI2
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommandSchemas") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommandSchemas")
             End If
 
-            For Each t In _mngr.tables.Where(Function(c) c.hasExport)
+            For Each t In _mngr.Tables.Where(Function(c) c.hasExport)
                 IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{t.singleName}.vb", _mngr.generateModel(t))
                 IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\Mapping\{t.singleName}Map.vb", _mngr.generateMap(t))
             Next
@@ -1115,7 +1114,7 @@ Public Class mainGUI2
             _FileManager.ScanForFiles(_currentProject.projectoutputlocation)
             _FileManager.OriginalFiles = _FileManager.CurrentFiles
 
-            _currentProject.database.tables = _mngr.tables
+            _currentProject.database.tables = _mngr.Tables
             _currentProject.database.routines = _mngr.routines
 
             _currentProject.generatedoutputs = _FileManager.CurrentFiles
@@ -1135,7 +1134,7 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            Dim t = _mngr.tables.FirstOrDefault(Function(c) c.name = node.TagString)
+            Dim t = _mngr.Tables.FirstOrDefault(Function(c) c.name = node.TagString)
 
             If t IsNot Nothing Then
                 scCodePreview.Text = _mngr.generateModel(t)
@@ -1152,7 +1151,7 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            Dim t = _mngr.tables.FirstOrDefault(Function(c) c.name = node.TagString)
+            Dim t = _mngr.Tables.FirstOrDefault(Function(c) c.name = node.TagString)
 
             If t IsNot Nothing Then
                 scCodePreview.Text = _mngr.generateMap(t)
@@ -1239,7 +1238,7 @@ Public Class mainGUI2
 
                 Select Case advtreeDatabases.SelectedNode.Text
                     Case "Tables", "Views"
-                        _mngr.tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
+                        _mngr.Tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case "Routines"
                         _mngr.routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case Else
@@ -1258,7 +1257,7 @@ Public Class mainGUI2
 
                 Select Case advtreeDatabases.SelectedNode.Text
                     Case "Tables", "Views"
-                        _mngr.tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
+                        _mngr.Tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case "Routines"
                         _mngr.routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case Else
@@ -1277,7 +1276,7 @@ Public Class mainGUI2
 
                 Select Case advtreeDatabases.SelectedNode.Text
                     Case "Tables", "Views"
-                        _mngr.tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
+                        _mngr.Tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case "Routines"
                         _mngr.routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case Else
@@ -1630,8 +1629,8 @@ Public Class mainGUI2
             'TODO: Create database vcs
             _mngr.setGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString)
             _mngr.SetDatabase(_currentProject.database.databasename)
-            _mngr.projectTables = _currentProject.database.tables
-            _mngr.projectRoutines = _currentProject.database.routines
+            _mngr.ProjectTables = _currentProject.database.tables
+            _mngr.ProjectRoutines = _currentProject.database.routines
 
             Dim selectedDB = advtreeDatabases.FindNodeByName(_currentProject.database.databasename)
 
@@ -1724,7 +1723,7 @@ Public Class mainGUI2
                 _currentProject.database = New databaseObjects With {
                     .connection = _currentConnection,
                     .databasename = _mngr.GetDatabase,
-                    .tables = _mngr.tables,
+                    .tables = _mngr.Tables,
                     .routines = _mngr.routines
                 }
 
@@ -1807,7 +1806,7 @@ Public Class mainGUI2
     End Sub
 
     Private Sub ButtonItem2_Click(sender As Object, e As EventArgs) Handles ButtonItem2.Click
-        IO.File.WriteAllText("d:\test\tables.json", JsonConvert.SerializeObject(_mngr.tables, Formatting.Indented, New JsonSerializerSettings With {
+        IO.File.WriteAllText("d:\test\Tables.json", JsonConvert.SerializeObject(_mngr.Tables, Formatting.Indented, New JsonSerializerSettings With {
                                                                                                     .ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                                                                                                     .PreserveReferencesHandling = PreserveReferencesHandling.Objects}))
     End Sub
@@ -1845,7 +1844,7 @@ Public Class mainGUI2
     Private Sub CalculateHashesOfMemoryFiles()
         Dim memoryFiles As New List(Of FileVCS.Models.vcsObject)
 
-        For Each t In _mngr.tables.Where(Function(c) c.hasExport)
+        For Each t In _mngr.Tables.Where(Function(c) c.hasExport)
             Dim modelContent = _mngr.generateModel(t)
             Dim mapContent = _mngr.generateMap(t)
 
@@ -2153,7 +2152,7 @@ Public Class mainGUI2
         '        If view IsNot Nothing Then
         '            Dim cname = dgvFields.Rows.Item(e.RowIndex).Cells.Item(0).Value.ToString
 
-        '            _mngr.tables.First(Function(c) c.name = view.name).columns.First(Function(c) c.name = cname).IsUserSelectedKey = CBool(dgvFields.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value)
+        '            _mngr.Tables.First(Function(c) c.name = view.name).columns.First(Function(c) c.name = cname).IsUserSelectedKey = CBool(dgvFields.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value)
         '        End If
         '    End If
         'End If

@@ -9,7 +9,7 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("NetBakery")>
-<Assembly: AssemblyDescription("Generate EF classes from MySQL databases")>
+<Assembly: AssemblyDescription("Generate EF classes from MySQL Databases")>
 <Assembly: AssemblyCompany("CMBSolutions")>
 <Assembly: AssemblyProduct("NetBakery")>
 <Assembly: AssemblyCopyright("Copyright © CMBSolutions 2017-2022")>

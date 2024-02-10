@@ -1,4 +1,4 @@
-﻿Namespace infoSchema
+Namespace infoSchema
 
     <Serializable>
     Public Class table
@@ -17,6 +17,6 @@
         Property HasMissingFields As Boolean
         Property NoAutoNumber As Boolean
         Property executiontime As TimeSpan
-        Property collation As String
+        Property table_collation As String
     End Class
 End Namespace

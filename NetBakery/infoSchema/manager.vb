@@ -5,83 +5,83 @@ Imports System.Text.RegularExpressions
 
 Namespace infoSchema
     <Serializable>
-    Public Class manager
+    Public Class Manager
         Implements IDisposable
 
-        Public Property connection As connection
-        Private Property _dbConnections As Dictionary(Of String, MySqlConnection)
-        Private Property _dbCommand As MySqlCommand
-        Private Property _dbInfoCommand As MySqlCommand
-        Private Property _p As New PluralizationService
-        Private Property _keywords As New List(Of String)
-        Private Property _database As String = ""
+        Public Property Connection As connection
+        Private Property DbConnections As Dictionary(Of String, MySqlConnection)
+        Private Property DbCommand As MySqlCommand
+        Private Property DbInfoCommand As MySqlCommand
+        Private Property Pservice As New PluralizationService
+        Private Property Keywords As New List(Of String)
+        Private Property DatabaseName As String = ""
 
-        Public Property projectTables As New List(Of table)
-        Public Property projectRoutines As New List(Of routine)
+        Public Property ProjectTables As New List(Of table)
+        Public Property ProjectRoutines As New List(Of routine)
 
-        Public Property databases As List(Of String)
-        Public Property tables As List(Of table)
-        Public Property routines As List(Of routine)
-        Public Property useEnums As Boolean
-        Private Property useGenerator As String = "net5"
+        Public Property Databases As List(Of String)
+        Public Property Tables As List(Of table)
+        Public Property Routines As List(Of routine)
+        Public Property UseEnums As Boolean
+        Private Property UseGenerator As String = "net5"
 
-        Private _generator As iGenerator = New net5Generator
+        Private Generator As iGenerator = New net5Generator
 
-        Public Sub setGenerator(_v As String)
-            useGenerator = _v
+        Public Sub SetGenerator(_v As String)
+            UseGenerator = _v
 
-            _keywords = New List(Of String)
+            Keywords = New List(Of String)
 
-            Select Case useGenerator
+            Select Case UseGenerator
                 Case "net"
-                    _generator = New legacy_netGenerator
-                    _keywords.AddRange(My.Resources.vb_keywords.Split(" "c))
+                    Generator = New legacy_netGenerator
+                    Keywords.AddRange(My.Resources.vb_keywords.Split(" "c))
                 Case "net5"
-                    _generator = New net5Generator
-                    _keywords.AddRange(My.Resources.vb_keywords.Split(" "c))
+                    Generator = New net5Generator
+                    Keywords.AddRange(My.Resources.vb_keywords.Split(" "c))
                 Case "php"
-                    _generator = New phpGenerator
-                    _keywords.AddRange(My.Resources.php_keywords.Split(" "c))
+                    Generator = New phpGenerator
+                    Keywords.AddRange(My.Resources.php_keywords.Split(" "c))
                 Case Else
 
             End Select
         End Sub
 
-        Public Function generateModel(t As table, Optional IsStoreCommand As Boolean = False) As String
+        Public Function GenerateModel(t As table, Optional IsStoreCommand As Boolean = False) As String
             Try
-                Return _generator.generateModel(t, IsStoreCommand)
+                Return Generator.generateModel(t, IsStoreCommand)
             Catch ex As Exception
                 Throw
             End Try
         End Function
 
-        Public Function generateMap(t As table) As String
+        Public Function GenerateMap(t As table) As String
             Try
-                Return _generator.generateMap(t)
+                Return Generator.generateMap(t)
             Catch ex As Exception
                 Throw
             End Try
         End Function
 
-        Public Function generateContext(name As String) As String
+        Public Function GenerateContext(name As String) As String
             Try
-                Return _generator.generateContext(tables.Where(Function(c) c.hasExport).ToList, name, False, routines.Where(Function(c) c.hasExport).ToList)
+                Return Generator.generateContext(Tables.Where(Function(c) c.hasExport).ToList, name, False, Routines.Where(Function(c) c.hasExport).ToList)
             Catch ex As Exception
                 Throw
             End Try
         End Function
 
-        Public Function generateStoreCommands(name As String, withLock As Boolean) As String
+        Public Function GenerateStoreCommands(name As String, withLock As Boolean) As String
             Try
-                Return _generator.generateStoreCommands(routines.Where(Function(c) c.isFunction And c.hasExport).ToList, routines.Where(Function(c) Not c.isFunction And c.hasExport).ToList, name, withLock)
+                Return Generator.generateStoreCommands(Routines.Where(Function(c) c.isFunction And c.hasExport).ToList, Routines.Where(Function(c) Not c.isFunction And c.hasExport).ToList, name, withLock)
             Catch ex As Exception
                 Throw
             End Try
         End Function
 
-        Public Function generateStoreCommand(r As infoSchema.routine, name As String, withLock As Boolean) As String
+        Public Function GenerateStoreCommand(r As infoSchema.routine, name As String, withLock As Boolean) As String
             Try
-                Return _generator.generateStoreCommand(r, name, withLock)
+                Return Generator.generateStoreCommand(r, name, withLock)
             Catch ex As Exception
                 Throw
             End Try
@@ -92,16 +92,16 @@ Namespace infoSchema
         End Sub
 
         Public Sub SetDatabase(database As String)
-            _database = database
+            DatabaseName = database
         End Sub
         Public Function GetDatabase() As String
-            Return _database
+            Return DatabaseName
         End Function
 
-        Public Sub harvestObjects()
+        Public Sub HarvestObjects()
             Try
-                tables = New List(Of table)
-                routines = New List(Of routine)
+                Tables = New List(Of table)
+                Routines = New List(Of routine)
 
                 getTables()
                 getColumns()
@@ -115,7 +115,7 @@ Namespace infoSchema
         End Sub
 
 #Region "object readers"
-        Private Sub getDatabases()
+        Private Sub GetDatabases()
             Try
                 Using _dbCommand = New MySqlCommand
 
@@ -124,7 +124,7 @@ Namespace infoSchema
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         While rdr.Read
-                            databases.Add(rdr(0).ToString)
+                            Databases.Add(rdr(0).ToString)
                         End While
                     End Using
                 End Using
@@ -133,30 +133,30 @@ Namespace infoSchema
             End Try
         End Sub
 
-        Private Sub getTables()
+        Private Sub GetTables()
             Try
                 Using _dbCommand = New MySqlCommand
 
                     _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT T.TABLE_NAME, T.TABLE_TYPE, V.VIEW_DEFINITION, T.TABLE_COLLATION FROM `TABLES` AS T LEFT JOIN VIEWS AS V ON T.TABLE_SCHEMA = V.TABLE_SCHEMA AND T.TABLE_NAME = V.TABLE_NAME WHERE T.TABLE_SCHEMA = @database;"
-                    _dbCommand.Parameters.AddWithValue("database", _database)
+                    _dbCommand.Parameters.AddWithValue("database", DatabaseName)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         While rdr.Read
                             Dim t As table
                             If rdr.GetString("TABLE_TYPE") = "VIEW" Then
-                                t = New table With {.name = rdr.GetString("TABLE_NAME").ToString, .singleName = _p.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = _p.Pluralize(rdr.GetString("TABLE_NAME")), .isView = True, .hasExport = True}
+                                t = New table With {.name = rdr.GetString("TABLE_NAME").ToString, .singleName = Pservice.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = Pservice.Pluralize(rdr.GetString("TABLE_NAME")), .isView = True, .hasExport = True}
                             Else
-                                t = New table With {.name = rdr.GetString("TABLE_NAME"), .singleName = _p.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = _p.Pluralize(rdr.GetString("TABLE_NAME")), .hasExport = True, .collation = rdr.GetString("TABLE_COLLATION")}
+                                t = New table With {.name = rdr.GetString("TABLE_NAME"), .singleName = Pservice.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = Pservice.Pluralize(rdr.GetString("TABLE_NAME")), .hasExport = True, .table_collation = rdr.GetString("TABLE_COLLATION")}
                             End If
 
-                            t.escapeName = _keywords IsNot Nothing AndAlso _keywords.Exists(Function(c) c = t.singleName)
+                            t.escapeName = Keywords IsNot Nothing AndAlso Keywords.Exists(Function(c) c = t.singleName)
                             t.NoAutoNumber = True
 
-                            tables.Add(t)
+                            Tables.Add(t)
 
                             Using _dbInfoCommand = New MySqlCommand
-                                _dbInfoCommand.Connection = dbConnection("definition", _database)
+                                _dbInfoCommand.Connection = dbConnection("definition", DatabaseName)
                                 _dbInfoCommand.CommandText = $"SHOW CREATE {rdr.GetString("TABLE_TYPE").Replace("BASE ", "")} {rdr("TABLE_NAME")}"
 
                                 Try
@@ -190,16 +190,16 @@ Namespace infoSchema
             End Try
         End Sub
 
-        Private Sub getColumns()
+        Private Sub GetColumns()
             Try
-                For Each t In tables
+                For Each t In Tables
 
                     t.columns = New List(Of column)
 
                     Using _dbCommand = New MySqlCommand
                         _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
                         _dbCommand.CommandText = "SELECT COLUMN_NAME,ORDINAL_POSITION,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,COLUMN_TYPE,COLUMN_KEY,EXTRA,CHARACTER_SET_NAME,COLLATION_NAME FROM COLUMNS WHERE TABLE_SCHEMA = @database AND TABLE_NAME = @table ORDER BY ORDINAL_POSITION ASC"
-                        _dbCommand.Parameters.AddWithValue("database", _database)
+                        _dbCommand.Parameters.AddWithValue("database", DatabaseName)
                         _dbCommand.Parameters.AddWithValue("table", t.name)
                         'Debug.WriteLine(t.tableName)
                         Using rdr As MySqlDataReader = _dbCommand.ExecuteReader()
@@ -222,7 +222,7 @@ Namespace infoSchema
                                         t.NoAutoNumber = False
                                     End If
                                 Else
-                                    Dim pt = projectTables.FirstOrDefault(Function(x) x.name = t.name)
+                                    Dim pt = ProjectTables.FirstOrDefault(Function(x) x.name = t.name)
                                     If pt IsNot Nothing Then
                                         Dim ct = pt.columns.FirstOrDefault(Function(y) y.name = c.name)
 
@@ -242,8 +242,8 @@ Namespace infoSchema
                                     c.enums.AddRange(tmpData.Replace("'", "").Split(","c))
                                 End If
 
-                                c.character_set_name = rdr("CHARACTER_SET_NAME").ToString
-                                c.collation_name = rdr("COLLATION_NAME").ToString
+                                c.character_set_name = rdr.GetString("CHARACTER_SET_NAME")
+                                c.collation_name = rdr.GetString("COLLATION_NAME")
 
                                 t.columns.Add(c)
                             End While
@@ -258,16 +258,16 @@ Namespace infoSchema
             End Try
         End Sub
 
-        Private Sub getIndexes()
+        Private Sub GetIndexes()
             Try
                 Using _dbCommand = New MySqlCommand
                     _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT TABLE_NAME, NON_UNIQUE, NULLABLE, INDEX_NAME, COLUMN_NAME, SEQ_IN_INDEX FROM STATISTICS WHERE TABLE_SCHEMA=@database ORDER BY TABLE_NAME, INDEX_NAME, SEQ_IN_INDEX"
-                    _dbCommand.Parameters.AddWithValue("database", _database)
+                    _dbCommand.Parameters.AddWithValue("database", DatabaseName)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         While rdr.Read
-                            Dim table = tables.FirstOrDefault(Function(c) c.name = rdr("TABLE_NAME").ToString)
+                            Dim table = Tables.FirstOrDefault(Function(c) c.name = rdr("TABLE_NAME").ToString)
 
                             Dim idx = table.indexes.FirstOrDefault(Function(c) c.Name = rdr("INDEX_NAME").ToString)
 
@@ -295,16 +295,16 @@ Namespace infoSchema
             End Try
         End Sub
 
-        Private Sub getForeignKeys()
+        Private Sub GetForeignKeys()
             Try
                 Using _dbCommand = New MySqlCommand
                     _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT CONSTRAINT_NAME, TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM KEY_COLUMN_USAGE WHERE CONSTRAINT_SCHEMA = @database AND REFERENCED_TABLE_NAME is not null ORDER BY TABLE_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT"
-                    _dbCommand.Parameters.AddWithValue("database", _database)
+                    _dbCommand.Parameters.AddWithValue("database", DatabaseName)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         While rdr.Read
-                            Dim table = tables.FirstOrDefault(Function(c) c.name = rdr("TABLE_NAME").ToString)
+                            Dim table = Tables.FirstOrDefault(Function(c) c.name = rdr("TABLE_NAME").ToString)
 
                             Dim fk = table.foreignKeys.FirstOrDefault(Function(c) c.name = rdr("CONSTRAINT_NAME").ToString)
 
@@ -328,6 +328,7 @@ Namespace infoSchema
                             Else
                                 fk.propertyAlias = $"{col.name}_"
                             End If
+                            Dim reftable = Tables.FirstOrDefault(Function(c) c.name = rdr("REFERENCED_TABLE_NAME").ToString)
 
                             Dim reftable As table = Nothing
                             Try
@@ -390,9 +391,9 @@ Namespace infoSchema
             End Try
         End Sub
 
-        Private Sub foreignKeyAliasBuilder()
+        Private Sub ForeignKeyAliasBuilder()
             Try
-                For Each table In tables.Where(Function(c) c.foreignKeys.Count > 0)
+                For Each table In Tables.Where(Function(c) c.foreignKeys.Count > 0)
                     For Each fk In table.foreignKeys
                         If table.foreignKeys.LongCount(Function(c) c.referencedTable.Equals(fk.referencedTable)) > 1 Then
                             fk.propertyAlias = FixKeyword(fk.columns.First.column.name.Replace("_id", ""))
@@ -405,9 +406,9 @@ Namespace infoSchema
                 Throw
             End Try
         End Sub
-        Private Sub relationAliasBuilder()
+        Private Sub RelationAliasBuilder()
             Try
-                For Each table In tables.Where(Function(c) c.relations.Count > 0)
+                For Each table In Tables.Where(Function(c) c.relations.Count > 0)
                     For Each re In table.relations
                         If table.relations.LongCount(Function(c) c.toTable.Equals(re.toTable)) > 1 Then
                             re.alias = re.toColumn.name.Replace("_id", "")
@@ -421,13 +422,13 @@ Namespace infoSchema
             End Try
         End Sub
 
-        Private Sub getRoutines()
+        Private Sub GetRoutines()
             Try
                 Using _dbCommand = New MySqlCommand
 
                     _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "Select r.ROUTINE_TYPE, r.ROUTINE_NAME, r.ROUTINE_DEFINITION, p.ORDINAL_POSITION, p.PARAMETER_NAME, p.DATA_TYPE, p.CHARACTER_MAXIMUM_LENGTH, p.NUMERIC_PRECISION FROM ROUTINES As r LEFT JOIN PARAMETERS As p On r.ROUTINE_SCHEMA = p.SPECIFIC_SCHEMA And r.ROUTINE_NAME = p.SPECIFIC_NAME WHERE r.ROUTINE_SCHEMA = @database ORDER BY r.ROUTINE_TYPE, p.SPECIFIC_NAME, p.ORDINAL_POSITION"
-                    _dbCommand.Parameters.AddWithValue("database", _database)
+                    _dbCommand.Parameters.AddWithValue("database", DatabaseName)
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
                         Dim rt As routine = Nothing
@@ -440,14 +441,14 @@ Namespace infoSchema
                                             getRoutineLayout(rt, Nothing, Nothing)
                                         End If
                                     End If
-                                    routines.Add(rt)
+                                    Routines.Add(rt)
                                 End If
                                 rt = New routine With {.name = rdr("ROUTINE_NAME").ToString, .hasExport = True}
 
                                 If rdr("ROUTINE_TYPE").ToString = "PROCEDURE" Then
                                     rt.returnsRecordset = Regex.IsMatch(rdr("ROUTINE_DEFINITION").ToString, My.Settings.routineRegex, RegexOptions.IgnoreCase Or RegexOptions.Singleline Or RegexOptions.Multiline)
                                     If rt.returnsRecordset Then
-                                        rt.returnLayout = New table With {.name = rt.name, .singleName = _p.Singularize(rt.name), .pluralName = _p.Pluralize(rt.name)}
+                                        rt.returnLayout = New table With {.name = rt.name, .singleName = Pservice.Singularize(rt.name), .pluralName = Pservice.Pluralize(rt.name)}
                                     End If
                                 End If
                             End If
@@ -466,13 +467,13 @@ Namespace infoSchema
                                 If ToInt(rdr("ORDINAL_POSITION")) = 0 Then
                                     rt.returnParam = p
                                     Dim specName = $"{p.vbType}Model"
-                                    Dim routineWithSameReturnLayout = routines.FirstOrDefault(Function(c) c.isFunction And c.returnLayout.name = specName)
+                                    Dim routineWithSameReturnLayout = Routines.FirstOrDefault(Function(c) c.isFunction And c.returnLayout.name = specName)
 
                                     If routineWithSameReturnLayout Is Nothing Then
                                         rt.returnLayout = New table With {
                                             .name = specName,
-                                            .singleName = _p.Singularize(.name),
-                                            .pluralName = _p.Pluralize(.name),
+                                            .singleName = Pservice.Singularize(.name),
+                                            .pluralName = Pservice.Pluralize(.name),
                                             .columns = New List(Of column)({
                                                                            New column With {
                                                                                 .name = "value",
@@ -496,7 +497,7 @@ Namespace infoSchema
 
                             If rt.definition = "" Then
                                 Using _dbInfoCommand = New MySqlCommand
-                                    _dbInfoCommand.Connection = dbConnection("definition", _database)
+                                    _dbInfoCommand.Connection = dbConnection("definition", DatabaseName)
                                     _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("ROUTINE_TYPE")} {rdr("ROUTINE_NAME")}"
                                     _dbInfoCommand.CommandType = CommandType.Text
 
@@ -521,18 +522,18 @@ Namespace infoSchema
                             If rt.returnsRecordset AndAlso Not rt.isFunction Then
                                 If My.Settings.autoExecuteSP Then getRoutineLayout(rt, Nothing, Nothing)
                             End If
-                            routines.Add(rt)
+                            Routines.Add(rt)
                         End If
                     End Using
                 End Using
 
                 If My.Settings.mergeRoutineLayouts Then
                     Dim matched As New List(Of String)
-                    ' Check for routines with same returnlayouts, those will be merged to a base layout
-                    For Each r1 In routines.Where(Function(c) c.returnsRecordset AndAlso Not c.isFunction)
+                    ' Check for Routines with same returnlayouts, those will be merged to a base layout
+                    For Each r1 In Routines.Where(Function(c) c.returnsRecordset AndAlso Not c.isFunction)
                         If matched.Contains(r1.name) Then Continue For
 
-                        For Each r2 In routines.Where(Function(c) c.returnsRecordset AndAlso Not c.isFunction AndAlso Not c.name = r1.name)
+                        For Each r2 In Routines.Where(Function(c) c.returnsRecordset AndAlso Not c.isFunction AndAlso Not c.name = r1.name)
                             Dim sameLayout As Boolean = True
                             For Each c1 In r1.returnLayout.columns
                                 If Not r2.returnLayout.columns.Item(r1.returnLayout.columns.IndexOf(c1)).Equals(c1) Then
@@ -553,11 +554,11 @@ Namespace infoSchema
             End Try
         End Sub
 
-        Public Sub getRoutineLayout(ByRef _r As routine, paramValues As String(), ByRef fieldNames As List(Of String))
+        Public Sub GetRoutineLayout(ByRef _r As routine, paramValues As String(), ByRef fieldNames As List(Of String))
             Try
                 Using _dbxCommand = New MySqlCommand
                     Dim startTime = Now
-                    _dbxCommand.Connection = dbConnection("definition", _database)
+                    _dbxCommand.Connection = dbConnection("definition", DatabaseName)
                     _dbxCommand.CommandTimeout = 3600
                     _dbxCommand.CommandType = CommandType.Text
                     _dbxCommand.CommandText = $"CALL {_r.name}({String.Join(",", (From r In _r.params Order By r.ordinalPosition Select "@" & r.name))})"
@@ -576,7 +577,7 @@ Namespace infoSchema
                             Using d As DataTable = rdr.GetSchemaTable
                                 If d IsNot Nothing Then
                                     If _r.returnLayout Is Nothing Then
-                                        _r.returnLayout = New table With {.name = _r.name, .singleName = _p.Singularize(_r.name), .pluralName = _p.Pluralize(_r.name)}
+                                        _r.returnLayout = New table With {.name = _r.name, .singleName = Pservice.Singularize(_r.name), .pluralName = Pservice.Pluralize(_r.name)}
                                     End If
                                     _r.returnsRecordset = True
                                     For Each row As DataRow In d.Rows
@@ -617,13 +618,13 @@ Namespace infoSchema
 #End Region
 
 #Region "helpers"
-        Public Sub initSchema()
+        Public Sub InitSchema()
             Try
-                databases = New List(Of String)
-                _dbConnections = New Dictionary(Of String, MySqlConnection)
+                Databases = New List(Of String)
+                DbConnections = New Dictionary(Of String, MySqlConnection)
 
-                tables = New List(Of table)
-                routines = New List(Of routine)
+                Tables = New List(Of table)
+                Routines = New List(Of routine)
 
             Catch ex As Exception
                 Throw
@@ -639,29 +640,27 @@ Namespace infoSchema
             End Try
         End Function
 
-        Private Function dbConnection(connectionName As String, databasename As String) As MySqlConnection
+        Private Function DbConnection(connectionName As String, databasename As String) As MySqlConnection
             Try
-                If _dbConnections Is Nothing Then
-                    _dbConnections = New Dictionary(Of String, MySqlConnection)
+                If DbConnections Is Nothing Then
+                    DbConnections = New Dictionary(Of String, MySqlConnection)
                 End If
                 Dim con As MySqlConnection
 
-                If _dbConnections.ContainsKey(connectionName) Then
-                    con = _dbConnections.First(Function(c) c.Key = connectionName).Value
-
-                    con.ChangeDatabase(databasename)
+                If DbConnections.ContainsKey(connectionName) Then
+                    con = DbConnections.First(Function(c) c.Key = connectionName).Value
                 Else
-                    con = New MySqlConnection(connection.ToString)
+                    con = New MySqlConnection(Connection.ToString)
 
-                    _dbConnections.Add(connectionName, con)
+                    DbConnections.Add(connectionName, con)
                 End If
 
                 If con.State = ConnectionState.Closed Or con.State = ConnectionState.Broken Then
                     Try
                         con.Open()
                     Catch msex As Exception
-                        connection.sslmode = eSslMode.None
-                        con.ConnectionString = connection.ToString
+                        Connection.sslmode = eSslMode.None
+                        con.ConnectionString = Connection.ToString
                         con.Open()
                     End Try
                     con.ChangeDatabase(databasename)
@@ -691,7 +690,7 @@ Namespace infoSchema
             Return s.Substring(0, 1).ToUpper & s.Substring(1).ToLower
 
         End Function
-        Private Function getVbType(mysqlType As String) As String
+        Private Function GetVbType(mysqlType As String) As String
             If mysqlType Is Nothing Then
                 Return "Integer"
             End If
@@ -717,7 +716,7 @@ Namespace infoSchema
             End Select
         End Function
 
-        Private Function getPHPType(mysqlType As String) As String
+        Private Function GetPHPType(mysqlType As String) As String
             If mysqlType Is Nothing Then
                 Return "int"
             End If
@@ -748,7 +747,7 @@ Namespace infoSchema
                 Dim inc As Integer = 1
 
                 ' First check tablenames
-                While tables.Exists(Function(t) t.name.ToLower = ali Or t.singleName.ToLower = ali Or t.pluralName.ToLower = ali)
+                While Tables.Exists(Function(t) t.name.ToLower = ali Or t.singleName.ToLower = ali Or t.pluralName.ToLower = ali)
                     ali = $"{original.ToLower}_{inc}"
                     inc += 1
                 End While
@@ -759,7 +758,7 @@ Namespace infoSchema
                 End If
 
                 ' Then check keywords (depending on generatortype)
-                If _keywords.Exists(Function(k) k = ali) Then
+                If Keywords.Exists(Function(k) k = ali) Then
                     ali = $"[{ali}]"
                 End If
 
@@ -774,7 +773,7 @@ Namespace infoSchema
 
         Private Function FixKeyword(inData As String) As String
             ' Then check keywords (depending on generatortype)
-            If _keywords.Exists(Function(k) k = inData) Then
+            If Keywords.Exists(Function(k) k = inData) Then
                 Return $"[{inData}]"
             Else
                 Return inData
@@ -790,18 +789,18 @@ Namespace infoSchema
         Protected Overridable Sub Dispose(disposing As Boolean)
             If Not disposedValue Then
                 If disposing Then
-                    If _dbConnections IsNot Nothing Then
-                        _dbConnections.Values.ToList.ForEach(Sub(c) c.Dispose())
-                        _dbConnections.Clear()
+                    If DbConnections IsNot Nothing Then
+                        DbConnections.Values.ToList.ForEach(Sub(c) c.Dispose())
+                        DbConnections.Clear()
                     End If
-                    If _dbCommand IsNot Nothing Then _dbCommand.Dispose()
-                    If _p IsNot Nothing Then _p.Dispose()
+                    If DbCommand IsNot Nothing Then DbCommand.Dispose()
+                    If Pservice IsNot Nothing Then Pservice.Dispose()
                 End If
 
-                _keywords = Nothing
-                databases = Nothing
-                tables = Nothing
-                routines = Nothing
+                Keywords = Nothing
+                Databases = Nothing
+                Tables = Nothing
+                Routines = Nothing
 
             End If
             disposedValue = True
@@ -900,7 +899,7 @@ Namespace infoSchema
             Return ret
         End Function
 
-        Public Function isSingle(s As Object) As Boolean
+        Public Function IsSingle(s As Object) As Boolean
             Return isSingle(s.ToString)
         End Function
 
@@ -910,11 +909,11 @@ Namespace infoSchema
             Return tmp.Equals(s)
         End Function
 
-        Public Function isPlural(s As Object) As Boolean
+        Public Function IsPlural(s As Object) As Boolean
             Return isPlural(s.ToString)
         End Function
 
-        Public Function isPlural(s As String) As Boolean
+        Public Function IsPlural(s As String) As Boolean
             Dim tmp As String = Pluralize(s)
 
             Return tmp.Equals(s)

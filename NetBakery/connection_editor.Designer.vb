@@ -86,7 +86,7 @@ Partial Class connection_editor
         Me.btnTryConnection.Symbol = ""
         Me.btnTryConnection.SymbolColor = System.Drawing.SystemColors.Highlight
         Me.btnTryConnection.TabIndex = 13
-        Me.btnTryConnection.Text = "Try connection"
+        Me.btnTryConnection.Text = "Try Connection"
         '
         'btnCancel
         '
@@ -374,7 +374,7 @@ Partial Class connection_editor
         Me.RenderFormIcon = False
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "New connection"
+        Me.Text = "New Connection"
         Me.TableLayoutPanel1.ResumeLayout(False)
         CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)

@@ -304,7 +304,7 @@ Partial Class preferences
         Me.sbRoutineLayouts.OnText = "Yes"
         Me.sbRoutineLayouts.Size = New System.Drawing.Size(66, 22)
         Me.sbRoutineLayouts.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
-        Me.SuperTooltip1.SetSuperTooltip(Me.sbRoutineLayouts, New DevComponents.DotNetBar.SuperTooltipInfo("Share routine layouts", "", "Set this to ""yes"" to use one layout for routines that have the same output struct" &
+        Me.SuperTooltip1.SetSuperTooltip(Me.sbRoutineLayouts, New DevComponents.DotNetBar.SuperTooltipInfo("Share routine layouts", "", "Set this to ""yes"" to use one layout for Routines that have the same output struct" &
             "ure." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Warning: Review the generated output, because it can result in duplicate" &
             " classes!!!", Global.NetBakery.My.Resources.Resources.info, Nothing, DevComponents.DotNetBar.eTooltipColor.System))
         Me.sbRoutineLayouts.SwitchClickTogglesValue = True
@@ -348,7 +348,7 @@ Partial Class preferences
         Me.sbTimeViews.OnText = "Yes"
         Me.sbTimeViews.Size = New System.Drawing.Size(66, 22)
         Me.sbTimeViews.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
-        Me.SuperTooltip1.SetSuperTooltip(Me.sbTimeViews, New DevComponents.DotNetBar.SuperTooltipInfo("Share routine layouts", "", "Set this to ""yes"" to use one layout for routines that have the same output struct" &
+        Me.SuperTooltip1.SetSuperTooltip(Me.sbTimeViews, New DevComponents.DotNetBar.SuperTooltipInfo("Share routine layouts", "", "Set this to ""yes"" to use one layout for Routines that have the same output struct" &
             "ure." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Warning: Review the generated output, because it can result in duplicate" &
             " classes!!!", Global.NetBakery.My.Resources.Resources.info, Nothing, DevComponents.DotNetBar.eTooltipColor.System))
         Me.sbTimeViews.SwitchClickTogglesValue = True
