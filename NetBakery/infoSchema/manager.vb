@@ -212,7 +212,7 @@ Namespace infoSchema
                                 c.defaultValue = If(rdr("COLUMN_DEFAULT").ToString = "", "NULL", rdr("COLUMN_DEFAULT").ToString)
                                 c.isNullable = If(rdr("IS_NULLABLE").ToString = "YES", True, False)
                                 c.mysqlType = rdr("DATA_TYPE").ToString
-                                c.maximumLength = ToInt(rdr("CHARACTER_MAXIMUM_LENGTH"))
+                                c.maximumLength = If(rdr("CHARACTER_MAXIMUM_LENGTH").ToString = "", 0, ToInt(rdr("CHARACTER_MAXIMUM_LENGTH")))
                                 c.numericPrecision = ToInt(rdr("NUMERIC_PRECISION"))
                                 c.numericScale = ToInt(rdr("NUMERIC_SCALE"))
                                 c.key = rdr("COLUMN_KEY").ToString
@@ -242,8 +242,8 @@ Namespace infoSchema
                                     c.enums.AddRange(tmpData.Replace("'", "").Split(","c))
                                 End If
 
-                                c.character_set_name = rdr.GetString("CHARACTER_SET_NAME")
-                                c.collation_name = rdr.GetString("COLLATION_NAME")
+                                c.character_set_name = If(rdr("CHARACTER_SET_NAME").ToString = "", "", rdr.GetString("CHARACTER_SET_NAME"))
+                                c.collation_name = If(rdr("COLLATION_NAME").ToString = "", "", rdr.GetString("COLLATION_NAME"))
 
                                 t.columns.Add(c)
                             End While
@@ -328,7 +328,6 @@ Namespace infoSchema
                             Else
                                 fk.propertyAlias = $"{col.name}_"
                             End If
-                            Dim reftable = Tables.FirstOrDefault(Function(c) c.name = rdr("REFERENCED_TABLE_NAME").ToString)
 
                             Dim reftable As table = Nothing
                             Try
