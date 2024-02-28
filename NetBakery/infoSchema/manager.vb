@@ -762,7 +762,9 @@ Namespace infoSchema
                 End If
 
                 ' replace spaces with _
-                ali = ali.Replace(" ", "_")
+                Dim RegexObj As New Regex("[^a-z\d\-_]", RegexOptions.IgnoreCase Or RegexOptions.Multiline)
+
+                ali = RegexObj.Replace(ali, "_")
 
                 Return ali
             Catch ex As Exception
