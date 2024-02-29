@@ -108,7 +108,7 @@ Namespace Models.Mapping
 		end if
 
 		lineParts.Add(").HasForeignKey(Function(d) d.")
-		lineParts.Add(f.columns.first.column.name)
+		lineParts.Add(f.columns.first.column.alias)
 		lineParts.Add(")")
 #>
 			<#= String.Join("", lineParts) #>
