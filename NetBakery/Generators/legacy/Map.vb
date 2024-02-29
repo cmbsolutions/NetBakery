@@ -227,7 +227,7 @@ Namespace My.Templates.legacy_net
 		end if
 
 		lineParts.Add(").HasForeignKey(Function(d) d.")
-		lineParts.Add(f.columns.first.column.name)
+		lineParts.Add(f.columns.first.column.alias)
 		lineParts.Add(")")
 
             
@@ -268,7 +268,7 @@ Namespace My.Templates.legacy_net
         '''<summary>
         '''The string builder that generation-time code is using to assemble generated output
         '''</summary>
-        Protected Property GenerationEnvironment() As System.Text.StringBuilder
+        Public Property GenerationEnvironment() As System.Text.StringBuilder
             Get
                 If (Me.generationEnvironmentField Is Nothing) Then
                     Me.generationEnvironmentField = New Global.System.Text.StringBuilder()
