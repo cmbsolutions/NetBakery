@@ -4,7 +4,6 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="Netbakery.Models" #>
-Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Data.Entity.ModelConfiguration
 
 Namespace Models.Mapping

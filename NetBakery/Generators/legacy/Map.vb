@@ -24,10 +24,9 @@ Namespace My.Templates.legacy_net
         '''Create the template output
         '''</summary>
         Public Overridable Function TransformText() As String
-            Me.Write("Imports System.ComponentModel.DataAnnotations.Schema"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Imports System.Data.Entity."& _ 
-                    "ModelConfiguration"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models.Mapping"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write("Imports System.Data.Entity.ModelConfiguration"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models.Mapping"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",11)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",10)
 
 	Dim keys as New List(Of String)
 
@@ -59,43 +58,43 @@ Namespace My.Templates.legacy_net
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&"Public Partial Class ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",38)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",37)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
             
             #End ExternalSource
             Me.Write("Map"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",39)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",38)
  If _t.escapeName then 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Inherits EntityTypeConfiguration(Of [")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",40)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",39)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
             
             #End ExternalSource
             Me.Write("])"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",41)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",40)
  Else 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Inherits EntityTypeConfiguration(Of ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",42)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",41)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",43)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",42)
  End If 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Primary Key"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",46)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",45)
 
 	If keys.Any() Then
 		If keys.count() = 1 then 
@@ -103,25 +102,25 @@ Namespace My.Templates.legacy_net
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.HasKey(Function(t) t.")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",49)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",48)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join("", keys)))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",50)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",49)
       else 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.HasKey(Function(t) New With { t.")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",51)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",50)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join(", t.", keys)))
             
             #End ExternalSource
             Me.Write("})"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",52)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",51)
  
 		End If
 	End If
@@ -130,7 +129,7 @@ Namespace My.Templates.legacy_net
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Properties"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",58)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",57)
 
 	For Each c in _t.columns
 		Dim configLines as new list(of String)
@@ -146,19 +145,19 @@ Namespace My.Templates.legacy_net
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.[Property](Function(t) t.")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",69)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",68)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
             
             #End ExternalSource
             Me.Write(")")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",69)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",68)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join("", configLines)))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",70)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",69)
 
 		end if
 	Next
@@ -167,13 +166,13 @@ Namespace My.Templates.legacy_net
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' Table & Column Mappings"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.ToTable(""")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",75)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",74)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.name))
             
             #End ExternalSource
             Me.Write(""")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",76)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",75)
 
 	For Each c in _t.columns
 		If c.name <> c.alias Then
@@ -182,19 +181,19 @@ Namespace My.Templates.legacy_net
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"Me.[Property](Function(t) t.")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",80)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",79)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
             
             #End ExternalSource
             Me.Write(").HasColumnName(""")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",80)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",79)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.name))
             
             #End ExternalSource
             Me.Write(""")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",81)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",80)
 
 		End If
 	Next
@@ -203,7 +202,7 @@ Namespace My.Templates.legacy_net
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&"' ForeignKeys"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",88)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",87)
 
 	For Each f In _t.foreignKeys.where(function(c) c.referencedtable.hasExport).orderby(Function(c) c.propertyalias)
 		dim lineParts As New List(of String)
@@ -234,13 +233,13 @@ Namespace My.Templates.legacy_net
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9)&Global.Microsoft.VisualBasic.ChrW(9))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",114)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",113)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(String.Join("", lineParts)))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",115)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",114)
 
 	Next
 
