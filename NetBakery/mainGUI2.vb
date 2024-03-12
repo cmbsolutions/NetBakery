@@ -634,7 +634,7 @@ Public Class mainGUI2
                 If rout IsNot Nothing Then
                     SelectedObject = rout
                     _spRoutine = rout
-                    Dim params = (From r In rout.params Order By r.ordinalPosition Select New With {.name = r.name, .value = ""})
+                    Dim params = (From r In rout.params Order By r.ordinalPosition Select New With {.name = r.name, .value = r.PreviewValue})
                     dgvInputParams.DataSource = params.ToArray
 
                     scSPRoutine.Text = rout.definition
@@ -1832,6 +1832,7 @@ Public Class mainGUI2
 
                 If flds.Count > 0 Then
                     lbReturnFields.DataSource = flds.ToArray
+                    WriteProject()
                 Else
                     MessageBox.Show("The layout for the stored procedure cannot be determined. If you are sure that it should return a layout, try it again with other parameter values.")
                 End If

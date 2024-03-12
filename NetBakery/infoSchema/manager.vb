@@ -1,6 +1,7 @@
 Imports System.Data.Entity.Infrastructure.Pluralization
 Imports MySql.Data.MySqlClient
 Imports System.Text.RegularExpressions
+Imports System.Web.UI.WebControls.WebParts
 
 
 Namespace infoSchema
@@ -88,7 +89,7 @@ Namespace infoSchema
         End Function
 
         Public Sub New()
-            initSchema()
+            InitSchema()
         End Sub
 
         Public Sub SetDatabase(database As String)
@@ -102,12 +103,11 @@ Namespace infoSchema
             Try
                 Tables = New List(Of table)
                 Routines = New List(Of routine)
-
-                getTables()
-                getColumns()
-                getIndexes()
-                getForeignKeys()
-                getRoutines()
+                GetTables()
+                GetColumns()
+                GetIndexes()
+                GetForeignKeys()
+                GetRoutines()
 
             Catch ex As Exception
                 Throw
@@ -119,7 +119,7 @@ Namespace infoSchema
             Try
                 Using _dbCommand = New MySqlCommand
 
-                    _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
+                    _dbCommand.Connection = DbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT SCHEMA_NAME FROM SCHEMATA WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys') ORDER BY SCHEMA_NAME"
 
                     Using rdr As MySqlDataReader = _dbCommand.ExecuteReader
@@ -137,7 +137,7 @@ Namespace infoSchema
             Try
                 Using _dbCommand = New MySqlCommand
 
-                    _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
+                    _dbCommand.Connection = DbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT T.TABLE_NAME, T.TABLE_TYPE, V.VIEW_DEFINITION, T.TABLE_COLLATION FROM `TABLES` AS T LEFT JOIN VIEWS AS V ON T.TABLE_SCHEMA = V.TABLE_SCHEMA AND T.TABLE_NAME = V.TABLE_NAME WHERE T.TABLE_SCHEMA = @database;"
                     _dbCommand.Parameters.AddWithValue("database", DatabaseName)
 
@@ -156,7 +156,7 @@ Namespace infoSchema
                             Tables.Add(t)
 
                             Using _dbInfoCommand = New MySqlCommand
-                                _dbInfoCommand.Connection = dbConnection("definition", DatabaseName)
+                                _dbInfoCommand.Connection = DbConnection("definition", DatabaseName)
                                 _dbInfoCommand.CommandText = $"SHOW CREATE {rdr.GetString("TABLE_TYPE").Replace("BASE ", "")} {rdr("TABLE_NAME")}"
 
                                 Try
@@ -197,7 +197,7 @@ Namespace infoSchema
                     t.columns = New List(Of column)
 
                     Using _dbCommand = New MySqlCommand
-                        _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
+                        _dbCommand.Connection = DbConnection("infoSchema", "INFORMATION_SCHEMA")
                         _dbCommand.CommandText = "SELECT COLUMN_NAME,ORDINAL_POSITION,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,COLUMN_TYPE,COLUMN_KEY,EXTRA,CHARACTER_SET_NAME,COLLATION_NAME FROM COLUMNS WHERE TABLE_SCHEMA = @database AND TABLE_NAME = @table ORDER BY ORDINAL_POSITION ASC"
                         _dbCommand.Parameters.AddWithValue("database", DatabaseName)
                         _dbCommand.Parameters.AddWithValue("table", t.name)
@@ -231,9 +231,9 @@ Namespace infoSchema
                                         End If
                                     End If
                                 End If
-                                c.vbType = getVbType(rdr("DATA_TYPE").ToString)
+                                c.vbType = GetVbType(rdr("DATA_TYPE").ToString)
                                 c.MySqlColumnType = rdr("COLUMN_TYPE").ToString
-                                c.phpType = getPHPType(c.mysqlType)
+                                c.phpType = GetPHPType(c.mysqlType)
                                 If rdr("DATA_TYPE").ToString = "enum" Then
                                     Dim RegexObj As New Regex("\(([^)]+)")
                                     Dim tmpData As String = RegexObj.Match(rdr("COLUMN_TYPE").ToString()).Groups(1).Value
@@ -261,7 +261,7 @@ Namespace infoSchema
         Private Sub GetIndexes()
             Try
                 Using _dbCommand = New MySqlCommand
-                    _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
+                    _dbCommand.Connection = DbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT TABLE_NAME, NON_UNIQUE, NULLABLE, INDEX_NAME, COLUMN_NAME, SEQ_IN_INDEX FROM STATISTICS WHERE TABLE_SCHEMA=@database ORDER BY TABLE_NAME, INDEX_NAME, SEQ_IN_INDEX"
                     _dbCommand.Parameters.AddWithValue("database", DatabaseName)
 
@@ -298,7 +298,7 @@ Namespace infoSchema
         Private Sub GetForeignKeys()
             Try
                 Using _dbCommand = New MySqlCommand
-                    _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
+                    _dbCommand.Connection = DbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "SELECT CONSTRAINT_NAME, TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM KEY_COLUMN_USAGE WHERE CONSTRAINT_SCHEMA = @database AND REFERENCED_TABLE_NAME is not null ORDER BY TABLE_NAME, ORDINAL_POSITION, POSITION_IN_UNIQUE_CONSTRAINT"
                     _dbCommand.Parameters.AddWithValue("database", DatabaseName)
 
@@ -331,7 +331,7 @@ Namespace infoSchema
 
                             Dim reftable As table = Nothing
                             Try
-                                reftable = tables.First(Function(c) c.name = rdr("REFERENCED_TABLE_NAME").ToString)
+                                reftable = Tables.First(Function(c) c.name = rdr("REFERENCED_TABLE_NAME").ToString)
                             Catch rex As Exception
                                 Throw New Exception($"Foreign key error on {table.name} to {rdr("REFERENCED_TABLE_NAME")}, are you missing the table?", rex)
                             End Try
@@ -425,7 +425,7 @@ Namespace infoSchema
             Try
                 Using _dbCommand = New MySqlCommand
 
-                    _dbCommand.Connection = dbConnection("infoSchema", "INFORMATION_SCHEMA")
+                    _dbCommand.Connection = DbConnection("infoSchema", "INFORMATION_SCHEMA")
                     _dbCommand.CommandText = "Select r.ROUTINE_TYPE, r.ROUTINE_NAME, r.ROUTINE_DEFINITION, p.ORDINAL_POSITION, p.PARAMETER_NAME, p.DATA_TYPE, p.CHARACTER_MAXIMUM_LENGTH, p.NUMERIC_PRECISION FROM ROUTINES As r LEFT JOIN PARAMETERS As p On r.ROUTINE_SCHEMA = p.SPECIFIC_SCHEMA And r.ROUTINE_NAME = p.SPECIFIC_NAME WHERE r.ROUTINE_SCHEMA = @database ORDER BY r.ROUTINE_TYPE, p.SPECIFIC_NAME, p.ORDINAL_POSITION"
                     _dbCommand.Parameters.AddWithValue("database", DatabaseName)
 
@@ -435,9 +435,11 @@ Namespace infoSchema
                         While rdr.Read
                             If rt Is Nothing OrElse rt.name <> rdr("ROUTINE_NAME").ToString Then
                                 If rt IsNot Nothing Then
-                                    If rt.returnsRecordset AndAlso Not rt.isFunction Then
+                                    Dim prt = ProjectRoutines.FirstOrDefault(Function(c) c.name = rt.name)
+                                    If (rt.returnsRecordset AndAlso Not rt.isFunction) OrElse (prt IsNot Nothing AndAlso prt.returnsRecordset AndAlso Not prt.isFunction) Then
                                         If My.Settings.autoExecuteSP Then
-                                            getRoutineLayout(rt, Nothing, Nothing)
+                                            Dim pvalues = rt.params.OrderBy(Function(d) d.ordinalPosition).Select(Function(c) c.PreviewValue).ToArray
+                                            GetRoutineLayout(rt, pvalues, Nothing)
                                         End If
                                     End If
                                     Routines.Add(rt)
@@ -456,8 +458,9 @@ Namespace infoSchema
                             p.mysqlType = rdr("DATA_TYPE").ToString
                             p.maximumLength = ToInt(rdr("CHARACTER_MAXIMUM_LENGTH"))
                             p.numericPrecision = ToInt(rdr("NUMERIC_PRECISION"))
-                            p.vbType = getVbType(rdr("DATA_TYPE").ToString)
+                            p.vbType = GetVbType(rdr("DATA_TYPE").ToString)
                             p.name = rdr("PARAMETER_NAME").ToString
+
 
                             If rdr("ROUTINE_TYPE").ToString = "FUNCTION" Then
                                 rt.isFunction = True
@@ -491,12 +494,23 @@ Namespace infoSchema
                             End If
 
                             If ToInt(rdr("ORDINAL_POSITION")) > 0 Then
+                                p.ordinalPosition = ToInt(rdr("ORDINAL_POSITION"))
+
+                                Dim prt = ProjectRoutines.FirstOrDefault(Function(c) c.name = rt.name)
+
+                                If prt IsNot Nothing AndAlso prt.params.Any Then
+                                    Dim pvalue = prt.params.FirstOrDefault(Function(d) d.ordinalPosition = p.ordinalPosition)
+
+                                    If pvalue IsNot Nothing AndAlso pvalue.PreviewValue IsNot Nothing Then
+                                        p.PreviewValue = pvalue.PreviewValue
+                                    End If
+                                End If
                                 rt.params.Add(p)
                             End If
 
                             If rt.definition = "" Then
                                 Using _dbInfoCommand = New MySqlCommand
-                                    _dbInfoCommand.Connection = dbConnection("definition", DatabaseName)
+                                    _dbInfoCommand.Connection = DbConnection("definition", DatabaseName)
                                     _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("ROUTINE_TYPE")} {rdr("ROUTINE_NAME")}"
                                     _dbInfoCommand.CommandType = CommandType.Text
 
@@ -519,7 +533,10 @@ Namespace infoSchema
 
                         If rt IsNot Nothing Then
                             If rt.returnsRecordset AndAlso Not rt.isFunction Then
-                                If My.Settings.autoExecuteSP Then getRoutineLayout(rt, Nothing, Nothing)
+                                If My.Settings.autoExecuteSP Then
+                                    Dim pvalues = rt.params.OrderBy(Function(d) d.ordinalPosition).Select(Function(c) c.PreviewValue).ToArray
+                                    GetRoutineLayout(rt, pvalues, Nothing)
+                                End If
                             End If
                             Routines.Add(rt)
                         End If
@@ -557,16 +574,18 @@ Namespace infoSchema
             Try
                 Using _dbxCommand = New MySqlCommand
                     Dim startTime = Now
-                    _dbxCommand.Connection = dbConnection("definition", DatabaseName)
+                    _dbxCommand.Connection = DbConnection("definition", DatabaseName)
                     _dbxCommand.CommandTimeout = 3600
                     _dbxCommand.CommandType = CommandType.Text
                     _dbxCommand.CommandText = $"CALL {_r.name}({String.Join(",", (From r In _r.params Order By r.ordinalPosition Select "@" & r.name))})"
 
                     For Each param In _r.params.OrderBy(Function(o) o.ordinalPosition)
                         If paramValues IsNot Nothing Then
-                            _dbxCommand.Parameters.AddWithValue("@" & param.name, paramValues(param.ordinalPosition))
+                            _dbxCommand.Parameters.AddWithValue("@" & param.name, paramValues(param.ordinalPosition - 1))
+                            param.PreviewValue = paramValues(param.ordinalPosition - 1)
                         Else
                             _dbxCommand.Parameters.AddWithValue("@" & param.name, 1)
+                            param.PreviewValue = "1"
                         End If
                     Next
 
@@ -588,10 +607,9 @@ Namespace infoSchema
                                         c.ordinalPosition = CInt(row.ItemArray(d.Columns.IndexOf("ColumnOrdinal")))
                                         c.isNullable = CBool(row.ItemArray(d.Columns.IndexOf("AllowDBNull")))
                                         c.mysqlType = [Enum].GetName(GetType(MySqlDbType), row.ItemArray(d.Columns.IndexOf("ProviderType")))
-                                        c.vbType = getVbType(c.mysqlType)
-                                        c.phpType = getPHPType(c.mysqlType)
+                                        c.vbType = GetVbType(c.mysqlType)
+                                        c.phpType = GetPHPType(c.mysqlType)
                                         _r.returnLayout.columns.Add(c)
-
                                         If fieldNames IsNot Nothing Then
                                             fieldNames.Add(c.name)
                                         End If
@@ -631,7 +649,7 @@ Namespace infoSchema
         End Sub
         Public Function TryConnect() As Boolean
             Try
-                getDatabases()
+                GetDatabases()
 
                 Return True
             Catch ex As Exception
@@ -911,7 +929,7 @@ Namespace infoSchema
         End Function
 
         Public Function IsPlural(s As Object) As Boolean
-            Return isPlural(s.ToString)
+            Return IsPlural(s.ToString)
         End Function
 
         Public Function IsPlural(s As String) As Boolean
