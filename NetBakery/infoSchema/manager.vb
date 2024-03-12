@@ -596,6 +596,8 @@ Namespace infoSchema
                                 If d IsNot Nothing Then
                                     If _r.returnLayout Is Nothing Then
                                         _r.returnLayout = New table With {.name = _r.name, .singleName = Pservice.Singularize(_r.name), .pluralName = Pservice.Pluralize(_r.name)}
+                                    Else
+                                        _r.returnLayout.columns.Clear()
                                     End If
                                     _r.returnsRecordset = True
                                     For Each row As DataRow In d.Rows
