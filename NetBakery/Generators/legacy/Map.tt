@@ -5,6 +5,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="Netbakery.Models" #>
 Imports System.Data.Entity.ModelConfiguration
+Imports System.ComponentModel.DataAnnotations.Schema
 
 Namespace Models.Mapping
 <#
