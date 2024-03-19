@@ -102,14 +102,6 @@ Public Class mainGUI2
 
             dcProjectSettings.Selected = True
 
-            If My.Settings.openLastProject AndAlso My.Settings.lastProject <> "" Then
-                If IO.File.Exists(My.Settings.lastProject) Then
-                    FormHelpers.Log("Loading last project")
-                    loadProject(My.Settings.lastProject)
-                End If
-            End If
-
-            enableOrDisableFields()
 
             FormHelpers.Log("Updating menus")
             If My.Settings.recentProjects.Count > 0 Then
@@ -124,6 +116,16 @@ Public Class mainGUI2
             End If
 
             LoadCodeBuilders()
+
+            If My.Settings.openLastProject AndAlso My.Settings.lastProject <> "" Then
+                If IO.File.Exists(My.Settings.lastProject) Then
+                    FormHelpers.Log("Loading last project")
+                    loadProject(My.Settings.lastProject)
+                End If
+            End If
+
+            enableOrDisableFields()
+
         Catch ex As Exception
             FormHelpers.dumpException(ex)
         End Try
@@ -197,6 +199,23 @@ Public Class mainGUI2
 
     Private Sub bCodePreview_Click(sender As Object, e As EventArgs) Handles bCodePreview.Click
         dcCodePreview.Visible = Not dcCodePreview.Visible
+    End Sub
+
+    Private Sub bSP_Click(sender As Object, e As EventArgs) Handles bSP.Click
+        dcSPRunner.Visible = Not dcSPRunner.Visible
+    End Sub
+
+    Private Sub bCOnv_Click(sender As Object, e As EventArgs) Handles bConv.Click
+        dcConversions.Visible = Not dcConversions.Visible
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles ButtonItem1.Click
+        dcERDiagram.Visible = True
+        dcProjectSettings.Visible = True
+        dcObjectInfo.Visible = True
+        dcCodePreview.Visible = True
+        dcSPRunner.Visible = True
+        dcConversions.Visible = True
     End Sub
 #End Region
 
@@ -650,7 +669,7 @@ Public Class mainGUI2
                             column.ReadOnly = True
                         Next
 
-                        Dim fields = (From f In rout.returnLayout.columns Select f.name)
+                        Dim fields = (From f In rout.returnLayout.columns Select $"{f.name} ({f.vbType})")
                         lbReturnFields.DataSource = fields.ToArray
 
                         dgvForeignKeys.DataSource = Nothing

@@ -613,7 +613,7 @@ Namespace infoSchema
                                         c.phpType = GetPHPType(c.mysqlType)
                                         _r.returnLayout.columns.Add(c)
                                         If fieldNames IsNot Nothing Then
-                                            fieldNames.Add(c.name)
+                                            fieldNames.Add($"{c.name} ({c.vbType})")
                                         End If
                                     Next
                                 Else
