@@ -126,7 +126,7 @@ Namespace My.Templates.legacy_net
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",26)
-  For each c in _t.columns 
+  For each c in _t.columns.Where(function(x) Not x.IsVirtual) 
             
             #End ExternalSource
             

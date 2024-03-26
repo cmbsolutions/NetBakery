@@ -26,71 +26,71 @@ Namespace My.Templates.legacy_net
             Me.Write("Imports System.Collections.Generic"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models.StoreCommandSchemas"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    P"& _ 
                     "ublic Partial Class ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommandModel.tt",9)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\StoreCommandModel.tt",9)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_procedure.returnLayout.singleName))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommandModel.tt",10)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\StoreCommandModel.tt",10)
  If _procedure.UseBaseLayout then 
             
             #End ExternalSource
             Me.Write("        Inherits ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommandModel.tt",11)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\StoreCommandModel.tt",11)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_procedure.BaseLayoutName))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommandModel.tt",12)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\StoreCommandModel.tt",12)
  End If 
             
             #End ExternalSource
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommandModel.tt",13)
-  For each c in _procedure.returnLayout.columns 
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\StoreCommandModel.tt",13)
+  For each c in _procedure.returnLayout.columns.Where(function(x) Not x.IsVirtual) 
             
             #End ExternalSource
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommandModel.tt",14)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\StoreCommandModel.tt",14)
       If c.isNullable And c.vbType <> "String" Then 
             
             #End ExternalSource
             Me.Write("        Public Property ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommandModel.tt",15)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\StoreCommandModel.tt",15)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
             
             #End ExternalSource
             Me.Write("() as ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommandModel.tt",15)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\StoreCommandModel.tt",15)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.vbType))
             
             #End ExternalSource
             Me.Write("?"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommandModel.tt",16)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\StoreCommandModel.tt",16)
       else 
             
             #End ExternalSource
             Me.Write("        Public Property ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommandModel.tt",17)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\StoreCommandModel.tt",17)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
             
             #End ExternalSource
             Me.Write("() as ")
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommandModel.tt",17)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\StoreCommandModel.tt",17)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.vbType))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("E:\My Documents\localRepos\netbakery\NetBakery\Generators\legacy\StoreCommandModel.tt",18)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\StoreCommandModel.tt",18)
       end if
     Next
 
@@ -118,7 +118,7 @@ Namespace My.Templates.legacy_net
         '''<summary>
         '''The string builder that generation-time code is using to assemble generated output
         '''</summary>
-        Protected Property GenerationEnvironment() As System.Text.StringBuilder
+        Public Property GenerationEnvironment() As System.Text.StringBuilder
             Get
                 If (Me.generationEnvironmentField Is Nothing) Then
                     Me.generationEnvironmentField = New Global.System.Text.StringBuilder()

@@ -231,6 +231,9 @@ Namespace infoSchema
                                         End If
                                     End If
                                 End If
+                                If rdr("EXTRA").ToString = "VIRTUAL GENERATED" Then
+                                    c.IsVirtual = True
+                                End If
                                 c.vbType = GetVbType(rdr("DATA_TYPE").ToString)
                                 c.MySqlColumnType = rdr("COLUMN_TYPE").ToString
                                 c.phpType = GetPHPType(c.mysqlType)

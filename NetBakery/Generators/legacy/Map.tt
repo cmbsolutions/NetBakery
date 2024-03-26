@@ -11,7 +11,7 @@ Namespace Models.Mapping
 <#
 	Dim keys as New List(Of String)
 
-	For Each c in _t.columns
+	For Each c in _t.columns.Where(function(x) Not x.IsVirtual)
 		If not _t.isView Then
 			If c.key = "PRI" then
 				keys.add(c.alias)
@@ -30,7 +30,7 @@ Namespace Models.Mapping
 	Next
 
 	If _t.isView And Not keys.Any() Then
-		For Each c in _t.columns
+		For Each c in _t.columns.Where(function(x) Not x.IsVirtual)
 			keys.add(c.alias)
 		Next
 	End If
@@ -56,7 +56,7 @@ Namespace Models.Mapping
 
 			' Properties
 <#
-	For Each c in _t.columns
+	For Each c in _t.columns.Where(function(x) Not x.IsVirtual)
 		Dim configLines as new list(of String)
 
 		if not c.isNullable Or (_t.isView And c.IsUserSelectedKey) then configLines.add(".IsRequired()")
@@ -74,7 +74,7 @@ Namespace Models.Mapping
 			' Table & Column Mappings
 			Me.ToTable("<#= _t.name #>")
 <#
-	For Each c in _t.columns
+	For Each c in _t.columns.Where(function(x) Not x.IsVirtual)
 		If c.name <> c.alias Then
 #>
 			Me.[Property](Function(t) t.<#= c.alias #>).HasColumnName("<#= c.name #>")

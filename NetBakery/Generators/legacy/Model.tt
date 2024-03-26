@@ -23,7 +23,7 @@ Namespace Models<#= If(_IsStoreCommand, ".StoreCommandSchemas", "") #>
         End Sub
 <#  End If #>
 
-<#  For each c in _t.columns #>
+<#  For each c in _t.columns.Where(function(x) Not x.IsVirtual) #>
 <#      If c.isNullable And c.vbType <> "String" Then #>
         Property <#= c.alias #>() as <#= c.vbType #>?
 <#      else #>

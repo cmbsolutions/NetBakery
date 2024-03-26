@@ -31,7 +31,7 @@ Namespace My.Templates.legacy_net
 
 	Dim keys as New List(Of String)
 
-	For Each c in _t.columns
+	For Each c in _t.columns.Where(function(x) Not x.IsVirtual)
 		If not _t.isView Then
 			If c.key = "PRI" then
 				keys.add(c.alias)
@@ -50,7 +50,7 @@ Namespace My.Templates.legacy_net
 	Next
 
 	If _t.isView And Not keys.Any() Then
-		For Each c in _t.columns
+		For Each c in _t.columns.Where(function(x) Not x.IsVirtual)
 			keys.add(c.alias)
 		Next
 	End If
@@ -132,7 +132,7 @@ Namespace My.Templates.legacy_net
             
             #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",58)
 
-	For Each c in _t.columns
+	For Each c in _t.columns.Where(function(x) Not x.IsVirtual)
 		Dim configLines as new list(of String)
 
 		if not c.isNullable Or (_t.isView And c.IsUserSelectedKey) then configLines.add(".IsRequired()")
@@ -175,7 +175,7 @@ Namespace My.Templates.legacy_net
             
             #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Map.tt",76)
 
-	For Each c in _t.columns
+	For Each c in _t.columns.Where(function(x) Not x.IsVirtual)
 		If c.name <> c.alias Then
 
             
