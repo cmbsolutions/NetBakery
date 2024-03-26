@@ -20,6 +20,7 @@ Namespace infoSchema
         Property IsUserSelectedKey As Boolean
         Property character_set_name As String
         Property collation_name As String
+        Property IsVirtual As Boolean
 
 
         Public Overrides Function Equals(obj As Object) As Boolean
