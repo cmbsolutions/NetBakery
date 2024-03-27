@@ -1563,31 +1563,9 @@ Public Class mainGUI2
 
     Private Sub btnSaveProject_Click(sender As Object, e As EventArgs) Handles btnSaveProject.Click
         Try
-            If _currentProject.projectfilename = "" Then _currentProject.projectfilename = IO.Path.Combine(_currentProject.projectlocation, $"{_currentProject.projectname}.nb2")
+            If _currentProject Is Nothing Then Exit Sub
 
-            'Create backup file
-            If IO.File.Exists(_currentProject.projectfilename) Then
-                Dim backupFile As String = _currentProject.projectfilename.Replace(".nb2", $"_backup.nbz")
-                Using zip As New Ionic.Zip.ZipFile(backupFile)
-                    zip.CompressionLevel = Ionic.Zlib.CompressionLevel.BestCompression
-                    zip.AddFile(_currentProject.projectfilename, $"{Now:yyyyMMdd_HHmmss}")
-                    zip.Save()
-                End Using
-            End If
-            Using fs As New IO.FileStream(_currentProject.projectfilename, IO.FileMode.Create, IO.FileAccess.Write, IO.FileShare.None)
-                Using sw As New IO.StreamWriter(fs, System.Text.Encoding.UTF8)
-
-                    sw.Write(JsonConvert.SerializeObject(_currentProject, Formatting.Indented, New JsonSerializerSettings With {
-                                                                                                    .ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                                                                                                    .PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-                                                                                                    .MaxDepth = 128}))
-
-                    'Dim js As New JsonSerializer
-                    'js.Serialize(sw, _currentProject)
-                End Using
-            End Using
-            _currentProject.needsSave = False
-            _tracelistener.WriteLine("Project saved!")
+            _currentProject.Save()
 
             If Not My.Settings.recentProjects.Contains(_currentProject.projectfilename) Then
                 My.Settings.recentProjects.Add(_currentProject.projectfilename)
@@ -1626,10 +1604,8 @@ Public Class mainGUI2
     Private Sub loadProject(f As String)
         Try
             _loadingProject = True
-            _currentProject = CType(JsonConvert.DeserializeObject(IO.File.ReadAllText(f), GetType(Project), New JsonSerializerSettings With {
-                                                                                                    .ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                                                                                                    .PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-                                                                                                    .MaxDepth = 128}), Project)
+
+            _currentProject = Project.Load(f)
 
             _currentProject.projectfilename = f
 
@@ -1745,8 +1721,6 @@ Public Class mainGUI2
                     .tables = _mngr.Tables,
                     .routines = _mngr.routines
                 }
-
-
             End If
         Catch ex As Exception
             FormHelpers.dumpException(ex)
