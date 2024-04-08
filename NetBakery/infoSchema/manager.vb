@@ -784,8 +784,8 @@ Namespace infoSchema
                     ali = $"[{ali}]"
                 End If
 
-                ' replace spaces with _
-                Dim RegexObj As New Regex("[^a-z\d\-_]", RegexOptions.IgnoreCase Or RegexOptions.Multiline)
+                ' replace everything other than a-z, 0-9, _ with _
+                Dim RegexObj As New Regex("[^a-z\d_]", RegexOptions.IgnoreCase Or RegexOptions.Multiline)
 
                 ali = RegexObj.Replace(ali, "_")
 
