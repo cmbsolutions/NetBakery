@@ -157,7 +157,7 @@ Namespace infoSchema
 
                             Using _dbInfoCommand = New MySqlCommand
                                 _dbInfoCommand.Connection = DbConnection("definition", DatabaseName)
-                                _dbInfoCommand.CommandText = $"SHOW CREATE {rdr.GetString("TABLE_TYPE").Replace("BASE ", "")} {rdr("TABLE_NAME")}"
+                                _dbInfoCommand.CommandText = $"SHOW CREATE {rdr.GetString("TABLE_TYPE").Replace("BASE ", "")} `{rdr("TABLE_NAME")}`"
 
                                 Try
                                     Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
@@ -172,7 +172,7 @@ Namespace infoSchema
 
                                 If t.isView AndAlso My.Settings.timeViews Then
                                     Dim starttime = Now
-                                    _dbInfoCommand.CommandText = $"SELECT * FROM {t.name};"
+                                    _dbInfoCommand.CommandText = $"SELECT * FROM `{t.name}`;"
                                     Try
                                         Dim cnt = _dbInfoCommand.ExecuteNonQuery
                                     Catch mex As Exception
@@ -514,7 +514,7 @@ Namespace infoSchema
                             If rt.definition = "" Then
                                 Using _dbInfoCommand = New MySqlCommand
                                     _dbInfoCommand.Connection = DbConnection("definition", DatabaseName)
-                                    _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("ROUTINE_TYPE")} {rdr("ROUTINE_NAME")}"
+                                    _dbInfoCommand.CommandText = $"SHOW CREATE {rdr("ROUTINE_TYPE")} `{rdr("ROUTINE_NAME")}`"
                                     _dbInfoCommand.CommandType = CommandType.Text
 
                                     Using irdr As MySqlDataReader = _dbInfoCommand.ExecuteReader
@@ -578,9 +578,9 @@ Namespace infoSchema
                 Using _dbxCommand = New MySqlCommand
                     Dim startTime = Now
                     _dbxCommand.Connection = DbConnection("definition", DatabaseName)
-                    _dbxCommand.CommandTimeout = 3600
+                    _dbxCommand.CommandTimeout = 10
                     _dbxCommand.CommandType = CommandType.Text
-                    _dbxCommand.CommandText = $"CALL {_r.name}({String.Join(",", (From r In _r.params Order By r.ordinalPosition Select "@" & r.name))})"
+                    _dbxCommand.CommandText = $"CALL `{_r.name}`({String.Join(",", (From r In _r.params Order By r.ordinalPosition Select "@" & r.name))})"
 
                     For Each param In _r.params.OrderBy(Function(o) o.ordinalPosition)
                         If paramValues IsNot Nothing Then
@@ -672,7 +672,7 @@ Namespace infoSchema
                 If DbConnections.ContainsKey(connectionName) Then
                     con = DbConnections.First(Function(c) c.Key = connectionName).Value
                 Else
-                    con = New MySqlConnection(Connection.ToString)
+                    con = New MySqlConnection(Connection.ToString.Replace("utf8", "utf8mb4"))
 
                     DbConnections.Add(connectionName, con)
                 End If
