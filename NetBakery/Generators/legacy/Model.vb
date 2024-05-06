@@ -24,149 +24,183 @@ Namespace My.Templates.legacy_net
         '''Create the template output
         '''</summary>
         Public Overridable Function TransformText() As String
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Imports System.ComponentModel.DataAnnotations.Schema"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",8)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",10)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(If(_IsStoreCommand, ".StoreCommandSchemas", "")))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",9)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",11)
  If _t.escapeName then 
             
             #End ExternalSource
             Me.Write("    Partial Public Class [")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",10)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",12)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
             
             #End ExternalSource
             Me.Write("]"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",11)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",13)
  Else 
             
             #End ExternalSource
             Me.Write("    Partial Public Class ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",12)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",14)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",13)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",15)
  End If 
             
             #End ExternalSource
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",14)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",16)
  If _t.relations.Any() Then 
             
             #End ExternalSource
             Me.Write("        Public Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",16)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",18)
       For Each re in _t.relations.Where(function(c) c.toTable.HasExport).OrderBy(Function(c) c.toTable.name) 
             
             #End ExternalSource
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",17)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",19)
           If re.toTable.escapeName Then 
             
             #End ExternalSource
             Me.Write("            ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",18)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",20)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(re.alias))
             
             #End ExternalSource
             Me.Write(" = New List(Of [")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",18)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",20)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(re.toTable.singleName))
             
             #End ExternalSource
             Me.Write("])"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",19)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",21)
           Else 
             
             #End ExternalSource
             Me.Write("            ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",20)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",22)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(re.alias))
             
             #End ExternalSource
             Me.Write(" = New List(Of ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",20)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",22)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(re.toTable.singleName))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",21)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",23)
           End If 
             
             #End ExternalSource
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",22)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",24)
       Next 
             
             #End ExternalSource
             Me.Write("        End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",24)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",26)
   End If 
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",26)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",28)
   For each c in _t.columns.Where(function(x) Not x.IsVirtual) 
             
             #End ExternalSource
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",27)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",29)
       If c.isNullable And c.vbType <> "String" Then 
+            
+            #End ExternalSource
+            
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",30)
+          If c.name <> c.alias Then 
+            
+            #End ExternalSource
+            Me.Write("        <Column(""")
+            
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",31)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.name))
+            
+            #End ExternalSource
+            Me.Write(""")>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",32)
+          End If 
             
             #End ExternalSource
             Me.Write("        Property ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",28)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",33)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
             
             #End ExternalSource
             Me.Write("() as ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",28)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",33)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.vbType))
             
             #End ExternalSource
             Me.Write("?"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",29)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",34)
       else 
+            
+            #End ExternalSource
+            
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",35)
+          If c.name <> c.alias Then 
+            
+            #End ExternalSource
+            Me.Write("        <Column(""")
+            
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",36)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.name))
+            
+            #End ExternalSource
+            Me.Write(""")>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",37)
+          End If 
             
             #End ExternalSource
             Me.Write("        Property ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",30)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",38)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
             
             #End ExternalSource
             Me.Write("() as ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",30)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",38)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.vbType))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",31)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",39)
       end if
 
         If c.mysqlType = "enum" AndAlso c.vbType <> "String" Then
@@ -176,42 +210,42 @@ Namespace My.Templates.legacy_net
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        Enum ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",37)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",45)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(c.vbType))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",38)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",46)
           For Each e in c.enums 
             
             #End ExternalSource
             Me.Write("            ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",39)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",47)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(e))
             
             #End ExternalSource
             Me.Write(" = ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",39)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",47)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(_i))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",40)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",48)
               _i += 1 
             
             #End ExternalSource
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",41)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",49)
           Next 
             
             #End ExternalSource
             Me.Write("        End Enum"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",44)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",52)
       End If
     Next
 
@@ -220,48 +254,48 @@ Namespace My.Templates.legacy_net
             
             #End ExternalSource
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",49)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",57)
  If fk.referencedtable.escapeName then 
             
             #End ExternalSource
             Me.Write("        Public Property ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",50)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",58)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.propertyAlias))
             
             #End ExternalSource
             Me.Write("() as [")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",50)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",58)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedtable.singlename))
             
             #End ExternalSource
             Me.Write("]"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",51)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",59)
  Else 
             
             #End ExternalSource
             Me.Write("        Public Property ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",52)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",60)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.propertyAlias))
             
             #End ExternalSource
             Me.Write("() as ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",52)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",60)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedtable.singlename))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",53)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",61)
  End If 
             
             #End ExternalSource
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",54)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",62)
   Next 
 
     For Each re in  _t.relations.Where(function(c) c.toTable.HasExport).orderby(Function(c) c.totable.name)
@@ -269,48 +303,48 @@ Namespace My.Templates.legacy_net
             
             #End ExternalSource
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",58)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",66)
  If re.totable.escapeName then 
             
             #End ExternalSource
             Me.Write("        Public Overridable Property ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",59)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",67)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(re.alias))
             
             #End ExternalSource
             Me.Write("() As List(Of [")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",59)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",67)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(re.totable.SingleName))
             
             #End ExternalSource
             Me.Write("])"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",60)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",68)
  Else 
             
             #End ExternalSource
             Me.Write("        Public Overridable Property ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",61)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",69)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(re.alias))
             
             #End ExternalSource
             Me.Write("() As List(Of ")
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",61)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",69)
             Me.Write(Me.ToStringHelper.ToStringWithCulture(re.totable.SingleName))
             
             #End ExternalSource
             Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",62)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",70)
  End If 
             
             #End ExternalSource
             
-            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",63)
+            #ExternalSource("D:\LocalRepos\dnt\NetBakery\NetBakery\Generators\legacy\Model.tt",71)
   Next
 
             
