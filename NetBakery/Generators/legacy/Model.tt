@@ -5,6 +5,8 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="Netbakery.infoSchema" #>
 
+Imports System.ComponentModel.DataAnnotations.Schema
+
 Namespace Models<#= If(_IsStoreCommand, ".StoreCommandSchemas", "") #>
 <# If _t.escapeName then #>
     Partial Public Class [<#= _t.singleName #>]
@@ -25,8 +27,14 @@ Namespace Models<#= If(_IsStoreCommand, ".StoreCommandSchemas", "") #>
 
 <#  For each c in _t.columns.Where(function(x) Not x.IsVirtual) #>
 <#      If c.isNullable And c.vbType <> "String" Then #>
+<#          If c.name <> c.alias Then #>
+        <Column("<#= c.name #>")>
+<#          End If #>
         Property <#= c.alias #>() as <#= c.vbType #>?
 <#      else #>
+<#          If c.name <> c.alias Then #>
+        <Column("<#= c.name #>")>
+<#          End If #>
         Property <#= c.alias #>() as <#= c.vbType #>
 <#      end if
 

@@ -17,6 +17,7 @@ Imports System.Linq.Expressions
 Imports System.Data.Entity.Core.Metadata.Edm
 Imports System.Data.Entity.Validation
 Imports System.Text
+Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class <#= _name #>DataManager
 	Inherits Models.<#= _name #>DataContext
@@ -38,48 +39,72 @@ Public Class <#= _name #>DataManager
 		Me.Database.Initialize(False)
 	End Sub
 
-	Public Function ConvertEntityResultSetToDataTable(EntityResultSet As Linq.IQueryable) As DataTable
-		Try
-			Dim table = New DataTable
+    Public Function ConvertEntityResultSetToDataTable(EntityResultSet As Linq.IQueryable) As DataTable
+        Try
+            Dim table = New DataTable
 
-			For Each EntityResult In EntityResultSet
-				If table.Columns.Count = 0 Then
-					For Each info As PropertyInfo In EntityResult.GetType().GetProperties()
-						If info.CanRead Then
-							Dim IsNullable As Boolean = (Nullable.GetUnderlyingType(info.PropertyType) IsNot Nothing)
+            For Each EntityResult In EntityResultSet
+                If table.Columns.Count = 0 Then
+                    For Each info As PropertyInfo In EntityResult.GetType().GetProperties()
+                        If info.CanRead Then
+                            Dim IsNullable As Boolean = (Nullable.GetUnderlyingType(info.PropertyType) IsNot Nothing)
+                            Dim columnAttribute = DirectCast(info.GetCustomAttribute(GetType(ColumnAttribute)), ColumnAttribute)
+                            Dim WhatName As String = info.Name
 
-							If IsNullable Then
-								table.Columns.Add(info.Name, Nullable.GetUnderlyingType(info.PropertyType))
-							Else
-								table.Columns.Add(info.Name, info.PropertyType())
-							End If
-						End If
-					Next
-				End If
+                            If columnAttribute IsNot Nothing Then WhatName = columnAttribute.Name
 
-				Dim row As DataRow = table.NewRow
+                            If IsNullable Then
+                                table.Columns.Add(WhatName, Nullable.GetUnderlyingType(info.PropertyType))
+                            Else
+                                table.Columns.Add(WhatName, info.PropertyType())
+                            End If
+                        End If
+                    Next
+                End If
 
-				For Each info As PropertyInfo In EntityResult.GetType().GetProperties()
-					Dim IsNullable As Boolean = (Nullable.GetUnderlyingType(info.PropertyType) IsNot Nothing)
+                Dim row As DataRow = table.NewRow
 
-					If IsNullable Then
-						Dim val As Object = info.GetValue(EntityResult, Nothing)
-						If val IsNot Nothing Then row(info.Name) = Convert.ChangeType(val, Nullable.GetUnderlyingType(info.PropertyType))
-					Else
-						row(info.Name) = info.GetValue(EntityResult, Nothing)
-					End If
+                For Each info As PropertyInfo In EntityResult.GetType().GetProperties()
+                    Dim IsNullable As Boolean = (Nullable.GetUnderlyingType(info.PropertyType) IsNot Nothing)
+                    Dim columnAttribute = DirectCast(info.GetCustomAttribute(GetType(ColumnAttribute)), ColumnAttribute)
+                    Dim WhatName As String = info.Name
 
-				Next
-				table.Rows.Add(row)
-			Next
+                    If columnAttribute IsNot Nothing Then WhatName = columnAttribute.Name
+                    If IsNullable Then
+                        Dim val As Object = info.GetValue(EntityResult, Nothing)
+                        If val IsNot Nothing Then row(WhatName) = Convert.ChangeType(val, Nullable.GetUnderlyingType(info.PropertyType))
+                    Else
+                        row(WhatName) = info.GetValue(EntityResult, Nothing)
+                    End If
 
-			Return table
-		Catch ex As Exception
-			Throw
-		End Try
+                Next
+                table.Rows.Add(row)
+            Next
 
-		Return Nothing
-	End Function
+            Return table
+        Catch ex As Exception
+            Throw
+        End Try
+
+        Return Nothing
+    End Function
+
+    Public Function GetDatabaseColumnNames(Of T)() As List(Of String)
+        Dim DatabaseColumns As New List(Of String)()
+
+        Dim properties = GetType(T).GetProperties(BindingFlags.Public Or BindingFlags.Instance)
+
+        For Each prop As PropertyInfo In properties
+            Dim columnAttribute = DirectCast(prop.GetCustomAttribute(GetType(ColumnAttribute)), ColumnAttribute)
+            If columnAttribute IsNot Nothing Then
+                DatabaseColumns.Add(columnAttribute.Name)
+            Else
+                DatabaseColumns.Add(prop.Name.ToLower()) ' Fallback to lowercase name if no mapping found
+            End If
+        Next
+
+        Return DatabaseColumns
+    End Function
 
 	Public Sub SetFieldValueByName(_entity As Object, _fieldname As String, _value As Object)
 		Try
