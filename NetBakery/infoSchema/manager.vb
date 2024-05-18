@@ -1,8 +1,6 @@
 Imports System.Data.Entity.Infrastructure.Pluralization
 Imports MySql.Data.MySqlClient
 Imports System.Text.RegularExpressions
-Imports System.Web.UI.WebControls.WebParts
-
 
 Namespace infoSchema
     <Serializable>
@@ -25,6 +23,8 @@ Namespace infoSchema
         Public Property Routines As List(Of routine)
         Public Property UseEnums As Boolean
         Private Property UseGenerator As String = "net5"
+        Public Property DiscoverLayouts As Integer
+        Public Property ShareLayouts As Boolean
 
         Private Generator As iGenerator = New net5Generator
 
@@ -204,18 +204,19 @@ Namespace infoSchema
                         'Debug.WriteLine(t.tableName)
                         Using rdr As MySqlDataReader = _dbCommand.ExecuteReader()
                             While rdr.Read
-                                Dim c As New column
                                 'Debug.WriteLine(rdr("COLUMN_NAME").ToString)
-                                c.name = rdr("COLUMN_NAME").ToString
-                                c.alias = AliasGenerator(rdr("COLUMN_NAME").ToString)
-                                c.ordinalPosition = CInt(rdr("ORDINAL_POSITION"))
-                                c.defaultValue = If(rdr("COLUMN_DEFAULT").ToString = "", "NULL", rdr("COLUMN_DEFAULT").ToString)
-                                c.isNullable = If(rdr("IS_NULLABLE").ToString = "YES", True, False)
-                                c.mysqlType = rdr("DATA_TYPE").ToString
-                                c.maximumLength = If(rdr("CHARACTER_MAXIMUM_LENGTH").ToString = "", 0, ToInt(rdr("CHARACTER_MAXIMUM_LENGTH")))
-                                c.numericPrecision = ToInt(rdr("NUMERIC_PRECISION"))
-                                c.numericScale = ToInt(rdr("NUMERIC_SCALE"))
-                                c.key = rdr("COLUMN_KEY").ToString
+                                Dim c As New column With {
+                                    .name = rdr("COLUMN_NAME").ToString,
+                                    .alias = AliasGenerator(rdr("COLUMN_NAME").ToString),
+                                    .ordinalPosition = CInt(rdr("ORDINAL_POSITION")),
+                                    .defaultValue = If(rdr("COLUMN_DEFAULT").ToString = "", "NULL", rdr("COLUMN_DEFAULT").ToString),
+                                    .isNullable = If(rdr("IS_NULLABLE").ToString = "YES", True, False),
+                                    .mysqlType = rdr("DATA_TYPE").ToString,
+                                    .maximumLength = If(rdr("CHARACTER_MAXIMUM_LENGTH").ToString = "", 0, ToInt(rdr("CHARACTER_MAXIMUM_LENGTH"))),
+                                    .numericPrecision = ToInt(rdr("NUMERIC_PRECISION")),
+                                    .numericScale = ToInt(rdr("NUMERIC_SCALE")),
+                                    .key = rdr("COLUMN_KEY").ToString
+                                }
                                 If Not t.isView Then
                                     If rdr("EXTRA").ToString = "auto_increment" Then
                                         c.autoIncrement = True
@@ -334,9 +335,19 @@ Namespace infoSchema
 
                             Dim reftable As table = Nothing
                             Try
-                                reftable = Tables.First(Function(c) c.name = rdr("REFERENCED_TABLE_NAME").ToString)
+                                reftable = Tables.FirstOrDefault(Function(c) c.name = rdr("REFERENCED_TABLE_NAME").ToString)
+
+                                If reftable Is Nothing Then
+                                    table.HasBrokenForeignKeys = True
+                                    fk.MissingReferencedTable = True
+                                    Trace.WriteLine($"Foreign key error on {table.name} to {rdr("REFERENCED_TABLE_NAME")}, are you missing the table?")
+                                    Continue While
+                                End If
                             Catch rex As Exception
-                                Throw New Exception($"Foreign key error on {table.name} to {rdr("REFERENCED_TABLE_NAME")}, are you missing the table?", rex)
+                                table.HasBrokenForeignKeys = True
+                                fk.MissingReferencedTable = True
+                                Trace.WriteLine($"Foreign key error on {table.name} to {rdr("REFERENCED_TABLE_NAME")}, are you missing the table?")
+                                Continue While
                             End Try
 
                             If fk.referencedTable Is Nothing Then
@@ -347,8 +358,18 @@ Namespace infoSchema
 
                             Try
                                 refcol = reftable.columns.FirstOrDefault(Function(c) c.name = rdr("REFERENCED_COLUMN_NAME").ToString)
+
+                                If refcol Is Nothing Then
+                                    table.HasBrokenForeignKeys = True
+                                    fk.MissingReferencedTable = True
+                                    Trace.WriteLine($"Foreign key error on {table.name} to {rdr("REFERENCED_TABLE_NAME")} and column {rdr("REFERENCED_COLUMN_NAME")}, are you missing the table?")
+                                    Continue While
+                                End If
                             Catch rex As Exception
-                                Throw New Exception($"Foreign key error on {table.name} to {rdr("REFERENCED_TABLE_NAME")} and column {rdr("REFERENCED_COLUMN_NAME")}, are you missing the table?", rex)
+                                table.HasBrokenForeignKeys = True
+                                fk.MissingReferencedTable = True
+                                Trace.WriteLine($"Foreign key error on {table.name} to {rdr("REFERENCED_TABLE_NAME")} and column {rdr("REFERENCED_COLUMN_NAME")}, are you missing the table?")
+                                Continue While
                             End Try
 
                             fk.referencedColumns.Add(New fkColumn With {
@@ -440,7 +461,7 @@ Namespace infoSchema
                                 If rt IsNot Nothing Then
                                     Dim prt = ProjectRoutines.FirstOrDefault(Function(c) c.name = rt.name)
                                     If (rt.returnsRecordset AndAlso Not rt.isFunction) OrElse (prt IsNot Nothing AndAlso prt.returnsRecordset AndAlso Not prt.isFunction) Then
-                                        If My.Settings.autoExecuteSP Then
+                                        If DiscoverLayouts = 0 Then
                                             Dim pvalues = rt.params.OrderBy(Function(d) d.ordinalPosition).Select(Function(c) c.PreviewValue).ToArray
                                             GetRoutineLayout(rt, pvalues, Nothing)
                                         End If
@@ -452,17 +473,19 @@ Namespace infoSchema
                                 If rdr("ROUTINE_TYPE").ToString = "PROCEDURE" Then
                                     rt.returnsRecordset = Regex.IsMatch(rdr("ROUTINE_DEFINITION").ToString, My.Settings.routineRegex, RegexOptions.IgnoreCase Or RegexOptions.Singleline Or RegexOptions.Multiline)
                                     If rt.returnsRecordset Then
+                                        rt.CanExecute = True
                                         rt.returnLayout = New table With {.name = rt.name, .singleName = Pservice.Singularize(rt.name), .pluralName = Pservice.Pluralize(rt.name)}
                                     End If
                                 End If
                             End If
 
-                            Dim p As New parameter
-                            p.mysqlType = rdr("DATA_TYPE").ToString
-                            p.maximumLength = ToInt(rdr("CHARACTER_MAXIMUM_LENGTH"))
-                            p.numericPrecision = ToInt(rdr("NUMERIC_PRECISION"))
-                            p.vbType = GetVbType(rdr("DATA_TYPE").ToString)
-                            p.name = rdr("PARAMETER_NAME").ToString
+                            Dim p As New parameter With {
+                                .mysqlType = rdr("DATA_TYPE").ToString,
+                                .maximumLength = ToInt(rdr("CHARACTER_MAXIMUM_LENGTH")),
+                                .numericPrecision = ToInt(rdr("NUMERIC_PRECISION")),
+                                .vbType = GetVbType(rdr("DATA_TYPE").ToString),
+                                .name = rdr("PARAMETER_NAME").ToString
+                            }
 
 
                             If rdr("ROUTINE_TYPE").ToString = "FUNCTION" Then
@@ -536,7 +559,7 @@ Namespace infoSchema
 
                         If rt IsNot Nothing Then
                             If rt.returnsRecordset AndAlso Not rt.isFunction Then
-                                If My.Settings.autoExecuteSP Then
+                                If DiscoverLayouts = 0 Or (DiscoverLayouts = 1 And rt.CanExecute) Then
                                     Dim pvalues = rt.params.OrderBy(Function(d) d.ordinalPosition).Select(Function(c) c.PreviewValue).ToArray
                                     GetRoutineLayout(rt, pvalues, Nothing)
                                 End If
@@ -546,7 +569,7 @@ Namespace infoSchema
                     End Using
                 End Using
 
-                If My.Settings.mergeRoutineLayouts Then
+                If ShareLayouts Then
                     Dim matched As New List(Of String)
                     ' Check for Routines with same returnlayouts, those will be merged to a base layout
                     For Each r1 In Routines.Where(Function(c) c.returnsRecordset AndAlso Not c.isFunction)
@@ -615,9 +638,7 @@ Namespace infoSchema
                                         c.vbType = GetVbType(c.mysqlType)
                                         c.phpType = GetPHPType(c.mysqlType)
                                         _r.returnLayout.columns.Add(c)
-                                        If fieldNames IsNot Nothing Then
-                                            fieldNames.Add($"{c.name} ({c.vbType})")
-                                        End If
+                                        fieldNames?.Add($"{c.name} ({c.vbType})")
                                     Next
                                 Else
                                     _r.returnLayout = Nothing
@@ -765,6 +786,8 @@ Namespace infoSchema
         End Function
         Private Function AliasGenerator(original As String) As String
             Try
+                If original = "" Then Return "__UNKNOWN__"
+
                 Dim ali As String = original.ToLower
                 Dim inc As Integer = 1
 

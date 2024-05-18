@@ -8,6 +8,7 @@
         Public Property positionInUniqueConstraint As Integer
         Public Property referencedTable As table
         Public Property referencedColumns As New List(Of fkColumn)
+        Public Property MissingReferencedTable As Boolean
     End Class
 
     Public Class fkColumn

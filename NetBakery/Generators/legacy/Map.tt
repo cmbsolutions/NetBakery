@@ -86,7 +86,7 @@ Namespace Models.Mapping
 
 			' ForeignKeys
 <#
-	For Each f In _t.foreignKeys.where(function(c) c.referencedtable.hasExport).orderby(Function(c) c.propertyalias)
+	For Each f In _t.foreignKeys.where(function(c) not c.MissingReferencedTable AndAlso c.referencedtable.hasExport).orderby(Function(c) c.propertyalias)
 		dim lineParts As New List(of String)
 
 		if f.columns.first.column.isNullable Then

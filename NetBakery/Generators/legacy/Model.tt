@@ -52,7 +52,7 @@ Namespace Models<#= If(_IsStoreCommand, ".StoreCommandSchemas", "") #>
 <#      End If
     Next
 
-    For each fk in _t.foreignkeys.where(function(c) c.referencedtable.hasExport).orderby(Function(c) c.propertyalias)
+    For each fk in _t.foreignkeys.where(function(c) not c.MissingReferencedTable andalso c.referencedtable.hasExport).orderby(Function(c) c.propertyalias)
 #>
 <# If fk.referencedtable.escapeName then #>
         Public Property <#= fk.propertyAlias #>() as [<#= fk.referencedtable.singlename #>]
