@@ -13,5 +13,6 @@
         Property executiontime As TimeSpan
         Property UseBaseLayout As Boolean
         Property BaseLayoutName As String
+        Property CanExecute As Boolean
     End Class
 End Namespace

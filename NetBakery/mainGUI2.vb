@@ -144,7 +144,7 @@ Public Class mainGUI2
             My.Settings.windowSize = Size
 
             If My.Settings.openLastProject AndAlso _currentProject IsNot Nothing Then
-                My.Settings.lastProject = _currentProject.projectfilename
+                My.Settings.lastProject = _currentProject.Projectfilename
             End If
             My.Settings.Save()
 
@@ -152,7 +152,7 @@ Public Class mainGUI2
 
             saveConnections()
 
-            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
+            If _currentProject IsNot Nothing AndAlso _currentProject.NeedsSave Then
                 If MessageBox.Show("Project has changed. Save changes?", "Save changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
                     btnSaveProject.RaiseClick()
                 End If
@@ -322,7 +322,7 @@ Public Class mainGUI2
                 Exit Sub
             End If
 
-            _mngr.initSchema()
+            _mngr.InitSchema()
             _mngr.Connection = _currentConnection
 
             If _mngr.TryConnect() Then
@@ -384,6 +384,10 @@ Public Class mainGUI2
                     tmpNode.Style = New ElementStyle(Color.Yellow)
                     tmpNode.Tooltip = "There is no autoincrment field defined in this table."
                 End If
+                If table.HasBrokenForeignKeys Then
+                    tmpNode.Style = New ElementStyle(Color.Red)
+                    tmpNode.Tooltip = "There is a broken foreign key"
+                End If
 
                 tableNode.Nodes.Add(tmpNode)
             Next
@@ -414,7 +418,7 @@ Public Class mainGUI2
             Next
 
             ' Process all Routines
-            For Each routine In _mngr.routines
+            For Each routine In _mngr.Routines
                 ' Clone the templates
                 Dim tmpNode = itemNode.DeepCopy
                 Dim tmpCell = New AdvTree.Cell With {.Editable = False, .Text = "", .TextDisplayFormat = "", .ImageAlignment = AdvTree.eCellPartAlignment.NearCenter}
@@ -451,7 +455,7 @@ Public Class mainGUI2
         End Try
     End Sub
 
-    Private Sub databaseNodeHandler(sender As Object, e As EventArgs)
+    Private Async Sub databaseNodeHandler(sender As Object, e As EventArgs)
         Try
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
@@ -466,8 +470,14 @@ Public Class mainGUI2
             Next
 
             _mngr.SetDatabase(node.Text)
+            _mngr.DiscoverLayouts = _currentProject.DiscoverProcedureLayouts
+            _mngr.ShareLayouts = _currentProject.ShareLayouts
+            _mngr.UseEnums = _currentProject.UseEnums
+
             Cursor = Cursors.WaitCursor
-            _mngr.harvestObjects()
+            Await Task.Run(Sub()
+                               _mngr.HarvestObjects()
+                           End Sub)
 
             populateTreeNode(node)
 
@@ -517,10 +527,10 @@ Public Class mainGUI2
 
                     dgvForeignKeys.DataSource = fks.ToArray
 
-                    scGeneratedModel.Text = _mngr.generateModel(tableFields)
+                    scGeneratedModel.Text = _mngr.GenerateModel(tableFields)
                     scGeneratedModel.Colorize(0, scGeneratedModel.Text.Length)
 
-                    scGeneratedMapping.Text = _mngr.generateMap(tableFields)
+                    scGeneratedMapping.Text = _mngr.GenerateMap(tableFields)
                     scGeneratedMapping.Colorize(0, scGeneratedMapping.Text.Length)
 
                     scRoutine.Text = tableFields.definition
@@ -614,10 +624,10 @@ Public Class mainGUI2
                     dgvIndexes.DataSource = Nothing
                     dgvReferences.DataSource = Nothing
 
-                    scGeneratedModel.Text = _mngr.generateModel(viewFields)
+                    scGeneratedModel.Text = _mngr.GenerateModel(viewFields)
                     scGeneratedModel.Colorize(0, scGeneratedModel.Text.Length)
 
-                    scGeneratedMapping.Text = _mngr.generateMap(viewFields)
+                    scGeneratedMapping.Text = _mngr.GenerateMap(viewFields)
                     scGeneratedMapping.Colorize(0, scGeneratedMapping.Text.Length)
 
                     scRoutine.Text = viewFields.definition
@@ -648,7 +658,7 @@ Public Class mainGUI2
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
             If nodeEvent.Button = MouseButtons.Left Then
-                Dim rout = _mngr.routines.FirstOrDefault(Function(c) c.name = node.Text)
+                Dim rout = _mngr.Routines.FirstOrDefault(Function(c) c.name = node.Text)
 
                 If rout IsNot Nothing Then
                     SelectedObject = rout
@@ -676,7 +686,7 @@ Public Class mainGUI2
                         dgvIndexes.DataSource = Nothing
                         dgvReferences.DataSource = Nothing
 
-                        scGeneratedModel.Text = _mngr.generateModel(rout.returnLayout)
+                        scGeneratedModel.Text = _mngr.GenerateModel(rout.returnLayout)
                         scGeneratedModel.Colorize(0, scGeneratedModel.Text.Length)
                     Else
                         dgvFields.DataSource = Nothing
@@ -695,7 +705,7 @@ Public Class mainGUI2
                 dcSPRunner.Selected = True
             End If
 
-            _mngr.routines.First(Function(c) c.name = node.Text).hasExport = node.Checked
+            _mngr.Routines.First(Function(c) c.name = node.Text).hasExport = node.Checked
 
         Catch ex As Exception
             FormHelpers.dumpException(ex)
@@ -709,7 +719,7 @@ Public Class mainGUI2
     Private Sub btnHomeOutputExplorer_Click(sender As Object, e As EventArgs) Handles btnHomeOutputExplorer.Click
         Try
             If _currentProject IsNot Nothing Then
-                Select Case _currentProject.outputtype.ToLower
+                Select Case _currentProject.Outputtype.ToLower
                     Case "net5"
                         Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
                             advtreeOutputExplorer.Nodes.Clear()
@@ -736,7 +746,7 @@ Public Class mainGUI2
     Private Sub btnRefreshOutputExplorer_Click(sender As Object, e As EventArgs) Handles btnRefreshOutputExplorer.Click
         Try
             If _currentProject IsNot Nothing Then
-                Select Case _currentProject.outputtype.ToLower
+                Select Case _currentProject.Outputtype.ToLower
                     Case "net5"
                         Using ts As New IO.StringReader(My.Resources.net5OutputExplorer)
                             advtreeOutputExplorer.Nodes.Clear()
@@ -764,7 +774,7 @@ Public Class mainGUI2
             Dim tplFunctions As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 28}
             Dim tplProcedures As New AdvTree.Node With {.DragDropEnabled = False, .Editable = False, .Expanded = False, .ImageIndex = 33}
 
-            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "php" Then
+            If _currentProject IsNot Nothing AndAlso _currentProject.Outputtype.ToLower = "php" Then
                 Dim mModel As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapModels", True).FirstOrDefault
                 Dim mMapping As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapMapping", True).FirstOrDefault
 
@@ -866,7 +876,7 @@ Public Class mainGUI2
                 Next
 
                 ' Routines
-                For Each routine In _mngr.routines.Where(Function(r) r.hasExport)
+                For Each routine In _mngr.Routines.Where(Function(r) r.hasExport)
                     Dim tmpNode As AdvTree.Node
 
                     If routine.isFunction Then
@@ -936,7 +946,7 @@ Public Class mainGUI2
                 End If
                 mModel.Nodes.Add(tmpContext)
 
-                If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net" Then
+                If _currentProject IsNot Nothing AndAlso _currentProject.Outputtype.ToLower = "net" Then
                     ' StoreCommandsContext
                     tmpContext = tplContextAndStoreCommands.DeepCopy
 
@@ -964,7 +974,7 @@ Public Class mainGUI2
             Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
 
             If diskFile IsNot Nothing Then
-                Dim newText = _mngr.generateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value)
+                Dim newText = _mngr.GenerateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value)
                 Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
 
                 LoadDiffView(oldText, newText)
@@ -983,7 +993,7 @@ Public Class mainGUI2
             Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
 
             If diskFile IsNot Nothing Then
-                Dim newText = _mngr.generateContext(txtProjectName.Text)
+                Dim newText = _mngr.GenerateContext(txtProjectName.Text)
                 Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
 
                 LoadDiffView(oldText, newText)
@@ -999,11 +1009,11 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            Dim t = _mngr.routines.FirstOrDefault(Function(c) c.name = node.TagString).returnLayout
+            Dim t = _mngr.Routines.FirstOrDefault(Function(c) c.name = node.TagString).returnLayout
             Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
 
             If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
-                Dim newText = _mngr.generateModel(t)
+                Dim newText = _mngr.GenerateModel(t)
                 Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
 
                 LoadDiffView(oldText, newText)
@@ -1019,11 +1029,11 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            Dim t = _mngr.routines.FirstOrDefault(Function(c) c.name = node.TagString)
+            Dim t = _mngr.Routines.FirstOrDefault(Function(c) c.name = node.TagString)
             Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
 
             If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
-                Dim newText = _mngr.generateStoreCommand(t, $"{txtProjectName.Text}", sbProcedureLocks.Value)
+                Dim newText = _mngr.GenerateStoreCommand(t, $"{txtProjectName.Text}", sbProcedureLocks.Value)
                 Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
 
                 LoadDiffView(oldText, newText)
@@ -1043,7 +1053,7 @@ Public Class mainGUI2
             Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
 
             If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
-                Dim newText = _mngr.generateMap(t)
+                Dim newText = _mngr.GenerateMap(t)
                 Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
 
                 LoadDiffView(oldText, newText)
@@ -1063,7 +1073,7 @@ Public Class mainGUI2
             Dim diskFile = _FileManager.ChangedFiles.FirstOrDefault(Function(c) c.filename = node.Text)
 
             If t IsNot Nothing AndAlso diskFile IsNot Nothing Then
-                Dim newText = _mngr.generateModel(t)
+                Dim newText = _mngr.GenerateModel(t)
                 Dim oldText = IO.File.ReadAllText($"{txtOutputFolder.Text}{diskFile.location}\{diskFile.filename}")
 
                 LoadDiffView(oldText, newText)
@@ -1088,7 +1098,7 @@ Public Class mainGUI2
             If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models")
             If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\Mapping") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\Mapping")
 
-            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net5" Then
+            If _currentProject IsNot Nothing AndAlso _currentProject.Outputtype.ToLower = "net5" Then
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands")
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Functions") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Functions")
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\Models")
@@ -1101,42 +1111,42 @@ Public Class mainGUI2
             End If
 
             For Each t In _mngr.Tables.Where(Function(c) c.hasExport)
-                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{t.singleName}.vb", _mngr.generateModel(t))
-                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\Mapping\{t.singleName}Map.vb", _mngr.generateMap(t))
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{t.singleName}.vb", _mngr.GenerateModel(t))
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\Mapping\{t.singleName}Map.vb", _mngr.GenerateMap(t))
             Next
 
-            For Each s In _mngr.routines.Where(Function(c) c.hasExport)
-                If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net5" Then
+            For Each s In _mngr.Routines.Where(Function(c) c.hasExport)
+                If _currentProject IsNot Nothing AndAlso _currentProject.Outputtype.ToLower = "net5" Then
                     If s.isFunction Then
-                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
-                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\Models\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\{s.name}.vb", _mngr.GenerateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Functions\Models\{s.returnLayout.singleName}.vb", _mngr.GenerateModel(s.returnLayout))
                     Else
-                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\{s.name}.vb", _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\{s.name}.vb", _mngr.GenerateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value))
                         If s.returnsRecordset Then
-                            IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\Models\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout))
+                            IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommands\Procedures\Models\{s.returnLayout.singleName}.vb", _mngr.GenerateModel(s.returnLayout))
                         End If
                     End If
                 Else
                     If s.returnsRecordset Then
-                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommandSchemas\{s.returnLayout.singleName}.vb", _mngr.generateModel(s.returnLayout, True))
+                        IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\StoreCommandSchemas\{s.returnLayout.singleName}.vb", _mngr.GenerateModel(s.returnLayout, True))
                     End If
                 End If
             Next
 
-            IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}DataContext.vb", _mngr.generateContext($"{txtProjectName.Text}"))
+            IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}DataContext.vb", _mngr.GenerateContext($"{txtProjectName.Text}"))
 
-            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net" Then
-                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}StoreCommands.vb", _mngr.generateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value))
+            If _currentProject IsNot Nothing AndAlso _currentProject.Outputtype.ToLower = "net" Then
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{txtProjectName.Text}StoreCommands.vb", _mngr.GenerateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value))
             End If
 
             _FileManager.OriginalFiles = Nothing
-            _FileManager.ScanForFiles(_currentProject.projectoutputlocation)
+            _FileManager.ScanForFiles(_currentProject.Projectoutputlocation)
             _FileManager.OriginalFiles = _FileManager.CurrentFiles
 
-            _currentProject.database.tables = _mngr.Tables
-            _currentProject.database.routines = _mngr.routines
+            _currentProject.Database.Tables = _mngr.Tables
+            _currentProject.Database.Routines = _mngr.Routines
 
-            _currentProject.generatedoutputs = _FileManager.CurrentFiles
+            _currentProject.Generatedoutputs = _FileManager.CurrentFiles
 
             ExplorerControl1.RefreshExplorer()
 
@@ -1156,7 +1166,7 @@ Public Class mainGUI2
             Dim t = _mngr.Tables.FirstOrDefault(Function(c) c.name = node.TagString)
 
             If t IsNot Nothing Then
-                scCodePreview.Text = _mngr.generateModel(t)
+                scCodePreview.Text = _mngr.GenerateModel(t)
                 scCodePreview.Colorize(0, scCodePreview.Text.Length)
                 dcCodePreview.Selected = True
             End If
@@ -1173,7 +1183,7 @@ Public Class mainGUI2
             Dim t = _mngr.Tables.FirstOrDefault(Function(c) c.name = node.TagString)
 
             If t IsNot Nothing Then
-                scCodePreview.Text = _mngr.generateMap(t)
+                scCodePreview.Text = _mngr.GenerateMap(t)
                 scCodePreview.Colorize(0, scCodePreview.Text.Length)
                 dcCodePreview.Selected = True
             End If
@@ -1187,10 +1197,10 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            Dim r = _mngr.routines.FirstOrDefault(Function(c) c.name = node.TagString)
+            Dim r = _mngr.Routines.FirstOrDefault(Function(c) c.name = node.TagString)
 
             If r IsNot Nothing Then
-                scCodePreview.Text = _mngr.generateStoreCommand(r, $"{txtProjectName.Text}Data", sbProcedureLocks.Value)
+                scCodePreview.Text = _mngr.GenerateStoreCommand(r, $"{txtProjectName.Text}Data", sbProcedureLocks.Value)
                 scCodePreview.Colorize(0, scCodePreview.Text.Length)
                 dcCodePreview.Selected = True
             End If
@@ -1204,10 +1214,10 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            Dim r = _mngr.routines.FirstOrDefault(Function(c) c.name = node.TagString)
+            Dim r = _mngr.Routines.FirstOrDefault(Function(c) c.name = node.TagString)
 
             If r IsNot Nothing AndAlso r.returnLayout IsNot Nothing Then
-                scCodePreview.Text = _mngr.generateModel(r.returnLayout)
+                scCodePreview.Text = _mngr.GenerateModel(r.returnLayout)
                 scCodePreview.Colorize(0, scCodePreview.Text.Length)
                 dcCodePreview.Selected = True
             End If
@@ -1222,7 +1232,7 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            scCodePreview.Text = _mngr.generateContext(txtProjectName.Text)
+            scCodePreview.Text = _mngr.GenerateContext(txtProjectName.Text)
             scCodePreview.Colorize(0, scCodePreview.Text.Length)
             dcCodePreview.Selected = True
 
@@ -1235,7 +1245,7 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            scCodePreview.Text = _mngr.generateStoreCommands(txtProjectName.Text, sbProcedureLocks.Value)
+            scCodePreview.Text = _mngr.GenerateStoreCommands(txtProjectName.Text, sbProcedureLocks.Value)
             scCodePreview.Colorize(0, scCodePreview.Text.Length)
             dcCodePreview.Selected = True
 
@@ -1259,7 +1269,7 @@ Public Class mainGUI2
                     Case "Tables", "Views"
                         _mngr.Tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case "Routines"
-                        _mngr.routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
+                        _mngr.Routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case Else
                         'Dunno
                 End Select
@@ -1278,7 +1288,7 @@ Public Class mainGUI2
                     Case "Tables", "Views"
                         _mngr.Tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case "Routines"
-                        _mngr.routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
+                        _mngr.Routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case Else
                         'Dunno
                 End Select
@@ -1297,7 +1307,7 @@ Public Class mainGUI2
                     Case "Tables", "Views"
                         _mngr.Tables.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case "Routines"
-                        _mngr.routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
+                        _mngr.Routines.First(Function(c) c.name = n.Text).hasExport = n.Checked
                     Case Else
                         'Dunno
                 End Select
@@ -1567,8 +1577,8 @@ Public Class mainGUI2
 
             _currentProject.Save()
 
-            If Not My.Settings.recentProjects.Contains(_currentProject.projectfilename) Then
-                My.Settings.recentProjects.Add(_currentProject.projectfilename)
+            If Not My.Settings.recentProjects.Contains(_currentProject.Projectfilename) Then
+                My.Settings.recentProjects.Add(_currentProject.Projectfilename)
             End If
 
             If My.Settings.recentProjects.Count > 10 Then
@@ -1583,7 +1593,7 @@ Public Class mainGUI2
 
     Private Sub btnOpenProject_Click(sender As Object, e As EventArgs) Handles btnOpenProject.Click
         Try
-            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
+            If _currentProject IsNot Nothing AndAlso _currentProject.NeedsSave Then
                 If MessageBox.Show("Project has changed. Save changes?", "Save changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
                     btnSaveProject.RaiseClick()
                 End If
@@ -1607,27 +1617,28 @@ Public Class mainGUI2
 
             _currentProject = Project.Load(f)
 
-            _currentProject.projectfilename = f
+            _currentProject.Projectfilename = f
 
-            txtProjectName.Text = _currentProject.projectname
-            txtProjectFolder.Text = _currentProject.projectlocation
-            txtOutputFolder.Text = _currentProject.projectoutputlocation
-            Dim itm = cboOutputType.Items().Cast(Of DevComponents.Editors.ComboItem).FirstOrDefault(Function(c) c.Value.ToString = _currentProject.outputtype)
+            txtProjectName.Text = _currentProject.Projectname
+            txtProjectFolder.Text = _currentProject.Projectlocation
+            txtOutputFolder.Text = _currentProject.Projectoutputlocation
+            Dim itm = cboOutputType.Items().Cast(Of DevComponents.Editors.ComboItem).FirstOrDefault(Function(c) c.Value.ToString = _currentProject.Outputtype)
             cboOutputType.SelectedItem = itm
-            sbEnums.SetValueAndAnimate(_currentProject.useEnums, eEventSource.Code)
-            sbProcedureLocks.SetValueAndAnimate(_currentProject.generateProcedureLocks, eEventSource.Code)
-
-            cboConnecions.Text = _currentProject.database.connection.description
+            sbEnums.SetValueAndAnimate(_currentProject.UseEnums, eEventSource.Code)
+            sbProcedureLocks.SetValueAndAnimate(_currentProject.GenerateProcedureLocks, eEventSource.Code)
+            SBShareLayout.SetValueAndAnimate(_currentProject.ShareLayouts, eEventSource.Code)
+            BAutoDiscoverButtons_Update()
+            cboConnecions.Text = _currentProject.Database.Connection.description
             _currentConnection = _connections.First(Function(c) c.description = cboConnecions.Text)
 
             btnConnect.RaiseClick(eEventSource.Code)
             'TODO: Create database vcs
-            _mngr.setGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString)
-            _mngr.SetDatabase(_currentProject.database.databasename)
-            _mngr.ProjectTables = _currentProject.database.tables
-            _mngr.ProjectRoutines = _currentProject.database.routines
+            _mngr.SetGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString)
+            _mngr.SetDatabase(_currentProject.Database.Databasename)
+            _mngr.ProjectTables = _currentProject.Database.Tables
+            _mngr.ProjectRoutines = _currentProject.Database.Routines
 
-            Dim selectedDB = advtreeDatabases.FindNodeByName(_currentProject.database.databasename)
+            Dim selectedDB = advtreeDatabases.FindNodeByName(_currentProject.Database.Databasename)
 
             If selectedDB IsNot Nothing Then
                 advtreeDatabases.SelectNode(selectedDB, AdvTree.eTreeAction.Code)
@@ -1636,8 +1647,8 @@ Public Class mainGUI2
 
             _FileManager = New FileVCS.Manager
             ExplorerControl1.ExplorerManager = _FileManager
-            _FileManager.ScanForFiles(_currentProject.projectoutputlocation)
-            If _currentProject.generatedoutputs IsNot Nothing Then _FileManager.OriginalFiles = _currentProject.generatedoutputs
+            _FileManager.ScanForFiles(_currentProject.Projectoutputlocation)
+            If _currentProject.Generatedoutputs IsNot Nothing Then _FileManager.OriginalFiles = _currentProject.Generatedoutputs
             ExplorerControl1.ClearExplorer()
             ExplorerControl1.RefreshExplorer()
 
@@ -1650,7 +1661,7 @@ Public Class mainGUI2
 
     Private Sub btnCloseProject_Click(sender As Object, e As EventArgs) Handles btnCloseProject.Click
         Try
-            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
+            If _currentProject IsNot Nothing AndAlso _currentProject.NeedsSave Then
                 If MessageBox.Show("Project has changed. Save changes?", "Save changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
                     btnSaveProject.RaiseClick()
                 End If
@@ -1674,7 +1685,7 @@ Public Class mainGUI2
 
     Private Sub btnNewProject_Click(sender As Object, e As EventArgs) Handles btnNewProject.Click
         Try
-            If _currentProject IsNot Nothing AndAlso _currentProject.needsSave Then
+            If _currentProject IsNot Nothing AndAlso _currentProject.NeedsSave Then
                 If MessageBox.Show("Project has changed. Save changes?", "Save changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
                     btnSaveProject.RaiseClick()
                 End If
@@ -1689,9 +1700,11 @@ Public Class mainGUI2
             txtProjectFolder.Text = ""
             txtOutputFolder.Text = ""
             Dim x As Editors.ComboItem = CType(cboOutputType.SelectedItem, Editors.ComboItem)
-            _currentProject.outputtype = x.Value.ToString
-            _currentProject.useEnums = sbEnums.Value
-            _currentProject.generateProcedureLocks = sbProcedureLocks.Value
+            _currentProject.Outputtype = x.Value.ToString
+            _currentProject.UseEnums = sbEnums.Value
+            _currentProject.GenerateProcedureLocks = sbProcedureLocks.Value
+            _currentProject.ShareLayouts = SBShareLayout.Value
+            _currentProject.DiscoverProcedureLayouts = 0
 
             enableOrDisableFields()
         Catch ex As Exception
@@ -1703,23 +1716,24 @@ Public Class mainGUI2
     Private Sub WriteProject()
         Try
             If Not _loadingProject AndAlso _currentProject IsNot Nothing Then
-                _currentProject.needsSave = True
-                _currentProject.application_version = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
-                _currentProject.save_date = Now
-                _currentProject.projectname = txtProjectName.Text
-                _currentProject.projectlocation = txtProjectFolder.Text
-                _currentProject.projectoutputlocation = txtOutputFolder.Text
+                _currentProject.NeedsSave = True
+                _currentProject.Application_version = $"{My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
+                _currentProject.Save_date = Now
+                _currentProject.Projectname = txtProjectName.Text
+                _currentProject.Projectlocation = txtProjectFolder.Text
+                _currentProject.Projectoutputlocation = txtOutputFolder.Text
 
                 Dim x As Editors.ComboItem = CType(cboOutputType.SelectedItem, Editors.ComboItem)
-                _currentProject.outputtype = x.Value.ToString
-                _currentProject.useEnums = sbEnums.Value
-                _currentProject.generateProcedureLocks = sbProcedureLocks.Value
+                _currentProject.Outputtype = x.Value.ToString
+                _currentProject.UseEnums = sbEnums.Value
+                _currentProject.GenerateProcedureLocks = sbProcedureLocks.Value
+                _currentProject.ShareLayouts = SBShareLayout.Value
 
-                _currentProject.database = New databaseObjects With {
-                    .connection = _currentConnection,
-                    .databasename = _mngr.GetDatabase,
-                    .tables = _mngr.Tables,
-                    .routines = _mngr.routines
+                _currentProject.Database = New DatabaseObjects With {
+                    .Connection = _currentConnection,
+                    .Databasename = _mngr.GetDatabase,
+                    .Tables = _mngr.Tables,
+                    .Routines = _mngr.Routines
                 }
             End If
         Catch ex As Exception
@@ -1756,7 +1770,7 @@ Public Class mainGUI2
                 setVbStyle(scGeneratedMapping)
         End Select
 
-        If _mngr IsNot Nothing Then _mngr.setGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString.ToLower)
+        If _mngr IsNot Nothing Then _mngr.SetGenerator(CType(cboOutputType.SelectedItem, DevComponents.Editors.ComboItem).Value.ToString.ToLower)
     End Sub
 
     Private Sub enableOrDisableFields()
@@ -1821,7 +1835,7 @@ Public Class mainGUI2
 
                 Dim flds As New List(Of String)
 
-                _mngr.getRoutineLayout(_spRoutine, par.ToArray, flds)
+                _mngr.GetRoutineLayout(_spRoutine, par.ToArray, flds)
 
                 If flds.Count > 0 Then
                     lbReturnFields.DataSource = flds.ToArray
@@ -1835,12 +1849,44 @@ Public Class mainGUI2
         End Try
     End Sub
 
+    Private Sub BAutoDiscoverAlways_Click(sender As Object, e As EventArgs) Handles BAutoDiscoverAlways.Click
+        If _currentProject IsNot Nothing Then
+            _currentProject.DiscoverProcedureLayouts = 0
+        End If
+        BAutoDiscoverButtons_Update()
+    End Sub
+
+    Private Sub BAutoDiscoverSelected_Click(sender As Object, e As EventArgs) Handles BAutoDiscoverSelected.Click
+        If _currentProject IsNot Nothing Then
+            _currentProject.DiscoverProcedureLayouts = 1
+        End If
+        BAutoDiscoverButtons_Update()
+    End Sub
+
+    Private Sub BAutoDiscoverNever_Click(sender As Object, e As EventArgs) Handles BAutoDiscoverNever.Click
+        If _currentProject IsNot Nothing Then
+            _currentProject.DiscoverProcedureLayouts = 2
+        End If
+        BAutoDiscoverButtons_Update()
+    End Sub
+
+    Private Sub BAutoDiscoverButtons_Update()
+        If _currentProject IsNot Nothing Then
+            BAutoDiscoverAlways.TextColor = If(_currentProject.DiscoverProcedureLayouts = 0, Color.White, Color.DarkGray)
+            BAutoDiscoverAlways.Font = New Font(BAutoDiscoverAlways.Font, If(_currentProject.DiscoverProcedureLayouts = 0, FontStyle.Bold, FontStyle.Regular))
+            BAutoDiscoverSelected.TextColor = If(_currentProject.DiscoverProcedureLayouts = 1, Color.White, Color.DarkGray)
+            BAutoDiscoverSelected.Font = New Font(BAutoDiscoverSelected.Font, If(_currentProject.DiscoverProcedureLayouts = 1, FontStyle.Bold, FontStyle.Regular))
+            BAutoDiscoverNever.TextColor = If(_currentProject.DiscoverProcedureLayouts = 2, Color.White, Color.DarkGray)
+            BAutoDiscoverNever.Font = New Font(BAutoDiscoverNever.Font, If(_currentProject.DiscoverProcedureLayouts = 2, FontStyle.Bold, FontStyle.Regular))
+        End If
+    End Sub
+
     Private Sub CalculateHashesOfMemoryFiles()
         Dim memoryFiles As New List(Of FileVCS.Models.vcsObject)
 
         For Each t In _mngr.Tables.Where(Function(c) c.hasExport)
-            Dim modelContent = _mngr.generateModel(t)
-            Dim mapContent = _mngr.generateMap(t)
+            Dim modelContent = _mngr.GenerateModel(t)
+            Dim mapContent = _mngr.GenerateMap(t)
 
             memoryFiles.Add(New FileVCS.Models.vcsObject With {
                             .filename = $"{t.singleName}.vb",
@@ -1854,11 +1900,11 @@ Public Class mainGUI2
                             })
         Next
 
-        For Each s In _mngr.routines.Where(Function(c) c.hasExport)
-            If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net5" Then
+        For Each s In _mngr.Routines.Where(Function(c) c.hasExport)
+            If _currentProject IsNot Nothing AndAlso _currentProject.Outputtype.ToLower = "net5" Then
                 If s.isFunction Then
-                    Dim scContent = _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value)
-                    Dim modelContent = _mngr.generateModel(s.returnLayout)
+                    Dim scContent = _mngr.GenerateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value)
+                    Dim modelContent = _mngr.GenerateModel(s.returnLayout)
 
                     memoryFiles.Add(New FileVCS.Models.vcsObject With {
                             .filename = $"{s.name}",
@@ -1871,7 +1917,7 @@ Public Class mainGUI2
                             .hash = FileVCS.Utils.GetHash(SHA384.Create, modelContent)
                             })
                 Else
-                    Dim scContent = _mngr.generateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value)
+                    Dim scContent = _mngr.GenerateStoreCommand(s, $"{txtProjectName.Text}", sbProcedureLocks.Value)
 
                     memoryFiles.Add(New FileVCS.Models.vcsObject With {
                             .filename = $"{s.name}",
@@ -1880,7 +1926,7 @@ Public Class mainGUI2
                             })
 
                     If s.returnsRecordset Then
-                        Dim modelContent = _mngr.generateModel(s.returnLayout)
+                        Dim modelContent = _mngr.GenerateModel(s.returnLayout)
                         memoryFiles.Add(New FileVCS.Models.vcsObject With {
                             .filename = $"{s.returnLayout.singleName}.vb",
                             .location = "\Models\StoreCommands\Procedures\Models\",
@@ -1890,7 +1936,7 @@ Public Class mainGUI2
                 End If
             Else
                 If s.returnsRecordset Then
-                    Dim modelContent = _mngr.generateModel(s.returnLayout, True)
+                    Dim modelContent = _mngr.GenerateModel(s.returnLayout, True)
                     memoryFiles.Add(New FileVCS.Models.vcsObject With {
                             .filename = $"{s.returnLayout.singleName}.vb",
                             .location = "\Models\StoreCommandSchemas\",
@@ -1900,15 +1946,15 @@ Public Class mainGUI2
             End If
         Next
 
-        Dim contextContent = _mngr.generateContext($"{txtProjectName.Text}")
+        Dim contextContent = _mngr.GenerateContext($"{txtProjectName.Text}")
         memoryFiles.Add(New FileVCS.Models.vcsObject With {
                             .filename = $"{txtProjectName.Text}DataContext.vb",
                             .location = "\Models\",
                             .hash = FileVCS.Utils.GetHash(SHA384.Create, contextContent)
                             })
 
-        If _currentProject IsNot Nothing AndAlso _currentProject.outputtype.ToLower = "net" Then
-            Dim scContent = _mngr.generateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value)
+        If _currentProject IsNot Nothing AndAlso _currentProject.Outputtype.ToLower = "net" Then
+            Dim scContent = _mngr.GenerateStoreCommands($"{txtProjectName.Text}", sbProcedureLocks.Value)
             memoryFiles.Add(New FileVCS.Models.vcsObject With {
                             .filename = $"{txtProjectName.Text}StoreCommands.vb",
                             .location = "\Models\",
@@ -1942,7 +1988,23 @@ Public Class mainGUI2
             TreeGX1.Nodes.Add(node)
 
             For Each fk In rootTable.foreignKeys
-                node.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, 1).ToArray)
+                If fk.MissingReferencedTable Then
+                    Dim errorStyle As New Tree.ElementStyle
+
+                    errorStyle.ApplyStyle(ElementStyle3)
+                    errorStyle.BackColor = Color.Red
+                    errorStyle.BackColor2 = Color.Red
+                    errorStyle.TextColor = Color.White
+
+                    node.Nodes.Add(New Tree.Node With {
+                                   .Text = fk.name,
+                                   .Name = fk.name,
+                                   .Style = errorStyle
+                                   })
+
+                Else
+                    node.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, 1).ToArray)
+                End If
             Next
 
         Catch ex As Exception
@@ -1957,6 +2019,7 @@ Public Class mainGUI2
     Private Function GetForeignKeyNodes(t As infoSchema.table, currentDepth As Integer) As List(Of Tree.Node)
         Dim nodes As New List(Of Tree.Node)
         If currentDepth > My.Settings.maxERDiagramDepth Then Return nodes
+        If t Is Nothing Then Return nodes
         Try
             Dim n As New Tree.Node With {
                           .Text = t.name,
@@ -2006,7 +2069,7 @@ Public Class mainGUI2
         TreeGX1.Nodes.Add(rootNode)
 
         Try
-            For Each t In _mngr.tables.Where(Function(c) Not c.isView)
+            For Each t In _mngr.Tables.Where(Function(c) Not c.isView)
                 LoadTableUnique(t, rootNode)
             Next
         Catch ex As Exception
@@ -2246,5 +2309,7 @@ Public Class mainGUI2
         scCodeBuilderOutput.InsertText(scCodeBuilderOutput.CurrentPosition, scCodeBuilder.Text)
         scCodeBuilderOutput.Colorize(0, scCodeBuilderOutput.Text.Length)
     End Sub
+
+
 #End Region
 End Class

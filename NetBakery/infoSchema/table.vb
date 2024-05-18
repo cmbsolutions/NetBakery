@@ -18,5 +18,6 @@ Namespace infoSchema
         Property NoAutoNumber As Boolean
         Property executiontime As TimeSpan
         Property table_collation As String
+        Property HasBrokenForeignKeys As Boolean
     End Class
 End Namespace

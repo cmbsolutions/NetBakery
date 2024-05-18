@@ -16,6 +16,8 @@ Public Class Project
     Property Outputtype As String
     Property UseEnums As Boolean
     Property GenerateProcedureLocks As Boolean
+    Property DiscoverProcedureLayouts As Integer
+    Property ShareLayouts As Boolean
 
     Property NeedsSave As Boolean
     Property Projectfilename As String
