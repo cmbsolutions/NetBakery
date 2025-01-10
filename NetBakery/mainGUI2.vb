@@ -2310,6 +2310,16 @@ Public Class mainGUI2
         scCodeBuilderOutput.Colorize(0, scCodeBuilderOutput.Text.Length)
     End Sub
 
+    Private Sub advtreeDatabases_AfterCheck(sender As Object, e As AdvTree.AdvTreeCellEventArgs) Handles advtreeDatabases.AfterCheck
+        If _mngr.Tables.Exists(Function(c) c.name = e.Cell.Text) Then
+            _mngr.Tables.First(Function(c) c.name = e.Cell.Text).hasExport = e.Cell.Checked
+        End If
+
+        If _mngr.Routines.Exists(Function(c) c.name = e.Cell.Text) Then
+            _mngr.Routines.First(Function(c) c.name = e.Cell.Text).hasExport = e.Cell.Checked
+        End If
+    End Sub
+
 
 #End Region
 End Class
