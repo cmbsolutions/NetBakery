@@ -559,10 +559,15 @@ Public Class mainGUI2
                                 })
 
                     If idxPrimary IsNot Nothing Then
-                        Dim idxSet = idxs.Prepend(idxPrimary.First)
-                        dgvIndexes.DataSource = idxSet.ToArray
+                        If idxs IsNot Nothing Then
+                            Dim idxSet = idxs.Prepend(idxPrimary.First)
+                            dgvIndexes.DataSource = idxSet.ToArray
+                        Else
+                            Dim idxset = idxs.Append(idxPrimary.First)
+                            dgvIndexes.DataSource = idxset.ToArray
+                        End If
                     Else
-                        dgvIndexes.DataSource = idxs.ToArray
+                            dgvIndexes.DataSource = idxs.ToArray
                     End If
 
 

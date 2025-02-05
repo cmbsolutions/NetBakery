@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Generate EF classes from MySQL Databases")>
 <Assembly: AssemblyCompany("CMBSolutions")>
 <Assembly: AssemblyProduct("NetBakery")>
-<Assembly: AssemblyCopyright("Copyright © CMBSolutions 2017-2022")>
+<Assembly: AssemblyCopyright("Copyright © CMBSolutions 2017-2025")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("2.2.962")>
-<Assembly: AssemblyFileVersion("2.2.962")>
+<Assembly: AssemblyVersion("2.2.966")>
+<Assembly: AssemblyFileVersion("2.2.966")>
