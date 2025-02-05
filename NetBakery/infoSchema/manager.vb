@@ -742,7 +742,7 @@ Namespace infoSchema
                     Return "Integer"
                 Case "bigint", "int64", "uint64"
                     Return "Long"
-                Case "char", "varchar", "text", "tinytext", "mediumtext", "longtext", "string", "varstring", "varbinary", "binary", "tinyblob", "mediumblob", "longblob", "set", "enum"
+                Case "char", "varchar", "text", "tinytext", "mediumtext", "longtext", "string", "varstring", "varbinary", "binary", "tinyblob", "mediumblob", "longblob", "set", "enum", "json"
                     Return "String"
                 Case "time", "timestamp"
                     Return "TimeSpan"
