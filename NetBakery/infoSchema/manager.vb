@@ -249,6 +249,8 @@ Namespace infoSchema
                                 c.character_set_name = If(rdr("CHARACTER_SET_NAME").ToString = "", "", rdr.GetString("CHARACTER_SET_NAME"))
                                 c.collation_name = If(rdr("COLLATION_NAME").ToString = "", "", rdr.GetString("COLLATION_NAME"))
 
+                                If c.mysqlType = "json" Then t.HasJSoNFields = True
+
                                 t.columns.Add(c)
                             End While
                         End Using

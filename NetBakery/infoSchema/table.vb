@@ -19,5 +19,6 @@ Namespace infoSchema
         Property executiontime As TimeSpan
         Property table_collation As String
         Property HasBrokenForeignKeys As Boolean
+        Property HasJSoNFields As Boolean
     End Class
 End Namespace

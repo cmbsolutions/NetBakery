@@ -6,6 +6,9 @@
 <#@ import namespace="Netbakery.infoSchema" #>
 
 Imports System.ComponentModel.DataAnnotations.Schema
+<# If _t.HasJSoNFields Then #>
+Imports Newtonsoft.Json.Linq
+<# End If #>
 
 Namespace Models<#= If(_IsStoreCommand, ".StoreCommandSchemas", "") #>
 <# If _t.escapeName then #>
@@ -70,5 +73,17 @@ Namespace Models<#= If(_IsStoreCommand, ".StoreCommandSchemas", "") #>
 <# End If #>
 <#  Next
 #>
+
+<# For each c in _t.columns.Where(function(x) x.mysqlType = "json") #>
+        <NotMapped>
+        Public ReadOnly Property <#= c.alias #>Json As JObject
+            Get
+                Return If(String.IsNullOrEmpty(<#= c.alias #>),
+                          New JObject,
+                          JObject.Parse(<#= c.alias #>))
+            End Get
+        End Property
+
+<# Next #>
     End Class
 End Namespace
