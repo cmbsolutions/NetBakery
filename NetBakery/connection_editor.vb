@@ -1,4 +1,4 @@
-﻿Imports MySql.Data.MySqlClient
+﻿Imports MySqlConnector
 Imports DevComponents.DotNetBar
 Imports DevComponents.DotNetBar.Validator
 Imports System.ComponentModel

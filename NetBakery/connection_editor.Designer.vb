@@ -320,7 +320,7 @@ Partial Class connection_editor
         Me.sbSsl.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.sbSsl.SwitchClickTogglesValue = True
         Me.sbSsl.TabIndex = 4
-        Me.sbSsl.ValueFalse = "Prefered"
+        Me.sbSsl.ValueFalse = "None"
         Me.sbSsl.ValueObject = "Prefered"
         Me.sbSsl.ValueTrue = "Required"
         '
