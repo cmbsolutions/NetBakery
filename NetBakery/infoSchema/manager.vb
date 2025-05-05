@@ -1,5 +1,5 @@
 Imports System.Data.Entity.Infrastructure.Pluralization
-Imports MySql.Data.MySqlClient
+Imports MySqlConnector
 Imports System.Text.RegularExpressions
 
 Namespace infoSchema
@@ -148,6 +148,11 @@ Namespace infoSchema
                                 t = New table With {.name = rdr.GetString("TABLE_NAME").ToString, .singleName = Pservice.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = Pservice.Pluralize(rdr.GetString("TABLE_NAME")), .isView = True, .hasExport = True}
                             Else
                                 t = New table With {.name = rdr.GetString("TABLE_NAME"), .singleName = Pservice.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = Pservice.Pluralize(rdr.GetString("TABLE_NAME")), .hasExport = True, .table_collation = rdr.GetString("TABLE_COLLATION")}
+                            End If
+
+                            Dim ProjectTable = ProjectTables.FirstOrDefault(Function(c) c.name = t.name)
+                            If ProjectTable IsNot Nothing Then
+                                t.hasExport = ProjectTable.hasExport
                             End If
 
                             t.escapeName = Keywords IsNot Nothing AndAlso Keywords.Exists(Function(c) c = t.singleName)

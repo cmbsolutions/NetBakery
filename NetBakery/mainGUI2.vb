@@ -388,6 +388,7 @@ Public Class mainGUI2
                     tmpNode.Style = New ElementStyle(Color.Red)
                     tmpNode.Tooltip = "There is a broken foreign key"
                 End If
+                tmpNode.Checked = table.hasExport
 
                 tableNode.Nodes.Add(tmpNode)
             Next
@@ -413,7 +414,7 @@ Public Class mainGUI2
                     tmpNode.Style = New ElementStyle(Color.Red)
                     tmpNode.Tooltip = "There is something wrong with this view. The view selects fields/Tables that are missing."
                 End If
-
+                tmpNode.Checked = view.hasExport
                 viewNode.Nodes.Add(tmpNode)
             Next
 
@@ -440,7 +441,7 @@ Public Class mainGUI2
                         tmpNode.Style = New ElementStyle(Color.OrangeRed)
                     End If
                 End If
-
+                tmpNode.Checked = routine.hasExport
                 routineNode.Nodes.Add(tmpNode)
             Next
 
@@ -468,6 +469,10 @@ Public Class mainGUI2
                     Exit For
                 End If
             Next
+
+            If _currentProject Is Nothing Then
+                btnNewProject.RaiseClick()
+            End If
 
             _mngr.SetDatabase(node.Text)
             _mngr.DiscoverLayouts = _currentProject.DiscoverProcedureLayouts
@@ -2035,8 +2040,10 @@ Public Class mainGUI2
             nodes.Add(n)
 
             For Each fk In t.foreignKeys
-                If fk.referencedTable.name <> t.name Then
-                    n.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, currentDepth + 1).ToArray)
+                If Not fk.MissingReferencedTable Then
+                    If fk.referencedTable.name <> t.name Then
+                        n.Nodes.AddRange(GetForeignKeyNodes(fk.referencedTable, currentDepth + 1).ToArray)
+                    End If
                 End If
             Next
 

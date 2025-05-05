@@ -215,7 +215,7 @@ Namespace infoSchema
             End If
         End Function
         Public Overrides Function ToString() As String
-            Return $"server={host};user id={user};password={decryptedPass()};allowuservariables=True;characterset=utf8;interactivesession=True;treattinyasboolean=False;compress=True;persistsecurityinfo=True;sslmode={sslmode}"
+            Return $"server={host};port=3306;user id={user};password={decryptedPass()};allowuservariables=True;characterset=utf8mb4;persistsecurityinfo=True;sslmode={sslmode};AllowPublicKeyRetrieval=True;"
         End Function
 
         Public Sub Clone(ByRef [to] As connection)
