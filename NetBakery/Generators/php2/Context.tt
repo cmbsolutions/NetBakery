@@ -6,3 +6,11 @@
 <#@ import namespace="Netbakery.Models" #>
 <#@ import namespace="Netbakery.infoSchema" #>
 <#@ output extension=".php" #>
+
+<#="<?php"#>
+<#="App::uses('AppModel', 'Model');"#>
+
+<#="class " & _name & "AppModel extends AppModel {"#>
+<#="    public $useDbConfig = '" & _name & "';"#>
+<#="    public $actsAs = ['Containable'];"#>
+<#="}"#>

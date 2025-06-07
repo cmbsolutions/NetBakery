@@ -12,6 +12,8 @@ Namespace infoSchema
         Private Property DbCommand As MySqlCommand
         Private Property DbInfoCommand As MySqlCommand
         Private Property Pservice As New PluralizationService
+        Private Property Inflector As New inflector
+
         Private Property Keywords As New List(Of String)
         Private Property DatabaseName As String = ""
 
@@ -43,14 +45,17 @@ Namespace infoSchema
                 Case "php"
                     Generator = New phpGenerator
                     Keywords.AddRange(My.Resources.php_keywords.Split(" "c))
+                Case "php2"
+                    Generator = New php2Generator
+                    Keywords.AddRange(My.Resources.php_keywords.Split(" "c))
                 Case Else
 
             End Select
         End Sub
 
-        Public Function GenerateModel(t As table, Optional IsStoreCommand As Boolean = False) As String
+        Public Function GenerateModel(t As table, Optional IsStoreCommand As Boolean = False, Optional Name As String = "") As String
             Try
-                Return Generator.generateModel(t, IsStoreCommand)
+                Return Generator.generateModel(t, IsStoreCommand, Name)
             Catch ex As Exception
                 Throw
             End Try
@@ -145,9 +150,9 @@ Namespace infoSchema
                         While rdr.Read
                             Dim t As table
                             If rdr.GetString("TABLE_TYPE") = "VIEW" Then
-                                t = New table With {.name = rdr.GetString("TABLE_NAME").ToString, .singleName = Pservice.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = Pservice.Pluralize(rdr.GetString("TABLE_NAME")), .isView = True, .hasExport = True}
+                                t = New table With {.name = rdr.GetString("TABLE_NAME").ToString, .singleName = Pservice.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = Pservice.Pluralize(rdr.GetString("TABLE_NAME")), .isView = True, .hasExport = True, .CamelCaseName = inflector.Camelize(.singleName), .CamelCasePluralName = inflector.Camelize(.pluralName)}
                             Else
-                                t = New table With {.name = rdr.GetString("TABLE_NAME"), .singleName = Pservice.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = Pservice.Pluralize(rdr.GetString("TABLE_NAME")), .hasExport = True, .table_collation = rdr.GetString("TABLE_COLLATION")}
+                                t = New table With {.name = rdr.GetString("TABLE_NAME"), .singleName = Pservice.Singularize(rdr.GetString("TABLE_NAME")), .pluralName = Pservice.Pluralize(rdr.GetString("TABLE_NAME")), .hasExport = True, .table_collation = rdr.GetString("TABLE_COLLATION"), .CamelCaseName = inflector.Camelize(.singleName), .CamelCasePluralName = inflector.Camelize(.pluralName)}
                             End If
 
                             Dim ProjectTable = ProjectTables.FirstOrDefault(Function(c) c.name = t.name)

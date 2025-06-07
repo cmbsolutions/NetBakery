@@ -4,9 +4,9 @@ Imports NetBakery.infoSchema
 Public Class php2Generator
     Implements iGenerator
 
-    Public Function generateModel(_t As table, Optional IsStoreCommand As Boolean = False) As String Implements iGenerator.generateModel
+    Public Function generateModel(_t As table, Optional IsStoreCommand As Boolean = False, Optional Name As String = "") As String Implements iGenerator.generateModel
         Try
-            Dim page = New My.Templates.php2.Model(_t)
+            Dim page = New My.Templates.php2.Model(_t, Name)
             Dim pageContent = page.TransformText()
             Return pageContent
         Catch ex As Exception
@@ -27,7 +27,7 @@ Public Class php2Generator
 
     Public Function generateContext(_t As List(Of table), name As String, recovery As Boolean, routines As List(Of infoSchema.routine)) As String Implements iGenerator.generateContext
         Try
-            Dim page = New My.Templates.php2.AppModel(_t, name, recovery)
+            Dim page = New My.Templates.php2.Context(_t, name, recovery)
             Dim pageContent = page.TransformText
 
             Return pageContent

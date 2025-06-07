@@ -19,12 +19,49 @@ Namespace My.Templates.php2
     '''Class to produce the template output
     '''</summary>
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")>  _
-    Partial Public Class AppModel
-        Inherits AppModelBase
+    Partial Public Class Context
+        Inherits ContextBase
         '''<summary>
         '''Create the template output
         '''</summary>
         Public Overridable Function TransformText() As String
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Context.tt",10)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("<?php"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Context.tt",11)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("App::uses('AppModel', 'Model');"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Context.tt",13)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("class " & _name & "AppModel extends AppModel {"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Context.tt",14)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("    public $useDbConfig = '" & _name & "';"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Context.tt",15)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("    public $actsAs = ['Containable'];"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Context.tt",16)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("}"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             Return Me.GenerationEnvironment.ToString
         End Function
     End Class
@@ -33,7 +70,7 @@ Namespace My.Templates.php2
     '''Base class for this transformation
     '''</summary>
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")>  _
-    Public Class AppModelBase
+    Public Class ContextBase
         #Region "Fields"
         Private generationEnvironmentField As Global.System.Text.StringBuilder
         Private errorsField As Global.System.CodeDom.Compiler.CompilerErrorCollection

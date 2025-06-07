@@ -338,10 +338,10 @@
     </Compile>
     <Compile Include="Generators\php2Generator.vb" />
     <Compile Include="Generators\php2Templates.vb" />
-    <Compile Include="Generators\php2\AppModel.vb">
+    <Compile Include="Generators\php2\Context.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>AppModel.tt</DependentUpon>
+      <DependentUpon>Context.tt</DependentUpon>
     </Compile>
     <Compile Include="Generators\php2\Model.vb">
       <AutoGen>True</AutoGen>
@@ -557,10 +557,10 @@
       <LastGenOutput>StoreCommands.vb</LastGenOutput>
       <CustomToolNamespace>My.Templates.net5</CustomToolNamespace>
     </Content>
-    <Content Include="Generators\php2\AppModel.tt">
+    <Content Include="Generators\php2\Context.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>My.Templates.php2</CustomToolNamespace>
-      <LastGenOutput>AppModel.vb</LastGenOutput>
+      <LastGenOutput>Context.vb</LastGenOutput>
     </Content>
     <Content Include="Generators\php2\Model.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>

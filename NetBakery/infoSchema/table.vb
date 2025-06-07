@@ -20,5 +20,7 @@ Namespace infoSchema
         Property table_collation As String
         Property HasBrokenForeignKeys As Boolean
         Property HasJSoNFields As Boolean
+        Property CamelCaseName As String
+        Property CamelCasePluralName As String
     End Class
 End Namespace
