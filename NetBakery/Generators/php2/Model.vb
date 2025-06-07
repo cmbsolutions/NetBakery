@@ -1,6 +1,7 @@
 ﻿Imports System.Linq
 Imports System.Text
 Imports System.Collections.Generic
+Imports Netbakery.Models
 Imports Netbakery.infoSchema
 Imports System
 
@@ -24,164 +25,223 @@ Namespace My.Templates.php2
         '''Create the template output
         '''</summary>
         Public Overridable Function TransformText() As String
-            Me.Write("Imports System.Collections.Generic"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Namespace Models"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"    Public Partial Class "& _ 
-                    "")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",10)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("<?php"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",11)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(_t.singleName))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("/**"))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",12)
-  If _t.foreignKeys.Any() Then 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(" * For each ""belongs to"" relationship add the magic properties so PHPStorm can autocomplete."))
             
             #End ExternalSource
-            Me.Write("        Sub New()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",13)
+ For each fk In _t.ForeignKeys 
+            
+            #End ExternalSource
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",14)
-      For Each fk in  _t.foreignKeys 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(" * @property " & _name & fk.referencedTable.singleName & " $" & fk.referencedTable.singleName))
             
             #End ExternalSource
-            Me.Write("            ")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",15)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedTable.name))
+ Next 
             
             #End ExternalSource
-            Me.Write(" = New List(Of ")
-            
-            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",15)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.referencedTable.name)))
-            
-            #End ExternalSource
-            Me.Write(")()"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",16)
-      Next 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("*/"))
             
             #End ExternalSource
-            Me.Write("        End Sub"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",18)
-  End If 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("class " & _name & _t.CamelCaseName & " extends " & _name & "AppModel {"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",19)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("    public $useTable = '" & _t.pluralName & "';"))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",20)
-  For each c in _t.columns 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("    public $primaryKey = '" & _t.columns.first.name & "';"))
             
             #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",21)
-      If c.isNullable And c.vbType <> "String" Then 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("    public $alias = '" & _t.CamelCaseName & "';"))
             
             #End ExternalSource
-            Me.Write("        Property ")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",22)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(""))
             
             #End ExternalSource
-            Me.Write("() as ")
-            
-            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",22)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.vbType))
-            
-            #End ExternalSource
-            Me.Write("?"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",23)
-      else 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("    public $virtualFields = ["))
             
             #End ExternalSource
-            Me.Write("        Property ")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",24)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.alias))
-            
-            #End ExternalSource
-            Me.Write("() as ")
-            
-            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",24)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.vbType))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("        'created_formatted' => 'DATE_FORMAT(" & _t.CamelCaseName & ".created,""%d-%m-%Y %H:%i:%s"")',"))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",25)
-      end if
-
-        If c.mysqlType = "enum" AndAlso c.vbType <> "String" Then
-            _i = 1
- 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("        'modified_formatted' => 'DATE_FORMAT(" & _t.CamelCaseName & ".modified,""%d-%m-%Y %H:%i:%s"")',"))
             
             #End ExternalSource
-            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"        Enum ")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",26)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("    ];"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",27)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(""))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",28)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("	public $hasMany = ["))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",29)
+ For each rel in _t.Relations.Where(Function(r) r.toTable IsNot Nothing) 
+            
+            #End ExternalSource
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",30)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("        '" & rel.toTable.CamelCasePluralName & "' => ["))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",31)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(c.vbType))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("            'className' => '" & _name & "." & rel.toTable.CamelCaseName & "',"))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",32)
-          For Each e in c.enums 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("            'foreignKey' => '" & rel.toColumn.name & "',"))
             
             #End ExternalSource
-            Me.Write("            ")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",33)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(e))
-            
-            #End ExternalSource
-            Me.Write(" = ")
-            
-            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",33)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(_i))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("            'dependent' => False,"))
             
             #End ExternalSource
             Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",34)
-              _i += 1 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("            'exclusive' => False,"))
             
             #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",35)
-          Next 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("		],"))
             
             #End ExternalSource
-            Me.Write("        End Enum"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",36)
+ Next 
+            
+            #End ExternalSource
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",37)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("	];"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",38)
-      End If
-    Next
-
-    For Each fk in  _t.foreignKeys
- 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture(""))
             
             #End ExternalSource
-            Me.Write("        Property ")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",39)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("	public $belongsTo = ["))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",40)
+ For each fk in _t.ForeignKeys 
+            
+            #End ExternalSource
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",41)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("        '" & fk.referencedTable.CamelCaseName & "' => ["))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",42)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("            'className' => '" & _name & "." & fk.referencedTable.CamelCaseName & "',"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",43)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(fk.referencedTable.name))
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("            'foreignKey' => '" & fk.referencedColumns.first.column.name & "',"))
             
             #End ExternalSource
-            Me.Write("() As List(Of ")
-            
-            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",43)
-            Me.Write(Me.ToStringHelper.ToStringWithCulture(p.Singularize(fk.referencedTable.name)))
-            
-            #End ExternalSource
-            Me.Write(")"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             
             #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",44)
-  Next 
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("		],"))
             
             #End ExternalSource
-            Me.Write("    End Class"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"End Namespace")
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",45)
+ Next 
+            
+            #End ExternalSource
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",46)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("	];"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
+            
+            #ExternalSource("E:\My Documents\localRepos\NetBakery\NetBakery\Generators\php2\Model.tt",47)
+            Me.Write(Me.ToStringHelper.ToStringWithCulture("}"))
+            
+            #End ExternalSource
+            Me.Write(""&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))
             Return Me.GenerationEnvironment.ToString
         End Function
     End Class

@@ -3,7 +3,7 @@
 Public Class phpGenerator
     Implements iGenerator
 
-    Public Function generateModel(_t As table, Optional IsStoreCommand As Boolean = False) As String Implements iGenerator.generateModel
+    Public Function generateModel(_t As table, Optional IsStoreCommand As Boolean = False, Optional Name As String = "") As String Implements iGenerator.generateModel
         Try
             Dim page = New My.Templates.php.Model(_t)
             Dim pageContent = page.TransformText()

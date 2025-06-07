@@ -46,6 +46,15 @@ Public Class mainGUI2
             FormHelpers.Log("Setting style and windowstate")
             dnbStyleManager.ManagerStyle = DirectCast([Enum].Parse(GetType(eStyle), My.Settings.gui_style), eStyle)
 
+            Select Case dnbStyleManager.ManagerStyle
+                Case eStyle.VisualStudio2012Light
+                    For Each ctrl As Control In TableLayoutPanel2.Controls
+                        If TypeOf ctrl Is DevComponents.DotNetBar.LabelX Then
+                            DirectCast(ctrl, DevComponents.DotNetBar.LabelX).ForeColor = Color.Black
+                        End If
+                    Next
+            End Select
+
             If My.Settings.isMaximized Then
                 WindowState = FormWindowState.Maximized
             Else
@@ -532,9 +541,17 @@ Public Class mainGUI2
 
                     dgvForeignKeys.DataSource = fks.ToArray
 
-                    scGeneratedModel.Text = _mngr.GenerateModel(tableFields)
-                    scGeneratedModel.Colorize(0, scGeneratedModel.Text.Length)
+                    If _currentProject IsNot Nothing Then
+                        Select Case _currentProject.Outputtype.ToLower
+                            Case "php", "php2"
+                                scGeneratedModel.Text = _mngr.GenerateModel(tableFields, False, _currentProject.Projectname)
+                            Case Else
+                                scGeneratedModel.Text = _mngr.GenerateModel(tableFields)
 
+                        End Select
+
+                        scGeneratedModel.Colorize(0, scGeneratedModel.Text.Length)
+                    End If
                     scGeneratedMapping.Text = _mngr.GenerateMap(tableFields)
                     scGeneratedMapping.Colorize(0, scGeneratedMapping.Text.Length)
 
@@ -735,7 +752,7 @@ Public Class mainGUI2
                             advtreeOutputExplorer.Nodes.Clear()
                             advtreeOutputExplorer.Load(ts)
                         End Using
-                    Case "php"
+                    Case "php", "php2"
                         Using ts As New IO.StringReader(My.Resources.phpOutputExplorer)
                             advtreeOutputExplorer.Nodes.Clear()
                             advtreeOutputExplorer.Load(ts)
@@ -762,7 +779,7 @@ Public Class mainGUI2
                             advtreeOutputExplorer.Nodes.Clear()
                             advtreeOutputExplorer.Load(ts)
                         End Using
-                    Case "php"
+                    Case "php", "php2"
                         Using ts As New IO.StringReader(My.Resources.phpOutputExplorer)
                             advtreeOutputExplorer.Nodes.Clear()
                             advtreeOutputExplorer.Load(ts)
@@ -826,7 +843,30 @@ Public Class mainGUI2
 
                     mMapping.Nodes.Add(tmpMapping)
                 Next
+            ElseIf _currentProject IsNot Nothing AndAlso _currentProject.Outputtype.ToLower = "php2" Then
+                Dim mModel As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapModels", True).FirstOrDefault
 
+                ' Tables and views
+                For Each table In _mngr.Tables.Where(Function(t) t.hasExport)
+                    Dim tmpModel As AdvTree.Node = tplModelAndMapping.DeepCopy
+
+                    tmpModel.Name = "n" & table.name
+                    tmpModel.TagString = table.name
+
+                    tmpModel.Text = $"{table.singleName}.php"
+                    AddHandler tmpModel.NodeClick, AddressOf explorerModelNodeHandler
+
+                    If _FileManager.ChangedFiles.LongCount(Function(c) c.filename = tmpModel.Text) > 0 Then
+                        tmpModel.ImageIndex += 3
+                        AddHandler tmpModel.NodeDoubleClick, AddressOf explorerModelNodeDiffHandler
+                        If mModel.ImageIndex = 18 Then
+                            mModel.ImageIndex += 3
+                            mModel.ImageExpandedIndex += 3
+                        End If
+                    End If
+
+                    mModel.Nodes.Add(tmpModel)
+                Next
             Else
                 Dim mModel As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapModels", True).FirstOrDefault
                 Dim mMapping As AdvTree.Node = advtreeOutputExplorer.Nodes.Find("mapMapping", True).FirstOrDefault
@@ -1176,7 +1216,7 @@ Public Class mainGUI2
             Dim t = _mngr.Tables.FirstOrDefault(Function(c) c.name = node.TagString)
 
             If t IsNot Nothing Then
-                scCodePreview.Text = _mngr.GenerateModel(t)
+                scCodePreview.Text = _mngr.GenerateModel(t, False, _currentProject.Projectname)
                 scCodePreview.Colorize(0, scCodePreview.Text.Length)
                 dcCodePreview.Selected = True
             End If
@@ -1242,7 +1282,7 @@ Public Class mainGUI2
             Dim node As AdvTree.Node = TryCast(sender, AdvTree.Node)
             Dim nodeEvent As AdvTree.TreeNodeMouseEventArgs = TryCast(e, AdvTree.TreeNodeMouseEventArgs)
 
-            scCodePreview.Text = _mngr.GenerateContext(txtProjectName.Text)
+            scCodePreview.Text = _mngr.GenerateContext(_currentProject.Projectname)
             scCodePreview.Colorize(0, scCodePreview.Text.Length)
             dcCodePreview.Selected = True
 
@@ -1762,7 +1802,7 @@ Public Class mainGUI2
                 setVbStyle(scCodePreview)
                 setVbStyle(scGeneratedModel)
                 setVbStyle(scGeneratedMapping)
-            Case "php"
+            Case "php", "php2"
                 Using ts As New IO.StringReader(My.Resources.phpOutputExplorer)
                     advtreeOutputExplorer.Nodes.Clear()
                     advtreeOutputExplorer.Load(ts)

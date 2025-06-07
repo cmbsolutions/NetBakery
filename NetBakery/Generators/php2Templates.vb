@@ -5,9 +5,11 @@ Namespace My.Templates.php2
         Private _t As infoSchema.table
         Private _i As Integer
         Private p As New PluralizationService
+        Private _name As String
 
-        Public Sub New(ByVal t As infoSchema.table)
+        Public Sub New(ByVal t As infoSchema.table, name As String)
             _t = t
+            _name = name
         End Sub
     End Class
 
@@ -21,7 +23,7 @@ Namespace My.Templates.php2
         End Sub
     End Class
 
-    Partial Public Class AppModel
+    Partial Public Class Context
         Private _tables As List(Of infoSchema.table)
         Private _name As String
         Private _recovery As Boolean
