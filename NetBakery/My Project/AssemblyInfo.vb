@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Generate EF classes from MySQL Databases")>
 <Assembly: AssemblyCompany("CMBSolutions")>
 <Assembly: AssemblyProduct("NetBakery")>
-<Assembly: AssemblyCopyright("Copyright © CMBSolutions 2017-2025")>
+<Assembly: AssemblyCopyright("Copyright © CMBSolutions 2017-2026")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>

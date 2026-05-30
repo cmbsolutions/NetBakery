@@ -10,7 +10,7 @@ Public Class navicatConnectionHelper
             accounts.Clear()
 
             Using mainReg = My.Computer.Registry.CurrentUser.OpenSubKey(registryRoot, False)
-                Dim RegexObj As New Regex("^(DEV|TST|APP|PRD) - (\w+)$", RegexOptions.IgnoreCase)
+                Dim RegexObj As New Regex("^AWS - (DEV|TST|APP|PRD) - (\w+)$", RegexOptions.IgnoreCase)
 
                 For Each entry In mainReg.GetSubKeyNames
                     If RegexObj.IsMatch(entry) Then
@@ -19,7 +19,7 @@ Public Class navicatConnectionHelper
                                          .host = subKey.GetValue("Host").ToString,
                                          .username = subKey.GetValue("UserName").ToString,
                                          .password = subKey.GetValue("Pwd").ToString,
-                                         .displayName = entry
+                                         .displayName = entry.Replace("AWS - ", "")
                                          })
                         End Using
                     End If

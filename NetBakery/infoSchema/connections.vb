@@ -127,7 +127,7 @@ Namespace infoSchema
 
             Try
                 Using mainReg = My.Computer.Registry.CurrentUser.OpenSubKey(registryRoot, False)
-                    Dim RegexObj As New Regex("^(DEV|TST|APP|PRD) - (\w+)$", RegexOptions.IgnoreCase)
+                    Dim RegexObj As New Regex("^AWS - (DEV|TST|APP|PRD) - (\w+)$", RegexOptions.IgnoreCase)
 
                     If mainReg IsNot Nothing Then
                         For Each entry In mainReg.GetSubKeyNames
@@ -138,7 +138,7 @@ Namespace infoSchema
                                                   .host = subKey.GetValue("Host").ToString,
                                                   .user = subKey.GetValue("UserName").ToString,
                                                   .pass = subKey.GetValue("Pwd").ToString,
-                                                  .description = entry,
+                                                  .description = entry.replace("AWS - ", ""),
                                                   .sslmode = eSslMode.Required
                                                   })
                                 End Using
