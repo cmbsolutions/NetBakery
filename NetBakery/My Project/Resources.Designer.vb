@@ -248,7 +248,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to https://www.cmbsolutions.nl.
+        '''  Looks up a localized string similar to https://netbakery.cmbsolutions.nl.
         '''</summary>
         Friend ReadOnly Property updateLocationBaseURL() As String
             Get
@@ -257,7 +257,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to netbakery/v2/latest.php.
+        '''  Looks up a localized string similar to netbakery/latest.php.
         '''</summary>
         Friend ReadOnly Property updateLocationResource() As String
             Get

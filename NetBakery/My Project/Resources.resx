@@ -1816,10 +1816,10 @@
 </value>
   </data>
   <data name="updateLocationResource" xml:space="preserve">
-    <value>netbakery/v2/latest.php</value>
+    <value>netbakery/latest.php</value>
   </data>
   <data name="updateLocationBaseURL" xml:space="preserve">
-    <value>https://www.cmbsolutions.nl</value>
+    <value>https://netbakery.cmbsolutions.nl</value>
   </data>
   <data name="phpOutputExplorer" xml:space="preserve">
     <value>&lt;AdvTree&gt;
