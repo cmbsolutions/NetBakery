@@ -44,10 +44,16 @@ jobs:
           name: netbakerysetup.latest
           path: .\installer\netbakerysetup.latest.exe
 
-    - name: Upload to server
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+    - name: SFTP Upload
+      # You may pin to the exact commit or the version.
+      # uses: Dylan700/sftp-upload-action@50ed7273493353a60dace713957c36b02dd87bec
+      uses: Dylan700/sftp-upload-action@v1.2.3
       with:
+        # The SFTP server (e.g. sftp.server.com).
         server: ${{secrets.FTP_HOST2}}
+        # The SFTP username.
         username: ${{secrets.FTP_USER2}}
+        # The SFTP password.
         password: ${{secrets.FTP_PASS2}}
-        local-dir: ./installer/
+        # A list of folders to upload in the format of `folder/ => upload_folder/`
+        uploads: ./installer/ => /
