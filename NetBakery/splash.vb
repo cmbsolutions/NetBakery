@@ -52,7 +52,7 @@ Public Class splash
 
             If My.Settings.checkUpdates Then
                 AutoUpdater.Synchronous = True
-                AutoUpdater.Start("https://netbakery.cmbsolutions.nl/v2/netbakery_update.php")
+                AutoUpdater.Start("https://www.cmbsolutions.nl/netbakery/netbakery_update.php")
             Else
                 ProgressBarX1.Text = "No updates. Loading program..."
                 Timer1.Enabled = True
