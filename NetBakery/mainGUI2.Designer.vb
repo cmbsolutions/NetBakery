@@ -396,7 +396,6 @@ Partial Class mainGUI2
         Me.PanelDockContainer2.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
         Me.PanelDockContainer2.Style.GradientAngle = 90
         Me.PanelDockContainer2.TabIndex = 0
-        Me.PanelDockContainer2.Visible = True
         '
         'txtLog
         '
@@ -472,6 +471,7 @@ Partial Class mainGUI2
         Me.Bar4.Margin = New System.Windows.Forms.Padding(0)
         Me.Bar4.Name = "Bar4"
         Me.Bar4.SelectedDockTab = 0
+        Me.Bar4.Size = New System.Drawing.Size(1085, 536)
         Me.Bar4.Stretch = True
         Me.Bar4.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.Bar4.TabIndex = 0
@@ -494,7 +494,6 @@ Partial Class mainGUI2
         Me.pdcProjectSettings.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
         Me.pdcProjectSettings.Style.GradientAngle = 90
         Me.pdcProjectSettings.TabIndex = 10
-        Me.pdcProjectSettings.Visible = True
         '
         'TableLayoutPanel2
         '
@@ -684,7 +683,6 @@ Partial Class mainGUI2
         Me.cboOutputType.Dock = System.Windows.Forms.DockStyle.Fill
         Me.cboOutputType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
         Me.cboOutputType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboOutputType.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cboOutputType.ForeColor = System.Drawing.Color.White
         Me.cboOutputType.FormattingEnabled = True
         Me.cboOutputType.Images = Me.ilDatabaseObjects
@@ -951,7 +949,6 @@ Partial Class mainGUI2
         Me.pdcObjectInfo.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
         Me.pdcObjectInfo.Style.GradientAngle = 90
         Me.pdcObjectInfo.TabIndex = 0
-        Me.pdcObjectInfo.Visible = True
         '
         'TabControl1
         '
@@ -1453,7 +1450,6 @@ Partial Class mainGUI2
         Me.pdcCodePreview.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
         Me.pdcCodePreview.Style.GradientAngle = 90
         Me.pdcCodePreview.TabIndex = 5
-        Me.pdcCodePreview.Visible = True
         '
         'scCodePreview
         '
@@ -1487,7 +1483,6 @@ Partial Class mainGUI2
         Me.pdcERDiagram.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
         Me.pdcERDiagram.Style.GradientAngle = 90
         Me.pdcERDiagram.TabIndex = 15
-        Me.pdcERDiagram.Visible = True
         '
         'TreeGX1
         '
@@ -1811,7 +1806,6 @@ Partial Class mainGUI2
         Me.PanelDockContainer4.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
         Me.PanelDockContainer4.Style.GradientAngle = 90
         Me.PanelDockContainer4.TabIndex = 29
-        Me.PanelDockContainer4.Visible = True
         '
         'SplitContainer1
         '
@@ -1973,7 +1967,6 @@ Partial Class mainGUI2
         Me.PanelDockContainer5.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
         Me.PanelDockContainer5.Style.GradientAngle = 90
         Me.PanelDockContainer5.TabIndex = 34
-        Me.PanelDockContainer5.Visible = True
         '
         'TableLayoutPanel5
         '
@@ -2101,7 +2094,6 @@ Partial Class mainGUI2
         Me.PanelDockContainer6.Size = New System.Drawing.Size(1079, 505)
         Me.PanelDockContainer6.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground
         Me.PanelDockContainer6.TabIndex = 38
-        Me.PanelDockContainer6.Visible = True
         '
         'dcProjectSettings
         '
@@ -2234,7 +2226,6 @@ Partial Class mainGUI2
         Me.PanelDockContainer1.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
         Me.PanelDockContainer1.Style.GradientAngle = 90
         Me.PanelDockContainer1.TabIndex = 0
-        Me.PanelDockContainer1.Visible = True
         '
         'advtreeDatabases
         '
@@ -2413,7 +2404,6 @@ Partial Class mainGUI2
         Me.PanelDockContainer3.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
         Me.PanelDockContainer3.Style.GradientAngle = 90
         Me.PanelDockContainer3.TabIndex = 0
-        Me.PanelDockContainer3.Visible = True
         '
         'TableLayoutPanel1
         '
@@ -2709,7 +2699,6 @@ Partial Class mainGUI2
         Me.pFileExplorer.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText
         Me.pFileExplorer.Style.GradientAngle = 90
         Me.pFileExplorer.TabIndex = 5
-        Me.pFileExplorer.Visible = True
         '
         'ExplorerControl1
         '
