@@ -1148,6 +1148,17 @@ Public Class mainGUI2
             If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models")
             If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\Mapping") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\Mapping")
 
+            If _currentProject IsNot Nothing AndAlso _currentProject.Outputtype.ToLower = "php2" Then
+                IO.File.WriteAllText($"{txtOutputFolder.Text}\{_currentProject.Projectname}AppModel.php", _mngr.GenerateContext(_currentProject.Projectname))
+                For Each t In _mngr.Tables.Where(Function(c) c.hasExport)
+                    IO.File.WriteAllText($"{txtOutputFolder.Text}\Models\{t.singleName}.php", _mngr.GenerateModel(t))
+                Next
+                Exit Sub
+            End If
+
+
+
+
             If _currentProject IsNot Nothing AndAlso _currentProject.Outputtype.ToLower = "net5" Then
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands")
                 If Not IO.Directory.Exists($"{txtOutputFolder.Text}\Models\StoreCommands\Functions") Then IO.Directory.CreateDirectory($"{txtOutputFolder.Text}\Models\StoreCommands\Functions")

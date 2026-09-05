@@ -262,5 +262,31 @@ Namespace Models
 			Return MaxLength
 		End Function
 
+		' This method allows you to save only the specified changed properties of an entity to the database.
+		' This can be tracked or untracked entities. There is no need to attach an untracked entity, this is done automatically.
+		' Example usage :
+		' myEntity.myProperty1 = "Test"
+		' myEntity.myProperty2 = Now()
+		' db.SaveChangesOnly(myEntity, NameOf(myEntity.myProperty1), NameOf(myEntity.myProperty2))
+		Public Sub SaveChangesOnly(Of TEntity As Class)(entity As TEntity, ParamArray changedProperties() As String)
+
+			If changedProperties Is Nothing OrElse changedProperties.Length = 0 Then
+				Throw New ArgumentException("At least one changed property must be specified.", NameOf(changedProperties))
+			End If
+
+			Using Connection = New MySqlConnectionFactory().CreateConnection(Me.Database.Connection.ConnectionString)
+				Using updateDb As New AVClientDataExchangeDataContext(Connection)
+					updateDb.Set(Of TEntity)().Attach(entity)
+
+					Dim entry = updateDb.Entry(entity)
+
+					For Each propertyName In changedProperties
+						entry.Property(propertyName).IsModified = True
+					Next
+
+					updateDb.SaveChanges()
+				End Using
+			End Using
+		End Sub
 	End Class
 End Namespace
