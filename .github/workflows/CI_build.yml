@@ -39,10 +39,11 @@ jobs:
       run: ${{env.INNO_SETUP}} ${{env.INSTALLER_FILE_PATH}}
 
     - name: Archive artifacts for x64
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v7.0.1
       with:
           name: netbakerysetup.latest
           path: .\installer\netbakerysetup.latest.exe
+          overwrite: true
 
     - name: SFTP Upload
       # You may pin to the exact commit or the version.
