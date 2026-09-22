@@ -1,7 +1,6 @@
 ﻿Imports System.Text.RegularExpressions
 Imports System.Xml
 Imports System.Xml.Serialization
-Imports System.Globalization
 
 Public Class Manager
     Property CurrentFiles As New List(Of Models.vcsObject)
