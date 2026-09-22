@@ -23,20 +23,7 @@ function exeparser_fileversion(string $file, string &$checksum): bool|string
 }
 
 $currentDir = dirname(__FILE__);
-$zipfile = $currentDir.'/netbakerysetup.latest.zip';
-$file = $currentDir.'/netbakerysetup.latest.exe';
-
-if ( file_exists($zipfile) ) {
-    if ( file_exists($file) ) unlink($file);
-
-    $zip = new ZipArchive();
-    if ( $zip->open($zipfile) === true ) {
-        $zip->extractTo($currentDir);
-        $zip->close();
-    }
-
-    if ( file_exists($file) ) unlink($zipfile);
-}
+$file = $currentDir.'/upload/netbakerysetup.latest.exe';
 
 $checksum = '';
 $version = exeparser_fileversion($file, $checksum);
@@ -45,7 +32,7 @@ header("Content-Type:text/xml");
 echo '<?xml version="1.0" encoding="utf-8" ?>';
 echo '<item>';
 echo '<version>'.$version.'</version>';
-echo '<url>https://www.cmbsolutions.nl/netbakery/netbakerysetup.latest.exe</url>';
+echo '<url>https://www.cmbsolutions.nl/netbakery/upload/netbakerysetup.latest.exe</url>';
 echo '<mandatory mode="1">true</mandatory>';
 echo '<checksum algorithm="SHA384">'.$checksum.'</checksum>';
 echo '</item>';
